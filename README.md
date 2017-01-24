@@ -1,5 +1,5 @@
 # XSDE 
-Exploratory Search and Discover Engine 
+Exploratory Search and Discovery Engine 
 
 ## Quick Start
 Install dependencies and download test data:
