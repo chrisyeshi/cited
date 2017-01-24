@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta name="description" content="">
+    <link rel="icon" href="../../favicon.ico"> -->
+    <title>XSDE - Exploratory Search and Discovery Engine</title>
+    <link href="/semantic/dist/semantic.min.css" rel="stylesheet">
+    <script src="/npm/requirejs/require.js"></script>
+    <script src="/npm/jquery/dist/jquery.min.js"></script>
+    <script src="/semantic/dist/semantic.min.js"></script>
+  </head>
+  <body>
+    <div class="ui icon input" id="search" style="width: 360px; margin: 20px;">
+      <input type="text" placeholder="Start Explore and Discover ... ">
+      <i class="circular search link icon" id="search-button"></i>
+    </div>
+    <div id="results" style="margin: 20px; border-top: 1px solid #DDD;"></div>
+    <script>
+        function getResults() {
+            $.get('/papers', function(results){
+                //first 20
+                results.slice(0, 20).forEach(function(d){
+                    var res =  $('<div/>')
+                        .addClass('ui vertical segment')
+                        .append($('<p/>').append(d.title));
+
+                    $('#results').append(res);
+                })
+            })
+        }
+
+        $('#search').keypress(function(e){
+            if(e.which == 13) getResults();
+        })
+        $('#search-button').click(getResults);
+    </script>
+    </body>
+</html>
