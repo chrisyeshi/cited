@@ -33,6 +33,7 @@
     border: 1px solid;
     line-height: 11px;
     vertical-align: middle;
+    background: #f5f1f1;
 }
 
 .axis path,

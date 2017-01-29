@@ -49,6 +49,9 @@
         var xScale = d3.scale.linear()
             .domain(xDomain)
             .range([0, w]);
+        var paperBeingDragged = undefined;
+        var prevMouseX, prevMouseY;
+        var linkLayer;
 
         function paperDivWidth() {
             return $('#vis-area').width() / (xDomain[1] - xDomain[0]) * 0.9;
@@ -95,21 +98,27 @@
             $('#papers-layer').empty();
             $.each(papersByYear, function(x, papersInYear) {
                 $.each(papersInYear, function(y, paper) {
+                    if (!paper.position) {
+                        paper.position = {
+                            x: xScale(x) + paperDivWidth() * 0.05,
+                            y: 80 + y * 45
+                        }
+                    }
                     $(document.createElement('div'))
                         .attr('class', 'paper')
                         .html(paper.year + ': ' + paper.title)
                         .css({
-                            top: 80 + y * 45 + 'px',
-                            left: xScale(x) + paperDivWidth() * 0.05,
+                            top: paper.position.y,
+                            left: paper.position.x,
                             width: paperDivWidth()
                         })
                         .appendTo('#papers-layer')
-                        .click(paper.id, function(event) {
+                        .click(paper, function(event) {
                             let posX = $(this).position().left;
                             let widthX = $(this).width();
                             let percentX = (event.pageX - posX) / widthX;
-                            let paperId = event.data;
-                            let paper = getPaperById(paperId);
+                            let paper = event.data;
+                            let paperId = paper.id;
                             let papers = [];
                             if (percentX < 0.5) {
                                 $('#search-query').val('References of ' + paper.title);
@@ -121,8 +130,51 @@
                             populateSearchResults(papers);
                             event.stopPropagation();
                         })
+                        .mousedown(paper, function(event) {
+                            if (event.which == 1) {
+                                paperBeingDragged = paper;
+                                prevMouseX = event.pageX;
+                                prevMouseY = event.pageY;
+                            }
+                            if (event.which == 3) {
+                                delete pinnedPapers[paper.id];
+                                refreshPinnedPaperView(pinnedPapers);
+                            }
+                        })
                 })
             })
+            // draw lines
+            let paperIds = Object.keys(pinnedPapers);
+            let paperPairs = [];
+            for (let i = 0; i < paperIds.length; ++i) {
+                for (let j = i + 1; j < paperIds.length; ++j) {
+                    $.each(testReferences, function(index, link) {
+                        if ((link.paper_id == paperIds[i] &&
+                                link.reference_id == paperIds[j]) ||
+                                (link.paper_id == paperIds[j] &&
+                                    link.reference_id == paperIds[i])) {
+                            paperPairs.push(link);
+                        }
+                    })
+                }
+            }
+            linkLayer.selectAll('line').remove();
+            linkLayer.selectAll('line')
+                .data(paperPairs)
+                .enter()
+                .append('line')
+                .attr('x1', function(d) {
+                    return pinnedPapers[d.paper_id].position.x + paperDivWidth() * 0.95 * 0.5;
+                })
+                .attr('y1', function(d) {
+                    return pinnedPapers[d.paper_id].position.y + 20;
+                })
+                .attr('x2', function(d) {
+                    return pinnedPapers[d.reference_id].position.x + paperDivWidth() * 0.95 * 0.5;
+                })
+                .attr('y2', function(d) {
+                    return pinnedPapers[d.reference_id].position.y + 20;
+                });
         }
 
         function populateSearchResults(papers) {
@@ -163,6 +215,23 @@
             $('#vis-area').click(function(e) {
                 $('#search-area .results').css('display', 'none');
             })
+            .contextmenu(function(e) {
+                e.preventDefault();
+            })
+            .mousemove(function(e) {
+                if (paperBeingDragged) {
+                    let currMouseX = e.pageX;
+                    let currMouseY = e.pageY;
+                    // paperBeingDragged.position.x += currMouseX - prevMouseX;
+                    paperBeingDragged.position.y += currMouseY - prevMouseY;
+                    refreshPinnedPaperView(pinnedPapers);
+                    prevMouseX = currMouseX;
+                    prevMouseY = currMouseY;
+                }
+            })
+            .mouseup(function(e) {
+                paperBeingDragged = undefined;
+            })
 
             $.get('/references').then(function(res) {
                 testReferences = res;
@@ -179,9 +248,12 @@
                     // .outerTickSize(0)
                     // .tickPadding(10)
                 vis = d3.select('#vis-area').append('svg');
-                vis.attr('width', w)
+                vis.attr('id', 'svg-layer')
+                    .attr('width', w)
                     .attr('height', h)
                     .attr('class', 'axis');
+                linkLayer = vis.append('g')
+                    .attr('id', 'link-layer');
                 vis.append('g')
                     .attr('transform', 'translate(0,' + (h - 30) + ')')
                     .attr('class', 'axis')
