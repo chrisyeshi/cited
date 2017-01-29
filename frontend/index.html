@@ -8,34 +8,187 @@
     <link rel="icon" href="../../favicon.ico"> -->
     <title>XSDE - Exploratory Search and Discovery Engine</title>
     <link href="/semantic/dist/semantic.min.css" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="/npm/requirejs/require.js"></script>
     <script src="/npm/jquery/dist/jquery.min.js"></script>
     <script src="/semantic/dist/semantic.min.js"></script>
   </head>
   <body>
-    <div class="ui icon input" id="search" style="width: 360px; margin: 20px;">
-      <input type="text" placeholder="Start Explore and Discover ... ">
-      <i class="circular search link icon" id="search-button"></i>
+    <!-- The visualization area in the background covering the whole viewport  -->
+    <div id="vis-area">
+        <div id="papers-layer">
+        </div>
     </div>
-    <div id="results" style="margin: 20px; border-top: 1px solid #DDD;"></div>
-    <script>
-        function getResults() {
-            $.get('/papers', function(results){
-                //first 20
-                results.slice(0, 20).forEach(function(d){
-                    var res =  $('<div/>')
-                        .addClass('ui vertical segment')
-                        .append($('<p/>').append(d.title));
 
-                    $('#results').append(res);
+    <!-- The search textbox and search results fixed to the top left corner -->
+    <div id="search-area">
+      <div class="ui">
+        <div class="ui icon input">
+          <input id="search-query" type="text" placeholder="Search...">
+          <i class="search icon"></i>
+        </div>
+        <div class="ui results celled list">
+        </div>
+      </div>
+    </div>
+
+    <!-- A temporary list to show the pinned papers -->
+    <div id="pinned-papers-list">
+    </div>
+
+    <script>
+        var testPapers = [];
+        var testReferences = [];
+        var pinnedPapers = {};
+        var paperSelection;
+        var vis = {};
+        var w = $('#vis-area').width();
+        var h = $('#vis-area').height();
+        var xDomain = [1990, 2015];
+        var xScale = d3.scale.linear()
+            .domain(xDomain)
+            .range([0, w]);
+
+        function paperDivWidth() {
+            return $('#vis-area').width() / (xDomain[1] - xDomain[0]) * 0.9;
+        }
+
+        function getPaperById(paperId) {
+            for (var i = 0; i < testPapers.length; ++i) {
+                if (paperId === testPapers[i].id) {
+                    return testPapers[i];
+                }
+            }
+            return undefined;
+        }
+
+        function getPaperReferences(paperId) {
+            let references = [];
+            $.each(testReferences, function(index, link) {
+                if (paperId === link.paper_id) {
+                    let paper = getPaperById(link.reference_id);
+                    if (paper)
+                        references.push(paper);
+                }
+            });
+            return references;
+        }
+
+        function getPaperCitations(paperId) {
+            let citations = [];
+            $.each(testReferences, function(index, link) {
+                if (paperId === link.reference_id) {
+                    citations.push(getPaperById(link.paper_id));
+                }
+            });
+            return citations;
+        }
+
+        function refreshPinnedPaperView(pinnedPapers) {
+            var papersByYear = [];
+            $.each(pinnedPapers, function(index, paper) {
+                if (!papersByYear[paper.year])
+                    papersByYear[paper.year] = [];
+                papersByYear[paper.year].push(paper);
+            });
+            $('#papers-layer').empty();
+            $.each(papersByYear, function(x, papersInYear) {
+                $.each(papersInYear, function(y, paper) {
+                    $(document.createElement('div'))
+                        .attr('class', 'paper')
+                        .html(paper.year + ': ' + paper.title)
+                        .css({
+                            top: 80 + y * 45 + 'px',
+                            left: xScale(x) + paperDivWidth() * 0.05,
+                            width: paperDivWidth()
+                        })
+                        .appendTo('#papers-layer')
+                        .click(paper.id, function(event) {
+                            let posX = $(this).position().left;
+                            let widthX = $(this).width();
+                            let percentX = (event.pageX - posX) / widthX;
+                            let paperId = event.data;
+                            let paper = getPaperById(paperId);
+                            let papers = [];
+                            if (percentX < 0.5) {
+                                $('#search-query').val('References of ' + paper.title);
+                                papers = getPaperReferences(paperId);
+                            } else {
+                                $('#search-query').val('Citations of ' + paper.title);
+                                papers = getPaperCitations(paperId);
+                            }
+                            populateSearchResults(papers);
+                            event.stopPropagation();
+                        })
                 })
             })
         }
 
-        $('#search').keypress(function(e){
-            if(e.which == 13) getResults();
-        })
-        $('#search-button').click(getResults);
+        function populateSearchResults(papers) {
+            $('#search-area .results')
+                .empty()
+                .css('display', 'block')
+            $.each(papers, function(index, paper) {
+                $(document.createElement('div'))
+                    .attr('class', 'item')
+                    .text(paper.year + ': ' + paper.title)
+                    .appendTo($('#search-area .results'))
+                    .click(paper, function(e) {
+                        pinnedPapers[paper.id] = paper;
+                        $('#search-area .results').css('display', 'none');
+                        refreshPinnedPaperView(pinnedPapers);
+                    })
+            })
+        }
+
+        function search(query) {
+            let papers = [];
+            $.each(testPapers, function(index, paper) {
+                if (-1 != paper.title.search(query) || query == paper.year)
+                    papers.push(paper);
+            });
+            populateSearchResults(papers);
+        }
+
+        window.onload = function() {
+            $('#search-query')
+            .css('width', 0.8 * w)
+            .keyup(function(e) {
+                if (13 == e.which) {
+                    search(e.target.value);
+                }
+            })
+
+            $('#vis-area').click(function(e) {
+                $('#search-area .results').css('display', 'none');
+            })
+
+            $.get('/references').then(function(res) {
+                testReferences = res;
+            })
+
+            $.get('/papers').then(function(res) {
+                testPapers = res;
+            }).then(function() {
+                var axis = d3.svg.axis()
+                    .scale(xScale)
+                    .orient('bottom')
+                    .ticks(xDomain[1] - xDomain[0])
+                    .tickSize(-h + 100)
+                    // .outerTickSize(0)
+                    // .tickPadding(10)
+                vis = d3.select('#vis-area').append('svg');
+                vis.attr('width', w)
+                    .attr('height', h)
+                    .attr('class', 'axis');
+                vis.append('g')
+                    .attr('transform', 'translate(0,' + (h - 30) + ')')
+                    .attr('class', 'axis')
+                    .call(axis);
+                paperSelection = vis.append('g');
+            })
+        }
     </script>
-    </body>
+  </body>
 </html>

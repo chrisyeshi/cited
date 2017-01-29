@@ -1,0 +1,43 @@
+#vis-area {
+    position:fixed;
+    padding: 0;
+    margin: 0;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+#search-area {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgb(255, 255, 255);
+    width: 50%;
+}
+
+#pinned-papers-list {
+    position: fixed;
+    top: 20px;
+    left: 500px;
+}
+
+.paper {
+    position: fixed;
+    width: 100px;
+    height: 40px;
+    overflow: hidden;
+    font-size: 8px;
+    border: 1px solid;
+    line-height: 11px;
+    vertical-align: middle;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
