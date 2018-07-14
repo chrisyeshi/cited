@@ -92,6 +92,7 @@ export default {
       let closeDragElement = evt => {
         document.onmouseup = null
         document.onmousemove = null
+        this.$emit('dragend', this.paper, evt)
       }
       let elementDrag = evt => {
         let node = this.paper
@@ -99,6 +100,7 @@ export default {
         let yCurr = evt.clientY
         node.rect.left += (xCurr - xPrev)
         node.rect.top += (yCurr - yPrev)
+        this.$emit('update:paper', node)
         xPrev = xCurr
         yPrev = yCurr
       }

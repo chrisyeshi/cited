@@ -1,14 +1,23 @@
 <template>
   <div>
-    <h4>References of</h4>
-    <div>{{ paper.title }}</div>
-    <span>{{ paper.authors }}</span>
+    <div class="header">
+      <div class="paper-title">
+        <h4>References of</h4>
+        <div>{{ paper.title }}</div>
+        <div>{{ paper.authors }}</div>
+      </div>
+      <div class="header-controls">
+        <input type="radio" id="layout-by-year" name="layout-method" value="layout-by-year" v-model="layoutMethod">
+        <label for="layout-by-year">by year</label>
+        <input type="radio" id="layout-by-reference-level" name="layout-method" value="layout-by-reference-level" v-model="layoutMethod">
+        <label for="layout-by-reference-level">by reference level</label>
+      </div>
+    </div>
     <div class="graph-container" ref="graphContainer" v-on:wheel="scrollHorizontally">
       <div class="nodes-container">
-        <paper-card v-for="node in nodes" v-bind:paper="node" v-bind:key="node.key" v-on:linkreferences="linkInNetworkReferences" v-on:linkcitations="linkInNetworkCitations"></paper-card>
+        <paper-card v-for="node in nodes" v-bind:paper.sync="node" v-bind:key="node.key" v-on:linkreferences="linkInNetworkReferences" v-on:linkcitations="linkInNetworkCitations" v-on:dragend="movePaperCard"></paper-card>
       </div>
       <svg class="overlay">
-        <!-- <line v-for="link in links" :key="link.key" :x1="link.citedBy.x" :y1="link.citedBy.y" :x2="link.citing.x" :y2="link.citing.y"></line> -->
         <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
       </svg>
     </div>
@@ -27,16 +36,20 @@ export default {
     this.$http.get('/static/insitupdf.json').then(function (res) {
       this.data = res.body
       this.paper = this.data.paper
-      // this.nodes = this.layoutByYears(this.data)
-      this.nodes = this.layoutByRefLevel(this.data)
+      this.nodes = this.layoutByMethod(this.data, this.layoutMethod)
     })
+    this.colWidth = 300
+    this.nodeSpacing = 20
+    this.nodeHeight = 105
     return {
       data: {
+        references: [],
         relations: []
       },
       paper: {},
       nodes: [],
-      visibleRelations: []
+      visibleRelations: [],
+      layoutMethod: 'layout-by-reference-level'
     }
   },
   computed: {
@@ -80,6 +93,11 @@ export default {
       })
     }
   },
+  watch: {
+    layoutMethod: function (method) {
+      this.nodes = this.layoutByMethod(this.data, method)
+    }
+  },
   methods: {
     scrollHorizontally: function (evt) {
       evt.preventDefault()
@@ -102,12 +120,6 @@ export default {
     getInNetworkRelations: function (prop, paperIndex) {
       return this.getRelations(this.data.relations, prop, paperIndex)
     },
-    // getInNetworkReferences: function (paperIndex) {
-    //   const getCitingPaperIndex = relation => relation.citing
-    //   const getPaper = paperIndex => this.nodes[paperIndex]
-    //   const relations = this.getRelations('citedBy', paperIndex)
-    //   return relations.map(getCitingPaperId).map(getPaper)
-    // },
     getInNetworkReferenceCount: function (paperIndex) {
       return this.getInNetworkRelations('citedBy', paperIndex).length
     },
@@ -122,6 +134,18 @@ export default {
     },
     showLinks: function (relations) {
       this.visibleRelations = relations
+    },
+    movePaperCard: function (node, evt) {
+      // const colRow = this.getColRowByRect(node.rect)
+      // const rect = this.getRectFromColRow(colRow)
+      // this.nodes[node.key].rect = rect
+    },
+    layoutByMethod: function (data, method) {
+      if (this.layoutMethod === 'layout-by-year') {
+        return this.layoutByYears(data)
+      } else if (this.layoutMethod === 'layout-by-reference-level') {
+        return this.layoutByRefLevel(data)
+      }
     },
     layoutByYears: function (data) {
       let years = data.references.map(paper => paper.year)
@@ -138,21 +162,11 @@ export default {
       yearUniqueStr.forEach(yearStr => {
         yearPapers[yearStr].sort((a, b) => b.citationCount - a.citationCount)
       })
-      let getNodeRect = (paper) => {
-        return this.getRectFromColRow({
-          col: yearUniqueStr.indexOf(paper.year.toString()),
-          row: yearPapers[paper.year.toString()].indexOf(paper)
-        })
-      }
-      return data.references.map((paper, index) => {
-        return this.makeNode({
-          paper: paper,
-          key: index,
-          inNetworkReferenceCount: this.getReferenceCount(data.relations, index),
-          inNetworkCitationCount: this.getCitationCount(data.relations, index),
-          rect: getNodeRect(paper)
-        })
-      })
+      const colRows = data.references.map(paper => ({
+        col: yearUniqueStr.indexOf(paper.year.toString()),
+        row: yearPapers[paper.year.toString()].indexOf(paper)
+      }))
+      return this.getNodesByColRows(data.references, colRows, data.relations)
     },
     makeRect: function ({ left, top, width, height }) {
       return {
@@ -171,7 +185,7 @@ export default {
         }
       }
     },
-    makeNode: function ({ paper, key, inNetworkReferenceCount, inNetworkCitationCount, rect }) {
+    makeNode: function ({ paper, key, inNetworkReferenceCount, inNetworkCitationCount, colRow }) {
       const headerHeight = 20
       return {
         key: key,
@@ -181,29 +195,32 @@ export default {
         citationCount: paper.citationCount,
         inNetworkReferenceCount: inNetworkReferenceCount,
         inNetworkCitationCount: inNetworkCitationCount,
-        rect: rect,
+        colRow: colRow,
+        rect: this.getRectFromColRow(colRow),
         headerHeight: headerHeight,
         get style () {
           return {
-            left: rect.left + 'px',
-            top: rect.top + 'px',
-            width: rect.width + 'px',
-            height: rect.height + 'px'
+            left: this.rect.left + 'px',
+            top: this.rect.top + 'px',
+            width: this.rect.width + 'px',
+            height: this.rect.height + 'px'
           }
         }
       }
     },
-    layoutByRefLevel: function ({ paper, references, relations }) {
-      const refLevels = this.assignRefLevels(references, relations)
-      const colRows = this.paperColRowsFromRefLevels(refLevels)
-      const paperRects = this.getRectsFromColRows(colRows)
-      return references.map((paper, paperId) => this.makeNode({
+    getNodesByColRows: function (papers, colRows, relations) {
+      return papers.map((paper, paperId) => this.makeNode({
         paper: paper,
         key: paperId,
         inNetworkReferenceCount: this.getReferenceCount(relations, paperId),
         inNetworkCitationCount: this.getCitationCount(relations, paperId),
-        rect: paperRects[paperId]
+        colRow: colRows[paperId]
       }))
+    },
+    layoutByRefLevel: function ({ paper, references, relations }) {
+      const refLevels = this.assignRefLevels(references, relations)
+      const colRows = this.paperColRowsFromRefLevels(refLevels)
+      return this.getNodesByColRows(references, colRows, relations)
     },
     assignRefLevels: function (references, relations) {
       let refLevels = {}
@@ -240,15 +257,18 @@ export default {
       })
       return colRows
     },
+    getColRowByRect: function (rect) {
+      return {
+        col: 0,
+        row: 0
+      }
+    },
     getRectFromColRow: function ({ col, row }) {
-      let colWidth = 300
-      let nodeSpacing = 20
-      let nodeHeight = 105
       return this.makeRect({
-        left: (colWidth + nodeSpacing) * col,
-        top: (nodeHeight + nodeSpacing) * row,
-        width: colWidth,
-        height: nodeHeight
+        left: (this.colWidth + this.nodeSpacing) * col,
+        top: (this.nodeHeight + this.nodeSpacing) * row,
+        width: this.colWidth,
+        height: this.nodeHeight
       })
     },
     getRectsFromColRows: function (colRows) {
@@ -305,5 +325,9 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+.header {
+  display: flex;
 }
 </style>
