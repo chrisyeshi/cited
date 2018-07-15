@@ -15,7 +15,7 @@
     </div>
     <div class="graph-container" ref="graphContainer" v-on:wheel="scrollHorizontally">
       <div class="nodes-container">
-        <paper-card v-for="node in nodes" v-bind:paper.sync="node" v-bind:key="node.key" v-on:linkreferences="linkInNetworkReferences" v-on:unlinkreferences="unlinkInNetworkReferences" v-on:linkcitations="linkInNetworkCitations" v-on:dragend="movePaperCard"></paper-card>
+        <paper-card v-for="node in nodes" v-bind:paper.sync="node" v-bind:key="node.key" v-on:linkreferences="linkInNetworkReferences" v-on:unlinkreferences="unlinkInNetworkReferences" v-on:linkcitations="linkInNetworkCitations" v-on:unlinkcitations="unlinkInNetworkCitations" v-on:dragend="movePaperCard"></paper-card>
       </div>
       <svg class="overlay">
         <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
@@ -134,6 +134,9 @@ export default {
     },
     linkInNetworkCitations: function (paperIndex) {
       this.showLinks(this.getInNetworkRelations('citing', paperIndex))
+    },
+    unlinkInNetworkCitations: function (paperIndex) {
+      this.showLinks([])
     },
     showLinks: function (relations) {
       this.visibleRelations = relations

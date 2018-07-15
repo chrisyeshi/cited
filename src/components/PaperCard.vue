@@ -3,7 +3,7 @@
     <div class="header" v-bind:style="{ height: paper.headerHeight + 'px' }">
       <span class="header-references" v-on:mouseover="$emit('linkreferences', paper.key)" v-on:mouseout="$emit('unlinkreferences', paper.key)" v-bind:style="{ 'background-color': inNetworkReferenceColor }">&lt; {{ paper.inNetworkReferenceCount }}</span>
       <span class="header-bar" v-on:mousedown="dragElement"></span>
-      <span class="header-citations" v-on:mouseover="$emit('linkcitations', paper.key)" v-bind:style="{ 'background-color': inNetworkCitationColor }">{{ paper.inNetworkCitationCount }} &gt;</span>
+      <span class="header-citations" v-on:mouseover="$emit('linkcitations', paper.key)" v-on:mouseout="$emit('unlinkcitations', paper.key)" v-bind:style="{ 'background-color': inNetworkCitationColor }">{{ paper.inNetworkCitationCount }} &gt;</span>
     </div>
     <div v-bind:class="line.classes" v-for="(line, index) in lines" v-bind:key="index">{{ line.text }}</div>
   </div>
