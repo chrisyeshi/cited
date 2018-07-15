@@ -1,7 +1,7 @@
 <template>
-  <div class="paper-card" v-bind:index="paper.index" v-bind:style="paper.style">
+  <div class="paper-card" v-bind:index="paper.index" v-bind:class="{ animate: enableAnimation }" v-bind:style="cardStyle">
     <div class="header" v-bind:style="{ height: paper.headerHeight + 'px' }">
-      <span class="header-references" v-on:mouseover="$emit('linkreferences', paper.key)" v-bind:style="{ 'background-color': inNetworkReferenceColor }">&lt; {{ paper.inNetworkReferenceCount }}</span>
+      <span class="header-references" v-on:mouseover="$emit('linkreferences', paper.key)" v-on:mouseout="$emit('unlinkreferences', paper.key)" v-bind:style="{ 'background-color': inNetworkReferenceColor }">&lt; {{ paper.inNetworkReferenceCount }}</span>
       <span class="header-bar" v-on:mousedown="dragElement"></span>
       <span class="header-citations" v-on:mouseover="$emit('linkcitations', paper.key)" v-bind:style="{ 'background-color': inNetworkCitationColor }">{{ paper.inNetworkCitationCount }} &gt;</span>
     </div>
@@ -23,7 +23,20 @@ export default {
       default: 4
     }
   },
+  data () {
+    return {
+      enableAnimation: true
+    }
+  },
   computed: {
+    cardStyle: function () {
+      return {
+        left: this.paper.rect.left + 'px',
+        top: this.paper.rect.top + 'px',
+        width: this.paper.rect.width + 'px',
+        height: this.paper.rect.height + 'px'
+      }
+    },
     lines: function () {
       let createLineObj = (classes, text) => {
         return {
@@ -90,6 +103,7 @@ export default {
       let xPrev = evt.clientX
       let yPrev = evt.clientY
       let closeDragElement = evt => {
+        this.enableAnimation = true
         document.onmouseup = null
         document.onmousemove = null
         this.$emit('dragend', this.paper, evt)
@@ -104,6 +118,7 @@ export default {
         xPrev = xCurr
         yPrev = yCurr
       }
+      this.enableAnimation = false
       document.onmouseup = closeDragElement
       document.onmousemove = elementDrag
     },
@@ -168,5 +183,9 @@ export default {
   flex-direction: row;
   align-items: center;
   background-color: gray;
+}
+
+.animate {
+  transition-duration: 0.1s;
 }
 </style>

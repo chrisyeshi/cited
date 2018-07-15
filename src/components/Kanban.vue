@@ -15,7 +15,7 @@
     </div>
     <div class="graph-container" ref="graphContainer" v-on:wheel="scrollHorizontally">
       <div class="nodes-container">
-        <paper-card v-for="node in nodes" v-bind:paper.sync="node" v-bind:key="node.key" v-on:linkreferences="linkInNetworkReferences" v-on:linkcitations="linkInNetworkCitations" v-on:dragend="movePaperCard"></paper-card>
+        <paper-card v-for="node in nodes" v-bind:paper.sync="node" v-bind:key="node.key" v-on:linkreferences="linkInNetworkReferences" v-on:unlinkreferences="unlinkInNetworkReferences" v-on:linkcitations="linkInNetworkCitations" v-on:dragend="movePaperCard"></paper-card>
       </div>
       <svg class="overlay">
         <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
@@ -129,6 +129,9 @@ export default {
     linkInNetworkReferences: function (paperIndex) {
       this.showLinks(this.getInNetworkRelations('citedBy', paperIndex))
     },
+    unlinkInNetworkReferences: function (paperIndex) {
+      this.showLinks([])
+    },
     linkInNetworkCitations: function (paperIndex) {
       this.showLinks(this.getInNetworkRelations('citing', paperIndex))
     },
@@ -136,9 +139,36 @@ export default {
       this.visibleRelations = relations
     },
     movePaperCard: function (node, evt) {
-      // const colRow = this.getColRowByRect(node.rect)
-      // const rect = this.getRectFromColRow(colRow)
-      // this.nodes[node.key].rect = rect
+      const colRow = this.getColRowByRect(node.rect)
+      const oldColRows = this.nodes.map(node => node.colRow)
+      const newColRows = this.moveColRow(oldColRows, node.key, colRow)
+      this.nodes = this.getNodesByColRows(this.data.references, newColRows, this.data.relations)
+    },
+    moveColRow: function (oldColRows, paperId, newColRow) {
+      const grid = []
+      Object.keys(oldColRows).forEach(pid => {
+        const colRow = oldColRows[pid]
+        grid[colRow.col] = grid[colRow.col] === undefined ? [] : grid[colRow.col]
+        grid[colRow.col][colRow.row] = pid
+      })
+      const oldColRow = oldColRows[paperId]
+      grid[oldColRow.col][oldColRow.row] = undefined
+      grid[newColRow.col].splice(newColRow.row, 0, paperId)
+      const tempGrid = grid.map(column => {
+        const newCol = column.filter(pid => pid !== undefined)
+        return newCol
+      })
+      const newGrid = tempGrid.filter(col => col.length !== 0)
+      const newColRows = {}
+      newGrid.forEach((column, col) => {
+        column.forEach((pid, row) => {
+          newColRows[pid] = {
+            col: col,
+            row: row
+          }
+        })
+      })
+      return newColRows
     },
     layoutByMethod: function (data, method) {
       if (this.layoutMethod === 'layout-by-year') {
@@ -197,15 +227,7 @@ export default {
         inNetworkCitationCount: inNetworkCitationCount,
         colRow: colRow,
         rect: this.getRectFromColRow(colRow),
-        headerHeight: headerHeight,
-        get style () {
-          return {
-            left: this.rect.left + 'px',
-            top: this.rect.top + 'px',
-            width: this.rect.width + 'px',
-            height: this.rect.height + 'px'
-          }
-        }
+        headerHeight: headerHeight
       }
     },
     getNodesByColRows: function (papers, colRows, relations) {
@@ -258,9 +280,11 @@ export default {
       return colRows
     },
     getColRowByRect: function (rect) {
+      const col = Math.floor((rect.center.x + 0.5 * this.nodeSpacing) / (this.colWidth + this.nodeSpacing))
+      const row = Math.floor((rect.center.y + 0.5 * this.nodeSpacing) / (this.nodeHeight + this.nodeSpacing))
       return {
-        col: 0,
-        row: 0
+        col: col,
+        row: row
       }
     },
     getRectFromColRow: function ({ col, row }) {
