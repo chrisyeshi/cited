@@ -7,10 +7,9 @@
         <div>{{ paper.authors }}</div>
       </div>
       <div class="header-controls">
-        <input type="radio" id="layout-by-year" name="layout-method" value="layout-by-year" v-model="layoutMethod">
-        <label for="layout-by-year">by year</label>
-        <input type="radio" id="layout-by-reference-level" name="layout-method" value="layout-by-reference-level" v-model="layoutMethod">
-        <label for="layout-by-reference-level">by reference level</label>
+        <div>
+          <radio-group name="layout-method" v-bind:ids="['layout-by-year', 'layout-by-reference-level']" v-bind:labels="['by year', 'by reference level']" v-model="computedLayoutMethod"></radio-group>
+        </div>
       </div>
     </div>
     <div class="graph-container" ref="graphContainer" v-on:wheel="scrollHorizontally">
@@ -26,11 +25,13 @@
 
 <script>
 import PaperCard from './PaperCard.vue'
+import RadioGroup from './RadioGroup.vue'
 
 export default {
   name: 'Kanban',
   components: {
-    PaperCard
+    PaperCard,
+    RadioGroup
   },
   data () {
     this.$http.get('/static/insitupdf.json').then(function (res) {
@@ -91,11 +92,15 @@ export default {
           path: `M${start.x} ${start.y} C ${interpolate(start.x, end.x, ratio)} ${start.y}, ${interpolate(end.x, start.x, ratio)} ${end.y}, ${end.x} ${end.y}`
         }
       })
-    }
-  },
-  watch: {
-    layoutMethod: function (method) {
-      this.nodes = this.layoutByMethod(this.data, method)
+    },
+    computedLayoutMethod: {
+      get: function () {
+        return this.layoutMethod
+      },
+      set: function (method) {
+        this.layoutMethod = method
+        this.nodes = this.layoutByMethod(this.data, method)
+      }
     }
   },
   methods: {
