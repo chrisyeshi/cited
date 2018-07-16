@@ -7,9 +7,10 @@
         <div>{{ paper.authors }}</div>
       </div>
       <div class="header-controls">
-        <div>
-          <radio-group name="layout-method" v-bind:ids="['layout-by-year', 'layout-by-reference-level']" v-bind:labels="['by year', 'by reference level']" v-model="computedLayoutMethod"></radio-group>
-        </div>
+        <v-radio-group v-model="computedLayoutMethod" row>
+          <v-radio label="by year" value="layout-by-year"></v-radio>
+          <v-radio label="by reference level" value="layout-by-reference-level"></v-radio>
+        </v-radio-group>
       </div>
     </div>
     <div class="graph-container" ref="graphContainer" v-on:wheel="scrollHorizontally">
@@ -25,13 +26,11 @@
 
 <script>
 import PaperCard from './PaperCard.vue'
-import RadioGroup from './RadioGroup.vue'
 
 export default {
   name: 'Kanban',
   components: {
-    PaperCard,
-    RadioGroup
+    PaperCard
   },
   data () {
     this.$http.get('/static/insitupdf.json').then(function (res) {
