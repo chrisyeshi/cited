@@ -11,11 +11,25 @@
           <v-radio label="by year" value="layout-by-year"></v-radio>
           <v-radio label="by reference level" value="layout-by-reference-level"></v-radio>
         </v-radio-group>
+        <v-radio-group v-model="computedShowLinkMethod" row>
+          <v-radio label="hover" value="show-link-hover"></v-radio>
+          <v-radio label="click" value="show-link-click"></v-radio>
+          <v-radio label="all" value="show-link-all"></v-radio>
+        </v-radio-group>
       </div>
     </div>
     <div class="graph-container" ref="graphContainer" v-on:wheel="scrollHorizontally">
       <div class="nodes-container">
-        <paper-card v-for="node in nodes" v-bind:paper.sync="node" v-bind:key="node.key" v-on:linkreferences="linkInNetworkReferences" v-on:unlinkreferences="unlinkInNetworkReferences" v-on:linkcitations="linkInNetworkCitations" v-on:unlinkcitations="unlinkInNetworkCitations" v-on:dragend="movePaperCard"></paper-card>
+        <paper-card
+          v-for="node in nodes" v-bind:key="node.key"
+          v-bind:paper.sync="node"
+          v-on:mouseoverrefcount="handleMouseOverRefCount($event)"
+          v-on:mouseoutrefcount="handleMouseOutRefCount($event)"
+          v-on:clickrefcount="handleClickRefCount($event)"
+          v-on:mouseovercitecount="handleMouseOverCiteCount($event)"
+          v-on:mouseoutcitecount="handleMouseOutCiteCount($event)"
+          v-on:clickcitecount="handleClickCiteCount($event)"
+          v-on:dragend="movePaperCard"></paper-card>
       </div>
       <svg class="overlay">
         <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
@@ -49,7 +63,18 @@ export default {
       paper: {},
       nodes: [],
       visibleRelations: [],
-      layoutMethod: 'layout-by-reference-level'
+      visiblePaperRefLinks: [],
+      visiblePaperCiteLinks: [],
+      layoutMethod: 'layout-by-reference-level',
+      showLinkMethod: 'show-link-hover'
+    }
+  },
+  watch: {
+    visiblePaperRefLinks: function (curr, prev) {
+      this.showLinks(this.getVisibleLinks(curr, this.visiblePaperCiteLinks))
+    },
+    visiblePaperCiteLinks: function (curr, prev) {
+      this.showLinks(this.getVisibleLinks(this.visiblePaperRefLinks, curr))
     }
   },
   computed: {
@@ -100,6 +125,21 @@ export default {
         this.layoutMethod = method
         this.nodes = this.layoutByMethod(this.data, method)
       }
+    },
+    computedShowLinkMethod: {
+      get: function () {
+        return this.showLinkMethod
+      },
+      set: function (method) {
+        this.showLinkMethod = method
+        if (method === 'show-link-all') {
+          this.showLinks(this.data.relations)
+        } else {
+          this.visiblePaperRefLinks = []
+          this.visiblePaperCiteLinks = []
+          this.showLinks([])
+        }
+      }
     }
   },
   methods: {
@@ -130,6 +170,56 @@ export default {
     getInNetworkCitationCount: function (paperIndex) {
       return this.getInNetworkRelations('citing', paperIndex).length
     },
+    handleMouseOverRefCount: function (paperIndex) {
+      if (this.showLinkMethod === 'show-link-hover') {
+        const set = new Set(this.visiblePaperRefLinks)
+        set.add(paperIndex)
+        this.visiblePaperRefLinks = Array.from(set)
+      }
+    },
+    handleMouseOutRefCount: function (paperIndex) {
+      if (this.showLinkMethod === 'show-link-hover') {
+        const set = new Set(this.visiblePaperRefLinks)
+        set.delete(paperIndex)
+        this.visiblePaperRefLinks = Array.from(set)
+      }
+    },
+    handleClickRefCount: function (paperIndex) {
+      if (this.showLinkMethod === 'show-link-click') {
+        const set = new Set(this.visiblePaperRefLinks)
+        if (set.has(paperIndex)) {
+          set.delete(paperIndex)
+        } else {
+          set.add(paperIndex)
+        }
+        this.visiblePaperRefLinks = Array.from(set)
+      }
+    },
+    handleMouseOverCiteCount: function (paperIndex) {
+      if (this.showLinkMethod === 'show-link-hover') {
+        const set = new Set(this.visiblePaperCiteLinks)
+        set.add(paperIndex)
+        this.visiblePaperCiteLinks = Array.from(set)
+      }
+    },
+    handleMouseOutCiteCount: function (paperIndex) {
+      if (this.showLinkMethod === 'show-link-hover') {
+        const set = new Set(this.visiblePaperCiteLinks)
+        set.delete(paperIndex)
+        this.visiblePaperCiteLinks = Array.from(set)
+      }
+    },
+    handleClickCiteCount: function (paperIndex) {
+      if (this.showLinkMethod === 'show-link-click') {
+        const set = new Set(this.visiblePaperCiteLinks)
+        if (set.has(paperIndex)) {
+          set.delete(paperIndex)
+        } else {
+          set.add(paperIndex)
+        }
+        this.visiblePaperCiteLinks = Array.from(set)
+      }
+    },
     linkInNetworkReferences: function (paperIndex) {
       this.showLinks(this.getInNetworkRelations('citedBy', paperIndex))
     },
@@ -144,6 +234,17 @@ export default {
     },
     showLinks: function (relations) {
       this.visibleRelations = relations
+    },
+    getVisibleLinks: function (paperRefLinks, paperCiteLinks) {
+      let strSet = new Set()
+      paperRefLinks.forEach(paperId => {
+        this.getInNetworkRelations('citedBy', paperId).map(relation => JSON.stringify(relation)).forEach(str => strSet.add(str))
+      })
+      paperCiteLinks.forEach(paperId => {
+        this.getInNetworkRelations('citing', paperId).map(relation => JSON.stringify(relation)).forEach(str => strSet.add(str))
+      })
+      const ret = Array.from(strSet).map(str => JSON.parse(str))
+      return ret
     },
     movePaperCard: function (node, evt) {
       const colRow = this.getColRowByRect(node.rect)
