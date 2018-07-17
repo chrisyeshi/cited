@@ -1,9 +1,17 @@
 <template>
-  <div class="paper-card" v-bind:index="paper.index" v-bind:class="{ animate: enableAnimation }" v-bind:style="cardStyle">
+  <div class="paper-card" v-bind:index="paper.index" v-bind:class="{ animate: !isDragging, 'front-most': isDragging }" v-bind:style="cardStyle">
     <div class="header" v-bind:style="{ height: paper.headerHeight + 'px' }">
-      <span class="header-references" v-on:mouseover="$emit('mouseoverrefcount', paper.key)" v-on:mouseout="$emit('mouseoutrefcount', paper.key)" v-on:click="$emit('clickrefcount', paper.key)" v-bind:style="{ 'background-color': inNetworkReferenceColor }">&lt; {{ paper.inNetworkReferenceCount }}</span>
+      <span class="header-references"
+        v-on:mouseover="$emit('mouseoverrefcount', paper.key)"
+        v-on:mouseout="$emit('mouseoutrefcount', paper.key)"
+        v-on:click="$emit('clickrefcount', paper.key)"
+        v-bind:style="{ 'background-color': inNetworkReferenceColor }">&lt; {{ paper.inNetworkReferenceCount }}</span>
       <span class="header-bar" v-on:mousedown="dragElement"></span>
-      <span class="header-citations" v-on:mouseover="$emit('mouseovercitecount', paper.key)" v-on:mouseout="$emit('mouseoutcitecount', paper.key)" v-on:click="$emit('clickcitecount', paper.key)" v-bind:style="{ 'background-color': inNetworkCitationColor }">{{ paper.inNetworkCitationCount }} &gt;</span>
+      <span class="header-citations"
+        v-on:mouseover="$emit('mouseovercitecount', paper.key)"
+        v-on:mouseout="$emit('mouseoutcitecount', paper.key)"
+        v-on:click="$emit('clickcitecount', paper.key)"
+        v-bind:style="{ 'background-color': inNetworkCitationColor }">{{ paper.inNetworkCitationCount }} &gt;</span>
     </div>
     <div v-bind:class="line.classes" v-for="(line, index) in lines" v-bind:key="index">{{ line.text }}</div>
   </div>
@@ -25,7 +33,7 @@ export default {
   },
   data () {
     return {
-      enableAnimation: true
+      isDragging: false
     }
   },
   computed: {
@@ -103,7 +111,7 @@ export default {
       let xPrev = evt.clientX
       let yPrev = evt.clientY
       let closeDragElement = evt => {
-        this.enableAnimation = true
+        this.isDragging = false
         document.onmouseup = null
         document.onmousemove = null
         this.$emit('dragend', this.paper, evt)
@@ -118,7 +126,7 @@ export default {
         xPrev = xCurr
         yPrev = yCurr
       }
-      this.enableAnimation = false
+      this.isDragging = true
       document.onmouseup = closeDragElement
       document.onmousemove = elementDrag
     },
@@ -142,6 +150,7 @@ export default {
   white-space: normal;
   word-break: break-all;
   overflow-y: hidden;
+  background-color: white;
 }
 
 .line-clamp-1 {
@@ -187,5 +196,9 @@ export default {
 
 .animate {
   transition-duration: 0.1s;
+}
+
+.front-most {
+  z-index: 99999;
 }
 </style>
