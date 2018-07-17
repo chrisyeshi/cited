@@ -18,22 +18,30 @@
         </v-radio-group>
       </div>
     </div>
-    <div class="graph-container" ref="graphContainer" v-on:wheel="scrollHorizontally">
-      <div class="nodes-container">
-        <paper-card
-          v-for="node in nodes" v-bind:key="node.key"
-          v-bind:paper.sync="node"
-          v-on:mouseoverrefcount="handleMouseOverRefCount($event)"
-          v-on:mouseoutrefcount="handleMouseOutRefCount($event)"
-          v-on:clickrefcount="handleClickRefCount($event)"
-          v-on:mouseovercitecount="handleMouseOverCiteCount($event)"
-          v-on:mouseoutcitecount="handleMouseOutCiteCount($event)"
-          v-on:clickcitecount="handleClickCiteCount($event)"
-          v-on:dragend="movePaperCard"></paper-card>
+    <div class="kanban-container" ref="kanbanContainer" v-on:wheel="scrollHorizontally">
+      <div class="years-container">
+        <span v-for="(yearRange, index) in yearRanges" v-bind:key="index"
+          v-bind:style="yearRangeStyle" class="year-range">
+          {{ yearRange.min }} to {{ yearRange.max }}
+        </span>
       </div>
-      <svg class="overlay">
-        <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
-      </svg>
+      <div class="graph-container" v-bind:style="{ 'margin-left': nodeSpacing / 2 + 'px', 'margin-right': nodeSpacing / 2 + 'px' }">
+        <div class="nodes-container">
+          <paper-card
+            v-for="node in nodes" v-bind:key="node.key"
+            v-bind:paper.sync="node"
+            v-on:mouseoverrefcount="handleMouseOverRefCount($event)"
+            v-on:mouseoutrefcount="handleMouseOutRefCount($event)"
+            v-on:clickrefcount="handleClickRefCount($event)"
+            v-on:mouseovercitecount="handleMouseOverCiteCount($event)"
+            v-on:mouseoutcitecount="handleMouseOutCiteCount($event)"
+            v-on:clickcitecount="handleClickCiteCount($event)"
+            v-on:dragend="movePaperCard"></paper-card>
+        </div>
+        <svg class="overlay">
+          <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
+        </svg>
+      </div>
     </div>
   </div>
 </template>
@@ -117,6 +125,25 @@ export default {
         }
       })
     },
+    yearRanges: function () {
+      let ret = []
+      this.nodes.forEach(node => {
+        ret[node.colRow.col] = ret[node.colRow.col] === undefined
+          ? { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER }
+          : ret[node.colRow.col]
+        ret[node.colRow.col].min = Math.min(node.year, ret[node.colRow.col].min)
+        ret[node.colRow.col].max = Math.max(node.year, ret[node.colRow.col].max)
+      })
+      return ret
+    },
+    yearRangeStyle: function () {
+      return {
+        display: 'inline-block',
+        width: this.colWidth + 'px',
+        'margin-left': this.nodeSpacing / 2 + 'px',
+        'margin-right': this.nodeSpacing / 2 + 'px'
+      }
+    },
     computedLayoutMethod: {
       get: function () {
         return this.layoutMethod
@@ -146,7 +173,7 @@ export default {
     scrollHorizontally: function (evt) {
       evt.preventDefault()
       let delta = evt.deltaX === 0 ? -evt.deltaY : -Math.sign(evt.deltaX) * Math.hypot(evt.deltaX, evt.deltaY)
-      this.$refs.graphContainer.scrollLeft -= delta * 5
+      this.$refs.kanbanContainer.scrollLeft -= delta * 5
     },
     getRelations: function (relations, prop, paperIndex) {
       const IsPaperInRelation = relation => relation[prop] === paperIndex
@@ -415,11 +442,25 @@ export default {
 </script>
 
 <style scoped>
-.graph-container {
+.years-container {
+  white-space: nowrap;
+}
+
+.year-range {
+  text-align: center;
+}
+
+.kanban-container {
   position: relative;
-  height: 1900px;
+  height: 100%;
   white-space: nowrap;
   overflow-x: scroll;
+}
+
+.graph-container {
+  position: relative;
+  height: 1560px;
+  white-space: nowrap;
 }
 
 .overlay {
