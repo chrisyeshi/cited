@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+      <router-link to="/kanban">Go to kanban</router-link>
+  <router-link to="/contail">Go to contail</router-link>
     <router-view/>
   </div>
 </template>
