@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { create as createRect } from './rect.js'
+
 export default {
   name: 'PaperCard',
   props: {
@@ -113,7 +115,7 @@ export default {
   },
   watch: {
     paper: function (curr, prev) {
-      this.rect = { ...curr.rect }
+      this.rect = createRect(curr.rect)
     }
   },
   methods: {
@@ -130,9 +132,8 @@ export default {
         document.onmousemove = null
         const paper = {
           ...this.paper,
-          rect: { ...this.rect }
+          rect: createRect(this.rect)
         }
-        this.$emit('update:paper', paper)
         this.$emit('dragend', paper, evt)
       }
       let elementDrag = evt => {
