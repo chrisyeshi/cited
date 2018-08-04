@@ -1,15 +1,20 @@
 <template>
   <div>
     <div class="header">
-      <div class="paper-title">
-        <h4>References of</h4>
-        <div>{{ paper.title }}</div>
-        <div>{{ paper.authors }}</div>
-      </div>
+      <v-card class="elevation-0">
+        <v-card-title primary-title>
+          <div>
+            <h5>References of</h5>
+            <h3 class="headline">{{ paper.title }}</h3>
+            <div>{{ paper.authors }}</div>
+          </div>
+        </v-card-title>
+      </v-card>
       <div class="header-controls">
         <v-radio-group v-model="computedLayoutMethod" row>
           <v-radio label="by year" value="layout-by-year"></v-radio>
           <v-radio label="by reference level" value="layout-by-reference-level"></v-radio>
+          <v-radio label="by optimized" value="layout-by-optimized"></v-radio>
         </v-radio-group>
         <v-radio-group v-model="computedShowLinkMethod" row>
           <v-radio label="hover" value="show-link-hover"></v-radio>
@@ -22,7 +27,7 @@
       <div class="years-container">
         <span v-for="(yearRange, index) in yearRanges" v-bind:key="index"
           v-bind:style="yearRangeStyle" class="year-range">
-          {{ yearRange.min }} to {{ yearRange.max }}
+          {{ yearRange }}
         </span>
       </div>
       <div class="graph-container" v-bind:style="{ 'margin-left': nodeSpacing / 2 + 'px', 'margin-right': nodeSpacing / 2 + 'px' }">
@@ -58,12 +63,16 @@ export default {
     this.$http.get('/static/insitupdf.json').then(function (res) {
       this.data = res.body
       this.paper = this.data.paper
-      this.nodes = this.layoutByMethod(this.data, this.layoutMethod)
+      this.graph = this.createGraph(this.data.references, this.data.relations)
+      this.nodes = this.layoutByMethod(this.data, this.graph, this.layoutMethod)
     })
     this.colWidth = 300
     this.nodeSpacing = 20
     this.nodeHeight = 105
     return {
+      graph: {
+        nodes: []
+      },
       data: {
         references: [],
         relations: []
@@ -73,7 +82,7 @@ export default {
       visibleRelations: [],
       visiblePaperRefLinks: [],
       visiblePaperCiteLinks: [],
-      layoutMethod: 'layout-by-reference-level',
+      layoutMethod: 'layout-by-optimized',
       showLinkMethod: 'show-link-hover'
     }
   },
@@ -134,7 +143,12 @@ export default {
         ret[node.colRow.col].min = Math.min(node.year, ret[node.colRow.col].min)
         ret[node.colRow.col].max = Math.max(node.year, ret[node.colRow.col].max)
       })
-      return ret
+      return ret.map(range => {
+        if (range.min === range.max) {
+          return `${range.min}`
+        }
+        return `${range.min} to ${range.max}`
+      })
     },
     yearRangeStyle: function () {
       return {
@@ -150,7 +164,7 @@ export default {
       },
       set: function (method) {
         this.layoutMethod = method
-        this.nodes = this.layoutByMethod(this.data, method)
+        this.nodes = this.layoutByMethod(this.data, this.graph, method)
       }
     },
     computedShowLinkMethod: {
@@ -170,6 +184,14 @@ export default {
     }
   },
   methods: {
+    createGraph: function (papers, relations) {
+      const nodes = papers.map(paper => ({ paper: paper, citing: [], citedBy: [] }))
+      relations.forEach(relation => {
+        nodes[relation.citing].citedBy.push(relation.citedBy)
+        nodes[relation.citedBy].citing.push(relation.citing)
+      })
+      return { nodes: nodes }
+    },
     scrollHorizontally: function (evt) {
       evt.preventDefault()
       let delta = evt.deltaX === 0 ? -evt.deltaY : -Math.sign(evt.deltaX) * Math.hypot(evt.deltaX, evt.deltaY)
@@ -181,6 +203,9 @@ export default {
     },
     getReferenceIds: function (relations, paperIndex) {
       return this.getRelations(relations, 'citedBy', paperIndex).map(relation => relation.citing)
+    },
+    getCitationIds: function (relations, paperIndex) {
+      return this.getRelations(relations, 'citing', paperIndex).map(relation => relation.citedBy)
     },
     getReferenceCount: function (relations, paperIndex) {
       return this.getRelations(relations, 'citedBy', paperIndex).length
@@ -305,11 +330,13 @@ export default {
       })
       return newColRows
     },
-    layoutByMethod: function (data, method) {
+    layoutByMethod: function (data, graph, method) {
       if (this.layoutMethod === 'layout-by-year') {
         return this.layoutByYears(data)
       } else if (this.layoutMethod === 'layout-by-reference-level') {
         return this.layoutByRefLevel(data)
+      } else if (this.layoutMethod === 'layout-by-optimized') {
+        return this.layoutByOptimized(data, graph)
       }
     },
     layoutByYears: function (data) {
@@ -332,6 +359,144 @@ export default {
         row: yearPapers[paper.year.toString()].indexOf(paper)
       }))
       return this.getNodesByColRows(data.references, colRows, data.relations)
+    },
+    layoutByRefLevel: function ({ paper, references, relations }) {
+      const refLevels = this.assignRefLevels(references, relations)
+      const colRows = this.paperColRowsFromRefLevels(refLevels)
+      return this.getNodesByColRows(references, colRows, relations)
+    },
+    layoutByOptimized: function ({ paper, references, relations }, graph) {
+      const refLevels = this.assignRefLevels(references, relations)
+      const citeLevels = this.assignCiteLevels(references, relations)
+      const colRows = this.paperColRowsFromRefCiteLevels(refLevels, citeLevels, graph)
+      return this.getNodesByColRows(references, colRows, relations)
+    },
+    paperColRowsFromRefCiteLevels: function (refLevels, citeLevels, graph) {
+      const paperIds = Object.keys(refLevels)
+      const maxRefLevel = Math.max(...paperIds.map(index => refLevels[index]))
+      const columnCount = maxRefLevel + 1
+      const paperColIntervals = paperIds.map(paperId => {
+        const refLevel = refLevels[paperId]
+        const citeLevel = citeLevels[paperId]
+        return {
+          min: citeLevel,
+          max: columnCount - 1 - refLevel
+        }
+      })
+
+      const years = graph.nodes.map(node => node.paper.year)
+      const sortedYears = years.slice()
+      sortedYears.sort()
+      let optimalYearRanges = []
+      for (let iCol = 0; iCol < columnCount; ++iCol) {
+        const loId = Math.round(iCol / columnCount * (years.length - 1))
+        const upId = Math.round((iCol + 1) / columnCount * (years.length - 1))
+        optimalYearRanges[iCol] = { min: sortedYears[loId], max: sortedYears[upId] }
+      }
+      // for (let iCol = 1; iCol < columnCount; ++iCol) {
+      //   const min = Math.max(optimalYearRanges[iCol].min, optimalYearRanges[iCol - 1].max + 1)
+      //   const max = Math.max(min, optimalYearRanges[iCol].max)
+      //   optimalYearRanges[iCol] = { min: min, max: max }
+      // }
+      // for (let iCol = columnCount - 2; iCol >= 0; --iCol) {
+      //   const max = Math.min(optimalYearRanges[iCol].max, optimalYearRanges[iCol + 1].min - 1)
+      //   const min = Math.min(max, optimalYearRanges[iCol].min)
+      //   optimalYearRanges[iCol] = { min: min, max: max }
+      // }
+      console.table(optimalYearRanges)
+
+      let sortedPaperIds = paperIds.slice()
+      let colIntervals = paperColIntervals.slice()
+      let grid = optimalYearRanges.map(() => ([]))
+      while (sortedPaperIds.length > 0) {
+        // console.table(grid)
+        sortedPaperIds.sort((a, b) => {
+          const aRange = colIntervals[a].max - colIntervals[a].min
+          const bRange = colIntervals[b].max - colIntervals[b].min
+          return aRange - bRange
+        })
+        for (let i = 0; i < sortedPaperIds.length; ++i) {
+          const paperId = sortedPaperIds[i]
+          const colInterval = colIntervals[paperId]
+          if (colInterval.min === colInterval.max) {
+            grid[colInterval.min].push(paperId)
+            continue
+          }
+          let yearErrors = []
+          for (let iCol = colInterval.min; iCol <= colInterval.max; ++iCol) {
+            const year = years[paperId]
+            const yearInterval = optimalYearRanges[iCol]
+            yearErrors[iCol] = Math.max(0, yearInterval.min - year, year - yearInterval.max)
+          }
+          const iCols = this.getMinIndexes(yearErrors)
+          if (paperId === '2') {
+            console.log(paperId, iCols, yearErrors, colInterval)
+          }
+          if (iCols.length === 1) {
+            const iCol = iCols[0]
+            grid[iCol].push(paperId)
+            colIntervals = this.updateColIntervals(paperId, iCol, graph, colIntervals)
+            sortedPaperIds = sortedPaperIds.slice(i + 1)
+            break
+          }
+          iCols.sort((a, b) => {
+            return grid[a].length - grid[b].length
+          })
+          const iCol = iCols[0]
+          grid[iCol].push(paperId)
+          colIntervals = this.updateColIntervals(paperId, iCol, graph, colIntervals)
+          sortedPaperIds = sortedPaperIds.slice(i + 1)
+          break
+        }
+      }
+
+      return this.gridToColRows(grid)
+    },
+    gridToColRows: function (grid) {
+      let colRows = {}
+      for (let iCol = 0; iCol < grid.length; ++iCol) {
+        const column = grid[iCol]
+        for (let iRow = 0; iRow < column.length; ++iRow) {
+          const paperId = column[iRow]
+          colRows[paperId] = { col: iCol, row: iRow }
+        }
+      }
+      return colRows
+    },
+    updateColIntervals: function (paperId, iCol, graph, colIntervals) {
+      let colInts = colIntervals.slice()
+      colInts[paperId] = { min: iCol, max: iCol }
+      graph.nodes[paperId].citing.forEach(citingId => {
+        let interval = colIntervals[citingId]
+        colInts[citingId] = {
+          min: interval.min,
+          max: Math.min(iCol - 1, interval.max)
+        }
+      })
+      graph.nodes[paperId].citedBy.forEach(citedById => {
+        let interval = colIntervals[citedById]
+        colInts[citedById] = {
+          min: Math.max(iCol + 1, interval.min),
+          max: interval.max
+        }
+      })
+      return colInts
+    },
+    getMinIndexes: function (numbers) {
+      let min = Number.MAX_SAFE_INTEGER
+      let indexes = []
+      numbers.forEach((num, iNum) => {
+        if (num === undefined) {
+          return
+        }
+        if (num < min) {
+          indexes = [ iNum ]
+          min = num
+        } else if (num === min) {
+          indexes.push(iNum)
+        }
+      })
+      return indexes
     },
     makeRect: function ({ left, top, width, height }) {
       return {
@@ -374,14 +539,24 @@ export default {
         colRow: colRows[paperId]
       }))
     },
-    layoutByRefLevel: function ({ paper, references, relations }) {
-      const refLevels = this.assignRefLevels(references, relations)
-      const colRows = this.paperColRowsFromRefLevels(refLevels)
-      return this.getNodesByColRows(references, colRows, relations)
+    assignCiteLevels: function (references, relations) {
+      let citeLevels = {}
+      const rootIds = this.getCiteRootIds(references, relations)
+      rootIds.forEach(paperId => { citeLevels[paperId] = 0 })
+      let bfsQueue = [].concat(rootIds)
+      while (bfsQueue.length > 0) {
+        const currId = bfsQueue.shift()
+        const citeIds = this.getCitationIds(relations, currId)
+        citeIds.forEach(paperId => {
+          citeLevels[paperId] = citeLevels[paperId] ? Math.max(citeLevels[currId] + 1, citeLevels[paperId]) : citeLevels[currId] + 1
+          bfsQueue.push(paperId)
+        })
+      }
+      return citeLevels
     },
     assignRefLevels: function (references, relations) {
       let refLevels = {}
-      const rootIds = this.getRootIds(references, relations)
+      const rootIds = this.getRefRootIds(references, relations)
       rootIds.forEach(paperId => { refLevels[paperId] = 0 })
       let bfsQueue = [].concat(rootIds)
       while (bfsQueue.length > 0) {
@@ -394,9 +569,14 @@ export default {
       }
       return refLevels
     },
-    getRootIds: function (references, relations) {
+    getRefRootIds: function (references, relations) {
       const paperIds = references.map((paper, index) => index)
       const rootIds = paperIds.filter(paperId => this.getCitationCount(relations, paperId) === 0)
+      return rootIds
+    },
+    getCiteRootIds: function (references, relations) {
+      const paperIds = references.map((paper, index) => index)
+      const rootIds = paperIds.filter(paperId => this.getReferenceCount(relations, paperId) === 0)
       return rootIds
     },
     paperColRowsFromRefLevels: function (refLevels) {
@@ -413,6 +593,18 @@ export default {
         columnCounters[colId] = rowId + 1
       })
       return colRows
+    },
+    findColWithMinRows: function (columnCounters, colInterval) {
+      let minColId = Number.MAX_SAFE_INTEGER
+      let minRowCount = Number.MAX_SAFE_INTEGER
+      for (let colId = colInterval.min; colId <= colInterval.max; ++colId) {
+        const rowCount = columnCounters[colId] ? columnCounters[colId] : 0
+        if (rowCount < minRowCount) {
+          minColId = colId
+          minRowCount = columnCounters[colId]
+        }
+      }
+      return minColId
     },
     getColRowByRect: function (rect) {
       const col = Math.floor((rect.center.x + 0.5 * this.nodeSpacing) / (this.colWidth + this.nodeSpacing))
