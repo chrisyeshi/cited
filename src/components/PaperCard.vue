@@ -1,5 +1,8 @@
 <template>
-  <div class="paper-card" v-bind:index="paper.index" v-bind:class="{ animate: !isDragging, 'front-most': isDragging }" v-bind:style="cardStyle">
+  <div class="paper-card"
+    v-bind:index="paper.index"
+    v-bind:class="{ animate: !isDragging, 'front-most': isDragging }"
+    v-bind:style="cardStyle">
     <div class="header" v-bind:style="{ height: paper.headerHeight + 'px' }">
       <span class="header-references"
         v-on:mouseover="$emit('mouseoverrefcount', paper.key)"
@@ -22,28 +25,34 @@ export default {
   name: 'PaperCard',
   props: {
     paper: Object,
+    autoHeight: {
+      type: Boolean,
+      default: true
+    },
     draggable: {
       type: Boolean,
       default: true
     },
-    lineCount: {
+    maxLineCount: {
       type: Number,
-      default: 4
+      default: 5
     }
   },
   data () {
     return {
-      isDragging: false
+      isDragging: false,
+      rect: { ...this.paper.rect }
     }
   },
   computed: {
     cardStyle: function () {
-      return {
-        left: this.paper.rect.left + 'px',
-        top: this.paper.rect.top + 'px',
-        width: this.paper.rect.width + 'px',
-        height: this.paper.rect.height + 'px'
+      const style = {
+        left: this.rect.left + 'px',
+        top: this.rect.top + 'px',
+        width: this.rect.width + 'px'
       }
+      const height = { height: this.rect.height + 'px' }
+      return this.autoHeight ? style : { ...style, ...height }
     },
     lines: function () {
       let createLineObj = (classes, text) => {
@@ -54,25 +63,25 @@ export default {
       }
       let authorList = this.paper.authors.split(/, |, and | and /)
       let shortAuthors = authorList.length < 2 ? authorList[0] : authorList[0] + ' +' + (authorList.length - 1)
-      if (this.lineCount < 2) {
+      if (this.maxLineCount < 2) {
         return [
           createLineObj('line-clamp-1', shortAuthors + ', ' + this.paper.year + ', "' + this.paper.citationCount)
         ]
       }
-      if (this.lineCount < 3) {
+      if (this.maxLineCount < 3) {
         return [
           createLineObj('line-clamp-1', this.paper.title),
           createLineObj('line-clamp-1', shortAuthors + ', ' + this.paper.year + ', "' + this.paper.citationCount)
         ]
       }
-      if (this.lineCount < 4) {
+      if (this.maxLineCount < 4) {
         return [
           createLineObj('line-clamp-1', this.paper.title),
           createLineObj('line-clamp-1', this.paper.authors),
           createLineObj('line-clamp-1', 'Published in ' + this.paper.year + ', Cited by ' + this.paper.citationCount)
         ]
       }
-      if (this.lineCount < 5) {
+      if (this.maxLineCount < 5) {
         return [
           createLineObj('line-clamp-2', this.paper.title),
           createLineObj('line-clamp-1', this.paper.authors),
@@ -102,6 +111,11 @@ export default {
       })
     }
   },
+  watch: {
+    paper: function (curr, prev) {
+      this.rect = { ...curr.rect }
+    }
+  },
   methods: {
     dragElement: function (evt) {
       if (!this.draggable) {
@@ -114,15 +128,18 @@ export default {
         this.isDragging = false
         document.onmouseup = null
         document.onmousemove = null
-        this.$emit('dragend', this.paper, evt)
+        const paper = {
+          ...this.paper,
+          rect: { ...this.rect }
+        }
+        this.$emit('update:paper', paper)
+        this.$emit('dragend', paper, evt)
       }
       let elementDrag = evt => {
-        let node = this.paper
         let xCurr = evt.clientX
         let yCurr = evt.clientY
-        node.rect.left += (xCurr - xPrev)
-        node.rect.top += (yCurr - yPrev)
-        this.$emit('update:paper', node)
+        this.rect.left += (xCurr - xPrev)
+        this.rect.top += (yCurr - yPrev)
         xPrev = xCurr
         yPrev = yCurr
       }

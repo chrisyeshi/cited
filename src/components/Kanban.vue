@@ -403,8 +403,6 @@ export default {
       //   const min = Math.min(max, optimalYearRanges[iCol].min)
       //   optimalYearRanges[iCol] = { min: min, max: max }
       // }
-      console.table(optimalYearRanges)
-
       let sortedPaperIds = paperIds.slice()
       let colIntervals = paperColIntervals.slice()
       let grid = optimalYearRanges.map(() => ([]))
@@ -429,9 +427,6 @@ export default {
             yearErrors[iCol] = Math.max(0, yearInterval.min - year, year - yearInterval.max)
           }
           const iCols = this.getMinIndexes(yearErrors)
-          if (paperId === '2') {
-            console.log(paperId, iCols, yearErrors, colInterval)
-          }
           if (iCols.length === 1) {
             const iCol = iCols[0]
             grid[iCol].push(paperId)
