@@ -35,7 +35,8 @@
           <paper-card
             ref="paperCards"
             v-for="node in nodes" v-bind:key="node.key"
-            v-bind:paper.sync="node"
+            v-bind:paper="node"
+            v-on:update:paper="updateNode($event)"
             v-on:mouseoverrefcount="handleMouseOverRefCount($event)"
             v-on:mouseoutrefcount="handleMouseOutRefCount($event)"
             v-on:clickrefcount="handleClickRefCount($event)"
@@ -55,6 +56,7 @@
 <script>
 import PaperCard from './PaperCard.vue'
 import { create as createRect } from './rect.js'
+import * as layout from './gridbasedlayout.js'
 
 export default {
   name: 'Kanban',
@@ -65,8 +67,9 @@ export default {
     this.$http.get('/static/insitupdf.json').then(function (res) {
       this.data = res.body
       this.paper = this.data.paper
-      this.graph = this.createGraph(this.data.references, this.data.relations)
       this.heights = new Array(this.data.references.length).fill(this.nodeHeight)
+      this.headerHeights = new Array(this.data.references.length).fill(0)
+      this.graph = this.createGraph(this.data.references, this.data.relations)
       this.nodes = this.layoutByMethod(this.data, this.graph, this.layoutMethod)
     })
     this.colWidth = 300
@@ -107,11 +110,11 @@ export default {
           key: index,
           citedBy: {
             x: citedBy.rect.left,
-            y: citedBy.rect.top + citedBy.headerHeight / 2
+            y: citedBy.rect.top + this.headerHeights[relation.citedBy] / 2
           },
           citing: {
             x: citing.rect.right,
-            y: citing.rect.top + citing.headerHeight / 2
+            y: citing.rect.top + this.headerHeights[relation.citing] / 2
           }
         }
       })
@@ -122,11 +125,11 @@ export default {
         let citing = this.nodes[relation.citing]
         const start = {
           x: citedBy.rect.left,
-          y: citedBy.rect.top + citedBy.headerHeight / 2
+          y: citedBy.rect.top + this.headerHeights[relation.citedBy] / 2
         }
         const end = {
           x: citing.rect.right,
-          y: citing.rect.top + citing.headerHeight / 2
+          y: citing.rect.top + this.headerHeights[relation.citing] / 2
         }
         const interpolate = (beg, end, ratio) => {
           return ratio * (end - beg) + beg
@@ -308,31 +311,8 @@ export default {
       const newColRows = this.moveColRow(oldColRows, node.key, newColRow)
       this.nodes = this.getNodesByColRows(this.data.references, newColRows, this.heights, this.data.relations)
     },
-    colRowsToGrid: function (colRows) {
-      let grid = []
-      Object.keys(colRows).forEach(pid => {
-        const colRow = colRows[pid]
-        grid[colRow.col] = grid[colRow.col] === undefined ? [] : grid[colRow.col]
-        grid[colRow.col][colRow.row] = pid
-      })
-      grid.forEach((column, index) => {
-        grid[index] = column === undefined ? [] : column
-      })
-      return grid
-    },
-    gridToColRows: function (grid) {
-      let colRows = {}
-      for (let iCol = 0; iCol < grid.length; ++iCol) {
-        const column = grid[iCol]
-        for (let iRow = 0; iRow < column.length; ++iRow) {
-          const paperId = column[iRow]
-          colRows[paperId] = { col: iCol, row: iRow }
-        }
-      }
-      return colRows
-    },
     moveColRow: function (oldColRows, paperId, newColRow) {
-      let grid = this.colRowsToGrid(oldColRows)
+      let grid = layout.toPaperGrid(oldColRows)
       const oldColRow = oldColRows[paperId]
       grid[oldColRow.col][oldColRow.row] = undefined
       grid[newColRow.col].splice(newColRow.row, 0, paperId)
@@ -341,13 +321,13 @@ export default {
         return newCol
       })
       const newGrid = tempGrid.filter(col => col.length !== 0)
-      return this.gridToColRows(newGrid)
+      return layout.toPaperColRows(newGrid)
     },
     layoutByMethod: function (data, graph, method) {
       if (this.layoutMethod === 'layout-by-year') {
         return this.layoutByYears(data)
       } else if (this.layoutMethod === 'layout-by-reference-level') {
-        return this.layoutByRefLevel(data)
+        return this.layoutByRefLevel(data, graph)
       } else if (this.layoutMethod === 'layout-by-optimized') {
         return this.layoutByOptimized(data, graph)
       }
@@ -373,15 +353,15 @@ export default {
       }))
       return this.getNodesByColRows(data.references, colRows, this.heights, data.relations)
     },
-    layoutByRefLevel: function ({ paper, references, relations }) {
-      const refLevels = this.assignRefLevels(references, relations)
-      const colRows = this.paperColRowsFromRefLevels(refLevels)
+    layoutByRefLevel: function ({ paper, references, relations }, graph) {
+      const citedByLevels = layout.getPaperCitedByLevels(graph)
+      const colRows = this.paperColRowsFromRefLevels(citedByLevels)
       return this.getNodesByColRows(references, colRows, this.heights, relations)
     },
     layoutByOptimized: function ({ paper, references, relations }, graph) {
-      const refLevels = this.assignRefLevels(references, relations)
-      const citeLevels = this.assignCiteLevels(references, relations)
-      const colRows = this.paperColRowsFromRefCiteLevels(refLevels, citeLevels, graph)
+      const citedByLevels = layout.getPaperCitedByLevels(graph)
+      const citingLevels = layout.getPaperCitingLevels(graph)
+      const colRows = this.paperColRowsFromRefCiteLevels(citedByLevels, citingLevels, graph)
       return this.getNodesByColRows(references, colRows, this.heights, relations)
     },
     paperColRowsFromRefCiteLevels: function (refLevels, citeLevels, graph) {
@@ -458,7 +438,7 @@ export default {
         }
       }
 
-      return this.gridToColRows(grid)
+      return layout.toPaperColRows(grid)
     },
     updateColIntervals: function (paperId, iCol, graph, colIntervals) {
       let colInts = colIntervals.slice()
@@ -496,7 +476,7 @@ export default {
       return indexes
     },
     getNodesByColRows: function (papers, colRows, heights, relations) {
-      const grid = this.colRowsToGrid(colRows)
+      const grid = layout.toPaperGrid(colRows)
       let nodes = []
       grid.forEach((column, iCol) => {
         let top = 0
@@ -518,43 +498,12 @@ export default {
               top: top,
               width: this.colWidth,
               height: height
-            }),
-            headerHeight: 20
+            })
           }
           top += height + this.nodeSpacing
         })
       })
       return nodes
-    },
-    assignCiteLevels: function (references, relations) {
-      let citeLevels = {}
-      const rootIds = this.getCiteRootIds(references, relations)
-      rootIds.forEach(paperId => { citeLevels[paperId] = 0 })
-      let bfsQueue = [].concat(rootIds)
-      while (bfsQueue.length > 0) {
-        const currId = bfsQueue.shift()
-        const citeIds = this.getCitationIds(relations, currId)
-        citeIds.forEach(paperId => {
-          citeLevels[paperId] = citeLevels[paperId] ? Math.max(citeLevels[currId] + 1, citeLevels[paperId]) : citeLevels[currId] + 1
-          bfsQueue.push(paperId)
-        })
-      }
-      return citeLevels
-    },
-    assignRefLevels: function (references, relations) {
-      let refLevels = {}
-      const rootIds = this.getRefRootIds(references, relations)
-      rootIds.forEach(paperId => { refLevels[paperId] = 0 })
-      let bfsQueue = [].concat(rootIds)
-      while (bfsQueue.length > 0) {
-        const currId = bfsQueue.shift()
-        const refIds = this.getReferenceIds(relations, currId)
-        refIds.forEach(paperId => {
-          refLevels[paperId] = refLevels[paperId] ? Math.max(refLevels[currId] + 1, refLevels[paperId]) : refLevels[currId] + 1
-          bfsQueue.push(paperId)
-        })
-      }
-      return refLevels
     },
     getRefRootIds: function (references, relations) {
       const paperIds = references.map((paper, index) => index)
@@ -596,7 +545,7 @@ export default {
     getColRowByRect: function (nodes, rect) {
       const col = Math.floor((rect.center.x + 0.5 * this.nodeSpacing) / (this.colWidth + this.nodeSpacing))
       const colRows = nodes.map(node => node.colRow)
-      const grid = this.colRowsToGrid(colRows)
+      const grid = layout.toPaperGrid(colRows)
       const column = grid[col]
       if (rect.center.y <= nodes[column[0]].rect.center.y) {
         return { col: col, row: 0 }
@@ -630,6 +579,9 @@ export default {
         rects[paperId] = this.getRectFromColRow(colRows[paperId])
       })
       return rects
+    },
+    updateNode: function (node) {
+      this.$set(this.nodes, node.key, node)
     }
   },
   mounted () {
@@ -637,10 +589,13 @@ export default {
     // TODO: nextTick being useless? come on vue...
     setTimeout(() => {
       let heights = []
+      let headerHeights = []
       vm.$refs.paperCards.forEach(card => {
         heights[card.paper.key] = card.$el.clientHeight
+        headerHeights[card.paper.key] = card.$refs.header.clientHeight
       })
       this.heights = heights
+      this.headerHeights = headerHeights
       this.nodes = this.layoutByMethod(this.data, this.graph, this.layoutMethod)
     })
   }

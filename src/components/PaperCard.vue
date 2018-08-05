@@ -3,7 +3,7 @@
     v-bind:index="paper.index"
     v-bind:class="{ animate: !isDragging, 'front-most': isDragging }"
     v-bind:style="cardStyle">
-    <div class="header" v-bind:style="{ height: paper.headerHeight + 'px' }">
+    <div class="header" ref="header">
       <span class="header-references"
         v-on:mouseover="$emit('mouseoverrefcount', paper.key)"
         v-on:mouseout="$emit('mouseoutrefcount', paper.key)"
@@ -141,6 +141,11 @@ export default {
         let yCurr = evt.clientY
         this.rect.left += (xCurr - xPrev)
         this.rect.top += (yCurr - yPrev)
+        const paper = {
+          ...this.paper,
+          rect: createRect(this.rect)
+        }
+        this.$emit('update:paper', paper)
         xPrev = xCurr
         yPrev = yCurr
       }
@@ -202,13 +207,12 @@ export default {
 .header-bar {
   order: 0;
   flex-grow: 1;
-  height: 100%;
 }
 
 .header {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
   background-color: gray;
 }
 
