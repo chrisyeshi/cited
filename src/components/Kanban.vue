@@ -94,6 +94,7 @@ export default {
       this.paper = this.data.paper
       this.graph = createGraph(this.data.references, this.data.relations)
       this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
+      this.nextTickLayoutPaperCards()
     })
     this.colWidth = 300
     this.nodeSpacing = 20
@@ -228,7 +229,7 @@ export default {
       Promise.all(dois.map(doi => api.getPaperByDOI(doi))).then(papers => {
         this.graph = compileGraph(papers)
         this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
-        this.delayedLayoutPaperCards()
+        this.nextTickLayoutPaperCards()
       })
     },
     scrollHorizontally: function (evt) {
@@ -416,20 +417,20 @@ export default {
     updateNode: function (node) {
       this.$set(this.nodes, node.key, node)
     },
-    delayedLayoutPaperCards: function () {
-      setTimeout(() => {
-        this.$refs.paperCards.forEach(card => {
-          this.graph.nodes[card.paper.key].geo = {
-            height: card.$el.clientHeight,
-            headerHeight: card.$refs.header.clientHeight
-          }
-        })
+    nextTickLayoutPaperCards: function () {
+      this.$nextTick().then(() => {
+        this.updateGeos()
         this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
       })
+    },
+    updateGeos: function () {
+      this.$refs.paperCards.forEach(card => {
+        this.graph.nodes[card.paper.key].geo = {
+          height: card.$el.clientHeight,
+          headerHeight: card.$refs.header.clientHeight
+        }
+      })
     }
-  },
-  mounted () {
-    this.delayedLayoutPaperCards()
   }
 }
 
