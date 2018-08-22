@@ -1,7 +1,7 @@
 
 export function getColRowsByYears (nodes) {
   const years = nodes.map(node => node.paper.year)
-  let onlyUnique = (value, index, self) => self.includes(value)
+  let onlyUnique = (value, index, self) => self.indexOf(value) === index
   let yearUniqueNum = years.filter(onlyUnique).sort((a, b) => a - b)
   let yearUniqueStr = yearUniqueNum.map(year => year.toString())
   let yearPapers = {}
@@ -70,7 +70,8 @@ export function getColRowsByOptimalYearIntervals (nodes) {
       const bRange = colIntervals[b].max - colIntervals[b].min
       return aRange - bRange
     })
-    for (let i = 0; i < sortedPaperIds.length; ++i) {
+    let i = 0
+    for (; i < sortedPaperIds.length; ++i) {
       const paperId = sortedPaperIds[i]
       const colInterval = colIntervals[paperId]
       if (colInterval.min === colInterval.max) {
@@ -88,7 +89,6 @@ export function getColRowsByOptimalYearIntervals (nodes) {
         const iCol = iCols[0]
         grid[iCol].push(paperId)
         colIntervals = updateColIntervals(paperId, iCol, nodes, colIntervals)
-        sortedPaperIds = sortedPaperIds.slice(i + 1)
         break
       }
       iCols.sort((a, b) => {
@@ -97,9 +97,9 @@ export function getColRowsByOptimalYearIntervals (nodes) {
       const iCol = iCols[0]
       grid[iCol].push(paperId)
       colIntervals = updateColIntervals(paperId, iCol, nodes, colIntervals)
-      sortedPaperIds = sortedPaperIds.slice(i + 1)
       break
     }
+    sortedPaperIds = sortedPaperIds.slice(i + 1)
   }
 
   return toPaperColRows(grid)

@@ -1,5 +1,29 @@
 <template>
-  <div>
+  <v-app>
+    <v-navigation-drawer absolute stateless hide-overlay v-model="isDrawerVisible" v-bind:width=600 style="overflow: visible;">
+      <v-btn class="drawer-collapse-button" absolute v-on:click="isDrawerVisible = !isDrawerVisible">
+        <v-icon>{{ isDrawerVisible ? 'arrow_left' : 'arrow_right' }}</v-icon>
+      </v-btn>
+      <v-toolbar flat>
+        <v-text-field hide-details single-line clearable
+          placeholder="search paper name"
+          v-on:change="search(searchText)"
+          v-model="searchText">
+        </v-text-field>
+        <v-btn icon v-on:click="search(searchText)">
+          <v-icon>search</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-list>
+        <v-list-tile
+          v-for="paper in searchResults" v-bind:key="paper.doi"
+          v-on:click="selectSearchResult(paper)">
+          <v-list-tile-content>
+            {{ paper.title }}
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
     <div class="header">
       <v-card class="elevation-0">
         <v-card-title primary-title>
@@ -50,13 +74,14 @@
         </svg>
       </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script>
 import PaperCard from './PaperCard.vue'
 import { create as createRect } from './rect.js'
 import * as layout from './gridbasedlayout.js'
+import * as api from './crossref.js'
 
 export default {
   name: 'Kanban',
@@ -82,7 +107,10 @@ export default {
       visiblePaperRefLinks: [],
       visiblePaperCiteLinks: [],
       layoutMethod: 'layout-by-optimized',
-      showLinkMethod: 'show-link-hover'
+      showLinkMethod: 'show-link-hover',
+      isDrawerVisible: true,
+      searchText: '',
+      searchResults: []
     }
   },
   watch: {
@@ -189,6 +217,20 @@ export default {
     }
   },
   methods: {
+    search: function (text) {
+      api.search(text).then(papers => {
+        this.searchResults = papers
+      })
+    },
+    selectSearchResult: function (paper) {
+      this.paper = paper
+      const dois = this.paper.references.map(ref => ref.doi)
+      Promise.all(dois.map(doi => api.getPaperByDOI(doi))).then(papers => {
+        this.graph = compileGraph(papers)
+        this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
+        this.delayedLayoutPaperCards()
+      })
+    },
     scrollHorizontally: function (evt) {
       evt.preventDefault()
       let delta = evt.deltaX === 0 ? -evt.deltaY : -Math.sign(evt.deltaX) * Math.hypot(evt.deltaX, evt.deltaY)
@@ -373,20 +415,21 @@ export default {
     },
     updateNode: function (node) {
       this.$set(this.nodes, node.key, node)
+    },
+    delayedLayoutPaperCards: function () {
+      setTimeout(() => {
+        this.$refs.paperCards.forEach(card => {
+          this.graph.nodes[card.paper.key].geo = {
+            height: card.$el.clientHeight,
+            headerHeight: card.$refs.header.clientHeight
+          }
+        })
+        this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
+      })
     }
   },
   mounted () {
-    let vm = this
-    // TODO: nextTick being useless? come on vue...
-    setTimeout(() => {
-      vm.$refs.paperCards.forEach(card => {
-        this.graph.nodes[card.paper.key].geo = {
-          height: card.$el.clientHeight,
-          headerHeight: card.$refs.header.clientHeight
-        }
-      })
-      this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
-    })
+    this.delayedLayoutPaperCards()
   }
 }
 
@@ -409,6 +452,37 @@ function createGraph (papers, relations) {
     nodes[relation.citing].citedBy.push(relation.citedBy)
     nodes[relation.citedBy].citing.push(relation.citing)
   })
+  return { nodes: nodes }
+}
+
+function compileGraph (papers) {
+  const nodes = papers.map(paper => ({
+    paper: paper,
+    citing: [],
+    citedBy: [],
+    geo: { height: 0, headerHeight: 0 }
+  }))
+  papers.forEach((paper, paperId) => {
+    const references = paper.references
+    const refDois = references.map(ref => ref.doi)
+    const inNetworkReferences = refDois.map(doi => {
+      if (doi === undefined) {
+        return null
+      }
+      return nodes.findIndex(node => {
+        return doi === node.paper.doi
+      })
+    })
+    nodes[paperId].citing = inNetworkReferences.filter(value => {
+      return value !== undefined && value !== null && value !== -1
+    })
+  })
+  nodes.forEach((node, citedBy) => {
+    node.citing.forEach(citing => {
+      nodes[citing].citedBy.push(citedBy)
+    })
+  })
+  // console.log(nodes)
   return { nodes: nodes }
 }
 
@@ -475,5 +549,18 @@ function createGraph (papers, relations) {
 
 .header {
   display: flex;
+}
+
+.drawer-collapse-button {
+  left: 100%;
+  top: 10px;
+  width: 22px;
+  height: 48px;
+  min-width: 0px;
+  padding: 0px;
+}
+
+.drawer-collapse-button .v-icon {
+  font-size: 22px;
 }
 </style>
