@@ -1,31 +1,55 @@
-import * as d3 from 'd3'
-export default function Circo (papers, relations, container) {
-  var diameter = 960
-  var radius = diameter / 2
-  // var innerRadius = radius - 120
-  var paperTotal = papers.length - 1
+import {select as d3Select} from 'd3-selection'
+import {lineRadial, curveBundle} from 'd3-shape'
+import {scaleLinear} from 'd3-scale'
+
+export default function Circo ({
+  papers, relations, containerId
+}) {
+  let container = d3Select(containerId)
+  let cnode = container.node()
+  let width = cnode.clientWidth
+  let height = cnode.clientHeight
+  let diameter = Math.min(width, height)
+  let radius = diameter / 2
+  let innerRadius = radius - 150
+  let paperTotal = papers.length
+
   papers.forEach(function (paper, pi) {
-    paper.x = radius / 2 * Math.cos(pi / paperTotal * Math.PI * 2)
-    paper.y = radius / 2 * Math.sin(pi / paperTotal * Math.PI * 2)
-    paper.angle = pi / paperTotal * 360
+    paper.x = innerRadius * Math.cos(pi / paperTotal * Math.PI * 2)
+    paper.y = innerRadius * Math.sin(pi / paperTotal * Math.PI * 2)
+    paper.angle = (pi + 0.25) / paperTotal * 360
+    paper.radius = innerRadius
   })
-  var line = d3.radialLine()
-    // .curve(d3.curveBundle.beta(0.85))
-    .radius(radius / 2)
-    .angle(function (d) {
-      return d.angle * Math.PI / 180
-    })
-  var svg = d3.select(container).append('svg')
+
+  let line = lineRadial()
+    .curve(curveBundle.beta(0.5))
+    .radius(d => d.radius - 10)
+    .angle(d => d.angle * Math.PI / 180)
+
+  let svg = container.append('svg')
     .attr('width', diameter)
     .attr('height', diameter)
     .append('g')
-    .attr('transform', 'translate(' + radius + ',' + radius + ')')
+    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 
-  var link = svg.append('g').selectAll('.link')
-  var node = svg.append('g').selectAll('.node')
+  let link = svg.append('g').selectAll('.link')
+  let node = svg.append('g').selectAll('.node')
 
-  var references = relations.map(function (ref) {
-    return [papers[ref.citedBy], papers[ref.citing]]
+  let citationExtent = [
+    Math.min(...papers.map(d => d.citationCount)),
+    Math.max(...papers.map(d => d.citationCount))
+  ]
+
+  let setNodeSize = scaleLinear()
+    .domain(citationExtent)
+    .range([5, 20])
+
+  let references = relations.map((ref) => {
+    return [
+      papers[ref.citedBy],
+      {angle: 0, radius: 0}, // curve midpoint
+      papers[ref.citing]
+    ]
   })
 
   link
@@ -42,7 +66,9 @@ export default function Circo (papers, relations, container) {
 
   node.append('circle')
     .attr('class', 'node')
-    .attr('r', 10)
+    .attr('cx', d => -10 * Math.cos(d.angle * Math.PI / 180))
+    .attr('cy', d => -10 * Math.sin(d.angle * Math.PI / 180))
+    .attr('r', d => setNodeSize(d.citationCount))
 
   node.append('text')
     .attr('dy', '0.31em')
@@ -54,6 +80,7 @@ export default function Circo (papers, relations, container) {
     })
 
     .text(function (d) {
-      return d.title.substring(0, 10)
+      return d.authors.replace('and', ',').split(',')[0] + ' et. al ' + d.year
+      // return d.title.substring(0, 10)
     })
 }
