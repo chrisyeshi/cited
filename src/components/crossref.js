@@ -2,8 +2,10 @@ import axios from 'axios'
 
 const crossref = 'https://api.crossref.org'
 const mailto = 'chrisyeshi@gmail.com'
-const hasReferences = 'has-references:true'
-const referenceVisibility = 'reference-visibility:open'
+// const hasReferences = 'has-references:true'
+// const referenceVisibility = 'reference-visibility:open'
+const hasReferences = ''
+const referenceVisibility = ''
 
 export function search (text) {
   const url = `${crossref}/works?mailto=${mailto}&filter=${hasReferences},${referenceVisibility}&query=${text}`

@@ -8,13 +8,13 @@
         v-on:mouseover="$emit('mouseoverrefcount', paper.key)"
         v-on:mouseout="$emit('mouseoutrefcount', paper.key)"
         v-on:click="$emit('clickrefcount', paper.key)"
-        v-bind:style="{ 'background-color': inNetworkReferenceColor }">&lt; {{ paper.inNetworkReferenceCount }}</span>
+        v-bind:style="{ 'background-color': inNetworkReferenceColor }">&lt; {{ paper.inNetworkReferenceCount }} / {{ paper.referenceCount }}</span>
       <span class="header-bar" v-on:mousedown="dragElement"></span>
       <span class="header-citations"
         v-on:mouseover="$emit('mouseovercitecount', paper.key)"
         v-on:mouseout="$emit('mouseoutcitecount', paper.key)"
         v-on:click="$emit('clickcitecount', paper.key)"
-        v-bind:style="{ 'background-color': inNetworkCitationColor }">{{ paper.inNetworkCitationCount }} &gt;</span>
+        v-bind:style="{ 'background-color': inNetworkCitationColor }">{{ paper.inNetworkCitationCount }} / {{ paper.citationCount }} &gt;</span>
     </div>
     <div v-bind:class="line.classes" v-for="(line, index) in lines" v-bind:key="index">{{ line.text }}</div>
   </div>

@@ -16,11 +16,16 @@
       </v-toolbar>
       <v-list>
         <v-list-tile
-          v-for="paper in searchResults" v-bind:key="paper.doi"
-          v-on:click="selectSearchResult(paper)">
+          v-for="paper in searchResults" v-bind:key="paper.doi">
           <v-list-tile-content>
             {{ paper.title }}
           </v-list-tile-content>
+          <v-list-tile-action>
+            <v-icon v-bind:color="paper.references.length > 0 ? 'teal' : 'grey'" v-on:click="selectSearchResult(paper)">view_week</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-action>
+            <v-icon v-bind:color="paper.references.length > 0 ? 'teal' : 'grey'" v-on:click="addSearchResult(paper)">plus_one</v-icon>
+          </v-list-tile-action>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
@@ -232,6 +237,11 @@ export default {
         this.nextTickLayoutPaperCards()
       })
     },
+    addSearchResult: function (paper) {
+      this.graph = addToGraph(this.graph, paper)
+      this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
+      this.nextTickLayoutPaperCards()
+    },
     scrollHorizontally: function (evt) {
       evt.preventDefault()
       let delta = evt.deltaX === 0 ? -evt.deltaY : -Math.sign(evt.deltaX) * Math.hypot(evt.deltaX, evt.deltaY)
@@ -265,6 +275,7 @@ export default {
       }
     },
     handleClickRefCount: function (paperIndex) {
+      // show/hide links
       if (this.showLinkMethod === 'show-link-click') {
         const set = new Set(this.visiblePaperRefLinks)
         if (set.has(paperIndex)) {
@@ -274,6 +285,20 @@ export default {
         }
         this.visiblePaperRefLinks = Array.from(set)
       }
+      // show all references in search panel
+      const paper = this.graph.nodes[paperIndex].paper
+      const dois = paper.references.map(ref => ref.doi)
+      const promises = dois.map(doi => {
+        return api.getPaperByDOI(doi).then(response => {
+          return response
+        }).catch(() => {
+          return null
+        })
+      })
+      Promise.all(promises).then(responses => {
+        const papers = responses.filter(res => res !== null)
+        this.searchResults = papers
+      })
     },
     handleMouseOverCiteCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-hover') {
@@ -367,6 +392,7 @@ export default {
             title: paper.title,
             authors: paper.authors,
             year: paper.year,
+            referenceCount: paper.references.length,
             citationCount: paper.citationCount,
             inNetworkReferenceCount: this.graph.nodes[paperId].citing.length,
             inNetworkCitationCount: this.graph.nodes[paperId].citedBy.length,
@@ -453,6 +479,9 @@ function createGraph (papers, relations) {
     nodes[relation.citing].citedBy.push(relation.citedBy)
     nodes[relation.citedBy].citing.push(relation.citing)
   })
+  nodes.forEach(node => {
+    node.paper.references = node.citing
+  })
   return { nodes: nodes }
 }
 
@@ -485,6 +514,41 @@ function compileGraph (papers) {
   })
   // console.log(nodes)
   return { nodes: nodes }
+}
+
+function addToGraph (graph, paper) {
+  const node = {
+    paper: paper,
+    citing: [],
+    citedBy: [],
+    geo: { height: 0, headerHeight: 0 }
+  }
+  const paperId = graph.nodes.push(node) - 1
+  // citing
+  const refDois = paper.references.map(ref => ref.doi)
+  const inNetworkReferences = refDois.map(doi => {
+    if (doi === undefined) {
+      return null
+    }
+    return graph.nodes.findIndex(node => {
+      return doi === node.paper.doi
+    })
+  })
+  node.citing = inNetworkReferences.filter(value => {
+    return value !== undefined && value !== null && value !== -1
+  })
+  node.citing.forEach(citing => {
+    graph.nodes[citing].citedBy.push(paperId)
+  })
+  // citedBy
+  graph.nodes.forEach((eachNode, eachNodeId) => {
+    const refDois = eachNode.paper.references.map(ref => ref.doi)
+    if (refDois.includes(paper.doi)) {
+      eachNode.citing.push(paperId)
+      node.citedBy.push(eachNodeId)
+    }
+  })
+  return graph
 }
 
 </script>

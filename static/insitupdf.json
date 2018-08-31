@@ -8,203 +8,174 @@
 },
 "references": [
     {
-        "tempId": 0,
         "title": "Scientific discovery at the exascale. report from the DOE ASCR 2011",
         "journal": "workshop on exascale data management",
         "year": 2011,
         "citationCount": 25,
         "authors": "S. Ahern, A. Shoshani, K.-L. Ma, A. Choudhary, T. Critchlow, S. Klasky, V. Pascucci, J. Ahrens, E. W. Bethel, H. Childs, et al."
     }, {
-        "tempId": 1,
         "title": "An image-based approach to extreme scale in situ visualization and analysis",
         "journal": "SC",
         "year": 2014,
         "citationCount": 80,
         "authors": "J. Ahrens, S. Jourdain, P. O’Leary, J. Patchett, D. H. Rogers, and M. Petersen"
     }, {
-        "tempId": 2,
         "title": "Paraview catalyst: Enabling in situ data analysis and visualization",
         "journal": "ISAV",
         "year": 2015,
         "citationCount": 29,
         "authors": "U. Ayachit, A. Bauer, B. Geveci, P. O’Leary, K. Moreland, N. Fabian, and J. Mauldin"
     }, {
-        "tempId": 3,
         "title": "Contour tree depth images for large data visualization",
         "journal": "EGPGV",
         "year": 2015,
         "citationCount": 6,
         "authors": "T. Biedert and C. Garth"
     }, {
-        "tempId": 4,
         "title": "Terascale direct numerical simulations of turbulent combustion using S3D",
         "journal": "Computational Science & Discovery",
         "year": 2009,
         "citationCount": 427,
         "authors": "J. H. Chen, A. Choudhary, B. De Supinski, M. DeVries, E. R. Hawkes, S. Klasky, W. Liao, K.-L. Ma, J. Mellor-Crummey, N. Podhorszki, et al."
     }, {
-        "tempId": 5,
         "title": "In situ processing",
         "journal": "High Performance Visualization: Enabling Extreme-Scale Scientific Insight",
         "year": 2012,
         "citationCount": 19,
         "authors": "H. Childs, K.-L. Ma, H. Yu, B. Whitlock, J. Meredith, J. Favre, S. Klasky, N. Podhorszki, K. Schwan, M. Wolf, M. Parashar, and F. Zhang"
     }, {
-        "tempId": 6,
         "title": "Damaris/viz: a nonintrusive, adaptable and user-friendly in situ visualization framework",
         "journal": "LDAV",
         "year": 2013,
         "citationCount": 33,
         "authors": "M. Dorier, R. R. Sisneros, T. Peterka, G. Antoniu, and D. B. Semeraro"
     }, {
-        "tempId": 7,
         "title": "Space-time volumetric depth images for in-situ visualization",
         "journal": "LDAV",
         "year": 2014,
         "citationCount": 10,
         "authors": "O. Fernandes, S. Frey, F. Sadlo, and T. Ertl"
     }, {
-        "tempId": 8,
         "title": "An approach to exascale visualization: Interactive viewing of in-situ visualization",
         "journal": "CPC",
         "year": 2014,
         "citationCount": 29,
         "authors": "A. Kageyama and T. Yamada"
     }, {
-        "tempId": 9,
         "title": "Parallel in situ indexing for data-intensive computing",
         "journal": "Proc. of LDAV",
         "year": 2011,
         "citationCount": 38,
         "authors": "J. Kim, H. Abbasi, L. Chacn, C. Docan, S. Klasky, Q. Liu, N. Podhorszki, A. Shoshani, and K. Wu"
     }, {
-        "tempId": 10,
         "title": "In situ data processing for extreme scale computing",
         "journal": "SciDAC",
         "year": 2011,
         "citationCount": 33,
         "authors": "S. Klasky, H. Abbasi, J. Logan, M. Parashar, K. Schwan, A. Shoshani, M. Wolf, S. Ahern, I. Altintas, W. Bethel, L. Chacon, C. Chang, J. Chen, H. Childs, J. Cummings, S. Ethier, R. Grout, Z. Lin, Q. Liu, X. Ma, K. Moreland, V. Pascucci, N. Podhorszki, N. Samatova, W. Schroeder, R. Tchoua, J. Wu, and W. Yu"
     }, {
-        "tempId": 11,
         "title": "Isabela for effective in situ compression of scientific data",
         "journal": "CCPE",
         "year": 2013,
         "citationCount": 30,
         "authors": "S. Lakshminarasimhan, N. Shah, S. Ethier, S.-H. Ku, C. S. Chang, S. Klasky, R. Latham, R. Ross, and N. F. Samatova"
     }, {
-        "tempId": 12,
         "title": "In-situ feature extraction of large scale combustion simulations using segmented merge trees",
         "journal": "SC",
         "year": 2014,
         "citationCount": 38,
         "authors": "A. G. Landge, V. Pascucci, A. Gyulassy, J. C. Bennett, H. Kolla, J. Chen, and P. T. Bremer"
     }, {
-        "tempId": 13,
         "title": "Adaptable, metadata rich io methods for portable high performance io",
         "journal": "IPDPS",
         "year": 2009,
         "citationCount": 161,
         "authors": "J. Lofstead, F. Zheng, S. Klasky, and K. Schwan"
     }, {
-        "tempId": 14,
         "title": "In-situ processing and visualization for ultrascale simulations",
         "journal": "JPCS",
         "year": 2007,
         "citationCount": 83,
         "authors": "K.-L. Ma, C. Wang, H. Yu, and A. Tikhonova"
     }, {
-        "tempId": 15,
         "title": "Scalable visualization of discrete velocity decompositions using spatially organized histograms",
         "journal": "LDAV",
         "year": 2015,
         "citationCount": 3,
         "authors": "T. Neuroth, F. Sauer, W. Wang, S. Ethier, and K.-L. Ma"
     }, {
-        "tempId": 16,
         "title": "Outlier-preserving focus+context visualization in parallel coordinates",
         "journal": "TVCG",
         "year": 2006,
         "citationCount": 221,
         "authors": "M. Novotny and H. Hauser"
     }, {
-        "tempId": 17,
         "title": "Isobar hybrid compression-I/O interleaving for large-scale parallel I/O optimization",
         "journal": "HPDC",
         "year": 2012,
         "citationCount": 33,
         "authors": "E. R. Schendel, S. V. Pendse, J. Jenkins, D. A. Boyuka, II, Z. Gong, S. Lakshminarasimhan, Q. Liu, H. Kolla, J. Chen, S. Klasky, R. Ross, and N. F. Samatova"
     }, {
-        "tempId": 18,
         "title": "Multi-resolution bitmap indexes for scientific data",
         "journal": "TODS",
         "year": 2007,
         "citationCount": 126,
         "authors": "R. R. Sinha and M. Winslett"
     }, {
-        "tempId": 19,
         "title": "In-situ bitmaps generation and efficient data analysis based on bitmaps",
         "journal": "HPDC",
         "year": 2015,
         "citationCount": 27,
         "authors": "Y. Su, Y. Wang, and G. Agrawal"
     }, {
-        "tempId": 20,
         "title": "Analysis of large-scale scalar data using hixels",
         "journal": "LDAV",
         "year": 2011,
         "citationCount": 55,
         "authors": "D. Thompson, J. A. Levine, J. C. Bennett, P. T. Bremer, A. Gyulassy, V. Pascucci, and P. P. Pbay"
     }, {
-        "tempId": 21,
         "title": "A preview and exploratory technique for large-scale scientific simulations",
         "journal": "EGPGV",
         "year": 2011,
         "citationCount": 26,
         "authors": "A. Tikhonova, H. Yu, C. D. Correa, J. H. Chen, and K.-L. Ma"
     }, {
-        "tempId": 22,
         "title": "Toward simulation-time data analysis and i/o acceleration on leadership-class systems",
         "journal": "LDAV",
         "year": 2011,
         "citationCount": 87,
         "authors": "V. Vishwanath, M. Hereld, and M. E. Papka"
     }, {
-        "tempId": 23,
         "title": "Parallel in situ coupling of simulation with a fully featured visualization system",
         "journal": "EGPGV",
         "year": 2011,
         "citationCount": 140,
         "authors": "B. Whitlock, J. M. Favre, and J. S. Meredith"
     }, {
-        "tempId": 24,
         "title": "In situ eddy analysis in a high-resolution ocean climate model",
         "journal": "TVCG",
         "year": 2016,
         "citationCount": 21,
         "authors": "J. Woodring, M. Petersen, A. Schmeisser, J. Patchett, J. Ahrens, and H. Hagen"
     }, {
-        "tempId": 25,
         "title": "In situ depth maps based feature extraction and tracking",
         "journal": "LDAV",
         "year": 2015,
         "citationCount": 4,
         "authors": "Y. C. Ye, Y. Wang, R. Miller, K.-L. Ma, and K. Ono"
     }, {
-        "tempId": 26,
         "title": "A study of i/o methods for parallel visualization of large-scale data",
         "journal": "Parallel Computing",
         "year": 2005,
         "citationCount": 40,
         "authors": "H. Yu and K.-L. Ma"
     }, {
-        "tempId": 27,
         "title": "In situ visualization for large-scale combustion simulations",
         "journal": "CG&A",
         "year": 2010,
         "citationCount": 175,
         "authors": "H. Yu, C. Wang, R. W. Grout, J. H. Chen, and K. L. Ma"
     }, {
-        "tempId": 28,
         "title": "Predata - preparatory data analytics on peta-scale machines",
         "journal": "IPDPS",
         "year": 2010,
