@@ -30,56 +30,87 @@
       <v-toolbar-title>DisCO</v-toolbar-title>
     </v-toolbar>
     <v-content>
-      <v-container fluid fill-height class="pa-2">
+      <v-container fluid fill-height class="pa-0">
         <v-layout justify-center align-center>
-          <v-flex xs6 fill-height>
+          <v-flex xs6 fill-height class="pa-2">
             <v-toolbar dense>
-                  <v-toolbar-side-icon></v-toolbar-side-icon>
-                  <v-btn icon>
-                    <v-icon>search</v-icon>
-                  </v-btn>
+              <v-toolbar-side-icon></v-toolbar-side-icon>
+              <v-btn icon>
+                <v-icon>search</v-icon>
+              </v-btn>
 
-                  <v-btn icon>
-                    <v-icon>apps</v-icon>
-                  </v-btn>
+              <v-btn icon>
+                <v-icon>apps</v-icon>
+              </v-btn>
 
-                  <v-btn icon>
-                    <v-icon>refresh</v-icon>
-                  </v-btn>
+              <v-btn icon>
+                <v-icon>refresh</v-icon>
+              </v-btn>
 
-                  <v-btn icon>
-                    <v-icon>more_vert</v-icon>
-                  </v-btn>
-              </v-toolbar>
+              <v-btn icon>
+                <v-icon>more_vert</v-icon>
+              </v-btn>
+            </v-toolbar>
             <v-card height="100%" id="vis-context">
             </v-card>
           </v-flex>
-          <v-flex xs6 fill-height class="pa-1">
-            <v-layout row wrap>
-              <v-flex xs6 v-for="paper in papers"  v-bind:key="paper.tempId">
-                <v-card  class="ma-1"
-                  v-on:mouseenter="hover(paper.tempId)"
+          <v-flex xs6 fill-height class="pa-2">
+            <v-toolbar dense>
+              <v-toolbar-title>References</v-toolbar-title>
+
+              <v-spacer></v-spacer>
+
+              <v-btn icon>
+                <v-icon>search</v-icon>
+              </v-btn>
+
+              <v-btn icon>
+                <v-icon>check_circle</v-icon>
+              </v-btn>
+            </v-toolbar>
+            <v-card>
+              <v-list two-line>
+                <template v-for="(paper, index) in papers">
+                  <v-list-tile
+                    :key="paper.title"
+                    avatar
+                    ripple
+                    @mouseenter="hover(index)"
                   >
-                  <v-card-title>
-                    <div class="headline"><span class="dot"></span>{{ paper.title }}</div>
-                    <div>{{paper.authors}}</div>
-                  </v-card-title>
-                  <v-card-actions>
-                      <v-btn flat>Detail</v-btn>
-                      <v-spacer></v-spacer>
-                      <v-btn icon>
-                        <v-icon>favorite</v-icon>
-                      </v-btn>
-                      <v-btn icon>
-                        <v-icon>bookmark</v-icon>
-                      </v-btn>
-                      <v-btn icon>
-                        <v-icon>share</v-icon>
-                      </v-btn>
-                    </v-card-actions>
-                </v-card>
-              </v-flex>
-            </v-layout>
+                    <v-list-tile-content>
+                      <v-list-tile-title><span class="dot" v-bind:style="'background-color: ' + paper.color"></span>
+                        {{ paper.title }}
+                      </v-list-tile-title>
+                      <v-list-tile-sub-title class="text--primary">{{ paper.authors }}</v-list-tile-sub-title>
+                    </v-list-tile-content>
+
+                    <v-list-tile-action>
+                      <v-list-tile-action-text>{{ paper.year }}</v-list-tile-action-text>
+                      <v-icon
+                        v-if="selected.indexOf(index) < 0"
+                        color="grey lighten-1"
+                        @click="toggle(index)"
+                      >
+                        star_border
+                      </v-icon>
+
+                      <v-icon
+                        v-else
+                        color="yellow darken-2"
+                        @click="toggle(index)"
+                      >
+                        star
+                      </v-icon>
+                    </v-list-tile-action>
+
+                  </v-list-tile>
+                  <v-divider
+                    v-if="index + 1 < papers.length"
+                    :key="index"
+                  ></v-divider>
+                </template>
+              </v-list>
+            </v-card>
           </v-flex>
         </v-layout>
       </v-container>
@@ -94,6 +125,12 @@
 import Circo from '../vis/Circo'
 // import PaperCard from './PaperCard.vue'
 
+const paperColors = {
+  selected: 'steelblue',
+  referenced: 'orange',
+  citedBy: 'green'
+}
+
 export default {
   name: 'Contail',
   // components: {
@@ -104,10 +141,11 @@ export default {
       data: {
         relations: []
       },
-      papers: {},
+      papers: [],
       nodes: [],
       visibleRelations: [],
-      drawer: false
+      drawer: false,
+      selected: [2]
     }
   },
   props: {
@@ -120,25 +158,56 @@ export default {
     // })
     this.$http.get('/static/insitupdf.json').then(function (res) {
       var data = res.body
-      //   console.log(data)
       var refs = data.references
-      //   refs.forEach( function(ref) {
-      //   ref.name = ref.tempId;
-      //   ref.size = 1;
-      //   ref.imported = data.relations.filter( r => r.citedBy == ref.tempId).map( r => r.citing );
-      //   })
+      refs.forEach(r => r.color = '#aaa')
       console.log(refs)
-      this.papers = refs.sort((a, b) => a.year - b.year)
-      Circo({
+      // this.papers = refs.sort((a, b) => a.year - b.year)
+      this.papers = refs
+      let c = Circo({
         papers: refs,
         relations: data.relations,
         containerId: '#vis-context'
       })
+      let that = this
+      c.onselect = function (pids) {
+        if(pids === undefined) return
+        let related = pids.selected.map(pid => {
+          refs[pid].color = paperColors.selected
+          return refs[pid]
+        })
+        if (Array.isArray(pids.referenced)) {
+          related = related.concat(
+            pids.referenced.map(pid => {
+              refs[pid].color = paperColors.referenced
+              return refs[pid]
+            })
+          )
+        }
+        if(Array.isArray(pids.citedBy)) {
+          related = related.concat(
+            pids.citedBy.map(pid => {
+              refs[pid].color = paperColors.citedBy
+              return refs[pid]
+            })
+          )
+        }
+        that.papers = related
+      }
+      // this.papers
     })
   },
   methods: {
-    hover: function (id) {
-      console.log(id)
+    hover: function (index) {
+      // console.log(index)
+    },
+    toggle (index) {
+      const i = this.selected.indexOf(index)
+
+      if (i > -1) {
+        this.selected.splice(i, 1)
+      } else {
+        this.selected.push(index)
+      }
     }
   }
 }
@@ -151,8 +220,8 @@ export default {
 
 .dot {
   /* float: left; */
-  height: 25px;
-  width: 25px;
+  height: 1em;
+  width: 1em;
   background-color: #bbb;
   border-radius: 50%;
   display: inline-block;

@@ -3,9 +3,6 @@
     fill: #bbb;
   }
   
-  .node:hover {
-    fill: #000;
-  }
   
   .link {
     stroke: steelblue;
@@ -41,4 +38,8 @@
   
   .link--target {
     stroke: #2ca02c;
+  }
+
+  .node-label {
+    fill: #222;
   }
