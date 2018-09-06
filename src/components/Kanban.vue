@@ -2,8 +2,9 @@
   <v-app>
     <v-navigation-drawer stateless hide-overlay app v-model="isDrawerVisible" width=600 style="overflow: scroll; padding: 0px;">
       <v-toolbar flat>
-        <v-text-field hide-details single-line clearable
+        <v-text-field hide-details single-line clearable solo
           placeholder="search paper name"
+          v-bind:loading="isSearching"
           v-on:keyup.native="searchKeyUp($event, searchText)"
           v-model="searchText">
         </v-text-field>
@@ -537,7 +538,6 @@ function compileGraph (papers) {
       nodes[citing].citedBy.push(citedBy)
     })
   })
-  // console.log(nodes)
   return { nodes: nodes }
 }
 
