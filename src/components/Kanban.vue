@@ -1,25 +1,22 @@
 <template>
   <v-app>
-    <v-navigation-drawer absolute stateless hide-overlay v-model="isDrawerVisible" v-bind:width=600 style="overflow: visible;">
-      <v-btn class="drawer-collapse-button" absolute v-on:click="isDrawerVisible = !isDrawerVisible">
-        <v-icon>{{ isDrawerVisible ? 'arrow_left' : 'arrow_right' }}</v-icon>
-      </v-btn>
+    <v-navigation-drawer stateless hide-overlay app v-model="isDrawerVisible" width=600 style="overflow: scroll; padding: 0px;">
       <v-toolbar flat>
         <v-text-field hide-details single-line clearable
           placeholder="search paper name"
-          v-on:change="search(searchText)"
+          v-on:keyup.native="searchKeyUp($event, searchText)"
           v-model="searchText">
         </v-text-field>
-        <v-btn icon v-on:click="search(searchText)">
+        <v-btn icon v-bind:loading="isSearching" v-on:click="search(searchText)">
           <v-icon>search</v-icon>
         </v-btn>
       </v-toolbar>
       <v-list>
         <v-list-tile
           v-for="paper in searchResults" v-bind:key="paper.doi">
-          <v-list-tile-content>
+          <v-list-tile-title>
             {{ paper.title }}
-          </v-list-tile-content>
+          </v-list-tile-title>
           <v-list-tile-action>
             <v-icon v-bind:color="paper.references.length > 0 ? 'teal' : 'grey'" v-on:click="selectSearchResult(paper)">view_week</v-icon>
           </v-list-tile-action>
@@ -29,38 +26,52 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <div class="header">
-      <v-card class="elevation-0">
-        <v-card-title primary-title>
-          <div>
-            <h5>References of</h5>
-            <h3 class="headline">{{ paper.title }}</h3>
-            <div>{{ paper.authors }}</div>
-          </div>
-        </v-card-title>
-      </v-card>
-      <div class="header-controls">
-        <v-radio-group v-model="computedLayoutMethod" row>
-          <v-radio label="by year" value="layout-by-year"></v-radio>
-          <v-radio label="by reference level" value="layout-by-reference-level"></v-radio>
-          <v-radio label="by optimized" value="layout-by-optimized"></v-radio>
-        </v-radio-group>
-        <v-radio-group v-model="computedShowLinkMethod" row>
-          <v-radio label="hover" value="show-link-hover"></v-radio>
-          <v-radio label="click" value="show-link-click"></v-radio>
-          <v-radio label="all" value="show-link-all"></v-radio>
-        </v-radio-group>
-      </div>
-    </div>
-    <div class="kanban-container" ref="kanbanContainer" v-on:wheel="scrollHorizontally">
-      <div class="years-container">
-        <span v-for="(yearInterval, index) in yearIntervalLabels" v-bind:key="index"
+    <v-toolbar app>
+      <v-toolbar-side-icon v-on:click="isDrawerVisible = !isDrawerVisible">
+      </v-toolbar-side-icon>
+      <v-toolbar-title>{{ title }}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-menu open-on-hover offset-y close-delay=0>
+        <v-btn icon slot="activator"><v-icon>gesture</v-icon></v-btn>
+        <v-list>
+          <v-list-tile v-on:click="computedShowLinkMethod = 'show-link-hover'">
+            <v-list-tile-title>show links on hover</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile v-on:click="computedShowLinkMethod = 'show-link-click'">
+            <v-list-tile-title>toggle links on click</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile v-on:click="computedShowLinkMethod = 'show-link-all'">
+            <v-list-tile-title>show all links</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+      <v-menu open-on-hover offset-y close-delay=0>
+        <v-btn icon slot="activator"><v-icon>dashboard</v-icon></v-btn>
+        <v-list>
+          <v-list-tile v-on:click="computedLayoutMethod = 'layout-by-year'">
+            <v-list-tile-title>layout by year</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile v-on:click="computedLayoutMethod = 'layout-by-reference-level'">
+            <v-list-tile-title>layout by reference level</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile v-on:click="computedLayoutMethod = 'layout-by-optimized'">
+            <v-list-tile-title>layout hybrid</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+      <v-btn icon><v-icon>account_circle</v-icon></v-btn>
+    </v-toolbar>
+    <v-content app>
+      <v-container ref="kanbanContainer" fluid kanban-container v-on:mousewheel="scroll">
+        <div class="years-container">
+        <span
+          v-for="(yearInterval, index) in yearIntervalLabels" v-bind:key="index"
           v-bind:style="yearIntervalStyle" class="year-range">
           {{ yearInterval }}
         </span>
       </div>
-      <div class="graph-container" v-bind:style="{ 'margin-left': nodeSpacing / 2 + 'px', 'margin-right': nodeSpacing / 2 + 'px' }">
-        <div class="nodes-container">
+      <div class="graph-container">
+        <div class="nodes-container" ref="nodesContainer">
           <paper-card
             ref="paperCards"
             v-for="node in nodes" v-bind:key="node.key"
@@ -78,7 +89,8 @@
           <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
         </svg>
       </div>
-    </div>
+      </v-container>
+    </v-content>
   </v-app>
 </template>
 
@@ -97,6 +109,7 @@ export default {
     this.$http.get('/static/insitupdf.json').then(function (res) {
       this.data = res.body
       this.paper = this.data.paper
+      this.title = this.paper.title
       this.graph = createGraph(this.data.references, this.data.relations)
       this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
       this.nextTickLayoutPaperCards()
@@ -107,6 +120,7 @@ export default {
       graph: {
         nodes: []
       },
+      title: 'Papers',
       paper: {},
       nodes: [],
       visibleRelations: [],
@@ -114,9 +128,10 @@ export default {
       visiblePaperCiteLinks: [],
       layoutMethod: 'layout-by-optimized',
       showLinkMethod: 'show-link-hover',
-      isDrawerVisible: true,
+      isDrawerVisible: false,
       searchText: '',
-      searchResults: []
+      searchResults: [],
+      isSearching: false
     }
   },
   watch: {
@@ -224,14 +239,24 @@ export default {
   },
   methods: {
     search: function (text) {
+      this.isSearching = true
       api.search(text).then(papers => {
         this.searchResults = papers
+        this.isSearching = false
+      }).catch(() => {
+        this.isSearching = false
       })
+    },
+    searchKeyUp: function (event, text) {
+      if (event.key === 'Enter') {
+        this.search(text)
+      }
     },
     selectSearchResult: function (paper) {
       this.paper = paper
       const dois = this.paper.references.map(ref => ref.doi)
-      Promise.all(dois.map(doi => api.getPaperByDOI(doi))).then(papers => {
+      Promise.all(dois.map(doi => api.getPaperByDOI(doi))).then(objects => {
+        const papers = objects.filter(obj => obj !== null)
         this.graph = compileGraph(papers)
         this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
         this.nextTickLayoutPaperCards()
@@ -241,11 +266,6 @@ export default {
       this.graph = addToGraph(this.graph, paper)
       this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
       this.nextTickLayoutPaperCards()
-    },
-    scrollHorizontally: function (evt) {
-      evt.preventDefault()
-      let delta = evt.deltaX === 0 ? -evt.deltaY : -Math.sign(evt.deltaX) * Math.hypot(evt.deltaX, evt.deltaY)
-      this.$refs.kanbanContainer.scrollLeft -= delta * 5
     },
     getInNetworkRelations: function (prop, paperIndex) {
       if (prop === 'citing') {
@@ -288,16 +308,16 @@ export default {
       // show all references in search panel
       const paper = this.graph.nodes[paperIndex].paper
       const dois = paper.references.map(ref => ref.doi)
+      this.isSearching = true
       const promises = dois.map(doi => {
-        return api.getPaperByDOI(doi).then(response => {
-          return response
-        }).catch(() => {
+        return api.getPaperByDOI(doi).catch(() => {
           return null
         })
       })
       Promise.all(promises).then(responses => {
         const papers = responses.filter(res => res !== null)
         this.searchResults = papers
+        this.isSearching = false
       })
     },
     handleMouseOverCiteCount: function (paperIndex) {
@@ -324,6 +344,11 @@ export default {
         }
         this.visiblePaperCiteLinks = Array.from(set)
       }
+    },
+    scroll: function (evt) {
+      evt.preventDefault()
+      this.$refs.kanbanContainer.scrollLeft = Math.max(1, this.$refs.kanbanContainer.scrollLeft + evt.deltaX)
+      this.$refs.kanbanContainer.scrollTop = this.$refs.kanbanContainer.scrollTop + evt.deltaY
     },
     linkInNetworkReferences: function (paperIndex) {
       this.showLinks(this.getInNetworkRelations('citedBy', paperIndex))
@@ -567,18 +592,17 @@ function addToGraph (graph, paper) {
   height: 100%;
   white-space: nowrap;
   overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .graph-container {
   position: relative;
-  height: 1560px;
   white-space: nowrap;
 }
 
 .overlay {
   position: absolute;
   width: 100%;
-  height: 100%;
   top:0px;
   bottom:0px;
   left:0px;
@@ -614,18 +638,5 @@ function addToGraph (graph, paper) {
 
 .header {
   display: flex;
-}
-
-.drawer-collapse-button {
-  left: 100%;
-  top: 10px;
-  width: 22px;
-  height: 48px;
-  min-width: 0px;
-  padding: 0px;
-}
-
-.drawer-collapse-button .v-icon {
-  font-size: 22px;
 }
 </style>

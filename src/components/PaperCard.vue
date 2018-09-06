@@ -174,6 +174,7 @@ export default {
   word-break: break-all;
   overflow-y: hidden;
   background-color: white;
+  margin-bottom: 100px;
 }
 
 .line-clamp-1 {
