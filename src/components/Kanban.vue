@@ -12,20 +12,12 @@
           <v-icon>search</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-list>
-        <v-list-tile
-          v-for="paper in searchResults" v-bind:key="paper.doi">
-          <v-list-tile-title>
-            {{ paper.title }}
-          </v-list-tile-title>
-          <v-list-tile-action>
-            <v-icon v-bind:color="paper.references.length > 0 ? 'teal' : 'grey'" v-on:click="selectSearchResult(paper)">view_week</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-action>
-            <v-icon v-bind:color="paper.references.length > 0 ? 'teal' : 'grey'" v-on:click="addSearchResult(paper)">plus_one</v-icon>
-          </v-list-tile-action>
-        </v-list-tile>
-      </v-list>
+      <component :is="drawerComponent" :paper="drawerPaper" :papers="searchResults"
+        @populate="searchResultPopulate($event)"
+        @insert="searchResultInsert($event)"
+        @detail="showPaperDetail($event)"
+        @back="drawerComponent = 'paperList'">
+      </component>
     </v-navigation-drawer>
     <v-toolbar app>
       <v-toolbar-side-icon v-on:click="isDrawerVisible = !isDrawerVisible">
@@ -60,6 +52,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
+      <v-btn icon to="/contail"><v-icon>data_usage</v-icon></v-btn>
       <v-btn icon><v-icon>account_circle</v-icon></v-btn>
     </v-toolbar>
     <v-content app>
@@ -97,6 +90,8 @@
 
 <script>
 import PaperCard from './PaperCard.vue'
+import PaperList from './PaperList.vue'
+import PaperDetail from './PaperDetail.vue'
 import { create as createRect } from './rect.js'
 import * as layout from './gridbasedlayout.js'
 import * as api from './crossref.js'
@@ -104,7 +99,9 @@ import * as api from './crossref.js'
 export default {
   name: 'Kanban',
   components: {
-    PaperCard
+    PaperCard,
+    PaperList,
+    PaperDetail
   },
   data () {
     this.$http.get('/static/insitupdf.json').then(function (res) {
@@ -132,7 +129,9 @@ export default {
       isDrawerVisible: false,
       searchText: '',
       searchResults: [],
-      isSearching: false
+      isSearching: false,
+      drawerComponent: 'paperList',
+      drawerPaper: null
     }
   },
   watch: {
@@ -240,6 +239,7 @@ export default {
   },
   methods: {
     search: function (text) {
+      this.drawerComponent = 'paperList'
       this.isSearching = true
       api.search(text).then(papers => {
         this.searchResults = papers
@@ -253,7 +253,7 @@ export default {
         this.search(text)
       }
     },
-    selectSearchResult: function (paper) {
+    searchResultPopulate: function (paper) {
       this.paper = paper
       const dois = this.paper.references.map(ref => ref.doi)
       Promise.all(dois.map(doi => api.getPaperByDOI(doi))).then(objects => {
@@ -263,10 +263,14 @@ export default {
         this.nextTickLayoutPaperCards()
       })
     },
-    addSearchResult: function (paper) {
+    searchResultInsert: function (paper) {
       this.graph = addToGraph(this.graph, paper)
       this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
       this.nextTickLayoutPaperCards()
+    },
+    showPaperDetail: function (paper) {
+      this.drawerComponent = 'paperDetail'
+      this.drawerPaper = paper
     },
     getInNetworkRelations: function (prop, paperIndex) {
       if (prop === 'citing') {
@@ -308,7 +312,11 @@ export default {
       }
       // show all references in search panel
       const paper = this.graph.nodes[paperIndex].paper
+      this.showPaperReferences(paper)
+    },
+    showPaperReferences: function (paper) {
       const dois = paper.references.map(ref => ref.doi)
+      this.drawerComponent = 'paperList'
       this.isSearching = true
       const promises = dois.map(doi => {
         return api.getPaperByDOI(doi).catch(() => {
@@ -496,7 +504,10 @@ function extractRelations (graphNodes) {
 
 function createGraph (papers, relations) {
   const nodes = papers.map(paper => ({
-    paper: paper,
+    paper: {
+      ...paper,
+      authors: paper.authors.split(/, |, and | and /).map(name => ({ family: name, given: '' }))
+    },
     citing: [],
     citedBy: [],
     geo: { height: 0, headerHeight: 0 }

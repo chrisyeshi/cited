@@ -63,7 +63,8 @@ export default {
           text: text
         }
       }
-      let authorList = this.paper.authors.split(/, |, and | and /)
+      let authorList = this.paper.authors.map(author => `${author.family}, ${author.given}`)
+      let authorText = authorList.join(' and ')
       let shortAuthors = authorList.length < 2 ? authorList[0] : authorList[0] + ' +' + (authorList.length - 1)
       if (this.maxLineCount < 2) {
         return [
@@ -79,20 +80,20 @@ export default {
       if (this.maxLineCount < 4) {
         return [
           createLineObj('line-clamp-1', this.paper.title),
-          createLineObj('line-clamp-1', this.paper.authors),
+          createLineObj('line-clamp-1', authorText),
           createLineObj('line-clamp-1', 'Published in ' + this.paper.year + ', Cited by ' + this.paper.citationCount)
         ]
       }
       if (this.maxLineCount < 5) {
         return [
           createLineObj('line-clamp-2', this.paper.title),
-          createLineObj('line-clamp-1', this.paper.authors),
+          createLineObj('line-clamp-1', authorText),
           createLineObj('line-clamp-1', 'Published in ' + this.paper.year + ', Cited by ' + this.paper.citationCount)
         ]
       }
       return [
         createLineObj('', this.paper.title),
-        createLineObj('', this.paper.authors),
+        createLineObj('', authorText),
         createLineObj('line-clamp-1', 'Published in ' + this.paper.year + ', Cited by ' + this.paper.citationCount)
       ]
     },
