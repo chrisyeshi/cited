@@ -77,6 +77,7 @@
             v-on:mouseovercitecount="handleMouseOverCiteCount($event)"
             v-on:mouseoutcitecount="handleMouseOutCiteCount($event)"
             v-on:clickcitecount="handleClickCiteCount($event)"
+            v-on:clicktitle="handleClickTitle($event)"
             v-on:dragend="movePaperCard"></paper-card>
         </div>
         <svg class="overlay">
@@ -354,6 +355,9 @@ export default {
         this.visiblePaperCiteLinks = Array.from(set)
       }
     },
+    handleClickTitle: function (paperIndex) {
+      this.showPaperDetail(this.graph.nodes[paperIndex].paper)
+    },
     scroll: function (evt) {
       evt.preventDefault()
       this.$refs.kanbanContainer.scrollLeft = Math.max(1, this.$refs.kanbanContainer.scrollLeft + evt.deltaX)
@@ -506,7 +510,8 @@ function createGraph (papers, relations) {
   const nodes = papers.map(paper => ({
     paper: {
       ...paper,
-      authors: paper.authors.split(/, |, and | and /).map(name => ({ family: name, given: '' }))
+      authors: paper.authors.split(/, |, and | and /).map(name => ({ family: name, given: '' })),
+      abstract: ''
     },
     citing: [],
     citedBy: [],

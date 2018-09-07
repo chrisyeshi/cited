@@ -16,7 +16,19 @@
         v-on:click="$emit('clickcitecount', paper.key)"
         v-bind:style="{ 'background-color': inNetworkCitationColor }">{{ paper.inNetworkCitationCount }} / {{ paper.citationCount }} &gt;</span>
     </div>
-    <div v-bind:class="line.classes" v-for="(line, index) in lines" v-bind:key="index">{{ line.text }}</div>
+    <h4><a @click="$emit('clicktitle', paper.key)">{{ paper.title }}</a></h4>
+    <div>
+      <template v-for="(name, index) in authorNames">
+        <span :key="`author-name-${index}`">
+          <a @click="console">{{ name }}</a>
+        </span>
+        <span v-if="index != authorNames.length - 1" :key="`author-and-${index}`">
+          and
+        </span>
+      </template>
+    </div>
+    <div><span><a @click="console">Year {{ paper.year }}</a></span>, <span><a @click="console">Referenced {{ paper.referenceCount }}</a></span>, <span><a @click="console">Cited by {{ paper.citationCount }}</a></span></div>
+    <!-- <div v-bind:class="line.classes" v-for="(line, index) in lines" v-bind:key="index">{{ line.text }}</div> -->
   </div>
 </template>
 
@@ -47,6 +59,13 @@ export default {
     }
   },
   computed: {
+    authorNames: function () {
+      return this.paper.authors.map(author => `${author.family}, ${author.given}`)
+    },
+    authorText: function () {
+      const names = this.paper.authors.map(author => `${author.family}, ${author.given}`)
+      return names.join(' and ')
+    },
     cardStyle: function () {
       const style = {
         left: this.rect.left + 'px',
@@ -161,6 +180,9 @@ export default {
       const boundLevel = Math.min(maxLevel, unboundLevel)
       const colorValue = maxValue / maxLevel * boundLevel
       return `rgb(10, ${colorValue}, 50)`
+    },
+    console: function (evt) {
+      console.log(evt)
     }
   }
 }
@@ -176,6 +198,14 @@ export default {
   overflow-y: hidden;
   background-color: white;
   margin-bottom: 100px;
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  background-color: yellow;
 }
 
 .line-clamp-1 {
