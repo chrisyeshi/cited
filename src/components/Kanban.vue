@@ -478,7 +478,7 @@ export default {
       this.$refs.paperCards.forEach(card => {
         this.graph.nodes[card.paper.key].geo = {
           height: card.$el.clientHeight,
-          headerHeight: card.$refs.header.clientHeight
+          headerHeight: card.$refs.header.computedHeight
         }
       })
     }
@@ -625,7 +625,7 @@ function addToGraph (graph, paper) {
   stroke: #a55;
   fill: none;
   stroke-opacity: 0.7;
-  stroke-width: 20px;
+  stroke-width: 5px;
 }
 
 .kanban {

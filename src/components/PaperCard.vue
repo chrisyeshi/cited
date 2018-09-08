@@ -3,32 +3,44 @@
     v-bind:index="paper.index"
     v-bind:class="{ animate: !isDragging, 'front-most': isDragging }"
     v-bind:style="cardStyle">
-    <div class="header" ref="header">
-      <span class="header-references"
-        v-on:mouseover="$emit('mouseoverrefcount', paper.key)"
-        v-on:mouseout="$emit('mouseoutrefcount', paper.key)"
-        v-on:click="$emit('clickrefcount', paper.key)"
-        v-bind:style="{ 'background-color': inNetworkReferenceColor }">&lt; {{ paper.inNetworkReferenceCount }} / {{ paper.referenceCount }}</span>
-      <span class="header-bar" v-on:mousedown="dragElement"></span>
-      <span class="header-citations"
-        v-on:mouseover="$emit('mouseovercitecount', paper.key)"
-        v-on:mouseout="$emit('mouseoutcitecount', paper.key)"
-        v-on:click="$emit('clickcitecount', paper.key)"
-        v-bind:style="{ 'background-color': inNetworkCitationColor }">{{ paper.inNetworkCitationCount }} / {{ paper.citationCount }} &gt;</span>
-    </div>
-    <h4><a @click="$emit('clicktitle', paper.key)">{{ paper.title }}</a></h4>
-    <div>
-      <template v-for="(name, index) in authorNames">
-        <span :key="`author-name-${index}`">
-          <a @click="console">{{ name }}</a>
-        </span>
-        <span v-if="index != authorNames.length - 1" :key="`author-and-${index}`">
-          and
-        </span>
-      </template>
-    </div>
-    <div><span><a @click="console">Year {{ paper.year }}</a></span>, <span><a @click="console">Referenced {{ paper.referenceCount }}</a></span>, <span><a @click="console">Cited by {{ paper.citationCount }}</a></span></div>
-    <!-- <div v-bind:class="line.classes" v-for="(line, index) in lines" v-bind:key="index">{{ line.text }}</div> -->
+    <v-hover close-delay=0>
+      <v-card slot-scope="{ hover }"
+        :class="`elevation-${hover ? 12 : 2}`">
+        <v-system-bar ref="header" style="padding: 0px;">
+          <span class="header-item"
+            :style="{ 'background-color': inNetworkReferenceColor }"
+            @mouseover="$emit('mouseoverrefcount', paper.key)"
+            @mouseout="$emit('mouseoutrefcount', paper.key)"
+            @click="$emit('clickrefcount', paper.key)">
+            <span>&lt; {{ paper.inNetworkReferenceCount }} / {{ paper.referenceCount }}</span>
+          </span>
+          <v-spacer style="height: 100%;"
+            @mousedown="dragElement">
+          </v-spacer>
+          <span class="header-item"
+            :style="{ 'background-color': inNetworkReferenceColor }"
+            @mouseover="$emit('mouseovercitecount', paper.key)"
+            @mouseout="$emit('mouseoutcitecount', paper.key)"
+            @click="$emit('clickcitecount', paper.key)">
+            <span>{{ paper.inNetworkCitationCount }} / {{ paper.citationCount }} &gt;</span>
+          </span>
+        </v-system-bar>
+        <v-card-text>
+          <h4><a @click="$emit('clicktitle', paper.key)">{{ paper.title }}</a></h4>
+          <div>
+            <template v-for="(name, index) in authorNames">
+              <span :key="`author-name-${index}`">
+                <a @click="console">{{ name }}</a>
+              </span>
+              <span v-if="index != authorNames.length - 1" :key="`author-and-${index}`">
+                and
+              </span>
+            </template>
+          </div>
+          <div><span><a @click="console">Year {{ paper.year }}</a></span>, <span><a @click="console">Referenced {{ paper.referenceCount }}</a></span>, <span><a @click="console">Cited by {{ paper.citationCount }}</a></span></div>
+        </v-card-text>
+      </v-card>
+    </v-hover>
   </div>
 </template>
 
@@ -191,12 +203,8 @@ export default {
 <style scoped>
 .paper-card {
   position: absolute;
-  border-style: solid;
-  border-width: 0.1em;
   white-space: normal;
   word-break: break-all;
-  overflow-y: hidden;
-  background-color: white;
   margin-bottom: 100px;
 }
 
@@ -222,30 +230,12 @@ a:hover {
   text-overflow: ellipsis;
 }
 
-.header-references,
-.header-citations {
-  color: white;
+.header-item {
   height: 100%;
-}
-
-.header-references {
-  order: -1;
-}
-
-.header-citations {
-  order: 1;
-}
-
-.header-bar {
-  order: 0;
-  flex-grow: 1;
-}
-
-.header {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  background-color: gray;
+  align-items: center;
+  padding: 0px 5px;
+  color: white;
 }
 
 .animate {
