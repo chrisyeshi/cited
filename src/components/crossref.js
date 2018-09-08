@@ -6,11 +6,16 @@ const mailto = 'chrisyeshi@gmail.com'
 // const referenceVisibility = 'reference-visibility:open'
 const hasReferences = ''
 const referenceVisibility = ''
+const rowsPerPage = 20
 
-export function search (text) {
-  const url = `${crossref}/works?mailto=${mailto}&filter=${hasReferences},${referenceVisibility}&query=${text}`
+export function search (text, page = 0) {
+  const url = `${crossref}/works?mailto=${mailto}&filter=${hasReferences},${referenceVisibility}&rows=${rowsPerPage}&offset=${page * rowsPerPage}&query=${text}`
   return axios.get(url).then(response => {
-    return response.data.message.items.map(formatPaper)
+    const papers = response.data.message.items.map(formatPaper)
+    return {
+      papers: papers,
+      totalPapers: response.data.message['total-results']
+    }
   })
 }
 

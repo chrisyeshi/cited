@@ -7,12 +7,12 @@
           <v-list-tile-sub-title>{{ formatAuthors(paper.authors) }}</v-list-tile-sub-title>
           <v-list-tile-sub-title>year: {{ paper.year }}, referenced: {{ paper.references.length }}, cited by: {{ paper.citationCount }}</v-list-tile-sub-title>
         </v-list-tile-content>
-        <v-btn icon @click="$emit('populate', paper)">
+        <v-btn icon @click.stop="$emit('populate', paper)">
           <v-icon :color="paper.references.length > 0 ? 'teal' : 'grey'">
             dashboard
           </v-icon>
         </v-btn>
-        <v-btn icon @click="$emit('insert', paper)">
+        <v-btn icon @click.stop="$emit('insert', paper)">
           <v-icon :color="paper.references.length > 0 ? 'teal' : 'grey'">
             plus_one
           </v-icon>

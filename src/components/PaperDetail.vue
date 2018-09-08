@@ -29,7 +29,11 @@
           <h4>References</h4>
         </div>
       </v-card-title>
-      <paper-list :papers="references"></paper-list>
+      <paper-list :papers="references"
+        @populate="$emit('populate', $event)"
+        @insert="$emit('insert', $event)"
+        @detail="$emit('detail', $event)">
+      </paper-list>
     </v-card>
     <v-card>
       <v-card-title primary-title>
@@ -60,12 +64,12 @@ export default {
   components: {
     PaperList
   },
-  props: {
-    paper: Object
-  },
   data () {
-    this.getRefPapers(this.paper).then(refs => { this.references = refs })
     return {
+      paper: {
+        references: [],
+        authors: []
+      },
       references: []
     }
   },
@@ -80,6 +84,9 @@ export default {
     }
   },
   methods: {
+    setPaper: function (paper) {
+      this.paper = paper
+    },
     getRefPapers: function (paper) {
       const dois = paper.references
         .map(ref => ref.doi)

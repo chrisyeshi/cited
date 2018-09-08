@@ -12,12 +12,19 @@
           <v-icon>search</v-icon>
         </v-btn>
       </v-toolbar>
-      <component :is="drawerComponent" :paper="drawerPaper" :papers="searchResults"
+      <paper-detail v-show="drawerComponent === 'paper-detail'"
+        ref="paperDetail"
         @populate="searchResultPopulate($event)"
         @insert="searchResultInsert($event)"
         @detail="showPaperDetail($event)"
-        @back="drawerComponent = 'paperList'">
-      </component>
+        @back="drawerComponent = 'search-results'">
+      </paper-detail>
+      <search-results v-show="drawerComponent === 'search-results'"
+        ref="searchResults"
+        @populate="searchResultPopulate($event)"
+        @insert="searchResultInsert($event)"
+        @detail="showPaperDetail($event)">
+      </search-results>
     </v-navigation-drawer>
     <v-toolbar app>
       <v-toolbar-side-icon v-on:click="isDrawerVisible = !isDrawerVisible">
@@ -93,6 +100,7 @@
 import PaperCard from './PaperCard.vue'
 import PaperList from './PaperList.vue'
 import PaperDetail from './PaperDetail.vue'
+import SearchResults from './SearchResults.vue'
 import { create as createRect } from './rect.js'
 import * as layout from './gridbasedlayout.js'
 import * as api from './crossref.js'
@@ -102,7 +110,8 @@ export default {
   components: {
     PaperCard,
     PaperList,
-    PaperDetail
+    PaperDetail,
+    SearchResults
   },
   data () {
     this.$http.get('/static/insitupdf.json').then(function (res) {
@@ -129,10 +138,8 @@ export default {
       showLinkMethod: 'show-link-hover',
       isDrawerVisible: false,
       searchText: '',
-      searchResults: [],
       isSearching: false,
-      drawerComponent: 'paperList',
-      drawerPaper: null
+      drawerComponent: 'search-results'
     }
   },
   watch: {
@@ -240,10 +247,9 @@ export default {
   },
   methods: {
     search: function (text) {
-      this.drawerComponent = 'paperList'
+      this.drawerComponent = 'search-results'
       this.isSearching = true
-      api.search(text).then(papers => {
-        this.searchResults = papers
+      this.$refs.searchResults.setSearchText(text).then(() => {
         this.isSearching = false
       }).catch(() => {
         this.isSearching = false
@@ -270,8 +276,8 @@ export default {
       this.nextTickLayoutPaperCards()
     },
     showPaperDetail: function (paper) {
-      this.drawerComponent = 'paperDetail'
-      this.drawerPaper = paper
+      this.drawerComponent = 'paper-detail'
+      this.$refs.paperDetail.setPaper(paper)
     },
     getInNetworkRelations: function (prop, paperIndex) {
       if (prop === 'citing') {
@@ -301,7 +307,6 @@ export default {
       }
     },
     handleClickRefCount: function (paperIndex) {
-      // show/hide links
       if (this.showLinkMethod === 'show-link-click') {
         const set = new Set(this.visiblePaperRefLinks)
         if (set.has(paperIndex)) {
@@ -311,24 +316,6 @@ export default {
         }
         this.visiblePaperRefLinks = Array.from(set)
       }
-      // show all references in search panel
-      const paper = this.graph.nodes[paperIndex].paper
-      this.showPaperReferences(paper)
-    },
-    showPaperReferences: function (paper) {
-      const dois = paper.references.map(ref => ref.doi)
-      this.drawerComponent = 'paperList'
-      this.isSearching = true
-      const promises = dois.map(doi => {
-        return api.getPaperByDOI(doi).catch(() => {
-          return null
-        })
-      })
-      Promise.all(promises).then(responses => {
-        const papers = responses.filter(res => res !== null)
-        this.searchResults = papers
-        this.isSearching = false
-      })
     },
     handleMouseOverCiteCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-hover') {
