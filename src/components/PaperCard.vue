@@ -131,7 +131,6 @@ export default {
     inNetworkCitationColor: function () {
       return this.getColor({
         maxLevel: 4,
-        maxValue: 200,
         logBase: 2,
         value: this.paper.inNetworkCitationCount
       })
@@ -139,7 +138,6 @@ export default {
     inNetworkReferenceColor: function () {
       return this.getColor({
         maxLevel: 4,
-        maxValue: 200,
         logBase: 2,
         value: this.paper.inNetworkReferenceCount
       })
@@ -185,13 +183,19 @@ export default {
       document.onmouseup = closeDragElement
       document.onmousemove = elementDrag
     },
-    getColor: function ({ maxLevel, maxValue, logBase, value }) {
+    getColor: function ({ maxLevel, logBase, value }) {
       const log = x => Math.log(x) / Math.log(logBase)
       const count = Math.floor(value)
       const unboundLevel = count === 0 ? 0 : Math.floor(log(count)) + 1
       const boundLevel = Math.min(maxLevel, unboundLevel)
-      const colorValue = maxValue / maxLevel * boundLevel
-      return `rgb(10, ${colorValue}, 50)`
+      const r = boundLevel / maxLevel
+      const minColor = [50, 50, 50]
+      const maxColor = [50, 200, 250]
+      const color = []
+      for (let i = 0; i < 3; ++i) {
+        color[i] = minColor[i] * (1 - r) + maxColor[i] * r
+      }
+      return `rgb(${color[0]}, ${color[1]}, ${color[2]})`
     },
     console: function (evt) {
       console.log(evt)
