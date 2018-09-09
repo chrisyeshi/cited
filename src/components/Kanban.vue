@@ -63,34 +63,36 @@
       <v-btn icon><v-icon>account_circle</v-icon></v-btn>
     </v-toolbar>
     <v-content app>
-      <v-container ref="kanbanContainer" fluid kanban-container v-on:mousewheel="scroll">
-        <div class="years-container">
-        <span
-          v-for="(yearInterval, index) in yearIntervalLabels" v-bind:key="index"
-          v-bind:style="yearIntervalStyle" class="year-range">
-          {{ yearInterval }}
-        </span>
-      </div>
-      <div class="graph-container">
-        <div class="nodes-container" ref="nodesContainer">
-          <paper-card
-            ref="paperCards"
-            v-for="node in nodes" v-bind:key="node.key"
-            v-bind:paper="node"
-            v-on:update:paper="updateNode($event)"
-            v-on:mouseoverrefcount="handleMouseOverRefCount($event)"
-            v-on:mouseoutrefcount="handleMouseOutRefCount($event)"
-            v-on:clickrefcount="handleClickRefCount($event)"
-            v-on:mouseovercitecount="handleMouseOverCiteCount($event)"
-            v-on:mouseoutcitecount="handleMouseOutCiteCount($event)"
-            v-on:clickcitecount="handleClickCiteCount($event)"
-            v-on:clicktitle="handleClickTitle($event)"
-            v-on:dragend="movePaperCard"></paper-card>
+      <v-container ref="kanbanContainer" fluid kanban-container
+        v-on:mousewheel="scroll">
+        <div class="years-container"
+          :style="`margin: 5px -${nodeSpacing / 2}px;`">
+          <span
+            v-for="(yearInterval, index) in yearIntervalLabels" v-bind:key="index"
+            v-bind:style="yearIntervalStyle" class="year-range">
+            <h2>{{ yearInterval }}</h2>
+          </span>
         </div>
-        <svg class="overlay">
-          <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
-        </svg>
-      </div>
+        <div class="graph-container">
+          <div class="nodes-container" ref="nodesContainer">
+            <paper-card
+              ref="paperCards"
+              v-for="node in nodes" v-bind:key="node.key"
+              v-bind:paper="node"
+              v-on:update:paper="updateNode($event)"
+              v-on:mouseoverrefcount="handleMouseOverRefCount($event)"
+              v-on:mouseoutrefcount="handleMouseOutRefCount($event)"
+              v-on:clickrefcount="handleClickRefCount($event)"
+              v-on:mouseovercitecount="handleMouseOverCiteCount($event)"
+              v-on:mouseoutcitecount="handleMouseOutCiteCount($event)"
+              v-on:clickcitecount="handleClickCiteCount($event)"
+              v-on:clicktitle="handleClickTitle($event)"
+              v-on:dragend="movePaperCard"></paper-card>
+          </div>
+          <svg class="overlay">
+            <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
+          </svg>
+        </div>
       </v-container>
     </v-content>
   </v-app>
