@@ -87,6 +87,7 @@
               v-on:mouseoutcitecount="handleMouseOutCiteCount($event)"
               v-on:clickcitecount="handleClickCiteCount($event)"
               v-on:clicktitle="handleClickTitle($event)"
+              v-on:clickhandle="handleClickHandle($event)"
               v-on:dragend="movePaperCard"></paper-card>
           </div>
           <svg class="overlay">
@@ -347,6 +348,12 @@ export default {
     handleClickTitle: function (paperIndex) {
       this.showPaperDetail(this.graph.nodes[paperIndex].paper)
     },
+    handleClickHandle: function (paperIndex) {
+      this.graph.nodes[paperIndex].selected =
+        !this.graph.nodes[paperIndex].selected
+      const colRows = this.nodes.map(node => node.colRow)
+      this.nodes = this.getNodesByColRows(this.graph, colRows)
+    },
     scroll: function (evt) {
       evt.preventDefault()
       this.$refs.kanbanContainer.scrollLeft = Math.max(1, this.$refs.kanbanContainer.scrollLeft + evt.deltaX)
@@ -424,6 +431,7 @@ export default {
             inNetworkReferenceCount: this.graph.nodes[paperId].citing.length,
             inNetworkCitationCount: this.graph.nodes[paperId].citedBy.length,
             colRow: { col: iCol, row: iRow },
+            highlight: graph.nodes[paperId].selected,
             rect: createRect({
               left: iCol * (this.colWidth + this.nodeSpacing),
               top: top,
@@ -494,6 +502,9 @@ function extractRelations (graphNodes) {
   })
   return layeredRelations.reduce((acc, val) => acc.concat(val), [])
 }
+
+// TODO: extract graph functions into its own file
+// TODO: standardize the graph node object
 
 function createGraph (papers, relations) {
   const nodes = papers.map(paper => ({

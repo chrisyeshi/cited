@@ -14,8 +14,9 @@
             @click="$emit('clickrefcount', paper.key)">
             <span>&lt; {{ paper.inNetworkReferenceCount }} / {{ paper.referenceCount }}</span>
           </span>
-          <v-spacer style="height: 100%;"
-            @mousedown="dragElement">
+          <v-spacer :style="handleStyle"
+            @mousedown="dragElement"
+            @click="$emit('clickhandle', paper.key)">
           </v-spacer>
           <span class="header-item"
             :style="{ 'background-color': inNetworkReferenceColor }"
@@ -26,7 +27,9 @@
           </span>
         </v-system-bar>
         <v-card-text>
-          <h4><a @click="$emit('clicktitle', paper.key)">{{ paper.title }}</a></h4>
+          <h4>
+            <a @click="$emit('clicktitle', paper.key)">{{ paper.title }}</a>
+          </h4>
           <div>
             <template v-for="(name, index) in authorNames">
               <span :key="`author-name-${index}`">
@@ -37,7 +40,9 @@
               </span>
             </template>
           </div>
-          <div><span><a @click="console">Year {{ paper.year }}</a></span>, <span><a @click="console">Referenced {{ paper.referenceCount }}</a></span>, <span><a @click="console">Cited by {{ paper.citationCount }}</a></span></div>
+          <div>
+            <span><a @click="console">Year {{ paper.year }}</a></span>, <span><a @click="console">Referenced {{ paper.referenceCount }}</a></span>, <span><a @click="console">Cited by {{ paper.citationCount }}</a></span>
+          </div>
         </v-card-text>
       </v-card>
     </v-hover>
@@ -46,6 +51,8 @@
 
 <script>
 import { create as createRect } from './rect.js'
+
+// TODO: use the standard Paper object format
 
 export default {
   name: 'PaperCard',
@@ -77,6 +84,12 @@ export default {
     authorText: function () {
       const names = this.paper.authors.map(author => `${author.family}, ${author.given}`)
       return names.join(' and ')
+    },
+    handleStyle: function () {
+      return {
+        height: '100%',
+        backgroundColor: this.paper.highlight ? 'orange' : undefined
+      }
     },
     cardStyle: function () {
       const style = {

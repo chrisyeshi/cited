@@ -8,6 +8,8 @@ const hasReferences = ''
 const referenceVisibility = ''
 const rowsPerPage = 20
 
+// TODO: use an event loop so that rapid user interactions don't fire multiple API calls.
+
 export function search (text, page = 0) {
   const url = `${crossref}/works?mailto=${mailto}&filter=${hasReferences},${referenceVisibility}&rows=${rowsPerPage}&offset=${page * rowsPerPage}&query=${text}`
   return axios.get(url).then(response => {
