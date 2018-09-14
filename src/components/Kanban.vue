@@ -25,12 +25,24 @@
         @insert="searchResultInsert($event)"
         @detail="showPaperDetail($event)">
       </search-results>
+      <common-relatives v-show="drawerComponent === 'common-relatives'"
+        ref="commonRelatives"
+        @populate="searchResultPopulate($event)"
+        @insert="searchResultInsert($event)"
+        @detail="showPaperDetail($event)">
+      </common-relatives>
     </v-navigation-drawer>
     <v-toolbar app>
       <v-toolbar-side-icon v-on:click="isDrawerVisible = !isDrawerVisible">
       </v-toolbar-side-icon>
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-tooltip v-if="graph.nodes.find(node => node.selected)" bottom>
+        <v-btn icon color="orange" slot="activator" @click="findCommonRelatives">
+          <v-icon color="white">device_hub</v-icon>
+        </v-btn>
+        <span>Find common ancestors/descendants</span>
+      </v-tooltip>
       <v-menu open-on-hover offset-y close-delay=0>
         <v-btn icon slot="activator"><v-icon>gesture</v-icon></v-btn>
         <v-list>
@@ -104,6 +116,7 @@ import PaperCard from './PaperCard.vue'
 import PaperList from './PaperList.vue'
 import PaperDetail from './PaperDetail.vue'
 import SearchResults from './SearchResults.vue'
+import CommonRelatives from './CommonRelatives.vue'
 import { create as createRect } from './rect.js'
 import * as layout from './gridbasedlayout.js'
 import * as api from './crossref.js'
@@ -114,7 +127,8 @@ export default {
     PaperCard,
     PaperList,
     PaperDetail,
-    SearchResults
+    SearchResults,
+    CommonRelatives
   },
   data () {
     this.$http.get('/static/insitupdf.json').then(function (res) {
@@ -294,6 +308,11 @@ export default {
           citedBy: paperIndex
         }))
       }
+    },
+    findCommonRelatives: function () {
+      const papers = this.graph.nodes.filter(node => node.selected).map(node => node.paper)
+      this.drawerComponent = 'common-relatives'
+      this.$refs.commonRelatives.setPapers(papers)
     },
     handleMouseOverRefCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-hover') {
