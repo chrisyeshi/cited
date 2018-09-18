@@ -78,7 +78,7 @@
       <v-container ref="kanbanContainer" fluid kanban-container
         v-on:mousewheel="preventTrackpadSwipeToBack">
         <div class="years-container"
-          :style="`margin: 5px -${nodeSpacing / 2}px;`">
+          :style="`margin: 5px -${cardSpacing / 2}px;`">
           <span
             v-for="(yearInterval, index) in yearIntervalLabels" v-bind:key="index"
             v-bind:style="yearIntervalStyle" class="year-range">
@@ -86,12 +86,12 @@
           </span>
         </div>
         <div class="graph-container">
-          <div class="nodes-container" ref="nodesContainer">
+          <div class="cards-container" ref="cardsContainer">
             <paper-card
               ref="paperCards"
-              v-for="node in nodes" v-bind:key="node.key"
-              v-bind:paper="node"
-              v-on:update:paper="updateNode($event)"
+              v-for="card in cards" v-bind:key="card.key"
+              v-bind:paper="card"
+              v-on:update:paper="updateCard($event)"
               v-on:mouseoverrefcount="handleMouseOverRefCount($event)"
               v-on:mouseoutrefcount="handleMouseOutRefCount($event)"
               v-on:clickrefcount="handleClickRefCount($event)"
@@ -141,18 +141,18 @@ export default {
         papers: this.data.references,
         relations: this.data.relations
       })
-      this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
+      this.cards = this.layoutByMethod(this.graph, this.layoutMethod)
       this.nextTickLayoutPaperCards()
     })
     this.colWidth = 300
-    this.nodeSpacing = 20
+    this.cardSpacing = 20
     return {
       graph: {
         nodes: []
       },
       title: 'Papers',
       paper: {},
-      nodes: [],
+      cards: [],
       visibleRelations: [],
       visiblePaperRefLinks: [],
       visiblePaperCiteLinks: [],
@@ -175,8 +175,8 @@ export default {
   computed: {
     links: function () {
       return this.visibleRelations.map((relation, index) => {
-        let citedBy = this.nodes[relation.citedBy]
-        let citing = this.nodes[relation.citing]
+        let citedBy = this.cards[relation.citedBy]
+        let citing = this.cards[relation.citing]
         return {
           key: index,
           citedBy: {
@@ -192,8 +192,8 @@ export default {
     },
     curves: function () {
       return this.visibleRelations.map((relation, index) => {
-        let citedBy = this.nodes[relation.citedBy]
-        let citing = this.nodes[relation.citing]
+        let citedBy = this.cards[relation.citedBy]
+        let citing = this.cards[relation.citing]
         const start = {
           x: citedBy.rect.left,
           y: citedBy.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
@@ -213,7 +213,7 @@ export default {
       })
     },
     yearIntervalLabels: function () {
-      const colRows = this.nodes.map(node => node.colRow)
+      const colRows = this.cards.map(node => node.colRow)
       const grid = layout.toPaperGrid(colRows)
       const yearIntervals = grid.map(column => {
         const colPapers = column.map(paperId => this.graph.nodes[paperId].paper)
@@ -237,8 +237,8 @@ export default {
       return {
         display: 'inline-block',
         width: this.colWidth + 'px',
-        'margin-left': this.nodeSpacing / 2 + 'px',
-        'margin-right': this.nodeSpacing / 2 + 'px'
+        'margin-left': this.cardSpacing / 2 + 'px',
+        'margin-right': this.cardSpacing / 2 + 'px'
       }
     },
     computedLayoutMethod: {
@@ -247,7 +247,7 @@ export default {
       },
       set: function (method) {
         this.layoutMethod = method
-        this.nodes = this.layoutByMethod(this.graph, method)
+        this.cards = this.layoutByMethod(this.graph, method)
       }
     },
     computedShowLinkMethod: {
@@ -283,18 +283,21 @@ export default {
     },
     searchResultPopulate: function (paper) {
       this.paper = paper
-      const dois = this.paper.references.map(ref => ref.doi)
-      Promise.all(dois.map(doi => api.getPaperByDOI(doi))).then(objects => {
+      const dois =
+        _.filter(
+          _.map(this.paper.references, ref => ref.doi), doi => !_.isEmpty(doi))
+      const promises =
+        dois.map(doi => api.getPaperByDOI(doi))
+      Promise.all(promises).then(objects => {
         const papers = objects.filter(obj => obj !== null)
         this.graph = Graph.fromPapers(papers)
-        this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
+        this.cards = this.layoutByMethod(this.graph, this.layoutMethod)
         this.nextTickLayoutPaperCards()
       })
     },
     searchResultInsert: function (paper) {
-      // this.graph = addToGraph(this.graph, paper)
       this.graph.insert(paper)
-      this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
+      this.cards = this.layoutByMethod(this.graph, this.layoutMethod)
       this.nextTickLayoutPaperCards()
     },
     showPaperDetail: function (paper) {
@@ -359,8 +362,8 @@ export default {
     },
     handleClickHandle: function (paperIndex) {
       this.graph.toggleSelectedByIndex(paperIndex)
-      const colRows = this.nodes.map(node => node.colRow)
-      this.nodes = this.getNodesByColRows(this.graph, colRows)
+      const colRows = this.cards.map(node => node.colRow)
+      this.cards = this.getCardsByColRows(this.graph, colRows)
     },
     preventTrackpadSwipeToBack: function (evt) {
       evt.preventDefault()
@@ -374,10 +377,10 @@ export default {
       return this.graph.getUnionRelations(paperCiteLinks, paperRefLinks)
     },
     movePaperCard: function (node, evt) {
-      const oldColRows = this.nodes.map(node => node.colRow)
-      const newColRow = this.getColRowByRect(this.nodes, node.rect)
+      const oldColRows = this.cards.map(node => node.colRow)
+      const newColRow = this.getColRowByRect(this.cards, node.rect)
       const newColRows = layout.moveColRow(oldColRows, node.key, newColRow)
-      this.nodes = this.getNodesByColRows(this.graph, newColRows)
+      this.cards = this.getCardsByColRows(this.graph, newColRows)
     },
     layoutByMethod: function (graph, method) {
       if (this.layoutMethod === 'layout-by-year') {
@@ -390,27 +393,26 @@ export default {
     },
     layoutByYears: function (graph) {
       const colRows = layout.getColRowsByYears(graph.nodes)
-      return this.getNodesByColRows(graph, colRows)
+      return this.getCardsByColRows(graph, colRows)
     },
     layoutByRefLevel: function (graph) {
       const colRows = layout.getColRowsByCitedLevels(graph.nodes)
-      return this.getNodesByColRows(graph, colRows)
+      return this.getCardsByColRows(graph, colRows)
     },
     layoutByOptimized: function (graph) {
       const colRows = layout.getColRowsByOptimalYearIntervals(graph.nodes)
-      return this.getNodesByColRows(graph, colRows)
+      return this.getCardsByColRows(graph, colRows)
     },
-    getNodesByColRows: function (graph, colRows) {
+    getCardsByColRows: function (graph, colRows) {
       const grid = layout.toPaperGrid(colRows)
-      let nodes = []
+      let cards = []
       grid.forEach((column, iCol) => {
         let top = 0
-        column.forEach((paperIdStr, iRow) => {
-          const paperId = parseInt(paperIdStr)
+        column.forEach((paperId, iRow) => {
           const graphNode = graph.nodes[paperId]
           const height = graphNode.geometry.height
           const paper = graphNode.paper
-          nodes[paperId] = {
+          cards[paperId] = {
             key: paperId,
             title: paper.title,
             authors: paper.authors,
@@ -422,20 +424,20 @@ export default {
             colRow: { col: iCol, row: iRow },
             highlight: graphNode.selected,
             rect: createRect({
-              left: iCol * (this.colWidth + this.nodeSpacing),
+              left: iCol * (this.colWidth + this.cardSpacing),
               top: top,
               width: this.colWidth,
               height: height
             })
           }
-          top += height + this.nodeSpacing
+          top += height + this.cardSpacing
         })
       })
-      return nodes
+      return cards
     },
-    getColRowByRect: function (nodes, rect) {
-      const col = Math.floor((rect.center.x + 0.5 * this.nodeSpacing) / (this.colWidth + this.nodeSpacing))
-      const colRows = nodes.map(node => node.colRow)
+    getColRowByRect: function (cards, rect) {
+      const col = Math.floor((rect.center.x + 0.5 * this.cardSpacing) / (this.colWidth + this.cardSpacing))
+      const colRows = cards.map(node => node.colRow)
       const grid = layout.toPaperGrid(colRows)
       const column = grid[col]
       const colHeights = column.map(paperId => this.graph.nodes[paperId].geometry.height)
@@ -444,7 +446,7 @@ export default {
           centerYs.push(height / 2)
         } else {
           const lastCenterY = centerYs[centerYs.length - 1]
-          centerYs.push(lastCenterY + this.nodeSpacing + height)
+          centerYs.push(lastCenterY + this.cardSpacing + height)
         }
         return centerYs
       }, [])
@@ -464,13 +466,13 @@ export default {
         row: row + 1
       }
     },
-    updateNode: function (node) {
-      this.$set(this.nodes, node.key, node)
+    updateCard: function (card) {
+      this.$set(this.cards, card.key, card)
     },
     nextTickLayoutPaperCards: function () {
       this.$nextTick().then(() => {
         this.updateGeos()
-        this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
+        this.cards = this.layoutByMethod(this.graph, this.layoutMethod)
       })
     },
     updateGeos: function () {
@@ -538,7 +540,7 @@ export default {
   padding: 0;
 }
 
-.nodes-container {
+.cards-container {
   position: relative;
   width: 100%;
   height: 100%;

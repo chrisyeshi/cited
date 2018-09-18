@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export function getColRowsByYears (nodes) {
   const years = nodes.map(node => node.paper.year)
   let onlyUnique = (value, index, self) => self.indexOf(value) === index
@@ -103,15 +105,13 @@ export function getColRowsByOptimalYearIntervals (nodes) {
   return toPaperColRows(grid)
 }
 
-export function toPaperGrid (colRows) {
-  let grid = []
-  Object.keys(colRows).forEach(pid => {
-    const colRow = colRows[pid]
-    grid[colRow.col] = grid[colRow.col] === undefined ? [] : grid[colRow.col]
-    grid[colRow.col][colRow.row] = pid
-  })
-  grid.forEach((column, index) => {
-    grid[index] = column === undefined ? [] : column
+export function toPaperGrid (inColRows) {
+  const toColRowsObject = inColRows => _.pickBy(_.mapValues(inColRows))
+  const colRows = toColRowsObject(inColRows)
+  const nCol = _.max(_.map(colRows, _.property('col'))) + 1
+  let grid = _.times(nCol, () => ([]))
+  _.forEach(colRows, ({ col, row }, paperIdStr) => {
+    grid[col][row] = _.toNumber(paperIdStr)
   })
   return grid
 }
@@ -150,7 +150,7 @@ export function getPaperCitingLevels (nodes) {
 }
 
 function getPaperLevels (nodes, rootProp, connProp) {
-  let levels = {}
+  let levels = _.times(nodes.length, _.constant(0))
   const rootIds = nodes.reduce((paperIds, node, paperId) => {
     if (node[rootProp].length === 0) {
       paperIds.push(paperId)

@@ -118,7 +118,10 @@ export class Graph {
     _.forEach(relation.citedBys, index => {
       this.nodes[index].inGraphCitings.push(newIndex)
     })
-    const node = new Node(paper, relation.citings, relation.citedBys)
+    const node = new Node(paper, {
+      inGraphCitings: relation.citings,
+      inGraphCitedBys: relation.citedBys
+    })
     this.nodes.push(node)
     return node
   }

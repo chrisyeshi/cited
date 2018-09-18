@@ -1,4 +1,5 @@
 import axios from 'axios'
+import _ from 'lodash'
 
 const crossref = 'https://api.crossref.org'
 const mailto = 'chrisyeshi@gmail.com'
@@ -22,6 +23,10 @@ export function search (text, page = 0) {
 }
 
 export function getPaperByDOI (doi) {
+  // TODO: better validation of DOI
+  if (_.isEmpty(doi)) {
+    throw new Error('a DOI should not be empty.')
+  }
   const url = `${crossref}/works/${doi}?mailto=${mailto}`
   return axios.get(url).then(response => {
     const unPaper = response.data.message
@@ -32,14 +37,14 @@ export function getPaperByDOI (doi) {
 
 function formatPaper (crossrefPaper) {
   return {
-    doi: crossrefPaper.DOI,
+    doi: _.toLower(crossrefPaper.DOI),
     title: crossrefPaper.title.join(),
     abstract: crossrefPaper.abstract ? crossrefPaper.abstract : '',
     year: +crossrefPaper.created['date-parts'][0][0],
     citationCount: crossrefPaper['is-referenced-by-count'],
     citedBy: !crossrefPaper.relation ? [] : !crossrefPaper.relation.cites ? [] : crossrefPaper.relation.cites,
     authors: formatAuthors(crossrefPaper.author),
-    references: crossrefPaper.reference ? crossrefPaper.reference.map(ref => ({ doi: ref.DOI })).filter(v => v.doi !== undefined) : []
+    references: crossrefPaper.reference ? crossrefPaper.reference.map(ref => ({ doi: _.toLower(ref.DOI) })).filter(v => v.doi !== undefined) : []
   }
 }
 
