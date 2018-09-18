@@ -19,7 +19,7 @@
             @click="$emit('clickhandle', paper.key)">
           </v-spacer>
           <span class="header-item"
-            :style="{ 'background-color': inNetworkReferenceColor }"
+            :style="{ 'background-color': inNetworkCitationColor }"
             @mouseover="$emit('mouseovercitecount', paper.key)"
             @mouseout="$emit('mouseoutcitecount', paper.key)"
             @click="$emit('clickcitecount', paper.key)">

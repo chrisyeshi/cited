@@ -37,7 +37,7 @@
       </v-toolbar-side-icon>
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-tooltip v-if="graph.nodes.find(node => node.selected)" bottom>
+      <v-tooltip v-if="graph.isAnyNodeSelected" bottom>
         <v-btn icon color="orange" slot="activator" @click="findCommonRelatives">
           <v-icon color="white">device_hub</v-icon>
         </v-btn>
@@ -76,7 +76,7 @@
     </v-toolbar>
     <v-content app>
       <v-container ref="kanbanContainer" fluid kanban-container
-        v-on:mousewheel="scroll">
+        v-on:mousewheel="preventTrackpadSwipeToBack">
         <div class="years-container"
           :style="`margin: 5px -${nodeSpacing / 2}px;`">
           <span
@@ -118,8 +118,10 @@ import PaperDetail from './PaperDetail.vue'
 import SearchResults from './SearchResults.vue'
 import CommonRelatives from './CommonRelatives.vue'
 import { create as createRect } from './rect.js'
+import { Graph } from './kanbangraph.js'
 import * as layout from './gridbasedlayout.js'
 import * as api from './crossref.js'
+import _ from 'lodash'
 
 export default {
   name: 'Kanban',
@@ -135,7 +137,10 @@ export default {
       this.data = res.body
       this.paper = this.data.paper
       this.title = this.paper.title
-      this.graph = createGraph(this.data.references, this.data.relations)
+      this.graph = Graph.fromTestJson({
+        papers: this.data.references,
+        relations: this.data.relations
+      })
       this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
       this.nextTickLayoutPaperCards()
     })
@@ -176,11 +181,11 @@ export default {
           key: index,
           citedBy: {
             x: citedBy.rect.left,
-            y: citedBy.rect.top + this.graph.nodes[relation.citedBy].geo.headerHeight / 2
+            y: citedBy.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
           },
           citing: {
             x: citing.rect.right,
-            y: citing.rect.top + this.graph.nodes[relation.citedBy].geo.headerHeight / 2
+            y: citing.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
           }
         }
       })
@@ -191,11 +196,11 @@ export default {
         let citing = this.nodes[relation.citing]
         const start = {
           x: citedBy.rect.left,
-          y: citedBy.rect.top + this.graph.nodes[relation.citedBy].geo.headerHeight / 2
+          y: citedBy.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
         }
         const end = {
           x: citing.rect.right,
-          y: citing.rect.top + this.graph.nodes[relation.citedBy].geo.headerHeight / 2
+          y: citing.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
         }
         const interpolate = (beg, end, ratio) => {
           return ratio * (end - beg) + beg
@@ -252,8 +257,7 @@ export default {
       set: function (method) {
         this.showLinkMethod = method
         if (method === 'show-link-all') {
-          const relations = extractRelations(this.graph.nodes)
-          this.showLinks(relations)
+          this.showLinks(this.graph.relations)
         } else {
           this.visiblePaperRefLinks = []
           this.visiblePaperCiteLinks = []
@@ -282,13 +286,14 @@ export default {
       const dois = this.paper.references.map(ref => ref.doi)
       Promise.all(dois.map(doi => api.getPaperByDOI(doi))).then(objects => {
         const papers = objects.filter(obj => obj !== null)
-        this.graph = compileGraph(papers)
+        this.graph = Graph.fromPapers(papers)
         this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
         this.nextTickLayoutPaperCards()
       })
     },
     searchResultInsert: function (paper) {
-      this.graph = addToGraph(this.graph, paper)
+      // this.graph = addToGraph(this.graph, paper)
+      this.graph.insert(paper)
       this.nodes = this.layoutByMethod(this.graph, this.layoutMethod)
       this.nextTickLayoutPaperCards()
     },
@@ -296,113 +301,77 @@ export default {
       this.drawerComponent = 'paper-detail'
       this.$refs.paperDetail.setPaper(paper)
     },
-    getInNetworkRelations: function (prop, paperIndex) {
-      if (prop === 'citing') {
-        return this.graph.nodes[paperIndex].citedBy.map(relatedId => ({
-          citing: paperIndex,
-          citedBy: relatedId
-        }))
-      } else {
-        return this.graph.nodes[paperIndex].citing.map(relatedId => ({
-          citing: relatedId,
-          citedBy: paperIndex
-        }))
-      }
-    },
     findCommonRelatives: function () {
-      const papers = this.graph.nodes.filter(node => node.selected).map(node => node.paper)
+      const papers = _.map(this.graph.selectedNodes, node => node.paper)
+      this.isDrawerVisible = true
       this.drawerComponent = 'common-relatives'
       this.$refs.commonRelatives.setPapers(papers)
     },
     handleMouseOverRefCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-hover') {
-        const set = new Set(this.visiblePaperRefLinks)
-        set.add(paperIndex)
-        this.visiblePaperRefLinks = Array.from(set)
+        this.visiblePaperRefLinks =
+          _.union(this.visiblePaperRefLinks, [ paperIndex ])
       }
     },
     handleMouseOutRefCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-hover') {
-        const set = new Set(this.visiblePaperRefLinks)
-        set.delete(paperIndex)
-        this.visiblePaperRefLinks = Array.from(set)
+        this.visiblePaperRefLinks =
+          _.without(this.visiblePaperRefLinks, paperIndex)
       }
     },
     handleClickRefCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-click') {
-        const set = new Set(this.visiblePaperRefLinks)
-        if (set.has(paperIndex)) {
-          set.delete(paperIndex)
+        if (_.includes(this.visiblePaperRefLinks, paperIndex)) {
+          this.visiblePaperRefLinks =
+            _.without(this.visiblePaperRefLinks, paperIndex)
         } else {
-          set.add(paperIndex)
+          this.visiblePaperRefLinks =
+            _.union(this.visiblePaperRefLinks, [ paperIndex ])
         }
-        this.visiblePaperRefLinks = Array.from(set)
       }
     },
     handleMouseOverCiteCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-hover') {
-        const set = new Set(this.visiblePaperCiteLinks)
-        set.add(paperIndex)
-        this.visiblePaperCiteLinks = Array.from(set)
+        this.visiblePaperCiteLinks =
+          _.union(this.visiblePaperCiteLinks, [ paperIndex ])
       }
     },
     handleMouseOutCiteCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-hover') {
-        const set = new Set(this.visiblePaperCiteLinks)
-        set.delete(paperIndex)
-        this.visiblePaperCiteLinks = Array.from(set)
+        this.visiblePaperCiteLinks =
+          _.without(this.visiblePaperCiteLinks, paperIndex)
       }
     },
     handleClickCiteCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-click') {
-        const set = new Set(this.visiblePaperCiteLinks)
-        if (set.has(paperIndex)) {
-          set.delete(paperIndex)
+        if (_.includes(this.visiblePaperCiteLinks, paperIndex)) {
+          this.visiblePaperCiteLinks =
+            _.without(this.visiblePaperCiteLinks, paperIndex)
         } else {
-          set.add(paperIndex)
+          this.visiblePaperCiteLinks =
+            _.union(this.visiblePaperCiteLinks, [ paperIndex ])
         }
-        this.visiblePaperCiteLinks = Array.from(set)
       }
     },
     handleClickTitle: function (paperIndex) {
+      this.isDrawerVisible = true
       this.showPaperDetail(this.graph.nodes[paperIndex].paper)
     },
     handleClickHandle: function (paperIndex) {
-      this.graph.nodes[paperIndex].selected =
-        !this.graph.nodes[paperIndex].selected
+      this.graph.toggleSelectedByIndex(paperIndex)
       const colRows = this.nodes.map(node => node.colRow)
       this.nodes = this.getNodesByColRows(this.graph, colRows)
     },
-    scroll: function (evt) {
+    preventTrackpadSwipeToBack: function (evt) {
       evt.preventDefault()
       this.$refs.kanbanContainer.scrollLeft = Math.max(1, this.$refs.kanbanContainer.scrollLeft + evt.deltaX)
       this.$refs.kanbanContainer.scrollTop = this.$refs.kanbanContainer.scrollTop + evt.deltaY
-    },
-    linkInNetworkReferences: function (paperIndex) {
-      this.showLinks(this.getInNetworkRelations('citedBy', paperIndex))
-    },
-    unlinkInNetworkReferences: function (paperIndex) {
-      this.showLinks([])
-    },
-    linkInNetworkCitations: function (paperIndex) {
-      this.showLinks(this.getInNetworkRelations('citing', paperIndex))
-    },
-    unlinkInNetworkCitations: function (paperIndex) {
-      this.showLinks([])
     },
     showLinks: function (relations) {
       this.visibleRelations = relations
     },
     getVisibleLinks: function (paperRefLinks, paperCiteLinks) {
-      let strSet = new Set()
-      paperRefLinks.forEach(paperId => {
-        this.getInNetworkRelations('citedBy', paperId).map(relation => JSON.stringify(relation)).forEach(str => strSet.add(str))
-      })
-      paperCiteLinks.forEach(paperId => {
-        this.getInNetworkRelations('citing', paperId).map(relation => JSON.stringify(relation)).forEach(str => strSet.add(str))
-      })
-      const ret = Array.from(strSet).map(str => JSON.parse(str))
-      return ret
+      return this.graph.getUnionRelations(paperCiteLinks, paperRefLinks)
     },
     movePaperCard: function (node, evt) {
       const oldColRows = this.nodes.map(node => node.colRow)
@@ -438,8 +407,9 @@ export default {
         let top = 0
         column.forEach((paperIdStr, iRow) => {
           const paperId = parseInt(paperIdStr)
-          const height = graph.nodes[paperId].geo.height
-          const paper = this.graph.nodes[paperId].paper
+          const graphNode = graph.nodes[paperId]
+          const height = graphNode.geometry.height
+          const paper = graphNode.paper
           nodes[paperId] = {
             key: paperId,
             title: paper.title,
@@ -447,10 +417,10 @@ export default {
             year: paper.year,
             referenceCount: paper.references.length,
             citationCount: paper.citationCount,
-            inNetworkReferenceCount: this.graph.nodes[paperId].citing.length,
-            inNetworkCitationCount: this.graph.nodes[paperId].citedBy.length,
+            inNetworkReferenceCount: graphNode.inGraphCitings.length,
+            inNetworkCitationCount: graphNode.inGraphCitedBys.length,
             colRow: { col: iCol, row: iRow },
-            highlight: graph.nodes[paperId].selected,
+            highlight: graphNode.selected,
             rect: createRect({
               left: iCol * (this.colWidth + this.nodeSpacing),
               top: top,
@@ -468,7 +438,7 @@ export default {
       const colRows = nodes.map(node => node.colRow)
       const grid = layout.toPaperGrid(colRows)
       const column = grid[col]
-      const colHeights = column.map(paperId => this.graph.nodes[paperId].geo.height)
+      const colHeights = column.map(paperId => this.graph.nodes[paperId].geometry.height)
       const colCenterYs = colHeights.reduce((centerYs, height) => {
         if (centerYs.length === 0) {
           centerYs.push(height / 2)
@@ -505,110 +475,13 @@ export default {
     },
     updateGeos: function () {
       this.$refs.paperCards.forEach(card => {
-        this.graph.nodes[card.paper.key].geo = {
+        this.graph.nodes[card.paper.key].geometry = {
           height: card.$el.clientHeight,
           headerHeight: card.$refs.header.computedHeight
         }
       })
     }
   }
-}
-
-function extractRelations (graphNodes) {
-  const layeredRelations = graphNodes.map((node, paperId) => {
-    const citingIds = node.citing
-    return citingIds.map(citingId => ({ citing: citingId, citedBy: paperId }))
-  })
-  return layeredRelations.reduce((acc, val) => acc.concat(val), [])
-}
-
-// TODO: extract graph functions into its own file
-// TODO: standardize the graph node object
-
-function createGraph (papers, relations) {
-  const nodes = papers.map(paper => ({
-    paper: {
-      ...paper,
-      authors: paper.authors.split(/, |, and | and /).map(name => ({ family: name, given: '' })),
-      abstract: ''
-    },
-    citing: [],
-    citedBy: [],
-    geo: { height: 0, headerHeight: 0 }
-  }))
-  relations.forEach(relation => {
-    nodes[relation.citing].citedBy.push(relation.citedBy)
-    nodes[relation.citedBy].citing.push(relation.citing)
-  })
-  nodes.forEach(node => {
-    node.paper.references = node.citing
-  })
-  return { nodes: nodes }
-}
-
-function compileGraph (papers) {
-  const nodes = papers.map(paper => ({
-    paper: paper,
-    citing: [],
-    citedBy: [],
-    geo: { height: 0, headerHeight: 0 }
-  }))
-  papers.forEach((paper, paperId) => {
-    const references = paper.references
-    const refDois = references.map(ref => ref.doi)
-    const inNetworkReferences = refDois.map(doi => {
-      if (doi === undefined) {
-        return null
-      }
-      return nodes.findIndex(node => {
-        return doi === node.paper.doi
-      })
-    })
-    nodes[paperId].citing = inNetworkReferences.filter(value => {
-      return value !== undefined && value !== null && value !== -1
-    })
-  })
-  nodes.forEach((node, citedBy) => {
-    node.citing.forEach(citing => {
-      nodes[citing].citedBy.push(citedBy)
-    })
-  })
-  return { nodes: nodes }
-}
-
-function addToGraph (graph, paper) {
-  const node = {
-    paper: paper,
-    citing: [],
-    citedBy: [],
-    geo: { height: 0, headerHeight: 0 }
-  }
-  const paperId = graph.nodes.push(node) - 1
-  // citing
-  const refDois = paper.references.map(ref => ref.doi)
-  const inNetworkReferences = refDois.map(doi => {
-    if (doi === undefined) {
-      return null
-    }
-    return graph.nodes.findIndex(node => {
-      return doi === node.paper.doi
-    })
-  })
-  node.citing = inNetworkReferences.filter(value => {
-    return value !== undefined && value !== null && value !== -1
-  })
-  node.citing.forEach(citing => {
-    graph.nodes[citing].citedBy.push(paperId)
-  })
-  // citedBy
-  graph.nodes.forEach((eachNode, eachNodeId) => {
-    const refDois = eachNode.paper.references.map(ref => ref.doi)
-    if (refDois.includes(paper.doi)) {
-      eachNode.citing.push(paperId)
-      node.citedBy.push(eachNodeId)
-    }
-  })
-  return graph
 }
 
 </script>

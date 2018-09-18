@@ -1,4 +1,3 @@
-
 export function getColRowsByYears (nodes) {
   const years = nodes.map(node => node.paper.year)
   let onlyUnique = (value, index, self) => self.indexOf(value) === index
@@ -64,7 +63,6 @@ export function getColRowsByOptimalYearIntervals (nodes) {
   let colIntervals = paperColIntervals.slice()
   let grid = optimalYearIntervals.map(() => ([]))
   while (sortedPaperIds.length > 0) {
-    // console.table(grid)
     sortedPaperIds.sort((a, b) => {
       const aRange = colIntervals[a].max - colIntervals[a].min
       const bRange = colIntervals[b].max - colIntervals[b].min
@@ -105,14 +103,6 @@ export function getColRowsByOptimalYearIntervals (nodes) {
   return toPaperColRows(grid)
 }
 
-export function getPaperCitedByLevels (nodes) {
-  return getPaperLevels(nodes, 'citedBy', 'citing')
-}
-
-export function getPaperCitingLevels (nodes) {
-  return getPaperLevels(nodes, 'citing', 'citedBy')
-}
-
 export function toPaperGrid (colRows) {
   let grid = []
   Object.keys(colRows).forEach(pid => {
@@ -151,6 +141,14 @@ export function moveColRow (fromColRows, paperId, toColRow) {
   return toPaperColRows(toGrid)
 }
 
+export function getPaperCitedByLevels (nodes) {
+  return getPaperLevels(nodes, 'inGraphCitedBys', 'inGraphCitings')
+}
+
+export function getPaperCitingLevels (nodes) {
+  return getPaperLevels(nodes, 'inGraphCitings', 'inGraphCitedBys')
+}
+
 function getPaperLevels (nodes, rootProp, connProp) {
   let levels = {}
   const rootIds = nodes.reduce((paperIds, node, paperId) => {
@@ -164,6 +162,7 @@ function getPaperLevels (nodes, rootProp, connProp) {
   while (bfsQueue.length > 0) {
     const currId = bfsQueue.shift()
     const paperIds = nodes[currId][connProp]
+
     paperIds.forEach(paperId => {
       levels[paperId] = levels[paperId] ? Math.max(levels[currId] + 1, levels[paperId]) : levels[currId] + 1
       bfsQueue.push(paperId)
@@ -192,14 +191,14 @@ function getMinIndexes (numbers) {
 function updateColIntervals (paperId, iCol, nodes, colIntervals) {
   let colInts = colIntervals.slice()
   colInts[paperId] = { min: iCol, max: iCol }
-  nodes[paperId].citing.forEach(citingId => {
+  nodes[paperId].inGraphCitings.forEach(citingId => {
     let interval = colIntervals[citingId]
     colInts[citingId] = {
       min: interval.min,
       max: Math.min(iCol - 1, interval.max)
     }
   })
-  nodes[paperId].citedBy.forEach(citedById => {
+  nodes[paperId].inGraphCitedBys.forEach(citedById => {
     let interval = colIntervals[citedById]
     colInts[citedById] = {
       min: Math.max(iCol + 1, interval.min),
