@@ -89,8 +89,8 @@
           <div class="cards-container" ref="cardsContainer">
             <paper-card
               ref="paperCards"
-              v-for="card in cards" v-bind:key="card.key"
-              v-bind:paper="card"
+              v-for="card in cards" v-bind:key="card.index"
+              v-bind:card="card"
               v-on:update:paper="updateCard($event)"
               v-on:mouseoverrefcount="handleMouseOverRefCount($event)"
               v-on:mouseoutrefcount="handleMouseOutRefCount($event)"
@@ -379,7 +379,7 @@ export default {
     movePaperCard: function (node, evt) {
       const oldColRows = this.cards.map(node => node.colRow)
       const newColRow = this.getColRowByRect(this.cards, node.rect)
-      const newColRows = layout.moveColRow(oldColRows, node.key, newColRow)
+      const newColRows = layout.moveColRow(oldColRows, node.index, newColRow)
       this.cards = this.getCardsByColRows(this.graph, newColRows)
     },
     layoutByMethod: function (graph, method) {
@@ -410,27 +410,19 @@ export default {
         let top = 0
         column.forEach((paperId, iRow) => {
           const graphNode = graph.nodes[paperId]
-          const height = graphNode.geometry.height
-          const paper = graphNode.paper
+          const cardHeight = graphNode.geometry.height
           cards[paperId] = {
-            key: paperId,
-            title: paper.title,
-            authors: paper.authors,
-            year: paper.year,
-            referenceCount: paper.references.length,
-            citationCount: paper.citationCount,
-            inNetworkReferenceCount: graphNode.inGraphCitings.length,
-            inNetworkCitationCount: graphNode.inGraphCitedBys.length,
+            ...graphNode,
+            index: paperId,
             colRow: { col: iCol, row: iRow },
-            highlight: graphNode.selected,
             rect: createRect({
               left: iCol * (this.colWidth + this.cardSpacing),
               top: top,
               width: this.colWidth,
-              height: height
+              height: cardHeight
             })
           }
-          top += height + this.cardSpacing
+          top += cardHeight + this.cardSpacing
         })
       })
       return cards
@@ -467,7 +459,7 @@ export default {
       }
     },
     updateCard: function (card) {
-      this.$set(this.cards, card.key, card)
+      this.$set(this.cards, card.index, card)
     },
     nextTickLayoutPaperCards: function () {
       this.$nextTick().then(() => {
@@ -476,10 +468,10 @@ export default {
       })
     },
     updateGeos: function () {
-      this.$refs.paperCards.forEach(card => {
-        this.graph.nodes[card.paper.key].geometry = {
-          height: card.$el.clientHeight,
-          headerHeight: card.$refs.header.computedHeight
+      this.$refs.paperCards.forEach(component => {
+        this.graph.nodes[component.card.index].geometry = {
+          height: component.$el.clientHeight,
+          headerHeight: component.$refs.header.computedHeight
         }
       })
     }

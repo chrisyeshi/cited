@@ -1,6 +1,6 @@
 <template>
   <div class="paper-card"
-    v-bind:index="paper.index"
+    v-bind:index="card.index"
     v-bind:class="{ animate: !isDragging, 'front-most': isDragging }"
     v-bind:style="cardStyle">
     <v-hover close-delay=0>
@@ -9,26 +9,26 @@
         <v-system-bar ref="header" style="padding: 0px;">
           <span class="header-item"
             :style="{ 'background-color': inNetworkReferenceColor }"
-            @mouseover="$emit('mouseoverrefcount', paper.key)"
-            @mouseout="$emit('mouseoutrefcount', paper.key)"
-            @click="$emit('clickrefcount', paper.key)">
-            <span>&lt; {{ paper.inNetworkReferenceCount }} / {{ paper.referenceCount }}</span>
+            @mouseover="$emit('mouseoverrefcount', card.index)"
+            @mouseout="$emit('mouseoutrefcount', card.index)"
+            @click="$emit('clickrefcount', card.index)">
+            <span>&lt; {{ card.inGraphCitings.length }} / {{ card.paper.references.length }}</span>
           </span>
           <v-spacer :style="handleStyle"
             @mousedown="dragElement"
-            @click="$emit('clickhandle', paper.key)">
+            @click="$emit('clickhandle', card.index)">
           </v-spacer>
           <span class="header-item"
             :style="{ 'background-color': inNetworkCitationColor }"
-            @mouseover="$emit('mouseovercitecount', paper.key)"
-            @mouseout="$emit('mouseoutcitecount', paper.key)"
-            @click="$emit('clickcitecount', paper.key)">
-            <span>{{ paper.inNetworkCitationCount }} / {{ paper.citationCount }} &gt;</span>
+            @mouseover="$emit('mouseovercitecount', card.index)"
+            @mouseout="$emit('mouseoutcitecount', card.index)"
+            @click="$emit('clickcitecount', card.index)">
+            <span>{{ card.inGraphCitedBys.length }} / {{ card.paper.citationCount }} &gt;</span>
           </span>
         </v-system-bar>
         <v-card-text>
           <h4>
-            <a @click="$emit('clicktitle', paper.key)">{{ paper.title }}</a>
+            <a @click="$emit('clicktitle', card.index)">{{ card.paper.title }}</a>
           </h4>
           <div>
             <template v-for="(name, index) in authorNames">
@@ -41,7 +41,7 @@
             </template>
           </div>
           <div>
-            <span><a @click="console">Year {{ paper.year }}</a></span>, <span><a @click="console">Referenced {{ paper.referenceCount }}</a></span>, <span><a @click="console">Cited by {{ paper.citationCount }}</a></span>
+            <span><a @click="console">Year {{ card.paper.year }}</a></span>, <span><a @click="console">Referenced {{ card.paper.references.length }}</a></span>, <span><a @click="console">Cited by {{ card.paper.citationCount }}</a></span>
           </div>
         </v-card-text>
       </v-card>
@@ -57,7 +57,7 @@ import { create as createRect } from './rect.js'
 export default {
   name: 'PaperCard',
   props: {
-    paper: Object,
+    card: Object,
     autoHeight: {
       type: Boolean,
       default: true
@@ -74,21 +74,21 @@ export default {
   data () {
     return {
       isDragging: false,
-      rect: { ...this.paper.rect }
+      rect: { ...this.card.rect }
     }
   },
   computed: {
     authorNames: function () {
-      return this.paper.authors.map(author => `${author.family}, ${author.given}`)
+      return this.card.paper.authors.map(author => `${author.family}, ${author.given}`)
     },
     authorText: function () {
-      const names = this.paper.authors.map(author => `${author.family}, ${author.given}`)
+      const names = this.card.paper.authors.map(author => `${author.family}, ${author.given}`)
       return names.join(' and ')
     },
     handleStyle: function () {
       return {
         height: '100%',
-        backgroundColor: this.paper.highlight ? 'orange' : undefined
+        backgroundColor: this.card.selected ? 'orange' : undefined
       }
     },
     cardStyle: function () {
@@ -107,57 +107,57 @@ export default {
           text: text
         }
       }
-      let authorList = this.paper.authors.map(author => `${author.family}, ${author.given}`)
+      let authorList = this.card.paper.authors.map(author => `${author.family}, ${author.given}`)
       let authorText = authorList.join(' and ')
       let shortAuthors = authorList.length < 2 ? authorList[0] : authorList[0] + ' +' + (authorList.length - 1)
       if (this.maxLineCount < 2) {
         return [
-          createLineObj('line-clamp-1', shortAuthors + ', ' + this.paper.year + ', "' + this.paper.citationCount)
+          createLineObj('line-clamp-1', shortAuthors + ', ' + this.card.paper.year + ', "' + this.card.paper.citationCount)
         ]
       }
       if (this.maxLineCount < 3) {
         return [
-          createLineObj('line-clamp-1', this.paper.title),
-          createLineObj('line-clamp-1', shortAuthors + ', ' + this.paper.year + ', "' + this.paper.citationCount)
+          createLineObj('line-clamp-1', this.card.paper.title),
+          createLineObj('line-clamp-1', shortAuthors + ', ' + this.card.paper.year + ', "' + this.card.paper.citationCount)
         ]
       }
       if (this.maxLineCount < 4) {
         return [
-          createLineObj('line-clamp-1', this.paper.title),
+          createLineObj('line-clamp-1', this.card.paper.title),
           createLineObj('line-clamp-1', authorText),
-          createLineObj('line-clamp-1', 'Published in ' + this.paper.year + ', Cited by ' + this.paper.citationCount)
+          createLineObj('line-clamp-1', 'Published in ' + this.card.paper.year + ', Cited by ' + this.card.paper.citationCount)
         ]
       }
       if (this.maxLineCount < 5) {
         return [
-          createLineObj('line-clamp-2', this.paper.title),
+          createLineObj('line-clamp-2', this.card.paper.title),
           createLineObj('line-clamp-1', authorText),
-          createLineObj('line-clamp-1', 'Published in ' + this.paper.year + ', Cited by ' + this.paper.citationCount)
+          createLineObj('line-clamp-1', 'Published in ' + this.card.paper.year + ', Cited by ' + this.card.paper.citationCount)
         ]
       }
       return [
-        createLineObj('', this.paper.title),
+        createLineObj('', this.card.paper.title),
         createLineObj('', authorText),
-        createLineObj('line-clamp-1', 'Published in ' + this.paper.year + ', Cited by ' + this.paper.citationCount)
+        createLineObj('line-clamp-1', 'Published in ' + this.card.paper.year + ', Cited by ' + this.card.paper.citationCount)
       ]
     },
     inNetworkCitationColor: function () {
       return this.getColor({
         maxLevel: 4,
         logBase: 2,
-        value: this.paper.inNetworkCitationCount
+        value: this.card.inGraphCitedBys.length
       })
     },
     inNetworkReferenceColor: function () {
       return this.getColor({
         maxLevel: 4,
         logBase: 2,
-        value: this.paper.inNetworkReferenceCount
+        value: this.card.inGraphCitings.length
       })
     }
   },
   watch: {
-    paper: function (curr, prev) {
+    card: function (curr, prev) {
       this.rect = createRect(curr.rect)
     }
   },
@@ -173,22 +173,22 @@ export default {
         this.isDragging = false
         document.onmouseup = null
         document.onmousemove = null
-        const paper = {
-          ...this.paper,
+        const card = {
+          ...this.card,
           rect: createRect(this.rect)
         }
-        this.$emit('dragend', paper, evt)
+        this.$emit('dragend', card, evt)
       }
       let elementDrag = evt => {
         let xCurr = evt.clientX
         let yCurr = evt.clientY
         this.rect.left += (xCurr - xPrev)
         this.rect.top += (yCurr - yPrev)
-        const paper = {
-          ...this.paper,
+        const card = {
+          ...this.card,
           rect: createRect(this.rect)
         }
-        this.$emit('update:paper', paper)
+        this.$emit('update:card', card)
         xPrev = xCurr
         yPrev = yCurr
       }
