@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { Paper } from './paper.js'
 
 const nodeOptTemplate = {
   inGraphCitings: [],
@@ -32,20 +33,8 @@ export class Graph {
   }
 
   static fromTestJson ({ papers: testPapers, relations }) {
-    const processAuthors = authorText => {
-      const names = _.split(authorText, /, |, and | and /)
-      const createAuthorObject = text => ({
-        family: text,
-        given: ''
-      })
-      return _.map(names, createAuthorObject)
-    }
-    const papers = _.map(testPapers, testPaper => ({
-      ...testPaper,
-      references: [],
-      authors: processAuthors(testPaper.authors),
-      abstract: ''
-    }))
+    const papers =
+      _.map(testPapers, testPaper => Paper.fromTestJson(testPaper))
     const nodes = _.map(papers, paper => new Node(paper))
     _.forEach(relations, relation => {
       nodes[relation.citing].inGraphCitedBys =
@@ -54,7 +43,7 @@ export class Graph {
         _.union(nodes[relation.citedBy].inGraphCitings, [relation.citing])
     })
     _.forEach(nodes, node => {
-      node.paper.references =
+      node.paper.citings =
         _.map(node.inGraphCitings, index => ({ doi: index }))
     })
     return new Graph(nodes)

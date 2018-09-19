@@ -26,6 +26,7 @@
 <script>
 import PaperList from './PaperList.vue'
 import * as api from './crossref.js'
+import _ from 'lodash'
 
 export default {
   name: 'CommonRelatives',
@@ -43,10 +44,10 @@ export default {
     setPapers: function (papers) {
       this.papers = papers
       const arrayOfCitingDois = papers.map(paper => {
-        return paper.references.map(ref => ref.doi)
+        return paper.references.map(ref => ref.doi).filter(doi => !_.isEmpty(doi))
       })
       const arrayOfCitedByDois = papers.map(paper => {
-        return paper.citedBy.map(citedBy => citedBy.doi)
+        return paper.citedBy.map(citedBy => citedBy.doi).filter(doi => !_.isEmpty(doi))
       })
       const intersect2 = (a, b) => a.filter(x => b.includes(x))
       const intersect = (a, b, ...rest) => {
