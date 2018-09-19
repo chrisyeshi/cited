@@ -6,7 +6,32 @@ export class Author {
     this.family = family
     this.given = given
   }
+
+  static trim (text) {
+    return _.trim(text, ' ,')
+  }
+
+  static stringify (value, format = Author.FORMAT_FAMILY_COMMA_GIVEN, delimiter = ' and ') {
+    if (_.isArray(value)) {
+      const authors = value
+      // TODO: validation
+      const texts = _.map(authors, author => this.stringify(author, format))
+      return _.join(texts, delimiter)
+    } else {
+      const author = value
+      // TODO: validataion
+      if (format === Author.FORMAT_FAMILY_COMMA_GIVEN) {
+        return Author.trim(`${author.family}, ${author.given}`)
+      } else if (format === Author.FORMAT_GIVEN_FAMILY) {
+        return Author.trim(`${author.given} ${author.family}`)
+      }
+      throw new Error(`wrong format: ${format}`)
+    }
+  }
 }
+
+Author.FORMAT_FAMILY_COMMA_GIVEN = 'format_family_comma_given'
+Author.FORMAT_GIVEN_FAMILY = 'format_given_family'
 
 export class Paper {
   constructor (doi, title, authors, abstract, year,

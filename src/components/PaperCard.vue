@@ -51,8 +51,8 @@
 
 <script>
 import { create as createRect } from './rect.js'
-
-// TODO: use the standard Paper object format
+import _ from 'lodash'
+import { Author } from './paper.js'
 
 export default {
   name: 'PaperCard',
@@ -78,12 +78,9 @@ export default {
     }
   },
   computed: {
+    paper: function () { return this.card.paper },
     authorNames: function () {
-      return this.card.paper.authors.map(author => `${author.family}, ${author.given}`)
-    },
-    authorText: function () {
-      const names = this.card.paper.authors.map(author => `${author.family}, ${author.given}`)
-      return names.join(' and ')
+      return _.map(this.paper.authors, author => Author.stringify(author))
     },
     handleStyle: function () {
       return {
@@ -99,47 +96,6 @@ export default {
       }
       const height = { height: this.rect.height + 'px' }
       return this.autoHeight ? style : { ...style, ...height }
-    },
-    lines: function () {
-      let createLineObj = (classes, text) => {
-        return {
-          classes: classes,
-          text: text
-        }
-      }
-      let authorList = this.card.paper.authors.map(author => `${author.family}, ${author.given}`)
-      let authorText = authorList.join(' and ')
-      let shortAuthors = authorList.length < 2 ? authorList[0] : authorList[0] + ' +' + (authorList.length - 1)
-      if (this.maxLineCount < 2) {
-        return [
-          createLineObj('line-clamp-1', shortAuthors + ', ' + this.card.paper.year + ', "' + this.card.paper.citationCount)
-        ]
-      }
-      if (this.maxLineCount < 3) {
-        return [
-          createLineObj('line-clamp-1', this.card.paper.title),
-          createLineObj('line-clamp-1', shortAuthors + ', ' + this.card.paper.year + ', "' + this.card.paper.citationCount)
-        ]
-      }
-      if (this.maxLineCount < 4) {
-        return [
-          createLineObj('line-clamp-1', this.card.paper.title),
-          createLineObj('line-clamp-1', authorText),
-          createLineObj('line-clamp-1', 'Published in ' + this.card.paper.year + ', Cited by ' + this.card.paper.citationCount)
-        ]
-      }
-      if (this.maxLineCount < 5) {
-        return [
-          createLineObj('line-clamp-2', this.card.paper.title),
-          createLineObj('line-clamp-1', authorText),
-          createLineObj('line-clamp-1', 'Published in ' + this.card.paper.year + ', Cited by ' + this.card.paper.citationCount)
-        ]
-      }
-      return [
-        createLineObj('', this.card.paper.title),
-        createLineObj('', authorText),
-        createLineObj('line-clamp-1', 'Published in ' + this.card.paper.year + ', Cited by ' + this.card.paper.citationCount)
-      ]
     },
     inNetworkCitationColor: function () {
       return this.getColor({
