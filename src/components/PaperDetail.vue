@@ -58,6 +58,7 @@
 <script>
 import PaperList from './PaperList.vue'
 import * as api from './crossref.js'
+import _ from 'lodash'
 
 export default {
   name: 'PaperDetail',
@@ -90,7 +91,7 @@ export default {
     getRefPapers: function (paper) {
       const dois = paper.references
         .map(ref => ref.doi)
-        .filter(doi => doi !== undefined)
+        .filter(doi => !_.isEmpty(doi))
       const promises = dois.map(doi => api.getPaperByDOI(doi).catch(() => null))
       return Promise.all(promises).then(responses => {
         return responses.filter(res => res !== null)
