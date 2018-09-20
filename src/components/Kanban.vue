@@ -91,7 +91,7 @@
               ref="paperCards"
               v-for="card in cards" v-bind:key="card.index"
               v-bind:card="card"
-              v-on:update:paper="updateCard($event)"
+              v-on:update:card="updateCard($event)"
               v-on:mouseoverrefcount="handleMouseOverRefCount($event)"
               v-on:mouseoutrefcount="handleMouseOutRefCount($event)"
               v-on:clickrefcount="handleClickRefCount($event)"
@@ -122,6 +122,8 @@ import { Graph } from './kanbangraph.js'
 import * as layout from './gridbasedlayout.js'
 import * as api from './crossref.js'
 import _ from 'lodash'
+
+// TODO: consider using https://haltu.github.io/muuri/
 
 export default {
   name: 'Kanban',
@@ -296,9 +298,16 @@ export default {
       })
     },
     searchResultInsert: function (paper) {
-      this.graph.insert(paper)
+      const node = this.graph.insert(paper)
+      const index = _.indexOf(this.graph.nodes, node)
+      // TODO: insert paper without applying a specific layout
       this.cards = this.layoutByMethod(this.graph, this.layoutMethod)
-      this.nextTickLayoutPaperCards()
+      this.nextTickLayoutPaperCards().then(() => {
+        const component =
+          _.find(
+            this.$refs.paperCards, paperCard => paperCard.card.index === index)
+        component.$el.scrollIntoView({ behavior: 'smooth' })
+      })
     },
     showPaperDetail: function (paper) {
       this.drawerComponent = 'paper-detail'
@@ -377,7 +386,7 @@ export default {
       return this.graph.getUnionRelations(paperCiteLinks, paperRefLinks)
     },
     movePaperCard: function (node, evt) {
-      const oldColRows = this.cards.map(node => node.colRow)
+      const oldColRows = this.cards.map(card => card.colRow)
       const newColRow = this.getColRowByRect(this.cards, node.rect)
       const newColRows = layout.moveColRow(oldColRows, node.index, newColRow)
       this.cards = this.getCardsByColRows(this.graph, newColRows)
@@ -390,6 +399,7 @@ export default {
       } else if (this.layoutMethod === 'layout-by-optimized') {
         return this.layoutByOptimized(graph)
       }
+      throw new Error(`wrong layout method ${method}`)
     },
     layoutByYears: function (graph) {
       const colRows = layout.getColRowsByYears(graph.nodes)
@@ -462,9 +472,10 @@ export default {
       this.$set(this.cards, card.index, card)
     },
     nextTickLayoutPaperCards: function () {
-      this.$nextTick().then(() => {
+      return this.$nextTick().then(() => {
         this.updateGeos()
-        this.cards = this.layoutByMethod(this.graph, this.layoutMethod)
+        const colRows = this.cards.map(_.property('colRow'))
+        this.cards = this.getCardsByColRows(this.graph, colRows)
       })
     },
     updateGeos: function () {

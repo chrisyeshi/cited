@@ -1,52 +1,53 @@
 <template>
-  <div class="paper-card"
-    v-bind:index="card.index"
-    v-bind:class="{ animate: !isDragging, 'front-most': isDragging }"
-    v-bind:style="cardStyle">
-    <v-hover close-delay=0>
-      <v-card slot-scope="{ hover }"
-        :class="`elevation-${hover ? 12 : 2}`">
-        <v-system-bar ref="header" style="padding: 0px;">
-          <span class="header-item"
-            :style="{ 'background-color': inNetworkReferenceColor }"
-            @mouseover="$emit('mouseoverrefcount', card.index)"
-            @mouseout="$emit('mouseoutrefcount', card.index)"
-            @click="$emit('clickrefcount', card.index)">
-            <span>&lt; {{ card.inGraphCitings.length }} / {{ card.paper.references.length }}</span>
-          </span>
-          <v-spacer :style="handleStyle"
-            @mousedown="dragElement"
-            @click="$emit('clickhandle', card.index)">
-          </v-spacer>
-          <span class="header-item"
-            :style="{ 'background-color': inNetworkCitationColor }"
-            @mouseover="$emit('mouseovercitecount', card.index)"
-            @mouseout="$emit('mouseoutcitecount', card.index)"
-            @click="$emit('clickcitecount', card.index)">
-            <span>{{ card.inGraphCitedBys.length }} / {{ card.paper.citationCount }} &gt;</span>
-          </span>
-        </v-system-bar>
-        <v-card-text>
-          <h4>
-            <a @click="$emit('clicktitle', card.index)">{{ card.paper.title }}</a>
-          </h4>
-          <div>
-            <template v-for="(name, index) in authorNames">
-              <span :key="`author-name-${index}`">
-                <a @click="console">{{ name }}</a>
-              </span>
-              <span v-if="index != authorNames.length - 1" :key="`author-and-${index}`">
-                and
-              </span>
-            </template>
-          </div>
-          <div>
-            <span><a @click="console">Year {{ card.paper.year }}</a></span>, <span><a @click="console">Referenced {{ card.paper.references.length }}</a></span>, <span><a @click="console">Cited by {{ card.paper.citationCount }}</a></span>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-hover>
-  </div>
+  <transition name="background">
+    <div class="paper-card"
+      v-bind:index="card.index"
+      v-bind:class="{ animate: !isDragging, 'front-most': isDragging }"
+      v-bind:style="cardStyle">
+      <v-hover close-delay=0>
+        <v-card slot-scope="{ hover }"
+          :class="`elevation-${hover ? 12 : 2}`">
+          <v-system-bar ref="header" style="padding: 0px;">
+            <span class="header-item"
+              :style="{ 'background-color': inNetworkReferenceColor }"
+              @mouseover="$emit('mouseoverrefcount', card.index)"
+              @mouseout="$emit('mouseoutrefcount', card.index)"
+              @click="$emit('clickrefcount', card.index)">
+              <span>&lt; {{ card.inGraphCitings.length }} / {{ card.paper.references.length }}</span>
+            </span>
+            <v-spacer :style="handleStyle"
+              @mousedown="dragElement">
+            </v-spacer>
+            <span class="header-item"
+              :style="{ 'background-color': inNetworkCitationColor }"
+              @mouseover="$emit('mouseovercitecount', card.index)"
+              @mouseout="$emit('mouseoutcitecount', card.index)"
+              @click="$emit('clickcitecount', card.index)">
+              <span>{{ card.inGraphCitedBys.length }} / {{ card.paper.citationCount }} &gt;</span>
+            </span>
+          </v-system-bar>
+          <v-card-text>
+            <h4>
+              <a @click="$emit('clicktitle', card.index)">{{ card.paper.title }}</a>
+            </h4>
+            <div>
+              <template v-for="(name, index) in authorNames">
+                <span :key="`author-name-${index}`">
+                  <a @click="console">{{ name }}</a>
+                </span>
+                <span v-if="index != authorNames.length - 1" :key="`author-and-${index}`">
+                  and
+                </span>
+              </template>
+            </div>
+            <div>
+              <span><a @click="console">Year {{ card.paper.year }}</a></span>, <span><a @click="console">Referenced {{ card.paper.references.length }}</a></span>, <span><a @click="console">Cited by {{ card.paper.citationCount }}</a></span>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-hover>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -65,10 +66,6 @@ export default {
     draggable: {
       type: Boolean,
       default: true
-    },
-    maxLineCount: {
-      type: Number,
-      default: 5
     }
   },
   data () {
@@ -123,21 +120,31 @@ export default {
         return
       }
       evt.preventDefault()
+      const xInit = evt.clientX
+      const yInit = evt.clientY
       let xPrev = evt.clientX
       let yPrev = evt.clientY
-      let closeDragElement = evt => {
+      const closeDragElement = evt => {
         this.isDragging = false
         document.onmouseup = null
         document.onmousemove = null
-        const card = {
-          ...this.card,
-          rect: createRect(this.rect)
+        const xCurr = evt.clientX
+        const yCurr = evt.clientY
+        const xDiff = xCurr - xInit
+        const yDiff = yCurr - yInit
+        if (Math.sqrt(xDiff * xDiff + yDiff * yDiff) > 1) {
+          const card = {
+            ...this.card,
+            rect: createRect(this.rect)
+          }
+          this.$emit('dragend', card, evt)
+        } else {
+          this.$emit('clickhandle', this.card.index)
         }
-        this.$emit('dragend', card, evt)
       }
-      let elementDrag = evt => {
-        let xCurr = evt.clientX
-        let yCurr = evt.clientY
+      const elementDrag = evt => {
+        const xCurr = evt.clientX
+        const yCurr = evt.clientY
         this.rect.left += (xCurr - xPrev)
         this.rect.top += (yCurr - yPrev)
         const card = {
@@ -189,20 +196,6 @@ a:hover {
   background-color: yellow;
 }
 
-.line-clamp-1 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .header-item {
   height: 100%;
   display: flex;
@@ -217,5 +210,12 @@ a:hover {
 
 .front-most {
   z-index: 99999;
+}
+
+.background-enter-active .v-card {
+  transition: background-color 2s ease-in;
+}
+.background-enter .v-card {
+  background-color: yellow;
 }
 </style>

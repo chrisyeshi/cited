@@ -59,6 +59,7 @@
 import PaperList from './PaperList.vue'
 import * as api from './crossref.js'
 import _ from 'lodash'
+import { Author } from './paper.js'
 
 export default {
   name: 'PaperDetail',
@@ -81,7 +82,7 @@ export default {
   },
   computed: {
     authorText () {
-      return this.formatAuthors(this.paper.authors)
+      return Author.stringify(this.paper.authors)
     }
   },
   methods: {
@@ -96,21 +97,6 @@ export default {
       return Promise.all(promises).then(responses => {
         return responses.filter(res => res !== null)
       })
-    },
-
-    // TODO: these two functions are duplicated from PaperList.vue
-    formatAuthor: function (authorObj) {
-      if (!authorObj.family) {
-        throw new Error('the family name of the author is not provided. ' + JSON.stringify(authorObj))
-      }
-      if (!authorObj.given) {
-        return authorObj.family
-      }
-      return `${authorObj.family}, ${authorObj.given}`
-    },
-
-    formatAuthors: function (authorObjs) {
-      return authorObjs.map(authorObj => this.formatAuthor(authorObj)).join(' and ')
     }
   }
 }
