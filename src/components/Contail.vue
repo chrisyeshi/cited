@@ -28,6 +28,14 @@
     <v-toolbar app fixed clipped-left>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>DisCO</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-text-field
+        label="Search by paper titles and keywoards"
+        solo
+      ></v-text-field>
+      <v-btn icon>
+        <v-icon>search</v-icon>
+      </v-btn>
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height class="pa-0">
@@ -35,20 +43,15 @@
           <v-flex xs6 fill-height class="pa-2">
             <v-toolbar dense>
               <v-toolbar-side-icon></v-toolbar-side-icon>
-              <v-btn icon>
+              <!-- <v-btn icon>
                 <v-icon>search</v-icon>
-              </v-btn>
-
+              </v-btn> -->
+              <v-spacer></v-spacer>
               <v-btn icon>
                 <v-icon>apps</v-icon>
               </v-btn>
-
               <v-btn icon>
                 <v-icon>refresh</v-icon>
-              </v-btn>
-
-              <v-btn icon>
-                <v-icon>more_vert</v-icon>
               </v-btn>
             </v-toolbar>
             <v-card height="100%" id="vis-context">
