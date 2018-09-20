@@ -137,4 +137,10 @@ export class Graph {
   getUnionRelations (citings, citedBys) {
     return _.filter(this.relations, relation => _.includes(citings, relation.citing) || _.includes(citedBys, relation.citedBy))
   }
+
+  deselectAllNodes () {
+    _.forEach(this.nodes, node => {
+      node.selected = false
+    })
+  }
 }

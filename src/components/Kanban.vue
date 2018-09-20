@@ -76,7 +76,8 @@
     </v-toolbar>
     <v-content app>
       <v-container ref="kanbanContainer" fluid kanban-container
-        v-on:mousewheel="preventTrackpadSwipeToBack">
+        @mousewheel="preventTrackpadSwipeToBack"
+        @mousedown="deselectAllNodes">
         <div class="years-container"
           :style="`margin: 5px -${cardSpacing / 2}px;`">
           <span
@@ -319,6 +320,10 @@ export default {
       this.drawerComponent = 'common-relatives'
       this.$refs.commonRelatives.setPapers(papers)
     },
+    deselectAllNodes: function () {
+      this.graph.deselectAllNodes()
+      this.nextTickLayoutPaperCards()
+    },
     handleMouseOverRefCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-hover') {
         this.visiblePaperRefLinks =
@@ -485,6 +490,9 @@ export default {
           headerHeight: component.$refs.header.computedHeight
         }
       })
+    },
+    console: function (value) {
+      console.log(value)
     }
   }
 }

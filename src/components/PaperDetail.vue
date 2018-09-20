@@ -87,6 +87,7 @@ export default {
   },
   methods: {
     setPaper: function (paper) {
+      this.references = []
       this.paper = paper
     },
     getRefPapers: function (paper) {

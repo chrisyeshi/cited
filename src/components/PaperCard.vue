@@ -16,7 +16,7 @@
               <span>&lt; {{ card.inGraphCitings.length }} / {{ card.paper.references.length }}</span>
             </span>
             <v-spacer :style="handleStyle"
-              @mousedown="dragElement">
+              @mousedown.stop="dragElement">
             </v-spacer>
             <span class="header-item"
               :style="{ 'background-color': inNetworkCitationColor }"
