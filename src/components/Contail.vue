@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import Circo from '../vis/Circo'
+import Circo from '../vis/PaperGraph'
 import '../vis/circo.css'
 // import PaperCard from './PaperCard.vue'
 
@@ -146,7 +146,7 @@ export default {
       nodes: [],
       visibleRelations: [],
       drawer: false,
-      selected: [2]
+      selected: []
     }
   },
   props: {
