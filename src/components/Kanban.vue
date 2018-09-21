@@ -76,9 +76,8 @@
     </v-toolbar>
     <v-content app>
       <v-container ref="kanbanContainer" fluid kanban-container
-        @mousewheel="preventTrackpadSwipeToBack"
         @mousedown="deselectAllNodes">
-        <div class="years-container"
+        <div ref="yearsContainer" class="years-container"
           :style="`margin: 5px -${cardSpacing / 2}px;`">
           <span
             v-for="(yearInterval, index) in yearIntervalLabels" v-bind:key="index"
@@ -86,7 +85,8 @@
             <h2>{{ yearInterval }}</h2>
           </span>
         </div>
-        <div class="graph-container">
+        <div ref="graphContainer" class="graph-container"
+          @scroll="alsoScrollYearsContainer">
           <div class="cards-container" ref="cardsContainer">
             <paper-card
               ref="paperCards"
@@ -379,10 +379,8 @@ export default {
       const colRows = this.cards.map(node => node.colRow)
       this.cards = this.getCardsByColRows(this.graph, colRows)
     },
-    preventTrackpadSwipeToBack: function (evt) {
-      evt.preventDefault()
-      this.$refs.kanbanContainer.scrollLeft = Math.max(1, this.$refs.kanbanContainer.scrollLeft + evt.deltaX)
-      this.$refs.kanbanContainer.scrollTop = this.$refs.kanbanContainer.scrollTop + evt.deltaY
+    alsoScrollYearsContainer: function (evt) {
+      this.$refs.yearsContainer.scrollLeft = this.$refs.graphContainer.scrollLeft
     },
     showLinks: function (relations) {
       this.visibleRelations = relations
@@ -502,6 +500,7 @@ export default {
 <style scoped>
 .years-container {
   white-space: nowrap;
+  overflow: hidden;
 }
 
 .year-range {
@@ -512,13 +511,15 @@ export default {
   position: relative;
   height: 100%;
   white-space: nowrap;
-  overflow-x: scroll;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 
 .graph-container {
   position: relative;
   white-space: nowrap;
+  height: 100%;
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .overlay {
