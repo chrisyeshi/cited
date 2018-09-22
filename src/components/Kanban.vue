@@ -71,6 +71,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
+      <v-btn icon @click="clearGraph"><v-icon>crop_landscape</v-icon></v-btn>
       <v-btn icon to="/contail"><v-icon>data_usage</v-icon></v-btn>
       <v-btn icon><v-icon>account_circle</v-icon></v-btn>
     </v-toolbar>
@@ -101,6 +102,7 @@
               v-on:clickcitecount="handleClickCiteCount($event)"
               v-on:clicktitle="handleClickTitle($event)"
               v-on:clickhandle="handleClickHandle($event)"
+              v-on:remove="handleRemoveCard($event)"
               v-on:dragend="movePaperCard"></paper-card>
           </div>
           <svg class="overlay">
@@ -324,6 +326,10 @@ export default {
       this.graph.deselectAllNodes()
       this.nextTickLayoutPaperCards()
     },
+    clearGraph: function () {
+      this.graph.clear()
+      this.cards = []
+    },
     handleMouseOverRefCount: function (paperIndex) {
       if (this.showLinkMethod === 'show-link-hover') {
         this.visiblePaperRefLinks =
@@ -378,6 +384,10 @@ export default {
       this.graph.toggleSelectedByIndex(paperIndex)
       const colRows = this.cards.map(node => node.colRow)
       this.cards = this.getCardsByColRows(this.graph, colRows)
+    },
+    handleRemoveCard: function (paperIndex) {
+      this.graph.remove(paperIndex)
+      this.cards = this.layoutByMethod(this.graph, this.layoutMethod)
     },
     alsoScrollYearsContainer: function (evt) {
       this.$refs.yearsContainer.scrollLeft = this.$refs.graphContainer.scrollLeft

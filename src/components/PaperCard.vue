@@ -7,7 +7,7 @@
       <v-hover close-delay=0>
         <v-card slot-scope="{ hover }"
           :class="`elevation-${hover ? 12 : 2}`">
-          <v-system-bar ref="header" style="padding: 0px;">
+          <v-system-bar status ref="header" :style="{ padding: '0px', 'background-color': card.selected ? 'orange' : undefined }">
             <span class="header-item"
               :style="{ 'background-color': inNetworkReferenceColor }"
               @mouseover="$emit('mouseoverrefcount', card.index)"
@@ -15,9 +15,10 @@
               @click="$emit('clickrefcount', card.index)">
               <span>&lt; {{ card.inGraphCitings.length }} / {{ card.paper.references.length }}</span>
             </span>
-            <v-spacer :style="handleStyle"
+            <v-spacer style="height: 100%;"
               @mousedown.stop="dragElement">
             </v-spacer>
+            <v-icon light @click="$emit('remove', card.index)">close</v-icon>
             <span class="header-item"
               :style="{ 'background-color': inNetworkCitationColor }"
               @mouseover="$emit('mouseovercitecount', card.index)"
@@ -78,12 +79,6 @@ export default {
     paper: function () { return this.card.paper },
     authorNames: function () {
       return _.map(this.paper.authors, author => Author.stringify(author))
-    },
-    handleStyle: function () {
-      return {
-        height: '100%',
-        backgroundColor: this.card.selected ? 'orange' : undefined
-      }
     },
     cardStyle: function () {
       const style = {

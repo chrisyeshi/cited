@@ -143,4 +143,28 @@ export class Graph {
       node.selected = false
     })
   }
+
+  clear () {
+    this.nodes = []
+  }
+
+  remove (index) {
+    const nodes = this.nodes
+    const node = nodes[index]
+    _.forEach(node.inGraphCitings, citing => {
+      _.pull(nodes[citing].inGraphCitedBys, index)
+    })
+    _.forEach(node.inGraphCitedBys, citedBy => {
+      _.pull(nodes[citedBy].inGraphCitings, index)
+    })
+    _.forEach(nodes, node => {
+      node.inGraphCitings = _.map(node.inGraphCitings, citing => {
+        return citing > index ? citing - 1 : citing
+      })
+      node.inGraphCitedBys = _.map(node.inGraphCitedBys, citedBy => {
+        return citedBy > index ? citedBy - 1 : citedBy
+      })
+    })
+    _.pull(nodes, node)
+  }
 }
