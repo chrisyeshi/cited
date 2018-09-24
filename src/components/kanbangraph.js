@@ -98,6 +98,9 @@ export class Graph {
   }
 
   insert (paper) {
+    if (this.includes(paper)) {
+      throw new Error(`cannot insert duplicated paper: ${paper}`)
+    }
     const relation = Graph.computeRelationToCollection(
       paper, _.map(this.nodes, node => node.paper))
     const newIndex = this.nodes.length
@@ -113,6 +116,22 @@ export class Graph {
     })
     this.nodes.push(node)
     return node
+  }
+
+  includes (arg) {
+    if (arg instanceof Paper) {
+      const paper = arg
+      return _.includes(this.dois, paper.doi)
+    }
+    if (arg instanceof Node) {
+      const node = arg
+      return _.includes(this.nodes, node)
+    }
+    throw new Error(`wrong input type: ${arg}`)
+  }
+
+  get dois () {
+    return _.map(this.nodes, node => node.paper.doi)
   }
 
   get isAnyNodeSelected () {

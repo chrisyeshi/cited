@@ -301,6 +301,9 @@ export default {
       })
     },
     searchResultInsert: function (paper) {
+      if (this.graph.includes(paper)) {
+        return
+      }
       const node = this.graph.insert(paper)
       const index = _.indexOf(this.graph.nodes, node)
       // TODO: insert paper without applying a specific layout
