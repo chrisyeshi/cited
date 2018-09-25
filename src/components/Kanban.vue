@@ -76,7 +76,7 @@
       <v-btn icon><v-icon>account_circle</v-icon></v-btn>
     </v-toolbar>
     <v-content app>
-      <v-container ref="kanbanContainer" fluid kanban-container
+      <v-container ref="kanbanContainer" fluid class="kanban-container"
         @mousedown="deselectAllNodes">
         <div ref="yearsContainer" class="years-container"
           :style="`margin: 5px -${cardSpacing / 2}px;`">
@@ -525,12 +525,14 @@ export default {
   height: 100%;
   white-space: nowrap;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .graph-container {
   position: relative;
   white-space: nowrap;
-  height: 100%;
+  flex: 1;
   overflow-x: scroll;
   overflow-y: scroll;
 }
