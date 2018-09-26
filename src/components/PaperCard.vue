@@ -81,10 +81,12 @@ export default {
       return _.map(this.paper.authors, author => Author.stringify(author))
     },
     cardStyle: function () {
+      const paddingRight = 24
       const style = {
         left: this.rect.left + 'px',
         top: this.rect.top + 'px',
-        width: this.rect.width + 'px'
+        width: (this.rect.width + paddingRight) + 'px',
+        paddingRight: paddingRight + 'px'
       }
       const height = { height: this.rect.height + 'px' }
       return this.autoHeight ? style : { ...style, ...height }

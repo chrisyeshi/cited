@@ -150,7 +150,7 @@ export default {
       this.nextTickLayoutPaperCards()
     })
     this.colWidth = 300
-    this.cardSpacing = 20
+    this.cardSpacing = 24
     return {
       graph: {
         nodes: []
@@ -179,32 +179,34 @@ export default {
   },
   computed: {
     links: function () {
+      const marginLeft = 24
       return this.visibleRelations.map((relation, index) => {
         let citedBy = this.cards[relation.citedBy]
         let citing = this.cards[relation.citing]
         return {
           key: index,
           citedBy: {
-            x: citedBy.rect.left,
+            x: citedBy.rect.left + marginLeft,
             y: citedBy.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
           },
           citing: {
-            x: citing.rect.right,
+            x: citing.rect.right + marginLeft,
             y: citing.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
           }
         }
       })
     },
     curves: function () {
+      const marginLeft = 24
       return this.visibleRelations.map((relation, index) => {
         let citedBy = this.cards[relation.citedBy]
         let citing = this.cards[relation.citing]
         const start = {
-          x: citedBy.rect.left,
+          x: citedBy.rect.left + marginLeft,
           y: citedBy.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
         }
         const end = {
-          x: citing.rect.right,
+          x: citing.rect.right + marginLeft,
           y: citing.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
         }
         const interpolate = (beg, end, ratio) => {
@@ -511,10 +513,6 @@ export default {
 </script>
 
 <style scoped>
-.years-container {
-  white-space: nowrap;
-  overflow: hidden;
-}
 
 .year-range {
   text-align: center;
@@ -527,6 +525,16 @@ export default {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+}
+
+.years-container {
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .graph-container {
@@ -535,6 +543,12 @@ export default {
   flex: 1;
   overflow-x: scroll;
   overflow-y: scroll;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.cards-container {
+  position: relative;
 }
 
 .overlay {
@@ -565,12 +579,6 @@ export default {
 .kanban {
   list-style: none;
   padding: 0;
-}
-
-.cards-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
 }
 
 .header {
