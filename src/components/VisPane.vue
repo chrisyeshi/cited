@@ -20,29 +20,82 @@
     <v-container class="pt-0" fluid style="height: calc(100vh - 155px); overflow: auto;">
       <v-layout column align-content-start
         :wrap="$store.state.visPaneState !== 'minor'"
-        style="height: calc(100vh - 155px); overflow: auto;">
-        <v-hover v-for="(card, index) in $store.state.cards" :key="index"
-          class="mb-3 mr-3">
-          <v-card slot-scope="{ hover }" :class="{ 'elevation-6': hover }" style="min-width: 252px; max-width: 252px;">
-            <v-system-bar status class="pa-0">
-              <span class="fill-height caption px-1 d-flex align-center cyan darken-3">
-                <span>&lt; 12 / 23</span>
-              </span>
-              <v-spacer></v-spacer>
-              <v-icon @click="trace">close</v-icon>
-              <span class="fill-height caption px-1 d-flex align-center cyan darken-1">
-                <span>12 / 23 &gt;</span>
-              </span>
-            </v-system-bar>
-            <v-card-text class="pa-2 caption">
-              <h4><a>Blast2GO: a universal tool for annotation, visualization and analysis in functional genomics research</a></h4>
-              <div class="text-truncate paper-author-line"><a>Ye, Yucong (Chris)</a> and <a>Moreland, Kenneth</a> and <a>Li Kelvin</a></div>
-              <v-layout row justify-space-between>
-                <a>LDAV</a>-<a>2016</a>-<a>Citing 23</a>-<a>Cited by 23</a>
-              </v-layout>
-            </v-card-text>
-          </v-card>
-        </v-hover>
+        style="height: calc(100vh - 180px); overflow: auto;">
+        <div>
+          <h4 class="text-xs-center">2010</h4>
+          <v-hover v-for="(card, index) in 1" :key="index"
+          class="ma-2">
+            <v-card slot-scope="{ hover }" :class="{ 'elevation-6': hover }" style="min-width: 252px; max-width: 252px;">
+              <v-system-bar status class="pa-0">
+                <span class="fill-height caption px-1 d-flex align-center cyan darken-3">
+                  <span>&lt; 12 / 23</span>
+                </span>
+                <v-spacer></v-spacer>
+                <v-icon @click="trace">close</v-icon>
+                <span class="fill-height caption px-1 d-flex align-center cyan darken-1">
+                  <span>12 / 23 &gt;</span>
+                </span>
+              </v-system-bar>
+              <v-card-text class="pa-2 caption">
+                <h4><a>Blast2GO: a universal tool for annotation, visualization and analysis in functional genomics research</a></h4>
+                <div class="text-truncate paper-author-line"><a>Ye, Yucong (Chris)</a> and <a>Moreland, Kenneth</a> and <a>Li Kelvin</a></div>
+                <v-layout row justify-space-between>
+                  <a>LDAV</a>-<a>2016</a>-<a>Citing 23</a>-<a>Cited by 23</a>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </div>
+        <div>
+          <h4 class="text-xs-center">2013</h4>
+          <v-hover v-for="(card, index) in 2" :key="index"
+          class="ma-2">
+            <v-card slot-scope="{ hover }" :class="{ 'elevation-6': hover }" style="min-width: 252px; max-width: 252px;">
+              <v-system-bar status class="pa-0">
+                <span class="fill-height caption px-1 d-flex align-center cyan darken-3">
+                  <span>&lt; 12 / 23</span>
+                </span>
+                <v-spacer></v-spacer>
+                <v-icon @click="trace">close</v-icon>
+                <span class="fill-height caption px-1 d-flex align-center cyan darken-1">
+                  <span>12 / 23 &gt;</span>
+                </span>
+              </v-system-bar>
+              <v-card-text class="pa-2 caption">
+                <h4><a>Blast2GO: a universal tool for annotation, visualization and analysis in functional genomics research</a></h4>
+                <div class="text-truncate paper-author-line"><a>Ye, Yucong (Chris)</a> and <a>Moreland, Kenneth</a> and <a>Li Kelvin</a></div>
+                <v-layout row justify-space-between>
+                  <a>LDAV</a>-<a>2016</a>-<a>Citing 23</a>-<a>Cited by 23</a>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </div>
+        <div>
+          <h4 class="text-xs-center">2016</h4>
+          <v-hover v-for="(card, index) in $store.state.cards" :key="index"
+          class="ma-2">
+            <v-card slot-scope="{ hover }" :class="{ 'elevation-6': hover }" style="min-width: 252px; max-width: 252px;">
+              <v-system-bar status class="pa-0">
+                <span class="fill-height caption px-1 d-flex align-center cyan darken-3">
+                  <span>&lt; 12 / 23</span>
+                </span>
+                <v-spacer></v-spacer>
+                <v-icon @click="trace">close</v-icon>
+                <span class="fill-height caption px-1 d-flex align-center cyan darken-1">
+                  <span>12 / 23 &gt;</span>
+                </span>
+              </v-system-bar>
+              <v-card-text class="pa-2 caption">
+                <h4><a>Blast2GO: a universal tool for annotation, visualization and analysis in functional genomics research</a></h4>
+                <div class="text-truncate paper-author-line"><a>Ye, Yucong (Chris)</a> and <a>Moreland, Kenneth</a> and <a>Li Kelvin</a></div>
+                <v-layout row justify-space-between>
+                  <a>LDAV</a>-<a>2016</a>-<a>Citing 23</a>-<a>Cited by 23</a>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </div>
       </v-layout>
     </v-container>
   </v-layout>
