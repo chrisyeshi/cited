@@ -1,9 +1,8 @@
 <template>
   <v-app overflow-hidden>
-    <app-collection-bar fixed
+    <app-collection-bar
       v-show="$store.state.isCollectionBarVisible">
     </app-collection-bar>
-    <v-toolbar flat v-show="$store.state.isCollectionBarVisible"></v-toolbar>
     <v-layout row overflow-hidden>
       <search-pane class="overflow-hidden"
         v-show="$store.state.isSearchPaneVisible && $store.state.visPaneState !== 'full'"

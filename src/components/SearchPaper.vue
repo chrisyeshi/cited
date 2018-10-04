@@ -15,7 +15,7 @@
       <a class="mr-3" ref="addToCollection" v-show="$store.state.isSignedIn">
         Add to collection ...
       </a>
-      <v-menu offset-y :activator="$refs.addToCollection">
+      <v-menu offset-y :activator="addToCollection">
         <user-collection-list dense></user-collection-list>
       </v-menu>
     </div>
@@ -33,7 +33,8 @@ export default {
   },
   data () {
     return {
-      isExpanded: false
+      isExpanded: false,
+      addToCollection: null
     }
   },
   methods: {
@@ -41,6 +42,9 @@ export default {
       console.log(value)
       return value
     }
+  },
+  mounted () {
+    this.addToCollection = this.$refs.addToCollection
   }
 }
 </script>
