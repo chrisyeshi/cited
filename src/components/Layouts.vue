@@ -8,6 +8,9 @@
       <v-list-tile>
         <router-link to="/contail">Contail</router-link>
       </v-list-tile>
+      <v-list-tile>
+        <router-link to="/smooth">Smooth</router-link>
+      </v-list-tile>
     </v-list>
   </v-container>
 </template>

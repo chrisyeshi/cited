@@ -5,6 +5,7 @@ import Router from 'vue-router'
 import Kanban from '@/components/Kanban'
 import Contail from '@/components/Contail'
 import Layouts from '@/components/Layouts'
+import Smooth from '@/components/Smooth'
 import Resource from 'vue-resource'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
@@ -28,6 +29,10 @@ export default new Router({
     {
       path: '/contail',
       component: Contail
+    },
+    {
+      path: '/smooth',
+      component: Smooth
     }
   ]
 })
