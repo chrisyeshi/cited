@@ -4,14 +4,14 @@ from mysql.connector import errorcode
 DB_NAME = 'disco'
 
 def connect_database(
-    # host='dev-db-server.cs6gjqtgg2dt.us-east-2.rds.amazonaws.com',
-    host='localhost',
+    host='dev-db-server.cs6gjqtgg2dt.us-east-2.rds.amazonaws.com',
+    # host='localhost',
     user='disco'
 ):
     cnx = mysql.connector.connect(
         host=host,
         user=user,
-        passwd='',
+        passwd='MakeBestTech:0',
         database=DB_NAME
     )
     return cnx
@@ -34,7 +34,7 @@ def setup_database():
         "  `date` datetime NULL DEFAULT NULL,"
         "  `rank` smallint(6) NULL DEFAULT NULL,"
         "  PRIMARY KEY (`id`),"
-        "  FULLTEXT KEY `title` (`paper_title`)"
+        "  FULLTEXT KEY `paper_title` (`title`)"
         ") ENGINE=InnoDB")
 
     TABLES['authors'] = (
@@ -68,9 +68,9 @@ def setup_database():
 
     TABLES['paper_references'] = (
         "CREATE TABLE `paper_references` ("
-        "  `from` varchar(8) NOT NULL,"
-        "  `to` varchar(8) NOT NULL,"
-        "  PRIMARY KEY (`from`, `to`)"
+        "  `paper_id` varchar(8) NOT NULL,"
+        "  `reference_id` varchar(8) NOT NULL,"
+        "  PRIMARY KEY (`paper_id`, `reference_id`)"
         ") ENGINE=InnoDB")
 
     def create_database(cursor):
