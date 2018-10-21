@@ -4,8 +4,8 @@ from mysql.connector import errorcode
 DB_NAME = 'disco'
 
 def connect_database(
-    host='dev-db-server.cs6gjqtgg2dt.us-east-2.rds.amazonaws.com',
-    # host='localhost',
+    # host='dev-db-server.cs6gjqtgg2dt.us-east-2.rds.amazonaws.com',
+    host='localhost',
     user='disco'
 ):
     cnx = mysql.connector.connect(
