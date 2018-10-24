@@ -34,7 +34,7 @@ Author.FORMAT_FAMILY_COMMA_GIVEN = 'format_family_comma_given'
 Author.FORMAT_GIVEN_FAMILY = 'format_given_family'
 
 export class Paper {
-  constructor (doi, title, authors, abstract, year,
+  constructor (doi, title, authors, abstract, year, venue,
     citings, nCitings, citedBys, nCitedBys) {
     // TODO: validation
     this.doi = doi
@@ -42,19 +42,21 @@ export class Paper {
     this.authors = authors
     this.abstract = abstract
     this.year = year
+    this.venue = venue
     this.citings = citings
     this.nCitings = nCitings
     this.citedBys = citedBys
     this.nCitedBys = nCitedBys
   }
 
-  static fromTestJson (testPaper) {
-    const doi = ''
+  static fromTestJson (testPaper, index) {
+    const doi = index
     const title = testPaper.title
     const authors =
       _.map(_.split(testPaper.authors, ', '), text => new Author(text, ''))
-    const abstract = ''
+    const abstract = testPaper.abstract
     const year = testPaper.year
+    const venue = testPaper.journal
     const citings = []
     const nCitings = 0
     const citedBys = []
@@ -65,6 +67,7 @@ export class Paper {
       authors /* authors */,
       abstract /* abstract */,
       year /* year */,
+      venue /* venue */,
       citings /* citings */,
       nCitings /* nCitings */,
       citedBys /* citedBys */,
@@ -91,6 +94,7 @@ export class Paper {
       authors /* authors */,
       abstract /* abstract */,
       year /* year */,
+      'venue' /* venue */,
       citings /* citings */,
       nCitings /* nCitings */,
       citedBys /* citedBys */,

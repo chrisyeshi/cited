@@ -8,8 +8,9 @@
       </search-box>
     </component>
     <search-content v-if="searchComponent === 'appBar'">
-      <v-layout column style="height: calc(100vh - 155px); overflow: auto;">
+      <v-layout column style="height: calc(100vh - 135px); overflow: auto;">
         <search-paper v-for="(refObj, index) in refObjs" :key="index"
+          :refObj="refObj"
           @onClickTitle="showRefObjDetail"
           @onClickCiting="showRelatedRefObjs('citing', $event)"
           @onClickCitedBy="showRelatedRefObjs('citedBy', $event)">
@@ -25,6 +26,8 @@ import SearchContent from './SearchContent.vue'
 import SearchBox from './SearchBox.vue'
 import AppBar from './AppBar.vue'
 import SearchPaper from './SearchPaper.vue'
+import _ from 'lodash'
+import { Graph } from './kanbangraph.js'
 
 export default {
   name: 'SearchPane',
@@ -36,8 +39,15 @@ export default {
     AppBar
   },
   data () {
+    this.$http.get('/static/insitupdf.json').then(res => {
+      const graph = Graph.fromTestJson({
+        papers: res.body.references,
+        relations: res.body.relations
+      })
+      this.refObjs = _.map(graph.nodes, ({ paper }) => paper)
+    })
     return {
-      refObjs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+      refObjs: []
     }
   },
   methods: {

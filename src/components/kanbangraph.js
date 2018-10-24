@@ -34,7 +34,8 @@ export class Graph {
 
   static fromTestJson ({ papers: testPapers, relations }) {
     const papers =
-      _.map(testPapers, testPaper => Paper.fromTestJson(testPaper))
+      _.map(
+        testPapers, (testPaper, index) => Paper.fromTestJson(testPaper, index))
     const nodes = _.map(papers, paper => new Node(paper))
     _.forEach(relations, relation => {
       nodes[relation.citing].inGraphCitedBys =

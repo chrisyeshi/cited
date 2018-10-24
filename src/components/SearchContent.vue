@@ -9,7 +9,7 @@
       </v-layout>
     </v-container>
     <v-divider class="my-2"></v-divider>
-    <v-container fluid class="pt-0">
+    <v-container fluid class="py-0">
       <v-layout row wrap>
         <v-flex v-if="isFilterVisible" xs12 md2 class="pr-2 mb-4">
           <v-radio-group v-model="timeFilter" hide-details class="ma-0 pt-2">

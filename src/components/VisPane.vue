@@ -11,16 +11,16 @@
             </v-icon>
           </v-flex>
           <v-flex offset-xs1>
-            <h4 class="body-2">Temporary collection</h4>
+            <h4 class="body-2">History</h4>
           </v-flex>
         </v-layout>
       </v-layout>
     </v-toolbar>
     <v-divider class="my-2"></v-divider>
-    <v-container class="pt-0" fluid style="height: calc(100vh - 155px); overflow: auto;">
+    <v-container class="py-0" fluid>
       <v-layout column align-content-start
         :wrap="$store.state.visPaneState !== 'minor'"
-        style="height: calc(100vh - 180px); overflow: auto;">
+        style="height: calc(100vh - 135px); overflow: auto;">
         <div>
           <h4 class="text-xs-center">2010</h4>
           <v-hover v-for="(card, index) in 1" :key="index"

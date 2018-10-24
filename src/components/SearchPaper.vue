@@ -1,18 +1,30 @@
 <template>
   <div class="my-2">
-    <h4 class="body-2"><a @click="$emit('onClickTitle')">Blast2GO: a universal tool for annotation, visualization and analysis in functional genomics research</a></h4>
-    <div class="caption text-truncate grey--text text--darken-3 paper-author-line"><a>Ye, Yucong (Chris)</a> and <a>Moreland, Kenneth</a> - <a>LDAV</a> - <a>2016</a></div>
-    <div class="caption grey--text text--darken-3" :class="{ 'text-truncate': !isExpanded }">
-      We present here Blast2GO (B2G), a research tool designed with the main purpose of enabling Gene Ontology (GO) based data mining on sequence data for which no GO annotation is yet available. B2G joints in one application GO annotation based on similarity searches with statistical analysis and highlighted visualization on directed acyclic graphs. This tool offers a suitable platform for functional genomics research in non-model species. B2G is an intuitive and interactive desktop application that allows monitoring and comprehension of the whole annotation and analysis process.
+    <h4 class="body-2">
+      <a @click="$emit('onClickTitle')">{{ refObj.title }}</a>
+    </h4>
+    <div class="caption grey--text text--darken-3 paper-author-line"
+      :class="{ 'text-truncate': !isExpanded }">
+      <span v-for="(name, index) in authorNames" :key="index">
+        <a class="text-no-wrap">{{ name }}</a>
+        <span v-if="index !== authorNames.length - 1">
+          and
+        </span>
+      </span>
     </div>
-    <div class="caption text-truncate grey--text text--darken-3">
+    <div class="caption grey--text text--darken-3" :class="{ 'text-truncate': !isExpanded }">
+      {{ refObj.abstract }}
+    </div>
+    <div class="caption text-wrap grey--text text--darken-3">
       <v-icon small color="primary" class="mr-3"
         @click="isExpanded = !isExpanded">
         {{ isExpanded ? 'expand_less' : 'expand_more' }}
       </v-icon>
-      <a class="mr-3" @click="$emit('onClickCiting')">Citing 26</a>
-      <a class="mr-3" @click="$emit('onClickCitedBy')">Cited by 427</a>
-      <a class="mr-3" ref="addToCollection" v-show="$store.state.isSignedIn">
+      <a class="text-no-wrap mr-3">{{ refObj.venue }}</a>
+      <a class="text-no-wrap mr-3">{{ refObj.year }}</a>
+      <a class="text-no-wrap mr-3" @click="$emit('onClickCiting')">Citing {{ refObj.citingCount }}</a>
+      <a class="text-no-wrap mr-3" @click="$emit('onClickCitedBy')">Cited by {{ refObj.citedByCount }}</a>
+      <a class="text-no-wrap mr-3" ref="addToCollection" v-show="$store.state.isSignedIn">
         Add to collection ...
       </a>
       <v-menu offset-y :activator="addToCollection">
@@ -24,12 +36,17 @@
 
 <script>
 import UserCollectionList from './UserCollectionList.vue'
+import { Author } from './paper.js'
+import _ from 'lodash'
 // TODO: animate the expand/collapse of the abstract
 
 export default {
   name: 'SearchPaper',
   components: {
     UserCollectionList
+  },
+  props: {
+    refObj: Object
   },
   data () {
     return {
@@ -45,6 +62,11 @@ export default {
   },
   mounted () {
     this.addToCollection = this.$refs.addToCollection
+  },
+  computed: {
+    authorNames () {
+      return _.map(this.refObj.authors, author => Author.stringify(author))
+    }
   }
 }
 </script>
