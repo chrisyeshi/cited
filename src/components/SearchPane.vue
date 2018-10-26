@@ -12,6 +12,8 @@
         <search-paper v-for="(refObj, index) in refObjs" :key="index"
           :refObj="refObj"
           @onClickTitle="showRefObjDetail"
+          @onClickVenue="trace"
+          @onClickYear="trace"
           @onClickCiting="showRelatedRefObjs('citing', $event)"
           @onClickCitedBy="showRelatedRefObjs('citedBy', $event)">
         </search-paper>
@@ -72,7 +74,7 @@ export default {
     showRefObjDetail () {
       this.trace()
     },
-    showRelatedRefObjs () {
+    showRelatedRefObjs (relation, refObj) {
       if (!this.$store.state.isVisPaneVisible) {
         window.flipping.read()
         this.$store.dispatch('toSearchCollection')
@@ -80,7 +82,7 @@ export default {
           window.flipping.flip()
         })
       }
-      this.$store.commit('pushCard', null)
+      this.$store.commit('insertToGraph', refObj)
     },
     onSearch (text) {
       window.flipping.read()

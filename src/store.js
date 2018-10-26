@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
+import { Graph } from './components/kanbangraph.js'
 
 Vue.use(Vuex)
 
@@ -14,7 +15,7 @@ export default new Vuex.Store({
     isSearched: false,
     searchText: '',
     collectionTitle: '',
-    cards: []
+    graph: new Graph([])
   },
   actions: {
     toHome (context) {
@@ -23,7 +24,7 @@ export default new Vuex.Store({
       context.commit('setVisPaneVisible', false)
       context.commit('setVisPaneState', 'minor')
       context.commit('setIsSearched', false)
-      context.commit('clearCards')
+      context.commit('clearGraph')
     },
     toSearchCollection (context) {
       context.commit('setCollectionBarVisible', true)
@@ -80,11 +81,11 @@ export default new Vuex.Store({
     setCollectionTitle (state, text) {
       state.collectionTitle = text
     },
-    clearCards (state) {
-      state.cards = []
+    insertToGraph (state, refObj) {
+      state.graph.insert(refObj)
     },
-    pushCard (state, card) {
-      state.cards.push(card)
+    clearGraph (state) {
+      state.graph.clear()
     }
   },
   getters: {

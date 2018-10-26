@@ -20,10 +20,18 @@
         @click="isExpanded = !isExpanded">
         {{ isExpanded ? 'expand_less' : 'expand_more' }}
       </v-icon>
-      <a class="text-no-wrap mr-3">{{ refObj.venue }}</a>
-      <a class="text-no-wrap mr-3">{{ refObj.year }}</a>
-      <a class="text-no-wrap mr-3" @click="$emit('onClickCiting')">Citing {{ refObj.citingCount }}</a>
-      <a class="text-no-wrap mr-3" @click="$emit('onClickCitedBy')">Cited by {{ refObj.citedByCount }}</a>
+      <a class="text-no-wrap mr-3" @click="$emit('onClickVenue', refObj.venue)">
+        {{ refObj.venue }}
+      </a>
+      <a class="text-no-wrap mr-3" @click="$emit('onClickYear', refObj.year)">
+        {{ refObj.year }}
+      </a>
+      <a class="text-no-wrap mr-3" @click="$emit('onClickCiting', refObj)">
+        Citing {{ refObj.citingCount }}
+      </a>
+      <a class="text-no-wrap mr-3" @click="$emit('onClickCitedBy', refObj)">
+        Cited by {{ refObj.citedByCount }}
+      </a>
       <a class="text-no-wrap mr-3" ref="addToCollection" v-show="$store.state.isSignedIn">
         Add to collection ...
       </a>
