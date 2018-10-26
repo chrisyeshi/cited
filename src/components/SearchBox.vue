@@ -6,7 +6,7 @@
           :flat="flat"
           :solo="!$store.state.isVisPaneVisible"
           :append-icon="$store.state.isVisPaneVisible ? 'search' : ''"
-          @click:append="trace"
+          @click:append="$emit('onSearch', text)"
           hide-details clearable
           autofocus
           v-model="text"

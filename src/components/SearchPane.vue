@@ -28,7 +28,6 @@ import SearchContent from './SearchContent.vue'
 import SearchBox from './SearchBox.vue'
 import AppBar from './AppBar.vue'
 import SearchPaper from './SearchPaper.vue'
-import _ from 'lodash'
 import { Graph } from './kanbangraph.js'
 
 export default {
@@ -41,16 +40,13 @@ export default {
     AppBar
   },
   data () {
-    this.$http.get('/static/insitupdf.json').then(res => {
-      const graph = Graph.fromTestJson({
+    this.$http.get('./static/insitupdf.json').then(res => {
+      this.$store.commit('setTestGraph', Graph.fromTestJson({
         papers: res.body.references,
         relations: res.body.relations
-      })
-      this.refObjs = _.map(graph.nodes, ({ paper }) => paper)
+      }))
     })
-    return {
-      refObjs: []
-    }
+    return {}
   },
   methods: {
     trace (value) {
@@ -82,11 +78,13 @@ export default {
           window.flipping.flip()
         })
       }
+      this.$store.dispatch(
+        'showRelatedTestRefObjs', { relation: relation, refObj: refObj })
       this.$store.commit('insertToGraph', refObj)
     },
     onSearch (text) {
       window.flipping.read()
-      this.$store.dispatch('search', text)
+      this.$store.commit('search', text)
       this.$nextTick(() => {
         window.flipping.flip()
       })
@@ -98,6 +96,9 @@ export default {
         return 'appBar'
       }
       return 'searchPage'
+    },
+    refObjs () {
+      return this.$store.state.searchRefObjs
     }
   },
   mounted () {

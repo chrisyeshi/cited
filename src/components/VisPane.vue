@@ -22,10 +22,11 @@
         :wrap="$store.state.visPaneState !== 'minor'"
         style="height: calc(100vh - 135px); overflow: auto;">
         <div v-for="year in years" :key="year">
-          <h4 class="text-xs-center">{{ year }}</h4>
+          <h4 class="text-xs-center column-width">{{ year }}</h4>
           <v-hover v-for="(card, index) in cardsByYears[year]" :key="index"
           class="ma-2">
-            <v-card slot-scope="{ hover }" :class="{ 'elevation-6': hover }" style="min-width: 252px; max-width: 252px;">
+            <!-- TODO: maybe refactor to VisCard.vue -->
+            <v-card slot-scope="{ hover }" :class="{ 'elevation-6': hover }" class="column-width">
               <v-system-bar status class="pa-0">
                 <span class="fill-height caption px-1 d-flex align-center cyan darken-3">
                   <span>&lt; {{ card.inGraphCitings.length }} / {{ card.paper.citingCount }}</span>
@@ -45,10 +46,21 @@
                       and
                     </span>
                   </span>
-                  <!-- <a>Ye, Yucong (Chris)</a> and <a>Moreland, Kenneth</a> and <a>Li Kelvin</a> -->
                 </div>
                 <v-layout row justify-space-between>
-                  <a class="text-truncate" style="max-width: 60px;">{{ card.paper.venue }}</a>-<a>{{ card.paper.year }}</a>-<a>Citing {{ card.paper.citingCount }}</a>-<a>Cited by {{ card.paper.citedByCount }}</a>
+                  <a class="text-truncate" style="max-width: 60px;">
+                    {{ card.paper.venue }}
+                  </a>
+                  -
+                  <a>{{ card.paper.year }}</a>
+                  -
+                  <a @click="showCitingRefObjs(card.paper)">
+                    Citing {{ card.paper.citingCount }}
+                  </a>
+                  -
+                  <a @click="showCitedByRefObjs(card.paper)">
+                    Cited by {{ card.paper.citedByCount }}
+                  </a>
                 </v-layout>
               </v-card-text>
             </v-card>
@@ -76,6 +88,14 @@ export default {
     },
     formatAuthorNames (authors) {
       return _.map(authors, author => Author.stringify(author))
+    },
+    showCitingRefObjs (refObj) {
+      this.$store.dispatch(
+        'showRelatedTestRefObjs', { relation: 'citing', refObj: refObj })
+    },
+    showCitedByRefObjs (refObj) {
+      this.$store.dispatch(
+        'showRelatedTestRefObjs', { relation: 'citedBy', refObj: refObj })
     }
   },
   computed: {
@@ -102,5 +122,10 @@ export default {
 .paper-author-line a {
   text-decoration: underline;
   color: dimgray;
+}
+
+.column-width {
+   min-width: 252px;
+   max-width: 252px;
 }
 </style>

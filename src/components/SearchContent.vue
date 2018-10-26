@@ -1,14 +1,22 @@
 <template>
   <v-layout column v-resize="onResize">
-    <v-container v-if="!$store.state.isVisPaneVisible" fluid class="pb-0">
+    <v-divider v-if="$store.state.isVisPaneVisible" class="my-2"></v-divider>
+    <v-container fluid :pb-0="!$store.state.isVisPaneVisible" :py-2="$store.state.isVisPaneVisible">
       <v-layout row align-center>
-        <v-flex offset-md2 class="px-2">
-          <h4 style="white-space: nowrap;">Search Results</h4>
+        <v-flex :offset-md2="!$store.state.isVisPaneVisible" class="px-2">
+          <h4 class="text-truncate">
+            <span>
+              {{ $store.state.searchLabel.text }}
+            </span>
+            <a class="text-truncate">
+              {{ $store.state.searchLabel.refObj.title }}
+            </a>
+          </h4>
         </v-flex>
         <v-icon v-if="isFilterIconVisible" @click="isManualShowFilter = !isManualShowFilter">filter_list</v-icon>
       </v-layout>
     </v-container>
-    <v-divider class="my-2"></v-divider>
+    <v-divider v-if="!$store.state.isVisPaneVisible" class="my-2"></v-divider>
     <v-container fluid class="py-0">
       <v-layout row wrap>
         <v-flex v-if="isFilterVisible" xs12 md2 class="pr-2 mb-4">

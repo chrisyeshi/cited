@@ -14,10 +14,14 @@ export default new Vuex.Store({
     visPaneState: 'minor',
     isSearched: false,
     searchText: '',
+    searchLabel: { text: '', refObj: { title: '' } },
     collectionTitle: '',
-    graph: new Graph([])
+    graph: new Graph([]),
+    testGraph: new Graph([]),
+    searchRefObjs: []
   },
   actions: {
+    // TODO: change these to mutations instead of actions so that the time travel in Vue debug tool is more useful.
     toHome (context) {
       context.commit('setCollectionBarVisible', false)
       context.commit('setSearchPaneVisible', true)
@@ -45,12 +49,31 @@ export default new Vuex.Store({
     toggleIsSearched (context) {
       context.commit('setIsSearched', !context.state.isSearched)
     },
-    search (context, text) {
-      if (_.isEmpty(text)) {
-        return
-      }
-      context.commit('setIsSearched', true)
-      context.commit('setSearchText', text)
+    showRelatedTestRefObjs (context, { relation, refObj }) {
+      const node = context.state.testGraph.nodes[refObj.doi]
+      const relatedNodeIds =
+        relation === 'citing'
+          ? node.inGraphCitings
+          : relation === 'citedBy'
+            ? node.inGraphCitedBys
+            : []
+      context.commit(
+        'setSearchRefObjs',
+        _.map(
+          relatedNodeIds,
+          nodeId => context.state.testGraph.nodes[nodeId].paper))
+      context.commit(
+        'setSearchLabel',
+        {
+          refObj: refObj,
+          text:
+            relation === 'citing'
+              ? `References of`
+              : relation === 'citedBy'
+                ? `Articles that are citing`
+                : ''
+        }
+      )
     }
   },
   mutations: {
@@ -78,6 +101,9 @@ export default new Vuex.Store({
     setSearchText (state, text) {
       state.searchText = text
     },
+    setSearchLabel (state, labelObj) {
+      state.searchLabel = labelObj
+    },
     setCollectionTitle (state, text) {
       state.collectionTitle = text
     },
@@ -86,6 +112,24 @@ export default new Vuex.Store({
     },
     clearGraph (state) {
       state.graph.clear()
+    },
+    search (state, text) {
+      if (_.isEmpty(text)) {
+        return
+      }
+      state.isSearched = true
+      state.searchText = text
+      state.searchRefObjs = _.map(state.testGraph.nodes, node => node.paper)
+      state.searchLabel = {
+        text: 'Search Results',
+        refObj: { title: '' }
+      }
+    },
+    setTestGraph (state, testGraph) {
+      state.testGraph = testGraph
+    },
+    setSearchRefObjs (state, refObjs) {
+      state.searchRefObjs = refObjs
     }
   },
   getters: {
