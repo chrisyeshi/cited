@@ -136,11 +136,11 @@ export class Graph {
   }
 
   get isAnyNodeSelected () {
-    return this.nodes.find(node => node.selected) !== undefined
+    return this.nodes.find(node => node.isSelected) !== undefined
   }
 
   get selectedNodes () {
-    return this.nodes.filter(node => node.selected)
+    return this.nodes.filter(node => node.isSelected)
   }
 
   get relations () {
@@ -151,7 +151,13 @@ export class Graph {
   }
 
   toggleSelectedByIndex (index) {
-    this.nodes[index].selected = !this.nodes[index].selected
+    const node = this.nodes[index]
+    this.nodes.splice(index, 1, { ...node, isSelected: !node.isSelected })
+  }
+
+  toggleSelected (arg) {
+    const index = _.isNumber(arg) ? arg : _.indexOf(this.nodes, arg)
+    return this.toggleSelectedByIndex(index)
   }
 
   getUnionRelations (citings, citedBys) {
@@ -160,7 +166,7 @@ export class Graph {
 
   deselectAllNodes () {
     _.forEach(this.nodes, node => {
-      node.selected = false
+      node.isSelected = false
     })
   }
 
@@ -168,7 +174,8 @@ export class Graph {
     this.nodes = []
   }
 
-  remove (index) {
+  remove (arg) {
+    const index = _.isNumber(arg) ? arg : _.indexOf(this.nodes, arg)
     const nodes = this.nodes
     const node = nodes[index]
     _.forEach(node.inGraphCitings, citing => {
@@ -185,6 +192,6 @@ export class Graph {
         return citedBy > index ? citedBy - 1 : citedBy
       })
     })
-    _.pull(nodes, node)
+    this.nodes.splice(index, 1)
   }
 }

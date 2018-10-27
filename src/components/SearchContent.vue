@@ -4,13 +4,25 @@
     <v-container fluid :pb-0="!$store.state.isVisPaneVisible" :py-2="$store.state.isVisPaneVisible">
       <v-layout row align-center>
         <v-flex :offset-md2="!$store.state.isVisPaneVisible" class="px-2">
-          <h4 class="text-truncate">
+          <h4>
             <span>
               {{ $store.state.searchLabel.text }}
             </span>
-            <a class="text-truncate">
+            <a v-if="!isSearchLabelRefObjArray">
               {{ $store.state.searchLabel.refObj.title }}
             </a>
+            <span v-else>
+              <template
+                v-for="(refObj, index) in $store.state.searchLabel.refObj">
+                <a :key="`title-${index}`">
+                  {{ refObj.title }}
+                </a>
+                <span :key="`and-${index}`"
+                  v-if="index < $store.state.searchLabel.refObj.length - 1">
+                  and
+                </span>
+              </template>
+            </span>
           </h4>
         </v-flex>
         <v-icon v-if="isFilterIconVisible" @click="isManualShowFilter = !isManualShowFilter">filter_list</v-icon>
@@ -50,6 +62,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
   name: 'SearchContent',
   data () {
@@ -73,7 +87,13 @@ export default {
       return this.isManualShowFilter
     },
     isFilterIconVisible () {
+      if (this.$store.state.isVisPaneVisible) {
+        return true
+      }
       return this.windowSize.width < 960
+    },
+    isSearchLabelRefObjArray () {
+      return _.isArray(this.$store.state.searchLabel.refObj)
     }
   },
   mounted () {

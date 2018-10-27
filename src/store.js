@@ -74,6 +74,9 @@ export default new Vuex.Store({
                 : ''
         }
       )
+      if (context.state.visPaneState === 'full') {
+        context.commit('setVisPaneState', 'major')
+      }
     }
   },
   mutations: {
@@ -107,8 +110,14 @@ export default new Vuex.Store({
     setCollectionTitle (state, text) {
       state.collectionTitle = text
     },
+    toggleNodeSelected (state, node) {
+      state.graph.toggleSelected(node)
+    },
     insertToGraph (state, refObj) {
       state.graph.insert(refObj)
+    },
+    removeFromGraph (state, node) {
+      state.graph.remove(node)
     },
     clearGraph (state) {
       state.graph.clear()

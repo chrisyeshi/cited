@@ -7,7 +7,7 @@
       <v-hover close-delay=0>
         <v-card slot-scope="{ hover }"
           :class="`elevation-${hover ? 12 : 2}`">
-          <v-system-bar status ref="header" :style="{ padding: '0px', 'background-color': card.selected ? 'orange' : undefined }">
+          <v-system-bar status ref="header" :style="{ padding: '0px', 'background-color': card.isSelected ? 'orange' : undefined }">
             <span class="header-item"
               :style="{ 'background-color': inNetworkReferenceColor }"
               @mouseover="$emit('mouseoverrefcount', card.index)"
