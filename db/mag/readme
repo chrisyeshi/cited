@@ -1,5 +1,0 @@
-The sql and python scripts in this folder is for extracting wanted papers from the Microsoft Academic Graph (MAG) dataset.
-MAG's database schema and tables info can be found in the mag-schema.sql file.
-The files journals.txt and conferences.txt contain the lists of top tier journals and conferences used by the extrac-by-venue.py python script.
-
-

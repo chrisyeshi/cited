@@ -18,7 +18,7 @@ def processPapers():
     mag_db = mag_conn.cursor(dictionary=True, buffered=True)
 
     aws_conn = mysql.connector.connect(
-        host='dev-db-server.cs6gjqtgg2dt.us-east-2.rds.amazonaws.com',
+        host='localhost',
         user='disco',
         database='disco',
         passwd='MakeBestTech:0'

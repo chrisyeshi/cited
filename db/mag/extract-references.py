@@ -1,18 +1,13 @@
 import mysql.connector
 from mysql.connector import errorcode
+import time
 
 NUMBER_OF_PAPERS = 126909021
-BATCH_SIZE = 50000
+BATCH_SIZE = 1000
 START_AT = 0
+VERBOSE_MODE = False
 
 def processPapers():
-
-    conf_file = open('conferences.txt', 'r')
-    conferences = conf_file.read().strip().split('\n')
-    journal_file = open('journals.txt', 'r')
-    journals = journal_file.read().strip().split('\n')
-    conf_file.close()
-    journal_file.close()
 
     mag_conn = mysql.connector.connect(
         host='localhost',
@@ -23,7 +18,6 @@ def processPapers():
     mag_db = mag_conn.cursor(dictionary=True, buffered=True)
 
     aws_conn = mysql.connector.connect(
-        # host='dev-db-server.cs6gjqtgg2dt.us-east-2.rds.amazonaws.com',
         host='localhost',
         user='disco',
         database='disco',
@@ -31,36 +25,38 @@ def processPapers():
     )
     aws_db = aws_conn.cursor()
 
-    def select_cs_papers(start=0, limit=10):
+    def extract_references(start=0, limit=10):
+
         crawled = start
-        mag_db.execute("SELECT * from `papers` LIMIT " + str(crawled) + "," + str(limit))
+        aws_db.execute("SELECT paper_id, reference_id from `paper_references` LIMIT " + str(crawled) + "," + str(limit))
+        results = aws_db.fetchall()
+
+        citings = [p for p,r in results]
+        citedBys = [r for p,r in results]
+
+        paper_ids = set(citings + citedBys)
+
+        aws_db.execute("SELECT id, hexcode from `papers` WHERE hexcode in (%s)" % ','.join([ "'" + str(j) +"'" for j in paper_ids]))
+        ex_paper_ids = aws_db.fetchall()
+   
+        if(len(ex_paper_ids) > 0):
+            paper_ids = paper_ids - set([e for i,e in ex_paper_ids])
+        
+        inserted = 0
+
+        mag_db.execute("SELECT * from `papers` WHERE id in (%s)" % ','.join([ "'" + str(j) +"'" for j in paper_ids]))
         papers = mag_db.fetchall()
 
-        inserted = 0
-        processed = 0
-
         for paper in papers: 
-            isCS = False
+            numRefs, numCited = insert_references(paper['id'])
+            if(numRefs > 0 or numCited > 0):
+                # print(paper)
+                insert_paper(paper, numRefs, numCited)
+                insert_authors(paper['id'])
+                inserted += 1
+    
+            print("Inserted %d CS papers from (%d) papers" % (inserted, BATCH_SIZE), end="\r")
 
-            if(paper['doi'] is None):
-                isCS = False
-            elif(paper['conference_id'] is not None):
-                isCS = paper['conference_id'] in conferences
-            elif(paper['journal_id'] is not None):
-                isCS = paper['journal_id'] in journals
-      
-            # print(isCS)
-            if(isCS):
-                numRefs, numCited = insert_references(paper['id'])
-                if(numRefs > 0 or numCited > 0):
-                    pp = insert_paper(paper, numRefs, numCited)
-                    insert_authors(paper['id'])
-                    # aws_conn.commit()
-                inserted+=1
-            
-            processed += 1
-            print("Inserted %d CS papers from (%d/%d) papers" % (inserted, processed, BATCH_SIZE), end="\r")
-        
         crawled += limit
         aws_conn.commit()
 
@@ -129,13 +125,11 @@ def processPapers():
 
         return authors
 
-
-    log = open('processed_total.txt', 'r+')
+    log = open('processed_refs.txt', 'r+')
     start_at = int(log.read())
 
-    # print('Data import starts at', start_at)
     if start_at < NUMBER_OF_PAPERS:
-        walked, selected = select_cs_papers(start_at, BATCH_SIZE)
+        walked, selected = extract_references(start_at, BATCH_SIZE)
     # print('\n')
     log.seek(0)
     log.write(str(walked))
@@ -144,8 +138,9 @@ def processPapers():
     mag_db.close()
 
 if __name__ == '__main__':
-    for x in range(200):
+    for x in range(50):
         print("iter %d" % x)
         processPapers()
+        time.sleep(10)
 
 

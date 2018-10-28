@@ -1,12 +1,12 @@
+const mysql = require('mysql')
 const express = require('express')
 const app = express()
-const mysql = require('mysql')
 
 let port = process.env.PORT || 8000
 let host = process.env.HOST || 'localhost'
 
 let rds = mysql.createConnection({
-  host     : 'localhost',
+  host     : 'dev-db-server.cs6gjqtgg2dt.us-east-2.rds.amazonaws.com',
   user     : 'disco',
   password : 'MakeBestTech:0',
   database : 'disco'
@@ -21,6 +21,7 @@ function fetch(query, resolve) {
   });
 }
 
+// example: /search?text=intelligence&offset=0&numResult=20 
 app.get('/search', function(req, res){
   let text = req.query.text
   let offset = req.query.offset || 0
@@ -33,21 +34,25 @@ app.get('/search', function(req, res){
   }
 })
 
+// example: /paper/123456 
 app.get('/paper/:id', function(req, res){
   let paperId = req.params.id
   fetch(`SELECT * FROM papers WHERE id = ${paperId}`, (r) => res.json(r))
 })
 
+// example: /references/086abc123
 app.get('/references/:code', function(req, res){
   let paperCode = req.params.code
   fetch(`select * from papers where hexcode in ( select reference_id from paper_references where paper_id = '${paperCode}' );`, (r) => res.json(r))
 })
 
+// example: /references/086abc123
 app.get('/citedby/:code', function(req, res){
   let paperCode = req.params.code
   fetch(`select * from papers where hexcode in ( select reference_id from paper_references where reference_id = '${paperCode}' );`, (r) => res.json(r))
 })
 
+// example: /authors/086abc123
 app.get('/authors', function(req, res){  
   let paperCodes = req.query.codes.split(',')
   let queryString = Array.isArray(paperCodes) ? JSON.stringify(paperCodes).slice(1, -1) : `'${paperCodes}'`
@@ -57,7 +62,6 @@ app.get('/authors', function(req, res){
     fetch(query, (r) => res.json(r))
 })
   
-
 app.listen(port, host, function(){
   console.log('API server started, listening', host, port)
 })
