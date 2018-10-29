@@ -1,7 +1,6 @@
 <template>
-  <v-layout column v-resize="onResize">
-    <v-divider v-if="$store.state.isVisPaneVisible" class="my-2"></v-divider>
-    <v-container fluid :pb-0="!$store.state.isVisPaneVisible" :py-2="$store.state.isVisPaneVisible">
+  <v-layout column v-resize="onResize" style="height: calc(100vh - 200px); overflow: auto;">
+    <v-container fluid :pb-0="!$store.state.isVisPaneVisible" :py-2="$store.state.isVisPaneVisible" style="flex-basis: auto;">
       <v-layout row align-center>
         <v-flex :offset-md2="!$store.state.isVisPaneVisible" class="px-2">
           <h4>

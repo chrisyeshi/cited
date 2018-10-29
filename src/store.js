@@ -17,6 +17,7 @@ export default new Vuex.Store({
     searchLabel: { text: '', refObj: { title: '' } },
     collectionTitle: '',
     graph: new Graph([]),
+    hoveredGraphNode: null,
     testGraph: new Graph([]),
     searchRefObjs: []
   },
@@ -121,6 +122,9 @@ export default new Vuex.Store({
     },
     clearGraph (state) {
       state.graph.clear()
+    },
+    setHoveredGraphNode (state, hoveredNode) {
+      state.hoveredGraphNode = hoveredNode
     },
     search (state, text) {
       if (_.isEmpty(text)) {

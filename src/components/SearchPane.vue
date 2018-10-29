@@ -7,8 +7,9 @@
         @onSearch="onSearch">
       </search-box>
     </component>
+    <v-divider v-if="$store.state.isVisPaneVisible" class="my-2"></v-divider>
     <search-content v-if="searchComponent === 'appBar'">
-      <v-layout column style="height: calc(100vh - 135px); overflow: auto;">
+      <v-layout column class="overflow-visible">
         <search-paper v-for="(refObj, index) in refObjs" :key="index"
           :refObj="refObj"
           @onClickTitle="showRefObjDetail"

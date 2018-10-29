@@ -1,22 +1,37 @@
 <template>
   <v-card class="column-width">
-    <v-system-bar status class="pa-0"
-      :style="{ 'background-color': color }">
-      <!-- TODO: hove over these to highlight the related cards in graph -->
-      <span class="fill-height caption px-1 d-flex align-center cyan darken-3">
-        <span>
-          &lt; {{ card.inGraphCitings.length }} / {{ card.paper.citingCount }}
+    <v-system-bar status class="pa-0" ref="header"
+      :class="{ orange: card.isSelected }">
+      <v-tooltip top class="fill-height" open-delay=500>
+        <span class="fill-height caption px-1 d-flex align-center white--text"
+          slot="activator"
+          :style="{ backgroundColor: inGraphCitingColor }"
+          @mouseover="setHovered(card, 'citing', true)"
+          @mouseout="setHovered(card, 'citing', false)"
+          @click="showCitingRefObjs(card.paper)">
+          <span>
+            &lt; {{ card.inGraphCitings.length }} / {{ card.paper.citingCount }}
+          </span>
         </span>
-      </span>
+        <span>Citing {{ card.inGraphCitings.length }} articles in collection and {{ card.paper.citingCount }} articles overall</span>
+      </v-tooltip>
       <v-spacer
         @click="$store.commit('toggleNodeSelected', card)" class="fill-height">
       </v-spacer>
       <v-icon @click="$store.commit('removeFromGraph', card)">close</v-icon>
-      <span class="fill-height caption px-1 d-flex align-center cyan darken-1">
-        <span>
-          {{ card.inGraphCitedBys.length }} / {{ card.paper.citedByCount }} &gt;
+      <v-tooltip top class="fill-height" open-delay=500>
+        <span class="fill-height caption px-1 d-flex align-center white--text"
+          slot="activator"
+          :style="{ backgroundColor: inGraphCitedByColor }"
+          @mouseover="setHovered(card, 'citedBy', true)"
+          @mouseout="setHovered(card, 'citedBy', false)"
+          @click="showCitedByRefObjs(card.paper)">
+          <span>
+            {{ card.inGraphCitedBys.length }} / {{ card.paper.citedByCount }} &gt;
+          </span>
         </span>
-      </span>
+        <span>Cited by {{ card.inGraphCitedBys.length }} articles in collection and {{ card.paper.citedByCount }} articles overall</span>
+      </v-tooltip>
     </v-system-bar>
     <v-card-text class="pa-2 caption">
       <h4><a>{{ card.paper.title }}</a></h4>
@@ -57,11 +72,6 @@ export default {
   props: {
     card: Object
   },
-  data () {
-    return {
-      color: undefined
-    }
-  },
   methods: {
     trace (value) {
       console.log(value)
@@ -77,11 +87,41 @@ export default {
     showCitedByRefObjs (refObj) {
       this.$store.dispatch(
         'showRelatedTestRefObjs', { relation: 'citedBy', refObj: refObj })
+    },
+    getColor: function ({ maxLevel, logBase, value }) {
+      const log = x => Math.log(x) / Math.log(logBase)
+      const count = Math.floor(value)
+      const unboundLevel = count === 0 ? 0 : Math.floor(log(count)) + 1
+      const boundLevel = Math.min(maxLevel, unboundLevel)
+      const r = boundLevel / maxLevel
+      const minColor = [50, 50, 50]
+      const maxColor = [50, 200, 250]
+      const color = []
+      for (let i = 0; i < 3; ++i) {
+        color[i] = minColor[i] * (1 - r) + maxColor[i] * r
+      }
+      return `rgb(${color[0]}, ${color[1]}, ${color[2]})`
+    },
+    setHovered (card, relation, hovered) {
+      this.$store.commit(
+        'setHoveredGraphNode',
+        hovered ? { node: card, relation: relation } : null)
     }
   },
-  watch: {
-    card (curr) {
-      this.color = curr.isSelected ? 'orange' : undefined
+  computed: {
+    inGraphCitingColor () {
+      return this.getColor({
+        maxLevel: 4,
+        logBase: 2,
+        value: this.card.inGraphCitings.length
+      })
+    },
+    inGraphCitedByColor () {
+      return this.getColor({
+        maxLevel: 4,
+        logBase: 2,
+        value: this.card.inGraphCitedBys.length
+      })
     }
   }
 }
