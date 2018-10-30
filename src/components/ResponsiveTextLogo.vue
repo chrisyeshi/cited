@@ -5,7 +5,7 @@
     <v-slide-x-transition>
       <span v-if="windowSize.width > 960"
         class="grey--text text--darken-2 display-1">
-        isco
+        <span>isco</span><span v-if="full">very Engine</span>
       </span>
     </v-slide-x-transition>
   </v-layout>
@@ -14,7 +14,11 @@
 <script>
 export default {
   name: 'ResponsiveTextLogo',
-  components: {
+  props: {
+    full: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

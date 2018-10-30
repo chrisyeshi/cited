@@ -19,25 +19,11 @@ export default new Vuex.Store({
     graph: new Graph([]),
     hoveredGraphNode: null,
     testGraph: new Graph([]),
-    searchRefObjs: []
+    searchRefObjs: [],
+    collections: [],
+    visPaneCollection: 'history'
   },
   actions: {
-    // TODO: change these to mutations instead of actions so that the time travel in Vue debug tool is more useful.
-    toHome (context) {
-      context.commit('setCollectionBarVisible', false)
-      context.commit('setSearchPaneVisible', true)
-      context.commit('setVisPaneVisible', false)
-      context.commit('setVisPaneState', 'minor')
-      context.commit('setIsSearched', false)
-      context.commit('clearGraph')
-    },
-    toSearchCollection (context) {
-      context.commit('setCollectionBarVisible', true)
-      context.commit('setSearchPaneVisible', true)
-      context.commit('setVisPaneVisible', true)
-      context.commit('setVisPaneState', 'minor')
-      context.commit('setCollectionTitle', 'collection: ' + context.state.searchText)
-    },
     toggleVisPaneState (context) {
       if (context.state.visPaneState === 'minor') {
         context.commit('setVisPaneState', 'major')
@@ -81,6 +67,22 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    toHome (state) {
+      state.isCollectionBarVisible = false
+      state.isSearchPaneVisible = true
+      state.isVisPaneVisible = false
+      state.visPaneState = 'minor'
+      state.isSearched = false
+      state.graph = new Graph([])
+      state.visPaneCollection = 'history'
+    },
+    toSearchCollection (state) {
+      state.isCollectionBarVisible = true
+      state.isSearchPaneVisible = true
+      state.isVisPaneVisible = true
+      state.visPaneState = 'minor'
+      state.collectionTitle = `collection: ${state.searchText}`
+    },
     change (state, to) {
       state = { ...state, ...to }
     },
@@ -114,6 +116,9 @@ export default new Vuex.Store({
     toggleNodeSelected (state, node) {
       state.graph.toggleSelected(node)
     },
+    clearSelectedNodes (state) {
+      state.graph.deselectAllNodes()
+    },
     insertToGraph (state, refObj) {
       state.graph.insert(refObj)
     },
@@ -143,6 +148,28 @@ export default new Vuex.Store({
     },
     setSearchRefObjs (state, refObjs) {
       state.searchRefObjs = refObjs
+    },
+    selectUserCollection (state, index) {
+      state.visPaneCollection = state.collections[index]
+      state.graph = state.collections[index].graph
+      if (!state.isVisPaneVisible) {
+        state.isCollectionBarVisible = true
+        state.isSearchPaneVisible = true
+        state.isVisPaneVisible = true
+        state.isSearched = true
+        state.visPaneState = 'full'
+      }
+    },
+    createUserCollection (state, collection) {
+      state.collections.push(collection)
+    },
+    createVisPaneCollection (state) {
+      const collection = { name: '', graph: state.graph }
+      state.collections.push(collection)
+      state.visPaneCollection = collection
+    },
+    setVisPaneCollectionName (state, text) {
+      state.visPaneCollection.name = text
     }
   },
   getters: {

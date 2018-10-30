@@ -29,7 +29,6 @@ import SearchContent from './SearchContent.vue'
 import SearchBox from './SearchBox.vue'
 import AppBar from './AppBar.vue'
 import SearchPaper from './SearchPaper.vue'
-import { Graph } from './kanbangraph.js'
 
 export default {
   name: 'SearchPane',
@@ -39,15 +38,6 @@ export default {
     SearchBox,
     SearchPaper,
     AppBar
-  },
-  data () {
-    this.$http.get('./static/insitupdf.json').then(res => {
-      this.$store.commit('setTestGraph', Graph.fromTestJson({
-        papers: res.body.references,
-        relations: res.body.relations
-      }))
-    })
-    return {}
   },
   methods: {
     trace (value) {
@@ -74,7 +64,7 @@ export default {
     showRelatedRefObjs (relation, refObj) {
       if (!this.$store.state.isVisPaneVisible) {
         window.flipping.read()
-        this.$store.dispatch('toSearchCollection')
+        this.$store.commit('toSearchCollection')
         this.$nextTick(() => {
           window.flipping.flip()
         })

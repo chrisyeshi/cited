@@ -2,8 +2,9 @@
   <v-toolbar flat :fixed="fixed"
     :dense="minimal"
     :color="minimal ? 'transparent' : ''">
-    <responsive-text-logo v-if="!minimal" @click="toHome"></responsive-text-logo>
-    <v-container fill-height class="pa-2">
+    <responsive-text-logo v-if="!minimal" :full="fullLogo" @click="toHome">
+    </responsive-text-logo>
+    <v-container v-if="!fullLogo" fill-height class="pa-2">
       <v-layout row fill-height justify-center align-center>
         <v-flex xs12 :md10="!minimal">
           <slot></slot>
@@ -38,6 +39,10 @@ export default {
     minimal: {
       type: Boolean,
       default: false
+    },
+    fullLogo: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -52,7 +57,7 @@ export default {
     },
     toHome () {
       window.flipping.read()
-      this.$store.dispatch('toHome')
+      this.$store.commit('toHome')
       this.$nextTick(() => {
         window.flipping.flip()
       })

@@ -165,8 +165,8 @@ export class Graph {
   }
 
   deselectAllNodes () {
-    _.forEach(this.nodes, node => {
-      node.isSelected = false
+    _.forEach(this.nodes, (node, index) => {
+      this.nodes.splice(index, 1, { ...node, isSelected: false })
     })
   }
 

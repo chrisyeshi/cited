@@ -4,8 +4,9 @@
       :class="{ orange: card.isSelected }">
       <v-tooltip top class="fill-height" open-delay=500>
         <span class="fill-height caption px-1 d-flex align-center white--text"
-          slot="activator"
           :style="{ backgroundColor: inGraphCitingColor }"
+          style="cursor: pointer;"
+          slot="activator"
           @mouseover="setHovered(card, 'citing', true)"
           @mouseout="setHovered(card, 'citing', false)"
           @click="showCitingRefObjs(card.paper)">
@@ -16,13 +17,14 @@
         <span>Citing {{ card.inGraphCitings.length }} articles in collection and {{ card.paper.citingCount }} articles overall</span>
       </v-tooltip>
       <v-spacer
-        @click="$store.commit('toggleNodeSelected', card)" class="fill-height">
+        @click.stop="$store.commit('toggleNodeSelected', card)" class="fill-height">
       </v-spacer>
       <v-icon @click="$store.commit('removeFromGraph', card)">close</v-icon>
       <v-tooltip top class="fill-height" open-delay=500>
         <span class="fill-height caption px-1 d-flex align-center white--text"
-          slot="activator"
           :style="{ backgroundColor: inGraphCitedByColor }"
+          style="cursor: pointer;"
+          slot="activator"
           @mouseover="setHovered(card, 'citedBy', true)"
           @mouseout="setHovered(card, 'citedBy', false)"
           @click="showCitedByRefObjs(card.paper)">

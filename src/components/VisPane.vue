@@ -9,19 +9,37 @@
               : 'chevron_left' }}
           </v-icon>
           <!-- TODO: change this to the approprate collection name -->
-          <h4 class="body-2">History</h4>
-          <v-icon
-            color="orange"
-            :disabled="!$store.state.graph.isAnyNodeSelected"
-            style="margin-left: auto;"
-            @click="findCommonRelatives">
-            device_hub
-          </v-icon>
+          <v-tooltip bottom v-if="$store.state.visPaneCollection === 'history'"
+            :disabled="!$store.state.isSignedIn">
+            <h4 class="body-2 d-flex align-center" slot="activator"
+              style="cursor: pointer;"
+              @click="createVisPaneCollection">
+              History
+              <v-icon v-if="$store.state.isSignedIn" small class="pl-1">
+                add
+              </v-icon>
+            </h4>
+            <span>Save to new collection</span>
+          </v-tooltip>
+          <input v-else type="text" placeholder="Collection name" @change="$store.commit('setVisPaneCollectionName', $event.target.value)" :value="$store.state.visPaneCollection.name" style="flex: 1;">
+          <v-spacer v-if="$store.state.visPaneCollection === 'history'"></v-spacer>
+          <v-tooltip bottom>
+            <v-icon
+              slot="activator"
+              class="pl-3"
+              color="orange"
+              :disabled="!$store.state.graph.isAnyNodeSelected"
+              @click="findCommonRelatives">
+              device_hub
+            </v-icon>
+            <span>Select cards to find common references and citations</span>
+          </v-tooltip>
         </v-layout>
       </v-layout>
     </v-toolbar>
     <v-divider class="my-2"></v-divider>
-    <v-container class="py-0" fluid style="position: relative;">
+    <v-container class="py-0" fluid style="position: relative;"
+      @click="$store.commit('clearSelectedNodes')">
       <v-layout column align-content-start ref="cardLayout"
         :wrap="$store.state.visPaneState !== 'minor'"
         style="height: calc(100vh - 135px); overflow: auto;">
@@ -82,6 +100,11 @@ export default {
         text: 'Common relatives of',
         refObj: _.map(this.$store.state.graph.selectedNodes, node => node.paper)
       })
+    },
+    createVisPaneCollection () {
+      if (this.$store.state.isSignedIn) {
+        this.$store.commit('createVisPaneCollection')
+      }
     }
   },
   computed: {

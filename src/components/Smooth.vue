@@ -21,6 +21,7 @@ import AppCollectionBar from './AppCollectionBar.vue'
 import SearchPane from './SearchPane.vue'
 import VisPane from './VisPane.vue'
 import Flipping from 'flipping/dist/flipping.web.js'
+import { Graph } from './kanbangraph.js'
 
 export default {
   name: 'Smooth',
@@ -60,6 +61,32 @@ export default {
   },
   mounted () {
     window.flipping = new Flipping()
+  },
+  beforeCreate () {
+    this.$http.get('./static/insitupdf.json').then(res => {
+      this.$store.commit('setTestGraph', Graph.fromTestJson({
+        papers: res.body.references,
+        relations: res.body.relations
+      }))
+      this.$store.commit(
+        'createUserCollection',
+        {
+          name: 'information visualization toolkits',
+          graph: Graph.fromTestJson({
+            papers: res.body.references,
+            relations: res.body.relations
+          })
+        })
+      this.$store.commit(
+        'createUserCollection',
+        {
+          name: 'in situ visualization',
+          graph: Graph.fromTestJson({
+            papers: res.body.references,
+            relations: res.body.relations
+          })
+        })
+    })
   }
 }
 </script>
