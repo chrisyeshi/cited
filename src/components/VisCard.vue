@@ -36,7 +36,7 @@
       </v-tooltip>
     </v-system-bar>
     <v-card-text class="pa-2 caption">
-      <h4><a>{{ card.paper.title }}</a></h4>
+      <h4><a @click="$store.commit('set', { prop: 'currRefObj', value: card.paper })">{{ card.paper.title }}</a></h4>
       <div class="text-truncate paper-author-line">
         <span v-for="(name, index) in formatAuthorNames(card.paper.authors)"
           :key="index">

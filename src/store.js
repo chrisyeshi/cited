@@ -21,7 +21,8 @@ export default new Vuex.Store({
     testGraph: new Graph([]),
     searchRefObjs: [],
     collections: [],
-    visPaneCollection: 'history'
+    visPaneCollection: 'history',
+    currRefObj: null
   },
   actions: {
     toggleVisPaneState (context) {
@@ -64,9 +65,13 @@ export default new Vuex.Store({
       if (context.state.visPaneState === 'full') {
         context.commit('setVisPaneState', 'major')
       }
+      context.commit('set', { prop: 'currRefObj', value: null })
     }
   },
   mutations: {
+    set (state, { prop, value }) {
+      state[prop] = value
+    },
     toHome (state) {
       state.isCollectionBarVisible = false
       state.isSearchPaneVisible = true
@@ -75,6 +80,7 @@ export default new Vuex.Store({
       state.isSearched = false
       state.graph = new Graph([])
       state.visPaneCollection = 'history'
+      state.currRefObj = null
     },
     toSearchCollection (state) {
       state.isCollectionBarVisible = true
@@ -142,6 +148,7 @@ export default new Vuex.Store({
         text: 'Search Results',
         refObj: { title: '' }
       }
+      state.currRefObj = null
     },
     setTestGraph (state, testGraph) {
       state.testGraph = testGraph

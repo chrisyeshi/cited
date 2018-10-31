@@ -1,7 +1,7 @@
 <template>
   <div class="my-2">
     <h4 class="body-2">
-      <a @click="$emit('onClickTitle')">{{ refObj.title }}</a>
+      <a @click="$emit('onClickTitle', refObj)">{{ refObj.title }}</a>
     </h4>
     <div class="caption grey--text text--darken-3 paper-author-line"
       :class="{ 'text-truncate': !isExpanded }">

@@ -8,8 +8,9 @@
       </search-box>
     </component>
     <v-divider v-if="$store.state.isVisPaneVisible" class="my-2"></v-divider>
-    <search-content v-if="searchComponent === 'appBar'">
-      <v-layout column class="overflow-visible">
+    <search-content
+      v-if="searchComponent === 'appBar' && !$store.state.currRefObj">
+      <v-layout column>
         <search-paper v-for="(refObj, index) in refObjs" :key="index"
           :refObj="refObj"
           @onClickTitle="showRefObjDetail"
@@ -20,6 +21,9 @@
         </search-paper>
       </v-layout>
     </search-content>
+    <reference-object
+      v-if="$store.state.currRefObj" :refObj="$store.state.currRefObj">
+    </reference-object>
   </v-layout>
 </template>
 
@@ -29,6 +33,7 @@ import SearchContent from './SearchContent.vue'
 import SearchBox from './SearchBox.vue'
 import AppBar from './AppBar.vue'
 import SearchPaper from './SearchPaper.vue'
+import ReferenceObject from './ReferenceObject.vue'
 
 export default {
   name: 'SearchPane',
@@ -37,7 +42,8 @@ export default {
     SearchContent,
     SearchBox,
     SearchPaper,
-    AppBar
+    AppBar,
+    ReferenceObject
   },
   methods: {
     trace (value) {
@@ -58,8 +64,8 @@ export default {
         }, interval)
       })
     },
-    showRefObjDetail () {
-      this.trace()
+    showRefObjDetail (refObj) {
+      this.$store.commit('set', { prop: 'currRefObj', value: refObj })
     },
     showRelatedRefObjs (relation, refObj) {
       if (!this.$store.state.isVisPaneVisible) {
