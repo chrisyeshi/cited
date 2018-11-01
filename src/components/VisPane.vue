@@ -167,11 +167,11 @@ export default {
       const paths = _.map(componentPairs, ({ citing, citedBy }) => {
         const start = {
           x: citedBy.$el.offsetLeft + marginLeft - this.$refs.cardLayout.scrollLeft,
-          y: citedBy.$el.offsetTop + citedBy.$refs.header.$el.offsetHeight / 2 - citedBy.$parent.$el.parentElement.scrollTop
+          y: citedBy.$el.offsetTop + citedBy.$refs.header.$el.offsetHeight / 2 - citedBy.$parent.$el.parentElement.scrollTop - this.$refs.cardLayout.scrollTop
         }
         const end = {
           x: citing.$el.offsetLeft + citing.$el.offsetWidth + marginLeft - this.$refs.cardLayout.scrollLeft,
-          y: citing.$el.offsetTop + citedBy.$refs.header.$el.offsetHeight / 2 - citing.$parent.$el.parentElement.scrollTop
+          y: citing.$el.offsetTop + citedBy.$refs.header.$el.offsetHeight / 2 - citing.$parent.$el.parentElement.scrollTop - this.$refs.cardLayout.scrollTop
         }
         const halfGap = Math.max(16, Math.abs(start.x - end.x) / 4)
         const halfHeader =
