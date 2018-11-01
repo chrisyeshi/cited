@@ -2,7 +2,7 @@
   <v-layout column>
     <v-toolbar dense flat class="pb-0" color="transparent">
       <v-layout fill-height align-end>
-        <v-layout row wrap align-center justify-start>
+        <v-layout row align-center justify-start>
           <v-icon class="pr-3" @click="$store.dispatch('toggleVisPaneState')">
             {{ $store.state.visPaneState === 'full'
               ? 'chevron_right'
@@ -22,12 +22,16 @@
             <span>Save to new collection</span>
           </v-tooltip>
           <input v-else type="text" placeholder="Collection name" @change="$store.commit('setVisPaneCollectionName', $event.target.value)" :value="$store.state.visPaneCollection.name" style="flex: 1;">
-          <v-spacer v-if="$store.state.visPaneCollection === 'history'"></v-spacer>
+          <v-spacer v-if="$store.state.visPaneCollection === 'history'">
+          </v-spacer>
           <v-tooltip bottom>
-            <v-icon
-              slot="activator"
-              class="pl-3"
-              color="orange"
+            <v-icon slot="activator" class="pl-3" @click="toggleLevelOfDetail">
+              zoom_in
+            </v-icon>
+            <span>Toggle level of detail</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <v-icon slot="activator" class="pl-2" color="orange"
               :disabled="!$store.state.graph.isAnyNodeSelected"
               @click="findCommonRelatives">
               device_hub
@@ -45,15 +49,17 @@
         style="height: calc(100vh - 135px); overflow: auto;">
         <div v-for="year in years" :key="year">
           <h4 class="text-xs-center column-width">{{ year }}</h4>
-          <v-hover v-for="(card, index) in cardsByYears[year]" :key="index"
-            class="ma-2">
-            <vis-card
-              :ref="`card-${card.paper.doi}`"
-              slot-scope="{ hover }"
-              :class="{ 'elevation-6': hover }"
-              :card="card">
-            </vis-card>
-          </v-hover>
+          <v-layout class="pa-1" align-center column :style="cardListStyle">
+            <v-hover v-for="(card, index) in cardsByYears[year]" :key="index"
+              class="mt-1 mb-2 mx-1">
+              <vis-card
+                :ref="`card-${card.paper.doi}`"
+                slot-scope="{ hover }"
+                :class="{ 'elevation-6': hover }"
+                :card="card">
+              </vis-card>
+            </v-hover>
+          </v-layout>
         </div>
       </v-layout>
       <svg class="overlay" ref="overlay">
@@ -105,9 +111,17 @@ export default {
       if (this.$store.state.isSignedIn) {
         this.$store.commit('createVisPaneCollection')
       }
+    },
+    toggleLevelOfDetail () {
+      this.$store.commit('toggleVisPaneLOD')
     }
   },
   computed: {
+    cardListStyle () {
+      return this.$store.state.visPaneState === 'minor'
+        ? {}
+        : { maxHeight: 'calc(100vh - 156px)', overflow: 'auto' }
+    },
     cardsByYears () {
       let byYears = {}
       for (let i = 0; i < this.$store.state.graph.nodes.length; ++i) {
@@ -153,11 +167,11 @@ export default {
       const paths = _.map(componentPairs, ({ citing, citedBy }) => {
         const start = {
           x: citedBy.$el.offsetLeft + marginLeft - this.$refs.cardLayout.scrollLeft,
-          y: citedBy.$el.offsetTop + citedBy.$refs.header.$el.offsetHeight / 2 - this.$refs.cardLayout.scrollTop
+          y: citedBy.$el.offsetTop + citedBy.$refs.header.$el.offsetHeight / 2 - citedBy.$parent.$el.parentElement.scrollTop
         }
         const end = {
           x: citing.$el.offsetLeft + citing.$el.offsetWidth + marginLeft - this.$refs.cardLayout.scrollLeft,
-          y: citing.$el.offsetTop + citedBy.$refs.header.$el.offsetHeight / 2 - this.$refs.cardLayout.scrollTop
+          y: citing.$el.offsetTop + citedBy.$refs.header.$el.offsetHeight / 2 - citing.$parent.$el.parentElement.scrollTop
         }
         const halfGap = Math.max(16, Math.abs(start.x - end.x) / 4)
         const halfHeader =

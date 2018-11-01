@@ -17,7 +17,11 @@
         <span>Citing {{ card.inGraphCitings.length }} articles in collection and {{ card.paper.citingCount }} articles overall</span>
       </v-tooltip>
       <v-spacer
-        @click.stop="$store.commit('toggleNodeSelected', card)" class="fill-height">
+        @click.stop="$store.commit('toggleNodeSelected', card)"
+        class="fill-height px-2 d-flex align-center text-truncate">
+        <span v-if="lod === 'author'">
+          {{ formatAuthorNames(card.paper.authors)[0].slice(0, 10) }}, {{ card.paper.year }}
+        </span>
       </v-spacer>
       <v-icon @click="$store.commit('removeFromGraph', card)">close</v-icon>
       <v-tooltip top class="fill-height" open-delay=500>
@@ -35,9 +39,9 @@
         <span>Cited by {{ card.inGraphCitedBys.length }} articles in collection and {{ card.paper.citedByCount }} articles overall</span>
       </v-tooltip>
     </v-system-bar>
-    <v-card-text class="pa-2 caption">
+    <v-card-text v-if="lod !== 'author'" class="pa-2 caption">
       <h4><a @click="$store.commit('set', { prop: 'currRefObj', value: card.paper })">{{ card.paper.title }}</a></h4>
-      <div class="text-truncate paper-author-line">
+      <div v-if="lod !== 'title'" class="text-truncate paper-author-line">
         <span v-for="(name, index) in formatAuthorNames(card.paper.authors)"
           :key="index">
           <a class="text-no-wrap">{{ name }}</a>
@@ -46,7 +50,7 @@
           </span>
         </span>
       </div>
-      <v-layout row justify-space-between>
+      <v-layout v-if="lod !== 'title'" row justify-space-between>
         <a class="text-truncate" style="max-width: 60px;">
           {{ card.paper.venue }}
         </a>
@@ -124,6 +128,9 @@ export default {
         logBase: 2,
         value: this.card.inGraphCitedBys.length
       })
+    },
+    lod () {
+      return this.$store.state.visPaneLOD
     }
   }
 }

@@ -22,7 +22,8 @@ export default new Vuex.Store({
     searchRefObjs: [],
     collections: [],
     visPaneCollection: 'history',
-    currRefObj: null
+    currRefObj: null,
+    visPaneLOD: 'full'
   },
   actions: {
     toggleVisPaneState (context) {
@@ -177,6 +178,15 @@ export default new Vuex.Store({
     },
     setVisPaneCollectionName (state, text) {
       state.visPaneCollection.name = text
+    },
+    toggleVisPaneLOD (state) {
+      if (state.visPaneLOD === 'full') {
+        state.visPaneLOD = 'author'
+      } else if (state.visPaneLOD === 'author') {
+        state.visPaneLOD = 'title'
+      } else if (state.visPaneLOD === 'title') {
+        state.visPaneLOD = 'full'
+      }
     }
   },
   getters: {

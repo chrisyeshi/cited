@@ -51,8 +51,8 @@ export default {
     visPaneStyle () {
       if (this.$store.state.visPaneState === 'minor') {
         return {
-          flex: '0 0 310px',
-          maxWidth: '310px'
+          flex: '0 0 315px',
+          maxWidth: '315px'
         }
       } else {
         return {}
