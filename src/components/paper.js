@@ -1,8 +1,9 @@
 import _ from 'lodash'
 
 export class Author {
-  constructor (family, given) {
+  constructor (id, family, given) {
     // TODO: validation
+    this.id = id
     this.family = family
     this.given = given
   }
@@ -34,9 +35,11 @@ Author.FORMAT_FAMILY_COMMA_GIVEN = 'format_family_comma_given'
 Author.FORMAT_GIVEN_FAMILY = 'format_given_family'
 
 export class Paper {
-  constructor (doi, title, authors, abstract, year, venue,
+  constructor (id, doi, title, authors, abstract, year, venue,
     citings, nCitings, citedBys, nCitedBys) {
     // TODO: validation
+    this.type = 'paper'
+    this.id = id
     this.doi = doi
     this.title = title
     this.authors = authors
@@ -53,15 +56,19 @@ export class Paper {
     const doi = index
     const title = testPaper.title
     const authors =
-      _.map(_.split(testPaper.authors, ', '), text => new Author(text, ''))
+      _.map(
+        _.split(testPaper.authors, ', '),
+        text => new Author('authorId', text, ''))
     const abstract = testPaper.abstract
     const year = testPaper.year
-    const venue = testPaper.journal
+    const venue = { id: 'venueId', name: testPaper.journal }
     const citings = []
     const nCitings = 0
     const citedBys = []
     const nCitedBys = testPaper.citationCount
+    const id = `p${authors[0].family}${year}hash06`
     return new Paper(
+      id /* id */,
       doi /* doi */,
       title /* title */,
       authors /* authors */,
@@ -76,9 +83,10 @@ export class Paper {
 
   static fromCrossref (crossrefPaper) {
     const doi = _.toLower(crossrefPaper.DOI)
+    const id = doi
     const title = crossrefPaper.title.join()
     const authors = _.map(
-      crossrefPaper.author, author => new Author(author.family, author.given))
+      crossrefPaper.author, author => new Author('authorId', author.family, author.given))
     const abstract = crossrefPaper.abstract
     const year = _.toNumber(crossrefPaper.created['date-parts'][0][0])
     const citings = _.map(
@@ -89,12 +97,13 @@ export class Paper {
       cite => ({ ...cite, doi: cite.DOI }))
     const nCitedBys = _.toNumber(crossrefPaper['is-referenced-by-count'])
     return new Paper(
+      id /* id */,
       doi /* doi */,
       title /* title */,
       authors /* authors */,
       abstract /* abstract */,
       year /* year */,
-      'venue' /* venue */,
+      { id: 'venueId', name: 'venue' } /* venue */,
       citings /* citings */,
       nCitings /* nCitings */,
       citedBys /* citedBys */,
@@ -108,6 +117,8 @@ export class Paper {
   get citingCount () {
     return _.max([ this.nCitings, this.citings.length ])
   }
+
+  get referenceCount () { return this.nCitings }
 
   // backward compatibility
   get citationCount () { return this.citedByCount }

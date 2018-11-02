@@ -49,7 +49,8 @@
         style="height: calc(100vh - 135px); overflow: auto;">
         <div v-for="year in years" :key="year">
           <h4 class="text-xs-center column-width">{{ year }}</h4>
-          <v-layout class="pa-1" align-center column :style="cardListStyle">
+          <v-layout
+            class="pa-1" align-content-start column :style="cardListStyle">
             <v-hover v-for="(card, index) in cardsByYears[year]" :key="index"
               class="mt-1 mb-2 mx-1">
               <vis-card
@@ -92,20 +93,16 @@ export default {
     },
     showCitingRefObjs (refObj) {
       this.$store.dispatch(
-        'showRelatedTestRefObjs', { relation: 'citing', refObj: refObj })
+        'showRelatedRefObjs', { relation: 'citing', refObj: refObj })
     },
     showCitedByRefObjs (refObj) {
       this.$store.dispatch(
-        'showRelatedTestRefObjs', { relation: 'citedBy', refObj: refObj })
+        'showRelatedRefObjs', { relation: 'citedBy', refObj: refObj })
     },
     findCommonRelatives () {
-      this.$store.commit(
-        'setSearchRefObjs',
-        _.map(this.$store.state.testGraph.nodes, node => node.paper))
-      this.$store.commit('setSearchLabel', {
-        text: 'Common relatives of',
-        refObj: _.map(this.$store.state.graph.selectedNodes, node => node.paper)
-      })
+      const refObjs =
+        _.map(this.$store.state.graph.selectedNodes, ({ paper }) => paper)
+      this.$store.dispatch('showCommonRelatives', refObjs)
     },
     createVisPaneCollection () {
       if (this.$store.state.isSignedIn) {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
 import { Graph } from './components/kanbangraph.js'
+import api from './components/api.js'
 
 Vue.use(Vuex)
 
@@ -38,35 +39,41 @@ export default new Vuex.Store({
     toggleIsSearched (context) {
       context.commit('setIsSearched', !context.state.isSearched)
     },
-    showRelatedTestRefObjs (context, { relation, refObj }) {
-      const node = context.state.testGraph.nodes[refObj.doi]
-      const relatedNodeIds =
+    async showRelatedRefObjs (context, { relation, refObj }) {
+      const refObjs =
         relation === 'citing'
-          ? node.inGraphCitings
-          : relation === 'citedBy'
-            ? node.inGraphCitedBys
-            : []
+          ? await api.getReferences(refObj.id)
+          : await api.getCitedBys(refObj.id)
       context.commit(
-        'setSearchRefObjs',
-        _.map(
-          relatedNodeIds,
-          nodeId => context.state.testGraph.nodes[nodeId].paper))
-      context.commit(
-        'setSearchLabel',
+        'setSearchResults',
         {
-          refObj: refObj,
-          text:
-            relation === 'citing'
+          label: {
+            refObj: refObj,
+            text: relation === 'citing'
               ? `References of`
-              : relation === 'citedBy'
-                ? `Articles that are citing`
-                : ''
-        }
-      )
+              : `Articles that are citing` },
+          refObjs: refObjs
+        })
       if (context.state.visPaneState === 'full') {
         context.commit('setVisPaneState', 'major')
       }
-      context.commit('set', { prop: 'currRefObj', value: null })
+    },
+    async showCommonRelatives (context, refObjs) {
+      const relatives =
+        await api.getCommonRelatives(_.map(refObjs, ({ id }) => id))
+      const label = { text: 'Common relatives of', refObj: refObjs }
+      context.commit('setSearchResults', { label: label, refObjs: relatives })
+    },
+    async search (context, text) {
+      if (_.isEmpty(text)) {
+        return
+      }
+      const refObjs = await api.searchRefObjs(text)
+      context.commit('setSearchResults', { text: text, refObjs: refObjs })
+    },
+    async setCurrRefObj (context, refObjId) {
+      const refObj = await api.getRefObj(refObjId)
+      context.commit('set', { prop: 'currRefObj', value: refObj })
     }
   },
   mutations: {
@@ -138,17 +145,12 @@ export default new Vuex.Store({
     setHoveredGraphNode (state, hoveredNode) {
       state.hoveredGraphNode = hoveredNode
     },
-    search (state, text) {
-      if (_.isEmpty(text)) {
-        return
-      }
+    setSearchResults (state, { text, label, refObjs }) {
       state.isSearched = true
-      state.searchText = text
-      state.searchRefObjs = _.map(state.testGraph.nodes, node => node.paper)
-      state.searchLabel = {
-        text: 'Search Results',
-        refObj: { title: '' }
-      }
+      state.searchText = text || state.searchText
+      state.searchRefObjs = refObjs
+      state.searchLabel =
+        label || { text: 'Search Results', refObj: { title: '' } }
       state.currRefObj = null
     },
     setTestGraph (state, testGraph) {

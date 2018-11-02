@@ -45,7 +45,10 @@ export class Graph {
     })
     _.forEach(nodes, node => {
       node.paper.citings =
-        _.map(node.inGraphCitings, index => ({ doi: index }))
+        _.map(node.inGraphCitings, index => ({ id: nodes[index].paper.id }))
+      node.paper.nCitings = node.paper.citings.length
+      node.paper.citedBys =
+        _.map(node.inGraphCitedBys, index => ({ id: nodes[index].paper.id }))
     })
     return new Graph(nodes)
   }

@@ -65,7 +65,7 @@ export default {
       })
     },
     showRefObjDetail (refObj) {
-      this.$store.commit('set', { prop: 'currRefObj', value: refObj })
+      this.$store.dispatch('setCurrRefObj', refObj.id)
     },
     showRelatedRefObjs (relation, refObj) {
       if (!this.$store.state.isVisPaneVisible) {
@@ -76,12 +76,12 @@ export default {
         })
       }
       this.$store.dispatch(
-        'showRelatedTestRefObjs', { relation: relation, refObj: refObj })
+        'showRelatedRefObjs', { relation: relation, refObj: refObj })
       this.$store.commit('insertToGraph', refObj)
     },
     onSearch (text) {
       window.flipping.read()
-      this.$store.commit('search', text)
+      this.$store.dispatch('search', text)
       this.$nextTick(() => {
         window.flipping.flip()
       })

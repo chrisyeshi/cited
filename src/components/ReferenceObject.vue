@@ -38,7 +38,7 @@
           </template>
         </h4>
         <h4 class="mb-4 subheading">
-          <a>{{ refObj.venue }}</a> - <a>{{ refObj.year }}</a> - <a @click="$refs.refLabel.scrollIntoView(true)">References {{ refObj.citingCount }}</a> - <a @click="showRelatedRefObjs('citing', refObj)">Cited by {{ refObj.citedByCount }}</a>
+          <a>{{ refObj.venue.name }}</a> - <a>{{ refObj.year }}</a> - <a @click="$refs.refLabel.scrollIntoView(true)">References {{ refObj.referenceCount }}</a> - <a @click="showRelatedRefObjs('citing', refObj)">Cited by {{ refObj.citedByCount }}</a>
         </h4>
         <h4 class="mb-1 subheading">Abstract:</h4>
         <p ref="abstract" class="mb-4 body-1">
@@ -56,9 +56,9 @@
           </a>
         </p>
         <h4 ref="refLabel" class="mb-1 subheading">
-          References ({{ refObj.citingCount }}):
+          References ({{ refObj.referenceCount }}):
         </h4>
-        <search-paper v-for="(citing, index) in citings" :key="index"
+        <search-paper v-for="(citing, index) in refObj.references" :key="index"
           :refObj="citing"
           @onClickTitle="showRefObjDetail"
           @onClickVenue="trace"
@@ -142,7 +142,7 @@ export default {
       return value
     },
     showRefObjDetail (refObj) {
-      this.$store.commit('set', { prop: 'currRefObj', value: refObj })
+      this.$store.dispatch('setCurrRefObj', refObj.id)
     },
     showRelatedRefObjs (relation, refObj) {
       if (!this.$store.state.isVisPaneVisible) {
@@ -153,7 +153,7 @@ export default {
         })
       }
       this.$store.dispatch(
-        'showRelatedTestRefObjs', { relation: relation, refObj: refObj })
+        'showRelatedRefObjs', { relation: relation, refObj: refObj })
       this.$store.commit('insertToGraph', refObj)
     }
   },
@@ -165,11 +165,6 @@ export default {
       return this.isAbstractExpanded
         ? this.refObj.abstract
         : this.refObj.abstract.slice(0, 512)
-    },
-    citings () {
-      return _.map(this.refObj.citings, ({ doi }) => {
-        return this.$store.state.testGraph.nodes[doi].paper
-      })
     }
   }
 }

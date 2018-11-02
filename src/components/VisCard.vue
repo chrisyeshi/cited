@@ -18,7 +18,7 @@
       </v-tooltip>
       <v-spacer
         @click.stop="$store.commit('toggleNodeSelected', card)"
-        class="fill-height px-2 d-flex align-center text-truncate">
+        class="fill-height px-2 d-flex align-center text-truncate body-1">
         <span v-if="lod === 'author'">
           {{ formatAuthorNames(card.paper.authors)[0].slice(0, 10) }}, {{ card.paper.year }}
         </span>
@@ -40,7 +40,11 @@
       </v-tooltip>
     </v-system-bar>
     <v-card-text v-if="lod !== 'author'" class="pa-2 caption">
-      <h4><a @click="$store.commit('set', { prop: 'currRefObj', value: card.paper })">{{ card.paper.title }}</a></h4>
+      <h4>
+        <a @click="$store.dispatch('setCurrRefObj', card.paper.id)">
+          {{ card.paper.title }}
+        </a>
+      </h4>
       <div v-if="lod !== 'title'" class="text-truncate paper-author-line">
         <span v-for="(name, index) in formatAuthorNames(card.paper.authors)"
           :key="index">
@@ -52,7 +56,7 @@
       </div>
       <v-layout v-if="lod !== 'title'" row justify-space-between>
         <a class="text-truncate" style="max-width: 60px;">
-          {{ card.paper.venue }}
+          {{ card.paper.venue.name }}
         </a>
         -
         <a>{{ card.paper.year }}</a>
@@ -88,11 +92,11 @@ export default {
     },
     showCitingRefObjs (refObj) {
       this.$store.dispatch(
-        'showRelatedTestRefObjs', { relation: 'citing', refObj: refObj })
+        'showRelatedRefObjs', { relation: 'citing', refObj: refObj })
     },
     showCitedByRefObjs (refObj) {
       this.$store.dispatch(
-        'showRelatedTestRefObjs', { relation: 'citedBy', refObj: refObj })
+        'showRelatedRefObjs', { relation: 'citedBy', refObj: refObj })
     },
     getColor: function ({ maxLevel, logBase, value }) {
       const log = x => Math.log(x) / Math.log(logBase)

@@ -21,13 +21,13 @@
         {{ isExpanded ? 'expand_less' : 'expand_more' }}
       </v-icon>
       <a class="text-no-wrap mr-3" @click="$emit('onClickVenue', refObj.venue)">
-        {{ refObj.venue }}
+        {{ refObj.venue.name }}
       </a>
       <a class="text-no-wrap mr-3" @click="$emit('onClickYear', refObj.year)">
         {{ refObj.year }}
       </a>
       <a class="text-no-wrap mr-3" @click="$emit('onClickCiting', refObj)">
-        Citing {{ refObj.citingCount }}
+        Referenced {{ refObj.referenceCount }}
       </a>
       <a class="text-no-wrap mr-3" @click="$emit('onClickCitedBy', refObj)">
         Cited by {{ refObj.citedByCount }}
