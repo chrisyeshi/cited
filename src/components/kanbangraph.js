@@ -81,20 +81,20 @@ export class Graph {
 
     }
     // citings
-    const refDois = _.map(paper.references, ref => ref.doi)
-    const inCollectionCitings = _.map(refDois, doi => {
-      if (doi === undefined) {
+    const refObjIds = _.map(paper.references, ref => ref.id)
+    const inCollectionCitings = _.map(refObjIds, id => {
+      if (id === undefined) {
         return null
       }
-      return papers.findIndex(paper => doi === paper.doi)
+      return papers.findIndex(paper => id === paper.id)
     })
     relation.citings = inCollectionCitings.filter(value => {
       return value !== undefined && value !== null && value !== -1
     })
     // citedBys
     _.forEach(papers, (eachPaper, eachPaperId) => {
-      const refDois = _.map(eachPaper.references, ref => ref.doi)
-      if (refDois.includes(paper.doi)) {
+      const refObjIds = _.map(eachPaper.references, ref => ref.id)
+      if (refObjIds.includes(paper.id)) {
         relation.citedBys.push(eachPaperId)
       }
     })
