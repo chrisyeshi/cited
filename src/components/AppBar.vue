@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar flat :fixed="fixed"
+  <v-toolbar app clipped-right flat :fixed="fixed"
     :dense="minimal"
     :color="minimal ? 'transparent' : ''">
     <responsive-text-logo v-if="!minimal" :full="fullLogo" @click="toHome">
@@ -14,19 +14,20 @@
     <v-toolbar-items v-if="!minimal">
       <v-menu offset-y transition="slide-y-transition"
         v-if="$store.state.isSignedIn">
-        <v-btn large icon slot="activator">
-          <v-icon large color="grey darken-2">view_list</v-icon>
-        </v-btn>
-        <user-collection-list></user-collection-list>
       </v-menu>
       <sign-in-button></sign-in-button>
+      <v-toolbar-side-icon
+        v-if="$store.state.isSignedIn"
+        @click.stop="toggleDrawer">
+          <v-icon large color="grey darken-2">view_list</v-icon>
+      </v-toolbar-side-icon>
     </v-toolbar-items>
   </v-toolbar>
 </template>
 
 <script>
 import SignInButton from './SignInButton.vue'
-import UserCollectionList from './UserCollectionList.vue'
+// import UserCollectionList from './UserCollectionList.vue'
 import ResponsiveTextLogo from './ResponsiveTextLogo.vue'
 
 export default {
@@ -45,9 +46,14 @@ export default {
       default: false
     }
   },
+  data () {
+    return {
+      drawer: false
+    }
+  },
   components: {
     SignInButton,
-    UserCollectionList,
+    // UserCollectionList,
     ResponsiveTextLogo
   },
   methods: {
@@ -61,6 +67,9 @@ export default {
       this.$nextTick(() => {
         window.flipping.flip()
       })
+    },
+    toggleDrawer () {
+      this.$store.commit('toggleSideDrawer')
     }
   }
 }

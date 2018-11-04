@@ -1,5 +1,38 @@
 <template>
   <v-app overflow-hidden>
+    <v-navigation-drawer
+      v-show="$store.state.openSideDrawer"
+      clipped
+      fixed
+      right
+      app
+    >
+      <v-list dense>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>settings</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Account Settings</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>history</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-title>History</v-list-tile-title>
+        </v-list-tile>
+        <v-list-group
+          prepend-icon="list"
+          value="true"
+        >
+          <v-list-tile slot="activator">
+            <v-list-tile-title>My Collections</v-list-tile-title>
+          </v-list-tile>
+          <user-collection-list dense></user-collection-list>
+        </v-list-group>
+      </v-list>
+    </v-navigation-drawer>
     <app-collection-bar
       v-show="$store.state.isCollectionBarVisible">
     </app-collection-bar>
@@ -18,6 +51,7 @@
 
 <script>
 import AppCollectionBar from './AppCollectionBar.vue'
+import UserCollectionList from './UserCollectionList.vue'
 import SearchPane from './SearchPane.vue'
 import VisPane from './VisPane.vue'
 import Flipping from 'flipping/dist/flipping.web.js'
@@ -27,6 +61,7 @@ export default {
   name: 'Smooth',
   components: {
     AppCollectionBar,
+    UserCollectionList,
     SearchPane,
     VisPane
   },

@@ -24,7 +24,8 @@ export default new Vuex.Store({
     collections: [],
     visPaneCollection: 'history',
     currRefObj: null,
-    visPaneLOD: 'full'
+    visPaneLOD: 'full',
+    openSideDrawer: false
   },
   actions: {
     toggleVisPaneState (context) {
@@ -35,6 +36,9 @@ export default new Vuex.Store({
       } else if (context.state.visPaneState === 'full') {
         context.commit('setVisPaneState', 'minor')
       }
+    },
+    toggleSideDrawer (context) {
+      context.commit('openSideDrawer', !context.state.openSideDrawer)
     },
     toggleIsSearched (context) {
       context.commit('setIsSearched', !context.state.isSearched)
@@ -102,6 +106,9 @@ export default new Vuex.Store({
     },
     toggleIsSignedIn (state) {
       state.isSignedIn = !state.isSignedIn
+    },
+    toggleSideDrawer (state) {
+      state.openSideDrawer = !state.openSideDrawer
     },
     setCollectionBarVisible (state, visible) {
       state.isCollectionBarVisible = visible
