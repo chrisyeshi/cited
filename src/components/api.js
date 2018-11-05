@@ -1,4 +1,4 @@
-import testData from './testData.js'
+import testData from './testdata.js'
 
 export class API {
   constructor (impl) {
