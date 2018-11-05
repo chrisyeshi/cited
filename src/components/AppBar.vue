@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar app clipped-right flat :fixed="fixed"
+  <v-toolbar clipped-right flat :fixed="fixed"
     :dense="minimal"
     :color="minimal ? 'transparent' : ''">
     <responsive-text-logo v-if="!minimal" :full="fullLogo" @click="toHome">
