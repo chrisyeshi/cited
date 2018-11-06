@@ -2,7 +2,11 @@
   <v-toolbar flat :fixed="fixed"
     :dense="minimal"
     :color="minimal ? 'transparent' : ''">
-    <responsive-text-logo v-if="!minimal" :full="fullLogo" @click="toHome">
+    <v-toolbar-side-icon
+      v-if="!minimal" @click="$store.commit('toggle', 'isDrawerVisible')">
+    </v-toolbar-side-icon>
+    <responsive-text-logo
+      v-if="!minimal" :full="fullLogo" @click="toHome" class="ml-2">
     </responsive-text-logo>
     <v-container v-if="!fullLogo" fill-height class="pa-2">
       <v-layout row fill-height justify-center align-center>
@@ -12,13 +16,6 @@
       </v-layout>
     </v-container>
     <v-toolbar-items v-if="!minimal">
-      <v-menu offset-y transition="slide-y-transition"
-        v-if="$store.state.isSignedIn">
-        <v-btn large icon slot="activator">
-          <v-icon large color="grey darken-2">view_list</v-icon>
-        </v-btn>
-        <user-collection-list></user-collection-list>
-      </v-menu>
       <sign-in-button></sign-in-button>
     </v-toolbar-items>
   </v-toolbar>

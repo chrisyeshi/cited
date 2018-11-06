@@ -1,5 +1,35 @@
 <template>
   <v-app overflow-hidden>
+    <v-navigation-drawer
+      temporary fixed width=240 v-model="$store.state.isDrawerVisible">
+      <v-toolbar flat>
+        <v-toolbar-side-icon
+          @click="$store.commit('toggle', 'isDrawerVisible')">
+        </v-toolbar-side-icon>
+        <v-toolbar-title class="headline ml-2"
+          @click="$router.push('/smooth?layout=home')" style="cursor: pointer;">
+          Discover
+        </v-toolbar-title>
+      </v-toolbar>
+      <user-collection-list
+        style="max-height: 100vh; overflow: auto;"
+        @onCollectionClicked="selectUserCollection">
+      </user-collection-list>
+      <v-list dense style="position: absolute; bottom: 0px; width: 100%;">
+        <v-divider></v-divider>
+        <v-list-tile @click="selectUserCollection(-1)">
+          <v-list-tile-title>History</v-list-tile-title>
+        </v-list-tile>
+        <v-divider></v-divider>
+        <v-list-tile>
+          <v-list-tile-title>Settings</v-list-tile-title>
+        </v-list-tile>
+        <v-divider></v-divider>
+        <v-list-tile>
+          <v-list-tile-title>Contact Us</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
     <app-collection-bar
       v-show="$store.state.isCollectionBarVisible">
     </app-collection-bar>
@@ -20,6 +50,8 @@
 import AppCollectionBar from './AppCollectionBar.vue'
 import SearchPane from './SearchPane.vue'
 import VisPane from './VisPane.vue'
+import ResponsiveTextLogo from './ResponsiveTextLogo.vue'
+import UserCollectionList from './UserCollectionList.vue'
 import Flipping from 'flipping/dist/flipping.web.js'
 import { Graph } from './kanbangraph.js'
 import api from './api.js'
@@ -30,7 +62,9 @@ export default {
   components: {
     AppCollectionBar,
     SearchPane,
-    VisPane
+    VisPane,
+    ResponsiveTextLogo,
+    UserCollectionList
   },
   props: {
     layout: String,
@@ -57,6 +91,7 @@ export default {
       if (query.search) {
         if (_.startsWith(query.search, 'citing:')) {
           const refObjId = query.search.substring('citing:'.length)
+          // TODO: change the 'getCitedBys' to also return the current 'refObj'
           Promise.all([ api.getRefObj(refObjId), api.getCitedBys(refObjId) ])
             .then(([ refObj, refObjs ]) => {
               this.$store.commit('setState', {
@@ -102,9 +137,26 @@ export default {
         })
       } else {
         this.$store.commit('setState', {
-          visPaneCollection: 'history'
+          visPaneCollection: 'history',
+          graph: new Graph([])
         })
       }
+    },
+    selectUserCollection (collectionId) {
+      const query = { collection: collectionId }
+      query.layout =
+        this.$store.getters.layout === 'home'
+          ? 'collection'
+          : this.$store.getters.layout === 'search'
+            ? 'minor'
+            : this.$store.getters.layout
+      if (this.$store.state.currRefObj) {
+        query.refobj = this.$store.state.currRefObj.id
+      }
+      this.$router.push({
+        path: '/smooth',
+        query: query
+      })
     }
   },
   computed: {
@@ -143,6 +195,11 @@ export default {
     this.setLayout(this.$route.query.layout)
     this.$http.get('./static/insitupdf.json')
       .then(res => {
+        this.$store.commit('setState', {
+          collections: [],
+          visPaneCollection: 'history',
+          graph: new Graph([])
+        })
         this.$store.commit(
           'createUserCollection',
           {

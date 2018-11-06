@@ -24,7 +24,8 @@ export default new Vuex.Store({
     collections: [],
     visPaneCollection: 'history',
     currRefObj: null,
-    visPaneLOD: 'full'
+    visPaneLOD: 'full',
+    isDrawerVisible: false
   },
   actions: {
     toggleVisPaneState (context) {
@@ -78,6 +79,9 @@ export default new Vuex.Store({
     },
     setState (state, newState) {
       Object.assign(state, { ...state, ...newState })
+    },
+    toggle (state, prop) {
+      state[prop] = !state[prop]
     },
     toHome (state) {
       state.isCollectionBarVisible = false
