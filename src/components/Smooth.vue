@@ -30,9 +30,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <app-collection-bar
-      v-show="$store.state.isCollectionBarVisible">
-    </app-collection-bar>
+    <app-bar full-logo v-show="$store.state.isCollectionBarVisible"></app-bar>
     <v-layout row overflow-hidden>
       <search-pane class="overflow-hidden"
         v-show="$store.state.isSearchPaneVisible && $store.state.visPaneState !== 'full'"
@@ -47,7 +45,7 @@
 </template>
 
 <script>
-import AppCollectionBar from './AppCollectionBar.vue'
+import AppBar from './AppBar.vue'
 import SearchPane from './SearchPane.vue'
 import VisPane from './VisPane.vue'
 import ResponsiveTextLogo from './ResponsiveTextLogo.vue'
@@ -60,7 +58,7 @@ import _ from 'lodash'
 export default {
   name: 'Smooth',
   components: {
-    AppCollectionBar,
+    AppBar,
     SearchPane,
     VisPane,
     ResponsiveTextLogo,
