@@ -40,7 +40,7 @@ export default {
         return this.$store.state.searchText
       },
       set (value) {
-        this.$store.commit('setSearchText', value)
+        this.$store.commit('setState', { searchText: value })
       }
     }
   },

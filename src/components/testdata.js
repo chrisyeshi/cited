@@ -5,20 +5,24 @@ export default {
 
   graph: new Graph([]),
 
-  async initialize () {
-    const res = await fetch('./static/insitupdf.json')
-    const data = await res.json()
-    this.graph = Graph.fromTestJson({
-      papers: data.references,
-      relations: data.relations
-    })
+  initialize () {
+    this.initialized = fetch('./static/insitupdf.json')
+      .then(res => res.json())
+      .then(data => {
+        this.graph = Graph.fromTestJson({
+          papers: data.references,
+          relations: data.relations
+        })
+      })
   },
 
   async searchRefObjs (text, { offset, count }) {
+    await this.initialized
     return _.map(this.graph.nodes, ({ paper }) => paper)
   },
 
-  getRefObj (refObjId) {
+  async getRefObj (refObjId) {
+    await this.initialized
     const paper =
       _.find(this.graph.nodes, node => node.paper.id === refObjId).paper
     paper.citings =
@@ -33,7 +37,8 @@ export default {
     return Promise.resolve()
   },
 
-  getReferences (refObjId, { offset, count }) {
+  async getReferences (refObjId, { offset, count }) {
+    await this.initialized
     const paper =
       _.find(this.graph.nodes, node => node.paper.id === refObjId).paper
     return _.map(paper.citings, ({ id }) => {
@@ -42,7 +47,8 @@ export default {
     })
   },
 
-  getCitedBys (refObjId, { offset, count }) {
+  async getCitedBys (refObjId, { offset, count }) {
+    await this.initialized
     const paper =
       _.find(this.graph.nodes, node => node.paper.id === refObjId).paper
     return _.map(paper.citedBys, ({ id }) => {
@@ -51,7 +57,8 @@ export default {
     })
   },
 
-  getCommonRelatives (refObjIds, opt) {
+  async getCommonRelatives (refObjIds, opt) {
+    await this.initialized
     return _.map(this.graph.nodes, ({ paper }) => paper)
   }
 }

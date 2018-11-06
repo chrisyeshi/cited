@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
 import { Graph } from './components/kanbangraph.js'
+import router from './router/index.js'
 import api from './components/api.js'
 
 Vue.use(Vuex)
@@ -19,7 +20,6 @@ export default new Vuex.Store({
     collectionTitle: '',
     graph: new Graph([]),
     hoveredGraphNode: null,
-    testGraph: new Graph([]),
     searchRefObjs: [],
     collections: [],
     visPaneCollection: 'history',
@@ -29,33 +29,11 @@ export default new Vuex.Store({
   actions: {
     toggleVisPaneState (context) {
       if (context.state.visPaneState === 'minor') {
-        context.commit('setVisPaneState', 'major')
+        context.commit('setState', { visPaneState: 'major' })
       } else if (context.state.visPaneState === 'major') {
-        context.commit('setVisPaneState', 'full')
+        context.commit('setState', { visPaneState: 'full' })
       } else if (context.state.visPaneState === 'full') {
-        context.commit('setVisPaneState', 'minor')
-      }
-    },
-    toggleIsSearched (context) {
-      context.commit('setIsSearched', !context.state.isSearched)
-    },
-    async showRelatedRefObjs (context, { relation, refObj }) {
-      const refObjs =
-        relation === 'citing'
-          ? await api.getReferences(refObj.id)
-          : await api.getCitedBys(refObj.id)
-      context.commit(
-        'setSearchResults',
-        {
-          label: {
-            refObj: refObj,
-            text: relation === 'citing'
-              ? `References of`
-              : `Articles that are citing` },
-          refObjs: refObjs
-        })
-      if (context.state.visPaneState === 'full') {
-        context.commit('setVisPaneState', 'major')
+        context.commit('setState', { visPaneState: 'minor' })
       }
     },
     async showCommonRelatives (context, refObjs) {
@@ -68,17 +46,38 @@ export default new Vuex.Store({
       if (_.isEmpty(text)) {
         return
       }
-      const refObjs = await api.searchRefObjs(text)
-      context.commit('setSearchResults', { text: text, refObjs: refObjs })
+      const query = { search: text }
+      query.layout =
+        context.getters.layout === 'home'
+          ? 'search'
+          : context.getters.layout === 'collection'
+            ? 'major'
+            : context.getters.layout
+      if (context.getters.currCollectionId >= 0) {
+        query.collection = context.getters.currCollectionId
+      }
+      router.push({ path: '/smooth', query: query })
     },
     async setCurrRefObj (context, refObjId) {
-      const refObj = await api.getRefObj(refObjId)
-      context.commit('set', { prop: 'currRefObj', value: refObj })
+      const query = { refobj: refObjId }
+      query.layout =
+        context.getters.layout === 'home'
+          ? 'search'
+          : context.getters.layout === 'collection'
+            ? 'major'
+            : context.getters.layout
+      if (context.getters.currCollectionId >= 0) {
+        query.collection = context.getters.currCollectionId
+      }
+      router.push({ path: '/smooth', query: query })
     }
   },
   mutations: {
     set (state, { prop, value }) {
       state[prop] = value
+    },
+    setState (state, newState) {
+      Object.assign(state, { ...state, ...newState })
     },
     toHome (state) {
       state.isCollectionBarVisible = false
@@ -90,42 +89,35 @@ export default new Vuex.Store({
       state.visPaneCollection = 'history'
       state.currRefObj = null
     },
-    toSearchCollection (state) {
+    toSearch (state) {
+      state.isCollectionBarVisible = false
+      state.isSearchPaneVisible = true
+      state.isSearched = true
+      state.isVisPaneVisible = false
+    },
+    toCollection (state) {
       state.isCollectionBarVisible = true
       state.isSearchPaneVisible = true
+      state.isSearched = true
+      state.isVisPaneVisible = true
+      state.visPaneState = 'full'
+    },
+    toMinor (state) {
+      state.isCollectionBarVisible = true
+      state.isSearchPaneVisible = true
+      state.isSearched = true
       state.isVisPaneVisible = true
       state.visPaneState = 'minor'
-      state.collectionTitle = `collection: ${state.searchText}`
     },
-    change (state, to) {
-      state = { ...state, ...to }
+    toMajor (state) {
+      state.isCollectionBarVisible = true
+      state.isSearchPaneVisible = true
+      state.isSearched = true
+      state.isVisPaneVisible = true
+      state.visPaneState = 'major'
     },
     toggleIsSignedIn (state) {
       state.isSignedIn = !state.isSignedIn
-    },
-    setCollectionBarVisible (state, visible) {
-      state.isCollectionBarVisible = visible
-    },
-    setSearchPaneVisible (state, visible) {
-      state.isSearchPaneVisible = visible
-    },
-    setVisPaneVisible (state, visible) {
-      state.isVisPaneVisible = visible
-    },
-    setVisPaneState (state, visPaneState) {
-      state.visPaneState = visPaneState
-    },
-    setIsSearched (state, isSearched) {
-      state.isSearched = isSearched
-    },
-    setSearchText (state, text) {
-      state.searchText = text
-    },
-    setSearchLabel (state, labelObj) {
-      state.searchLabel = labelObj
-    },
-    setCollectionTitle (state, text) {
-      state.collectionTitle = text
     },
     toggleNodeSelected (state, node) {
       state.graph.toggleSelected(node)
@@ -134,7 +126,10 @@ export default new Vuex.Store({
       state.graph.deselectAllNodes()
     },
     insertToGraph (state, refObj) {
-      state.graph.insert(refObj)
+      try {
+        state.graph.insert(refObj)
+      } catch (error) {
+      }
     },
     removeFromGraph (state, node) {
       state.graph.remove(node)
@@ -152,9 +147,6 @@ export default new Vuex.Store({
       state.searchLabel =
         label || { text: 'Search Results', refObj: { title: '' } }
       state.currRefObj = null
-    },
-    setTestGraph (state, testGraph) {
-      state.testGraph = testGraph
     },
     setSearchRefObjs (state, refObjs) {
       state.searchRefObjs = refObjs
@@ -192,8 +184,20 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    isSignedIn: function (state) {
+    isSignedIn: state => {
       return state.isSignedIn
+    },
+    layout: state => {
+      return !state.isCollectionBarVisible && !state.isSearched
+        ? 'home'
+        : !state.isVisPaneVisible
+          ? 'search'
+          : state.visPaneState === 'full'
+            ? 'collection'
+            : state.visPaneState
+    },
+    currCollectionId: state => {
+      return _.indexOf(state.collections, state.visPaneCollection)
     }
   }
 })

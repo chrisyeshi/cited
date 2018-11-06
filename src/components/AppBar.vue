@@ -57,7 +57,12 @@ export default {
     },
     toHome () {
       window.flipping.read()
-      this.$store.commit('toHome')
+      this.$router.push({
+        path: '/smooth',
+        query: {
+          layout: 'home'
+        }
+      })
       this.$nextTick(() => {
         window.flipping.flip()
       })

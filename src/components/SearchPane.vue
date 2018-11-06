@@ -16,8 +16,8 @@
           @onClickTitle="showRefObjDetail"
           @onClickVenue="trace"
           @onClickYear="trace"
-          @onClickCiting="showRelatedRefObjs('citing', $event)"
-          @onClickCitedBy="showRelatedRefObjs('citedBy', $event)">
+          @onClickCiting="showRelatedRefObjs('citedBy', $event)"
+          @onClickCitedBy="showRelatedRefObjs('citing', $event)">
         </search-paper>
       </v-layout>
     </search-content>
@@ -57,7 +57,7 @@ export default {
       }
       this.animateSearchText(text.slice(0, text.length - 1), interval, () => {
         setTimeout(() => {
-          this.$store.commit('setSearchText', text)
+          this.$store.commit('setState', { searchText: text })
           if (callback) {
             callback()
           }
@@ -68,16 +68,25 @@ export default {
       this.$store.dispatch('setCurrRefObj', refObj.id)
     },
     showRelatedRefObjs (relation, refObj) {
-      if (!this.$store.state.isVisPaneVisible) {
-        window.flipping.read()
-        this.$store.commit('toSearchCollection')
-        this.$nextTick(() => {
-          window.flipping.flip()
-        })
+      window.flipping.read()
+      const query = { search: `${relation}:${refObj.id}` }
+      const layout = this.$store.getters.layout
+      query.layout =
+        layout === 'home' || layout === 'search'
+          ? 'minor'
+          : layout === 'collection'
+            ? 'major'
+            : layout
+      if (this.$store.getters.currCollectionId >= 0) {
+        query.collection = this.$store.getters.currCollectionId
       }
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: relation, refObj: refObj })
-      this.$store.commit('insertToGraph', refObj)
+      this.$router.push({ path: '/smooth', query: query })
+      this.$nextTick(() => {
+        window.flipping.flip()
+      })
+      if (this.$store.state.visPaneCollection === 'history') {
+        this.$store.commit('insertToGraph', refObj)
+      }
     },
     onSearch (text) {
       window.flipping.read()

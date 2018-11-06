@@ -61,11 +61,11 @@
         -
         <a>{{ card.paper.year }}</a>
         -
-        <a @click="showCitingRefObjs(card.paper)">
+        <a @click="showRelatedRefObjs('citedBy', card.paper)">
           Citing {{ card.paper.citingCount }}
         </a>
         -
-        <a @click="showCitedByRefObjs(card.paper)">
+        <a @click="showRelatedRefObjs('citing', card.paper)">
           Cited by {{ card.paper.citedByCount }}
         </a>
       </v-layout>
@@ -90,13 +90,23 @@ export default {
     formatAuthorNames (authors) {
       return _.map(authors, author => Author.stringify(author))
     },
-    showCitingRefObjs (refObj) {
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: 'citing', refObj: refObj })
-    },
-    showCitedByRefObjs (refObj) {
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: 'citedBy', refObj: refObj })
+    showRelatedRefObjs (relation, refObj) {
+      window.flipping.read()
+      const query = { search: `${relation}:${refObj.id}` }
+      const layout = this.$store.getters.layout
+      query.layout =
+        layout === 'home' || layout === 'search'
+          ? 'minor'
+          : layout === 'collection'
+            ? 'major'
+            : layout
+      if (this.$store.getters.currCollectionId >= 0) {
+        query.collection = this.$store.getters.currCollectionId
+      }
+      this.$router.push({ path: '/smooth', query: query })
+      this.$nextTick(() => {
+        window.flipping.flip()
+      })
     },
     getColor: function ({ maxLevel, logBase, value }) {
       const log = x => Math.log(x) / Math.log(logBase)
