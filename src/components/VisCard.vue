@@ -9,7 +9,7 @@
           slot="activator"
           @mouseover="setHovered(card, 'citing', true)"
           @mouseout="setHovered(card, 'citing', false)"
-          @click="showCitingRefObjs(card.paper)">
+          @click="showRelatedRefObjs('citedBy', card.paper)">
           <span>
             &lt; {{ card.inGraphCitings.length }} / {{ card.paper.citingCount }}
           </span>
@@ -31,7 +31,7 @@
           slot="activator"
           @mouseover="setHovered(card, 'citedBy', true)"
           @mouseout="setHovered(card, 'citedBy', false)"
-          @click="showCitedByRefObjs(card.paper)">
+          @click="showRelatedRefObjs('citing', card.paper)">
           <span>
             {{ card.inGraphCitedBys.length }} / {{ card.paper.citedByCount }} &gt;
           </span>

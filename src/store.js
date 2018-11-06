@@ -18,14 +18,18 @@ export default new Vuex.Store({
     searchText: '',
     searchLabel: { text: '', refObj: { title: '' } },
     collectionTitle: '',
+    // TODO: graph duplicates with visPaneCollection and historyCollection
     graph: new Graph([]),
     hoveredGraphNode: null,
     searchRefObjs: [],
     collections: [],
     visPaneCollection: 'history',
+    historyGraph: new Graph([]),
     currRefObj: null,
     visPaneLOD: 'full',
-    isDrawerVisible: false
+    isDrawerVisible: false,
+    enableUserCollectionDropdown: false,
+    enableDrawer: true
   },
   actions: {
     toggleVisPaneState (context) {
@@ -190,6 +194,9 @@ export default new Vuex.Store({
   getters: {
     isSignedIn: state => {
       return state.isSignedIn
+    },
+    isUserCollectionDropdownVisible: state => {
+      return state.enableUserCollectionDropdown && state.isSignedIn
     },
     layout: state => {
       return !state.isCollectionBarVisible && !state.isSearched

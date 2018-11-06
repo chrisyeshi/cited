@@ -21,11 +21,11 @@
           <v-list-tile-title>History</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile>
+        <v-list-tile @click="trace">
           <v-list-tile-title>Settings</v-list-tile-title>
         </v-list-tile>
         <v-divider></v-divider>
-        <v-list-tile>
+        <v-list-tile @click="trace">
           <v-list-tile-title>Contact Us</v-list-tile-title>
         </v-list-tile>
       </v-list>
@@ -73,6 +73,10 @@ export default {
     collectionId: String
   },
   methods: {
+    trace (value) {
+      console.log(value)
+      return value
+    },
     setLayout (layoutText) {
       if (layoutText === 'home') {
         this.$store.commit('toHome')
@@ -138,7 +142,7 @@ export default {
       } else {
         this.$store.commit('setState', {
           visPaneCollection: 'history',
-          graph: new Graph([])
+          graph: this.$store.state.historyGraph
         })
       }
     },
@@ -198,7 +202,7 @@ export default {
         this.$store.commit('setState', {
           collections: [],
           visPaneCollection: 'history',
-          graph: new Graph([])
+          graph: this.$store.state.historyGraph
         })
         this.$store.commit(
           'createUserCollection',
