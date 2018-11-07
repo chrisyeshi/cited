@@ -46,7 +46,9 @@ export default new Vuex.Store({
       const relatives =
         await api.getCommonRelatives(_.map(refObjs, ({ id }) => id))
       const label = { text: 'Common relatives of', refObj: refObjs }
-      context.commit('setSearchResults', { label: label, refObjs: relatives })
+      context.commit(
+        'setSearchResults',
+        { label: label, refObjs: relatives, currRefObj: null })
     },
     async search (context, text) {
       if (_.isEmpty(text)) {
@@ -155,13 +157,16 @@ export default new Vuex.Store({
     setHoveredGraphNode (state, hoveredNode) {
       state.hoveredGraphNode = hoveredNode
     },
-    setSearchResults (state, { text, label, refObjs }) {
+    setSearchResults (
+      state, { text, label, refObjs, currRefObj = undefined }) {
       state.isSearched = true
       state.searchText = text || state.searchText
       state.searchRefObjs = refObjs
       state.searchLabel =
         label || { text: 'Search Results', refObj: { title: '' } }
-      state.currRefObj = null
+      if (currRefObj) {
+        state.currRefObj = currRefObj
+      }
     },
     setSearchRefObjs (state, refObjs) {
       state.searchRefObjs = refObjs

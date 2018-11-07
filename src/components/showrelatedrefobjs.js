@@ -17,7 +17,9 @@ export default {
       this.$nextTick(() => {
         window.flipping.flip()
       })
-      this.$store.commit('insertToHistory', refObj)
+      if (isHistory) {
+        this.$store.commit('insertToHistory', refObj)
+      }
     }
   }
 }

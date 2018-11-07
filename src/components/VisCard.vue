@@ -62,7 +62,7 @@
         <a>{{ card.paper.year }}</a>
         -
         <a @click="showRelatedRefObjs('citedBy', card.paper, false)">
-          Citing {{ card.paper.citingCount }}
+          Referenced {{ card.paper.citingCount }}
         </a>
         -
         <a @click="showRelatedRefObjs('citing', card.paper, false)">

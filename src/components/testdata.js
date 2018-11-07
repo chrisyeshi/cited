@@ -41,20 +41,22 @@ export default {
     await this.initialized
     const paper =
       _.find(this.graph.nodes, node => node.paper.id === refObjId).paper
-    return _.map(paper.citings, ({ id }) => {
-      return _.find(
-        this.graph.nodes, node => node.paper.id === id).paper
-    })
+    return {
+      refObj: paper,
+      references: _.map(paper.citings, ({ id }) =>
+        _.find(this.graph.nodes, node => node.paper.id === id).paper)
+    }
   },
 
   async getCitedBys (refObjId, { offset, count }) {
     await this.initialized
     const paper =
       _.find(this.graph.nodes, node => node.paper.id === refObjId).paper
-    return _.map(paper.citedBys, ({ id }) => {
-      return _.find(
-        this.graph.nodes, node => node.paper.id === id).paper
-    })
+    return {
+      refObj: paper,
+      references: _.map(paper.citedBys, ({ id }) =>
+        _.find(this.graph.nodes, node => node.paper.id === id).paper)
+    }
   },
 
   async getCommonRelatives (refObjIds, opt) {

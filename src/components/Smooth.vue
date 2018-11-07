@@ -93,15 +93,18 @@ export default {
       })
     },
     setLayout (layoutText) {
-      if (layoutText === 'home') {
+      const shouldCommitLayout = text => {
+        return layoutText === text && this.$store.getters.layout !== text
+      }
+      if (shouldCommitLayout('home')) {
         this.$store.commit('toHome')
-      } else if (layoutText === 'search') {
+      } else if (shouldCommitLayout('search')) {
         this.$store.commit('toSearch')
-      } else if (layoutText === 'collection') {
+      } else if (shouldCommitLayout('collection')) {
         this.$store.commit('toCollection')
-      } else if (layoutText === 'minor') {
+      } else if (shouldCommitLayout('minor')) {
         this.$store.commit('toMinor')
-      } else if (layoutText === 'major') {
+      } else if (shouldCommitLayout('major')) {
         this.$store.commit('toMajor')
       }
     },
@@ -110,27 +113,22 @@ export default {
       if (query.search) {
         if (_.startsWith(query.search, 'citing:')) {
           const refObjId = query.search.substring('citing:'.length)
-          // TODO: change the 'getCitedBys' to also return the current 'refObj'
-          Promise.all([ api.getRefObj(refObjId), api.getCitedBys(refObjId) ])
-            .then(([ refObj, refObjs ]) => {
-              this.$store.commit('setState', {
-                isSearched: true,
-                searchText: query.search,
-                searchRefObjs: refObjs,
-                searchLabel: { text: 'Articles that are citing', refObj: refObj }
-              })
+          api.getCitedBys(refObjId).then(({ refObj, citedBys }) => {
+            this.$store.commit('setSearchResults', {
+              text: query.search,
+              label: { text: 'Articles that are citing', refObj: refObj },
+              refObjs: citedBys
             })
+          })
         } else if (_.startsWith(query.search, 'citedBy:')) {
           const refObjId = query.search.substring('citedBy:'.length)
-          Promise.all([ api.getRefObj(refObjId), api.getReferences(refObjId) ])
-            .then(([ refObj, refObjs ]) => {
-              this.$store.commit('setState', {
-                isSearched: true,
-                searchText: query.search,
-                searchRefObjs: refObjs,
-                searchLabel: { text: 'References of', refObj: refObj }
-              })
+          api.getReferences(refObjId).then(({ refObj, references }) => {
+            this.$store.commit('setSearchResults', {
+              text: query.search,
+              label: { text: 'References of', refObj: refObj },
+              refObjs: references
             })
+          })
         } else {
           api.searchRefObjs(query.search).then(refObjs => {
             this.$store.commit('setState', {
@@ -147,6 +145,7 @@ export default {
           this.$store.commit('setState', { currRefObj: refObj })
         })
       } else {
+        // TODO: add another layout as refobj so that we no longer need to rely on currRefObj to determine the layout
         this.$store.commit('setState', { currRefObj: null })
       }
       if (this.$store.state.collections[query.collection]) {
