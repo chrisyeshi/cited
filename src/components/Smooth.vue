@@ -1,8 +1,9 @@
 <template>
   <v-app overflow-hidden>
     <v-navigation-drawer
-      app temporary fixed width=240 v-model="$store.state.isDrawerVisible">
-      <v-toolbar flat>
+      app :temporary="$store.state.enableDrawerTemporary" clipped width=240
+      v-model="$store.state.isDrawerVisible">
+      <v-toolbar v-if="$store.state.enableDrawerTemporary" flat>
         <v-toolbar-side-icon
           @click="$store.commit('toggle', 'isDrawerVisible')">
         </v-toolbar-side-icon>
@@ -12,7 +13,7 @@
         </v-toolbar-title>
       </v-toolbar>
       <user-collection-list
-        style="max-height: 100vh; overflow: auto;"
+        style="max-height: 100vh; overflow: auto; margin-top: 12px;"
         @onCollectionClicked="selectUserCollection">
       </user-collection-list>
       <v-list dense style="position: absolute; bottom: 0px; width: 100%;">
@@ -30,16 +31,22 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <app-bar app>
+    <app-bar>
       <search-box flat ref="searchBox" @onSearch="onSearch"></search-box>
     </app-bar>
-    <v-layout row overflow-hidden>
-      <component :is="searchComponent" overflow-hidden v-show="$store.getters.layout !== 'collection'" :style="searchPaneStyle"></component>
-      <v-flex
-        v-show="$store.state.isVisPaneVisible" :style="visPaneStyle">
-        <vis-pane></vis-pane>
-      </v-flex>
-    </v-layout>
+    <v-content>
+      <v-layout row overflow-hidden>
+        <component
+          :is="searchComponent" overflow-hidden
+          v-show="$store.getters.layout !== 'collection'"
+          :style="searchPaneStyle">
+        </component>
+        <v-flex
+          v-show="$store.state.isVisPaneVisible" :style="visPaneStyle">
+          <vis-pane></vis-pane>
+        </v-flex>
+      </v-layout>
+    </v-content>
   </v-app>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar flat :fixed="fixed"
+  <v-toolbar app clipped-left flat :fixed="fixed"
     :dense="minimal"
     :color="minimal ? 'transparent' : ''">
     <v-toolbar-side-icon

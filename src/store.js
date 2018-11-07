@@ -29,7 +29,8 @@ export default new Vuex.Store({
     visPaneLOD: 'full',
     isDrawerVisible: false,
     enableUserCollectionDropdown: false,
-    enableDrawer: true
+    enableDrawer: true,
+    enableDrawerTemporary: false
   },
   actions: {
     toggleVisPaneState (context) {
