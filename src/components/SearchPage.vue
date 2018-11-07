@@ -1,16 +1,10 @@
 <template>
   <v-layout column>
-    <v-toolbar flat>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <sign-in-button></sign-in-button>
-      </v-toolbar-items>
-    </v-toolbar>
     <v-container style="max-width: 600px;">
       <h1 class="pa-4 grey--text text--darken-2 responsive-font-size">
         Discovery Engine
       </h1>
-      <slot></slot>
+      <search-box solo @onSearch="onSearch"></search-box>
       <v-slide-y-transition>
         <user-collection-list
           v-if="$store.state.isSignedIn"
@@ -23,19 +17,45 @@
 
 <script>
 import SignInButton from './SignInButton.vue'
+import SearchBox from './SearchBox.vue'
 import UserCollectionList from './UserCollectionList.vue'
 
 export default {
   name: 'SearchPage',
   components: {
     SignInButton,
+    SearchBox,
     UserCollectionList
   },
   methods: {
     trace (value) {
       console.log(value)
       return value
+    },
+    animateSearchText (text, interval, callback) {
+      if (text === '') {
+        callback()
+        return
+      }
+      this.animateSearchText(text.slice(0, text.length - 1), interval, () => {
+        setTimeout(() => {
+          this.$store.commit('setState', { searchText: text })
+          if (callback) {
+            callback()
+          }
+        }, interval)
+      })
+    },
+    onSearch (text) {
+      window.flipping.read()
+      this.$store.dispatch('search', text)
+      this.$nextTick(() => {
+        window.flipping.flip()
+      })
     }
+  },
+  mounted () {
+    this.animateSearchText('visualization', 20)
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <v-app overflow-hidden>
     <v-navigation-drawer
-      temporary fixed width=240 v-model="$store.state.isDrawerVisible">
+      app temporary fixed width=240 v-model="$store.state.isDrawerVisible">
       <v-toolbar flat>
         <v-toolbar-side-icon
           @click="$store.commit('toggle', 'isDrawerVisible')">
@@ -30,12 +30,11 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <app-bar full-logo v-show="$store.state.isCollectionBarVisible"></app-bar>
+    <app-bar app>
+      <search-box flat ref="searchBox" @onSearch="onSearch"></search-box>
+    </app-bar>
     <v-layout row overflow-hidden>
-      <search-pane class="overflow-hidden"
-        v-show="$store.state.isSearchPaneVisible && $store.state.visPaneState !== 'full'"
-        :style="searchPaneStyle">
-      </search-pane>
+      <component :is="searchComponent" overflow-hidden v-show="$store.getters.layout !== 'collection'" :style="searchPaneStyle"></component>
       <v-flex
         v-show="$store.state.isVisPaneVisible" :style="visPaneStyle">
         <vis-pane></vis-pane>
@@ -46,6 +45,8 @@
 
 <script>
 import AppBar from './AppBar.vue'
+import SearchBox from './SearchBox.vue'
+import SearchPage from './SearchPage.vue'
 import SearchPane from './SearchPane.vue'
 import VisPane from './VisPane.vue'
 import ResponsiveTextLogo from './ResponsiveTextLogo.vue'
@@ -59,6 +60,8 @@ export default {
   name: 'Smooth',
   components: {
     AppBar,
+    SearchBox,
+    SearchPage,
     SearchPane,
     VisPane,
     ResponsiveTextLogo,
@@ -74,6 +77,13 @@ export default {
     trace (value) {
       console.log(value)
       return value
+    },
+    onSearch (text) {
+      window.flipping.read()
+      this.$store.dispatch('search', text)
+      this.$nextTick(() => {
+        window.flipping.flip()
+      })
     },
     setLayout (layoutText) {
       if (layoutText === 'home') {
@@ -162,6 +172,12 @@ export default {
     }
   },
   computed: {
+    searchComponent () {
+      if (this.$store.state.isSearched) {
+        return 'searchPane'
+      }
+      return 'searchPage'
+    },
     searchPaneStyle () {
       if (!this.$store.state.isVisPaneVisible) {
         return {}

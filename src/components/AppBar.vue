@@ -7,12 +7,13 @@
       @click="$store.commit('toggle', 'isDrawerVisible')">
     </v-toolbar-side-icon>
     <responsive-text-logo
-      v-if="!minimal" :full="fullLogo" @click="toHome" class="ml-2">
+      v-if="!minimal && $store.getters.layout !== 'home'"
+      :full="fullLogo" @click="toHome" class="ml-2">
     </responsive-text-logo>
     <v-container v-if="!fullLogo" fill-height class="pa-2">
       <v-layout row fill-height justify-center align-center>
         <v-flex xs12 :md10="!minimal">
-          <slot></slot>
+          <slot v-if="$store.getters.layout !== 'home'"></slot>
         </v-flex>
       </v-layout>
     </v-container>
