@@ -91,14 +91,6 @@ export default {
     formatAuthorNames (authors) {
       return _.map(authors, author => Author.stringify(author))
     },
-    showCitingRefObjs (refObj) {
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: 'citing', refObj: refObj })
-    },
-    showCitedByRefObjs (refObj) {
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: 'citedBy', refObj: refObj })
-    },
     findCommonRelatives () {
       const refObjs =
         _.map(this.$store.state.graph.selectedNodes, ({ paper }) => paper)

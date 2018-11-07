@@ -9,7 +9,7 @@
           slot="activator"
           @mouseover="setHovered(card, 'citing', true)"
           @mouseout="setHovered(card, 'citing', false)"
-          @click="showRelatedRefObjs('citedBy', card.paper)">
+          @click="showRelatedRefObjs('citedBy', card.paper, false)">
           <span>
             &lt; {{ card.inGraphCitings.length }} / {{ card.paper.citingCount }}
           </span>
@@ -31,7 +31,7 @@
           slot="activator"
           @mouseover="setHovered(card, 'citedBy', true)"
           @mouseout="setHovered(card, 'citedBy', false)"
-          @click="showRelatedRefObjs('citing', card.paper)">
+          @click="showRelatedRefObjs('citing', card.paper, false)">
           <span>
             {{ card.inGraphCitedBys.length }} / {{ card.paper.citedByCount }} &gt;
           </span>
@@ -61,11 +61,11 @@
         -
         <a>{{ card.paper.year }}</a>
         -
-        <a @click="showRelatedRefObjs('citedBy', card.paper)">
+        <a @click="showRelatedRefObjs('citedBy', card.paper, false)">
           Citing {{ card.paper.citingCount }}
         </a>
         -
-        <a @click="showRelatedRefObjs('citing', card.paper)">
+        <a @click="showRelatedRefObjs('citing', card.paper, false)">
           Cited by {{ card.paper.citedByCount }}
         </a>
       </v-layout>
@@ -76,9 +76,13 @@
 <script>
 import { Author } from './paper.js'
 import _ from 'lodash'
+import showRelatedRefObjs from './showrelatedrefobjs.js'
 
 export default {
   name: 'VisCard',
+  mixins: [
+    showRelatedRefObjs
+  ],
   props: {
     card: Object
   },
@@ -89,24 +93,6 @@ export default {
     },
     formatAuthorNames (authors) {
       return _.map(authors, author => Author.stringify(author))
-    },
-    showRelatedRefObjs (relation, refObj) {
-      window.flipping.read()
-      const query = { search: `${relation}:${refObj.id}` }
-      const layout = this.$store.getters.layout
-      query.layout =
-        layout === 'home' || layout === 'search'
-          ? 'minor'
-          : layout === 'collection'
-            ? 'major'
-            : layout
-      if (this.$store.getters.currCollectionId >= 0) {
-        query.collection = this.$store.getters.currCollectionId
-      }
-      this.$router.push({ path: '/smooth', query: query })
-      this.$nextTick(() => {
-        window.flipping.flip()
-      })
     },
     getColor: function ({ maxLevel, logBase, value }) {
       const log = x => Math.log(x) / Math.log(logBase)

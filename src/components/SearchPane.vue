@@ -26,9 +26,13 @@ import SearchBox from './SearchBox.vue'
 import AppBar from './AppBar.vue'
 import SearchPaper from './SearchPaper.vue'
 import ReferenceObject from './ReferenceObject.vue'
+import showRelatedRefObjs from './showrelatedrefobjs.js'
 
 export default {
   name: 'SearchPane',
+  mixins: [
+    showRelatedRefObjs
+  ],
   components: {
     SearchPage,
     SearchContent,
@@ -44,27 +48,6 @@ export default {
     },
     showRefObjDetail (refObj) {
       this.$store.dispatch('setCurrRefObj', refObj.id)
-    },
-    showRelatedRefObjs (relation, refObj) {
-      window.flipping.read()
-      const query = { search: `${relation}:${refObj.id}` }
-      const layout = this.$store.getters.layout
-      query.layout =
-        layout === 'home' || layout === 'search'
-          ? 'minor'
-          : layout === 'collection'
-            ? 'major'
-            : layout
-      if (this.$store.getters.currCollectionId >= 0) {
-        query.collection = this.$store.getters.currCollectionId
-      }
-      this.$router.push({ path: '/smooth', query: query })
-      this.$nextTick(() => {
-        window.flipping.flip()
-      })
-      if (this.$store.state.visPaneCollection === 'history') {
-        this.$store.commit('insertToGraph', refObj)
-      }
     },
     onSearch (text) {
       window.flipping.read()

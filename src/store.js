@@ -140,6 +140,12 @@ export default new Vuex.Store({
       } catch (error) {
       }
     },
+    insertToHistory (state, refObj) {
+      try {
+        state.historyGraph.insert(refObj)
+      } catch (error) {
+      }
+    },
     removeFromGraph (state, node) {
       state.graph.remove(node)
     },
