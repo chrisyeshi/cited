@@ -42,13 +42,13 @@ export class Paper {
     this.id = id
     this.doi = doi
     this.title = title
-    this.authors = authors
-    this.abstract = abstract
+    this.authors = authors || []
+    this.abstract = abstract || ''
     this.year = year
-    this.venue = venue
-    this.citings = citings
+    this.venue = venue || { id: '', name: '' }
+    this.citings = citings || []
     this.nCitings = nCitings
-    this.citedBys = citedBys
+    this.citedBys = citedBys || []
     this.nCitedBys = nCitedBys
   }
 
