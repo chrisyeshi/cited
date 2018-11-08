@@ -42,10 +42,6 @@ export default {
     }
   },
   methods: {
-    setSearchText: function (text) {
-      this.searchText = text
-      return this.search(this.searchText)
-    },
     search: function (text, page = 0) {
       return api.search(text, page).then(({ papers, totalPapers }) => {
         this.papers = papers

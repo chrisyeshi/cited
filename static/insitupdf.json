@@ -188,7 +188,7 @@
         "journal": "LDAV",
         "year": 2015,
         "citationCount": 4,
-        "authors": "Y. C. Ye, Y. Wang, R. Miller, K.-L. Ma, and K. Ono"
+        "authors": "Ye, Y. Wang, R. Miller, K.-L. Ma, and K. Ono"
     }, {
         "title": "A study of i/o methods for parallel visualization of large-scale data",
         "abstract": "This paper presents two parallel I/O methods for the visualization of time-varying volume data in a high-performance computing environment. We discuss the interplay between the parallel renderer, I/O strategy, and file system, and show the results of our study on the performance of the I/O strategies with and without MPI parallel I/O support. The targeted application is earthquake modeling using a large 3D unstructured mesh consisting of one hundred millions cells. Our test results on the HP/Compaq AlphaServer operated at the Pittsburgh Supercomputing Center demonstrate that the I/O methods effectively remove the I/O bottlenecks commonly present in time-varying data visualization, and therefore help significantly lower interframe delay. This high-performance visualization solution allows scientists to explore their data in the temporal, spatial, and visualization domains at high resolution. Such new explorability, likely not presently available to most computational science groups, will help lead to many new insights into the modeled physical and chemical processes.",

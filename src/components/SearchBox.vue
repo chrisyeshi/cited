@@ -4,8 +4,8 @@
       <div data-flip-key="search-box-text-field">
         <v-text-field
           :flat="flat"
-          :solo="!$store.state.isVisPaneVisible"
-          :append-icon="$store.state.isVisPaneVisible ? 'search' : ''"
+          :solo="solo"
+          :append-icon="!solo ? 'search' : ''"
           @click:append="$emit('onSearch', text)"
           hide-details clearable
           autofocus
@@ -14,7 +14,7 @@
         </v-text-field>
       </div>
     </v-flex>
-    <v-btn v-if="!$store.state.isVisPaneVisible"
+    <v-btn v-if="solo"
       :depressed="flat"
       color="primary ma-0 pa-0"
       data-flip-key="search-box-button"
@@ -32,6 +32,10 @@ export default {
     flat: {
       type: Boolean,
       default: false
+    },
+    solo: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -40,7 +44,7 @@ export default {
         return this.$store.state.searchText
       },
       set (value) {
-        this.$store.commit('setSearchText', value)
+        this.$store.commit('setState', { searchText: value })
       }
     }
   },

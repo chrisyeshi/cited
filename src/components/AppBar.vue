@@ -1,19 +1,26 @@
 <template>
-  <v-toolbar flat :fixed="fixed"
+  <v-toolbar app clipped-left flat :fixed="fixed"
     :dense="minimal"
     :color="minimal ? 'transparent' : ''">
-    <responsive-text-logo v-if="!minimal" :full="fullLogo" @click="toHome">
+    <v-toolbar-side-icon
+      v-if="$store.state.enableDrawer && !minimal"
+      @click="$store.commit('toggle', 'isDrawerVisible')">
+    </v-toolbar-side-icon>
+    <responsive-text-logo
+      v-if="!minimal && $store.getters.layout !== 'home'"
+      :full="fullLogo" @click="toHome" class="ml-2">
     </responsive-text-logo>
     <v-container v-if="!fullLogo" fill-height class="pa-2">
       <v-layout row fill-height justify-center align-center>
         <v-flex xs12 :md10="!minimal">
-          <slot></slot>
+          <slot v-if="$store.getters.layout !== 'home'"></slot>
         </v-flex>
       </v-layout>
     </v-container>
     <v-toolbar-items v-if="!minimal">
-      <v-menu offset-y transition="slide-y-transition"
-        v-if="$store.state.isSignedIn">
+      <v-menu
+        v-if="$store.getters.isUserCollectionDropdownVisible"
+        offset-y transition="slide-y-transition">
         <v-btn large icon slot="activator">
           <v-icon large color="grey darken-2">view_list</v-icon>
         </v-btn>
@@ -57,7 +64,12 @@ export default {
     },
     toHome () {
       window.flipping.read()
-      this.$store.commit('toHome')
+      this.$router.push({
+        path: '/smooth',
+        query: {
+          layout: 'home'
+        }
+      })
       this.$nextTick(() => {
         window.flipping.flip()
       })

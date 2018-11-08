@@ -1,33 +1,37 @@
 <template>
-  <v-container pb-1 :py-2="$store.state.isVisPaneVisible">
-    <v-layout row wrap>
-      <v-flex :md2="!$store.state.isVisPaneVisible" px-2>
-        <v-layout row wrap justify-space-between>
-          <v-btn
-            round depressed small block outline color="accent" class="mx-2 text-truncate">
-            <v-icon small class="px-1">add</v-icon>
-            Add to ...
-          </v-btn>
-          <v-btn
-            round depressed small block outline color="accent" class="mx-2">
-            <v-icon small class="px-1">format_quote</v-icon>
-            Cite ...
-          </v-btn>
-          <v-btn
-            round depressed small block outline color="accent" class="mx-2"
-            @click="$refs.commentLabel.scrollIntoView(true)">
-            <v-icon small class="px-1">comment</v-icon>
-            Comments
-          </v-btn>
-          <v-btn
-            round depressed small block outline color="accent" class="mx-2">
-            <v-icon small class="px-1">launch</v-icon>
-            Source
-          </v-btn>
-        </v-layout>
-        <v-divider class="my-2"></v-divider>
-      </v-flex>
-      <v-flex :md10="!$store.state.isVisPaneVisible" px-2 :style="{ height: $store.state.isVisPaneVisible ? 'calc(100vh - 200px)' : 'calc(100vh - 100px)', overflow: 'auto' }">
+  <v-layout column>
+    <v-toolbar dense flat class="pb-0" color="transparent">
+      <v-layout fill-height align-end>
+        <v-flex
+          :offset-md2="!$store.state.isVisPaneVisible"
+          :md8="!$store.state.isVisPaneVisible">
+          <v-layout justify-start class="text-truncate">
+            <a @click="trace" class="mr-4 text-no-wrap">
+              <v-icon class="pr-1" size=20>add</v-icon>
+              <span class="text-truncate">Add to ...</span>
+            </a>
+            <a @click="trace" class="mr-4 text-no-wrap">
+              <v-icon class="pr-1" size=20>format_quote</v-icon>
+              <span class="text-truncate">Cite ...</span>
+            </a>
+            <a class="mr-4 text-no-wrap"
+              @click="$refs.commentLabel.scrollIntoView(true)">
+              <v-icon class="pr-1" size=20>comment</v-icon>
+              <span class="text-truncate">Comments</span>
+            </a>
+            <a @click="trace" class="mr-4 text-no-wrap">
+              <v-icon class="pr-1" size=20>launch</v-icon>
+              <span class="text-truncate">Source</span>
+            </a>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+    </v-toolbar>
+    <v-divider class="my-2"></v-divider>
+    <v-container fluid py-2 style="height: calc(100vh - 135px); overflow: auto;">
+      <v-flex
+        :offset-md2="!$store.state.isVisPaneVisible"
+        :md8="!$store.state.isVisPaneVisible">
         <h2 class="mb-2 display-1">{{ refObj.title }}</h2>
         <h4 class="mb-2 subheading">
           <template v-for="(name, index) in authorNames">
@@ -63,8 +67,8 @@
           @onClickTitle="showRefObjDetail"
           @onClickVenue="trace"
           @onClickYear="trace"
-          @onClickCiting="showRelatedRefObjs('citing', $event)"
-          @onClickCitedBy="showRelatedRefObjs('citedBy', $event)">
+          @onClickCiting="showRelatedRefObjs('citedBy', $event)"
+          @onClickCitedBy="showRelatedRefObjs('citing', $event)">
         </search-paper>
         <h4 ref="commentLabel" class="mt-4 mb-2 subheading">Comments:</h4>
         <v-card class="mb-3">
@@ -114,17 +118,21 @@
           </v-card-title>
         </v-card>
       </v-flex>
-    </v-layout>
-  </v-container>
+    </v-container>
+  </v-layout>
 </template>
 
 <script>
 import _ from 'lodash'
 import { Author } from './paper.js'
 import SearchPaper from './SearchPaper.vue'
+import showRelatedRefObjs from './showrelatedrefobjs.js'
 
 export default {
   name: 'ReferenceObject',
+  mixins: [
+    showRelatedRefObjs
+  ],
   components: {
     SearchPaper
   },
@@ -142,19 +150,7 @@ export default {
       return value
     },
     showRefObjDetail (refObj) {
-      this.$store.dispatch('setCurrRefObj', refObj.id)
-    },
-    showRelatedRefObjs (relation, refObj) {
-      if (!this.$store.state.isVisPaneVisible) {
-        window.flipping.read()
-        this.$store.commit('toSearchCollection')
-        this.$nextTick(() => {
-          window.flipping.flip()
-        })
-      }
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: relation, refObj: refObj })
-      this.$store.commit('insertToGraph', refObj)
+      this.$store.dispatch('showRefObjDetail', refObj.id)
     }
   },
   computed: {

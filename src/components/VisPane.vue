@@ -3,12 +3,11 @@
     <v-toolbar dense flat class="pb-0" color="transparent">
       <v-layout fill-height align-end>
         <v-layout row align-center justify-start>
-          <v-icon class="pr-3" @click="$store.dispatch('toggleVisPaneState')">
+          <v-icon class="pr-3" size=20 @click="$store.dispatch('toggleVisPaneState')">
             {{ $store.state.visPaneState === 'full'
               ? 'chevron_right'
               : 'chevron_left' }}
           </v-icon>
-          <!-- TODO: change this to the approprate collection name -->
           <v-tooltip bottom v-if="$store.state.visPaneCollection === 'history'"
             :disabled="!$store.state.isSignedIn">
             <h4 class="body-2 d-flex align-center" slot="activator"
@@ -25,13 +24,13 @@
           <v-spacer v-if="$store.state.visPaneCollection === 'history'">
           </v-spacer>
           <v-tooltip bottom>
-            <v-icon slot="activator" class="pl-3" @click="toggleLevelOfDetail">
+            <v-icon slot="activator" class="pl-3" size=20 @click="toggleLevelOfDetail">
               zoom_in
             </v-icon>
             <span>Toggle level of detail</span>
           </v-tooltip>
           <v-tooltip bottom>
-            <v-icon slot="activator" class="pl-2" color="orange"
+            <v-icon slot="activator" class="pl-2" size=20 color="orange"
               :disabled="!$store.state.graph.isAnyNodeSelected"
               @click="findCommonRelatives">
               device_hub
@@ -42,7 +41,8 @@
       </v-layout>
     </v-toolbar>
     <v-divider class="my-2"></v-divider>
-    <v-container class="py-0" fluid style="position: relative;"
+    <v-container
+      class="py-0" fluid style="position: relative;"
       @click="$store.commit('clearSelectedNodes')">
       <v-layout column align-content-start ref="cardLayout"
         :wrap="$store.state.visPaneState !== 'minor'"
@@ -90,14 +90,6 @@ export default {
     },
     formatAuthorNames (authors) {
       return _.map(authors, author => Author.stringify(author))
-    },
-    showCitingRefObjs (refObj) {
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: 'citing', refObj: refObj })
-    },
-    showCitedByRefObjs (refObj) {
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: 'citedBy', refObj: refObj })
     },
     findCommonRelatives () {
       const refObjs =

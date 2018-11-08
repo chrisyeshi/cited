@@ -1,11 +1,11 @@
 <template>
   <v-layout align-center style="cursor: pointer; min-width: 30px;" v-resize="onResize"
     @click="$emit('click', $event)">
-    <span class="grey--text text--darken-2 display-1">D</span>
+    <span class="headline">D</span>
     <v-slide-x-transition>
       <span v-if="windowSize.width > 960"
-        class="grey--text text--darken-2 display-1">
-        <span>isco</span><span v-if="full">very Engine</span>
+        class="headline">
+        <span>iscover</span><span v-if="full">y Engine</span>
       </span>
     </v-slide-x-transition>
   </v-layout>

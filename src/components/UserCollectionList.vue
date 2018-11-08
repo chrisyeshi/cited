@@ -4,7 +4,10 @@
     <v-divider v-if="!dense"></v-divider>
     <v-list-tile
       v-for="(collection, index) in $store.state.collections" :key="index"
-      @click="$store.commit('selectUserCollection', index)">
+      @click="$emit('onCollectionClicked', index)">
+      <v-list-tile-action v-if="dense">
+        <v-checkbox></v-checkbox>
+      </v-list-tile-action>
       <v-list-tile-content>
         <v-list-tile-title>
           <a>{{ collection.name }}</a>

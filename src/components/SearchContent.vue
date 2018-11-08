@@ -1,9 +1,7 @@
 <template>
-  <v-layout column v-resize="onResize" style="height: calc(100vh - 200px); overflow: auto;">
-    <v-container
-      fluid :pb-0="!$store.state.isVisPaneVisible"
-      :py-2="$store.state.isVisPaneVisible" style="flex-basis: auto;">
-      <v-layout row align-center>
+  <v-layout column v-resize="onResize">
+    <v-toolbar dense flat class="pb-0" color="transparent">
+      <v-layout fill-height align-end class="text-truncate">
         <v-flex :offset-md2="!$store.state.isVisPaneVisible" class="px-2">
           <h4>
             <span>
@@ -15,8 +13,8 @@
             <span v-else>
               <template
                 v-for="(refObj, index) in $store.state.searchLabel.refObj">
-                <a :key="`title-${index}`">
-                  {{ refObj.title }}
+                <a :key="`author-${index}`">
+                  {{ refObj.authors[0].family }}, {{ refObj.year }}
                 </a>
                 <span :key="`and-${index}`"
                   v-if="index < $store.state.searchLabel.refObj.length - 1">
@@ -28,9 +26,9 @@
         </v-flex>
         <v-icon v-if="isFilterIconVisible" @click="isManualShowFilter = !isManualShowFilter">filter_list</v-icon>
       </v-layout>
-    </v-container>
-    <v-divider v-if="!$store.state.isVisPaneVisible" class="my-2"></v-divider>
-    <v-container fluid class="py-0">
+    </v-toolbar>
+    <v-divider class="my-2"></v-divider>
+    <v-container fluid class="py-0" style="height: calc(100vh - 135px); overflow: auto;">
       <v-layout row wrap>
         <v-flex v-if="isFilterVisible" xs12 md2 class="pr-2 mb-4">
           <v-radio-group v-model="timeFilter" hide-details class="ma-0 pt-2">

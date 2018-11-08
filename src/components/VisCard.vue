@@ -9,7 +9,7 @@
           slot="activator"
           @mouseover="setHovered(card, 'citing', true)"
           @mouseout="setHovered(card, 'citing', false)"
-          @click="showCitingRefObjs(card.paper)">
+          @click="showRelatedRefObjs('citedBy', card.paper, false)">
           <span>
             &lt; {{ card.inGraphCitings.length }} / {{ card.paper.citingCount }}
           </span>
@@ -31,7 +31,7 @@
           slot="activator"
           @mouseover="setHovered(card, 'citedBy', true)"
           @mouseout="setHovered(card, 'citedBy', false)"
-          @click="showCitedByRefObjs(card.paper)">
+          @click="showRelatedRefObjs('citing', card.paper, false)">
           <span>
             {{ card.inGraphCitedBys.length }} / {{ card.paper.citedByCount }} &gt;
           </span>
@@ -41,7 +41,7 @@
     </v-system-bar>
     <v-card-text v-if="lod !== 'author'" class="pa-2 caption">
       <h4>
-        <a @click="$store.dispatch('setCurrRefObj', card.paper.id)">
+        <a @click="$store.dispatch('showRefObjDetail', card.paper.id)">
           {{ card.paper.title }}
         </a>
       </h4>
@@ -55,17 +55,17 @@
         </span>
       </div>
       <v-layout v-if="lod !== 'title'" row justify-space-between>
-        <a class="text-truncate" style="max-width: 60px;">
+        <a class="text-truncate" style="max-width: 50px;">
           {{ card.paper.venue.name }}
         </a>
         -
         <a>{{ card.paper.year }}</a>
         -
-        <a @click="showCitingRefObjs(card.paper)">
-          Citing {{ card.paper.citingCount }}
+        <a @click="showRelatedRefObjs('citedBy', card.paper, false)">
+          Referenced {{ card.paper.citingCount }}
         </a>
         -
-        <a @click="showCitedByRefObjs(card.paper)">
+        <a @click="showRelatedRefObjs('citing', card.paper, false)">
           Cited by {{ card.paper.citedByCount }}
         </a>
       </v-layout>
@@ -76,9 +76,13 @@
 <script>
 import { Author } from './paper.js'
 import _ from 'lodash'
+import showRelatedRefObjs from './showrelatedrefobjs.js'
 
 export default {
   name: 'VisCard',
+  mixins: [
+    showRelatedRefObjs
+  ],
   props: {
     card: Object
   },
@@ -89,14 +93,6 @@ export default {
     },
     formatAuthorNames (authors) {
       return _.map(authors, author => Author.stringify(author))
-    },
-    showCitingRefObjs (refObj) {
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: 'citing', refObj: refObj })
-    },
-    showCitedByRefObjs (refObj) {
-      this.$store.dispatch(
-        'showRelatedRefObjs', { relation: 'citedBy', refObj: refObj })
     },
     getColor: function ({ maxLevel, logBase, value }) {
       const log = x => Math.log(x) / Math.log(logBase)
