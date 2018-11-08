@@ -62,6 +62,7 @@ import Flipping from 'flipping/dist/flipping.web.js'
 import { Graph } from './kanbangraph.js'
 import api from './api.js'
 import _ from 'lodash'
+import getNextLayout from './getnextlayout.js'
 
 export default {
   name: 'Smooth',
@@ -165,15 +166,11 @@ export default {
     },
     selectUserCollection (collectionId) {
       const query = { collection: collectionId }
-      const currLayout = this.$store.getters.layout
-      query.layout =
-        currLayout === 'home'
-          ? 'collection'
-          : currLayout === 'search'
-            ? 'minorsearch'
-            : currLayout === 'refobj'
-              ? 'minorrefobj'
-              : currLayout
+      query.layout = getNextLayout(this.$store.getters.layout, {
+        'collection': 'home',
+        'minorsearch': 'search',
+        'minorrefobj': 'refobj'
+      })
       if (this.$store.state.currRefObj) {
         query.refobj = this.$store.state.currRefObj.id
       }

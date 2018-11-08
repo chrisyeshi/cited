@@ -5,6 +5,7 @@ import { Graph } from './components/kanbangraph.js'
 import { Paper } from './components/paper.js'
 import router from './router/index.js'
 import api from './components/api.js'
+import getNextLayout from './components/getnextlayout.js'
 
 Vue.use(Vuex)
 
@@ -54,13 +55,10 @@ export default new Vuex.Store({
         return
       }
       const query = { search: text }
-      const currLayout = context.getters.layout
-      query.layout =
-        currLayout === 'home' || currLayout === 'refobj'
-          ? 'search'
-          : currLayout === 'collection'
-            ? 'majorsearch'
-            : currLayout
+      query.layout = getNextLayout(context.getters.layout, {
+        'search': [ 'home', 'refobj' ],
+        'majorsearch': 'collection'
+      })
       if (context.getters.currCollectionId >= 0) {
         query.collection = context.getters.currCollectionId
       }
@@ -68,15 +66,11 @@ export default new Vuex.Store({
     },
     async showRefObjDetail (context, refObjId) {
       const query = { refobj: refObjId }
-      const currLayout = context.getters.layout
-      query.layout =
-        currLayout === 'home' || currLayout === 'search'
-          ? 'refobj'
-          : currLayout === 'collection' || currLayout === 'majorsearch'
-            ? 'majorrefobj'
-            : currLayout === 'minorsearch'
-              ? 'minorrefobj'
-              : currLayout
+      query.layout = getNextLayout(context.getters.layout, {
+        'refobj': [ 'home', 'search' ],
+        'majorrefobj': [ 'collection', 'majorsearch' ],
+        'minorrefobj': 'minorsearch'
+      })
       if (context.getters.currCollectionId >= 0) {
         query.collection = context.getters.currCollectionId
       }
