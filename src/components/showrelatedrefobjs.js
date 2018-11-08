@@ -5,10 +5,10 @@ export default {
       const query = { search: `${relation}:${refObj.id}` }
       const layout = this.$store.getters.layout
       query.layout =
-        layout === 'home' || layout === 'search'
-          ? 'minor'
-          : layout === 'collection'
-            ? 'major'
+        layout === 'home' || layout === 'search' || layout === 'refobj' || layout === 'minorrefobj'
+          ? 'minorsearch'
+          : layout === 'collection' || layout === 'majorrefobj'
+            ? 'majorsearch'
             : layout
       if (this.$store.getters.currCollectionId >= 0) {
         query.collection = this.$store.getters.currCollectionId

@@ -100,12 +100,18 @@ export default {
         this.$store.commit('toHome')
       } else if (shouldCommitLayout('search')) {
         this.$store.commit('toSearch')
+      } else if (shouldCommitLayout('refobj')) {
+        this.$store.commit('toRefObj')
       } else if (shouldCommitLayout('collection')) {
         this.$store.commit('toCollection')
-      } else if (shouldCommitLayout('minor')) {
-        this.$store.commit('toMinor')
-      } else if (shouldCommitLayout('major')) {
-        this.$store.commit('toMajor')
+      } else if (shouldCommitLayout('minorsearch')) {
+        this.$store.commit('toMinorSearch')
+      } else if (shouldCommitLayout('minorrefobj')) {
+        this.$store.commit('toMinorRefObj')
+      } else if (shouldCommitLayout('majorsearch')) {
+        this.$store.commit('toMajorSearch')
+      } else if (shouldCommitLayout('majorrefobj')) {
+        this.$store.commit('toMajorRefObj')
       }
     },
     fetchData () {
@@ -144,9 +150,6 @@ export default {
         api.getRefObj(query.refobj).then(refObj => {
           this.$store.commit('setState', { currRefObj: refObj })
         })
-      } else {
-        // TODO: add another layout as refobj so that we no longer need to rely on currRefObj to determine the layout
-        this.$store.commit('setState', { currRefObj: null })
       }
       if (this.$store.state.collections[query.collection]) {
         this.$store.commit('setState', {
@@ -162,12 +165,15 @@ export default {
     },
     selectUserCollection (collectionId) {
       const query = { collection: collectionId }
+      const currLayout = this.$store.getters.layout
       query.layout =
-        this.$store.getters.layout === 'home'
+        currLayout === 'home'
           ? 'collection'
-          : this.$store.getters.layout === 'search'
-            ? 'minor'
-            : this.$store.getters.layout
+          : currLayout === 'search'
+            ? 'minorsearch'
+            : currLayout === 'refobj'
+              ? 'minorrefobj'
+              : currLayout
       if (this.$store.state.currRefObj) {
         query.refobj = this.$store.state.currRefObj.id
       }

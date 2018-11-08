@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
 import { Graph } from './components/kanbangraph.js'
+import { Paper } from './components/paper.js'
 import router from './router/index.js'
 import api from './components/api.js'
 
@@ -10,10 +11,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isSignedIn: false,
-    isCollectionBarVisible: false,
     isSearchPaneVisible: true,
     isVisPaneVisible: false,
     visPaneState: 'minor',
+    searchPaneState: 'search',
     isSearched: false,
     searchText: '',
     searchLabel: { text: '', refObj: { title: '' } },
@@ -25,7 +26,7 @@ export default new Vuex.Store({
     collections: [],
     visPaneCollection: 'history',
     historyGraph: new Graph([]),
-    currRefObj: null,
+    currRefObj: new Paper(),
     visPaneLOD: 'full',
     isDrawerVisible: false,
     enableUserCollectionDropdown: false,
@@ -46,34 +47,36 @@ export default new Vuex.Store({
       const relatives =
         await api.getCommonRelatives(_.map(refObjs, ({ id }) => id))
       const label = { text: 'Common relatives of', refObj: refObjs }
-      context.commit(
-        'setSearchResults',
-        { label: label, refObjs: relatives, currRefObj: null })
+      context.commit('setSearchResults', { label: label, refObjs: relatives })
     },
     async search (context, text) {
       if (_.isEmpty(text)) {
         return
       }
       const query = { search: text }
+      const currLayout = context.getters.layout
       query.layout =
-        context.getters.layout === 'home'
+        currLayout === 'home' || currLayout === 'refobj'
           ? 'search'
-          : context.getters.layout === 'collection'
-            ? 'major'
-            : context.getters.layout
+          : currLayout === 'collection'
+            ? 'majorsearch'
+            : currLayout
       if (context.getters.currCollectionId >= 0) {
         query.collection = context.getters.currCollectionId
       }
       router.push({ path: '/smooth', query: query })
     },
-    async setCurrRefObj (context, refObjId) {
+    async showRefObjDetail (context, refObjId) {
       const query = { refobj: refObjId }
+      const currLayout = context.getters.layout
       query.layout =
-        context.getters.layout === 'home'
-          ? 'search'
-          : context.getters.layout === 'collection'
-            ? 'major'
-            : context.getters.layout
+        currLayout === 'home' || currLayout === 'search'
+          ? 'refobj'
+          : currLayout === 'collection' || currLayout === 'majorsearch'
+            ? 'majorrefobj'
+            : currLayout === 'minorsearch'
+              ? 'minorrefobj'
+              : currLayout
       if (context.getters.currCollectionId >= 0) {
         query.collection = context.getters.currCollectionId
       }
@@ -91,41 +94,59 @@ export default new Vuex.Store({
       state[prop] = !state[prop]
     },
     toHome (state) {
-      state.isCollectionBarVisible = false
       state.isSearchPaneVisible = true
       state.isVisPaneVisible = false
       state.visPaneState = 'minor'
       state.isSearched = false
       state.graph = new Graph([])
       state.visPaneCollection = 'history'
-      state.currRefObj = null
     },
     toSearch (state) {
-      state.isCollectionBarVisible = false
       state.isSearchPaneVisible = true
       state.isSearched = true
       state.isVisPaneVisible = false
+      state.searchPaneState = 'search'
+      console.log(state.searchPaneState)
+    },
+    toRefObj (state) {
+      state.isSearchPaneVisible = true
+      state.isSearched = true
+      state.isVisPaneVisible = false
+      state.searchPaneState = 'refobj'
     },
     toCollection (state) {
-      state.isCollectionBarVisible = true
       state.isSearchPaneVisible = true
       state.isSearched = true
       state.isVisPaneVisible = true
       state.visPaneState = 'full'
     },
-    toMinor (state) {
-      state.isCollectionBarVisible = true
+    toMinorSearch (state) {
       state.isSearchPaneVisible = true
       state.isSearched = true
       state.isVisPaneVisible = true
       state.visPaneState = 'minor'
+      state.searchPaneState = 'search'
     },
-    toMajor (state) {
-      state.isCollectionBarVisible = true
+    toMinorRefObj (state) {
+      state.isSearchPaneVisible = true
+      state.isSearched = true
+      state.isVisPaneVisible = true
+      state.visPaneState = 'minor'
+      state.searchPaneState = 'refobj'
+    },
+    toMajorSearch (state) {
       state.isSearchPaneVisible = true
       state.isSearched = true
       state.isVisPaneVisible = true
       state.visPaneState = 'major'
+      state.searchPaneState = 'search'
+    },
+    toMajorRefObj (state) {
+      state.isSearchPaneVisible = true
+      state.isSearched = true
+      state.isVisPaneVisible = true
+      state.visPaneState = 'major'
+      state.searchPaneState = 'refobj'
     },
     toggleIsSignedIn (state) {
       state.isSignedIn = !state.isSignedIn
@@ -157,16 +178,12 @@ export default new Vuex.Store({
     setHoveredGraphNode (state, hoveredNode) {
       state.hoveredGraphNode = hoveredNode
     },
-    setSearchResults (
-      state, { text, label, refObjs, currRefObj = undefined }) {
+    setSearchResults (state, { text, label, refObjs }) {
       state.isSearched = true
       state.searchText = text || state.searchText
       state.searchRefObjs = refObjs
       state.searchLabel =
         label || { text: 'Search Results', refObj: { title: '' } }
-      if (currRefObj) {
-        state.currRefObj = currRefObj
-      }
     },
     setSearchRefObjs (state, refObjs) {
       state.searchRefObjs = refObjs
@@ -211,13 +228,13 @@ export default new Vuex.Store({
       return state.enableUserCollectionDropdown && state.isSignedIn
     },
     layout: state => {
-      return !state.isCollectionBarVisible && !state.isSearched
+      return !state.isSearched
         ? 'home'
         : !state.isVisPaneVisible
-          ? 'search'
+          ? state.searchPaneState
           : state.visPaneState === 'full'
             ? 'collection'
-            : state.visPaneState
+            : state.visPaneState + state.searchPaneState
     },
     currCollectionId: state => {
       return _.indexOf(state.collections, state.visPaneCollection)

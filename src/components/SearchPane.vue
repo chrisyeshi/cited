@@ -1,7 +1,6 @@
 <template>
   <v-layout column>
-    <search-content
-      v-if="searchComponent === 'appBar' && !$store.state.currRefObj">
+    <search-content v-if="$store.state.searchPaneState === 'search'">
       <v-layout column>
         <search-paper v-for="(refObj, index) in refObjs" :key="index"
           :refObj="refObj"
@@ -13,8 +12,7 @@
         </search-paper>
       </v-layout>
     </search-content>
-    <reference-object
-      v-if="$store.state.currRefObj" :refObj="$store.state.currRefObj">
+    <reference-object v-else :refObj="$store.state.currRefObj">
     </reference-object>
   </v-layout>
 </template>
@@ -47,7 +45,7 @@ export default {
       return value
     },
     showRefObjDetail (refObj) {
-      this.$store.dispatch('setCurrRefObj', refObj.id)
+      this.$store.dispatch('showRefObjDetail', refObj.id)
     },
     onSearch (text) {
       window.flipping.read()
@@ -58,12 +56,6 @@ export default {
     }
   },
   computed: {
-    searchComponent () {
-      if (this.$store.state.isSearched) {
-        return 'appBar'
-      }
-      return 'searchPage'
-    },
     refObjs () {
       return this.$store.state.searchRefObjs
     }

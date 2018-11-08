@@ -54,7 +54,7 @@ export default {
       _.find(this.graph.nodes, node => node.paper.id === refObjId).paper
     return {
       refObj: paper,
-      references: _.map(paper.citedBys, ({ id }) =>
+      citedBys: _.map(paper.citedBys, ({ id }) =>
         _.find(this.graph.nodes, node => node.paper.id === id).paper)
     }
   },

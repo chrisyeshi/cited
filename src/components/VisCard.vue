@@ -41,7 +41,7 @@
     </v-system-bar>
     <v-card-text v-if="lod !== 'author'" class="pa-2 caption">
       <h4>
-        <a @click="$store.dispatch('setCurrRefObj', card.paper.id)">
+        <a @click="$store.dispatch('showRefObjDetail', card.paper.id)">
           {{ card.paper.title }}
         </a>
       </h4>
@@ -55,7 +55,7 @@
         </span>
       </div>
       <v-layout v-if="lod !== 'title'" row justify-space-between>
-        <a class="text-truncate" style="max-width: 60px;">
+        <a class="text-truncate" style="max-width: 50px;">
           {{ card.paper.venue.name }}
         </a>
         -

@@ -150,7 +150,7 @@ export default {
       return value
     },
     showRefObjDetail (refObj) {
-      this.$store.dispatch('setCurrRefObj', refObj.id)
+      this.$store.dispatch('showRefObjDetail', refObj.id)
     }
   },
   computed: {
