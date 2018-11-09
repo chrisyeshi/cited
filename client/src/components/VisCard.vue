@@ -11,10 +11,10 @@
           @mouseout="setHovered(card, 'citing', false)"
           @click="showRelatedRefObjs('citedBy', card.paper, false)">
           <span>
-            &lt; {{ card.inGraphCitings.length }} / {{ card.paper.citingCount }}
+            &lt; {{ card.inGraphCitings.length }} / {{ card.paper.referenceCount }}
           </span>
         </span>
-        <span>Citing {{ card.inGraphCitings.length }} articles in collection and {{ card.paper.citingCount }} articles overall</span>
+        <span>Citing {{ card.inGraphCitings.length }} articles in collection and {{ card.paper.referenceCount }} articles overall</span>
       </v-tooltip>
       <v-spacer
         @click.stop="$store.commit('toggleNodeSelected', card)"
@@ -62,7 +62,7 @@
         <a>{{ card.paper.year }}</a>
         -
         <a @click="showRelatedRefObjs('citedBy', card.paper, false)">
-          Referenced {{ card.paper.citingCount }}
+          Referenced {{ card.paper.referenceCount }}
         </a>
         -
         <a @click="showRelatedRefObjs('citing', card.paper, false)">

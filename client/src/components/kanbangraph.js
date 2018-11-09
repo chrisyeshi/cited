@@ -123,15 +123,12 @@ export class Graph {
   }
 
   includes (arg) {
-    if (arg instanceof Paper) {
-      const paper = arg
-      return _.includes(this.dois, paper.doi)
-    }
-    if (arg instanceof Node) {
-      const node = arg
-      return _.includes(this.nodes, node)
-    }
-    throw new Error(`wrong input type: ${arg}`)
+    const id = arg instanceof Node ? arg.paper.id : arg.id
+    return _.includes(this.ids, id)
+  }
+
+  get ids () {
+    return _.map(this.nodes, node => node.paper.id)
   }
 
   get dois () {

@@ -54,7 +54,7 @@
             <v-hover v-for="(card, index) in cardsByYears[year]" :key="index"
               class="mt-1 mb-2 mx-1">
               <vis-card
-                :ref="`card-${card.paper.doi}`"
+                :ref="`card-${card.paper.id}`"
                 slot-scope="{ hover }"
                 :class="{ 'elevation-6': hover }"
                 :card="card">
@@ -148,8 +148,8 @@ export default {
       })
       const componentPairs = _.map(nodePairs, ({ citing, citedBy }) => {
         return {
-          citing: this.$refs[`card-${citing.paper.doi}`][0],
-          citedBy: this.$refs[`card-${citedBy.paper.doi}`][0]
+          citing: this.$refs[`card-${citing.paper.id}`][0],
+          citedBy: this.$refs[`card-${citedBy.paper.id}`][0]
         }
       })
       const marginLeft = 0

@@ -54,7 +54,7 @@ let RefObj = new graphql.GraphQLObjectType({
 let Query = new graphql.GraphQLObjectType({
   name: 'Query',
   fields: {
-    refobj: {
+    refObj: {
       type: RefObj,
       args: { id: { type: graphql.GraphQLString } },
       resolve: (obj, { id }) => getRefObj(id)
