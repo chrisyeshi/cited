@@ -138,7 +138,7 @@ export default {
     CommonRelatives
   },
   data () {
-    this.$http.get('/static/insitupdf.json').then(function (res) {
+    this.$http.get('/api/static/insitupdf.json').then(function (res) {
       this.data = res.body
       this.paper = this.data.paper
       this.title = this.paper.title

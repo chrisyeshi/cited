@@ -160,7 +160,7 @@ export default {
     //   console.log(res.body)
     //   Circo(res.body, '#vis-context')
     // })
-    this.$http.get('/static/insitupdf.json').then(function (res) {
+    this.$http.get('/api/static/insitupdf.json').then(function (res) {
       var data = res.body
       var refs = data.references
       console.log(refs)
