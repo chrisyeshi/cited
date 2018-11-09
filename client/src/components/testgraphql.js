@@ -39,38 +39,30 @@ export default {
     const query = `
       query getRefObj ($id: String!) {
         refObj (id: $id) {
-          id
-          title
-          authors {
-            family
-            given
-          }
-          abstract
-          venue {
-            name
-          }
-          year
-          referenceCount
+          ...commonFields
           references {
-            id
-            title
-            authors {
-              family
-              given
-            }
-            abstract
-            venue {
-              name
-            }
-            year
-            referenceCount
+            ...commonFields
             references { id }
-            citedByCount
             citedBys { id }
           }
-          citedByCount
           citedBys { id }
         }
+      }
+
+      fragment commonFields on RefObj {
+        id
+        title
+        authors {
+          family
+          given
+        }
+        abstract
+        venue {
+          name
+        }
+        year
+        referenceCount
+        citedByCount
       }
     `
     const res = await request('/api/graphql', query, { id: refObjId })
@@ -81,38 +73,30 @@ export default {
     const query = `
       query getRefObj ($id: String!) {
         refObj (id: $id) {
-          id
-          title
-          authors {
-            family
-            given
-          }
-          abstract
-          venue {
-            name
-          }
-          year
-          referenceCount
+          ...commonFields
           references {
-            id
-            title
-            authors {
-              family
-              given
-            }
-            abstract
-            venue {
-              name
-            }
-            year
-            referenceCount
+            ...commonFields
             references { id }
-            citedByCount
             citedBys { id }
           }
-          citedByCount
           citedBys { id }
         }
+      }
+
+      fragment commonFields on RefObj {
+        id
+        title
+        authors {
+          family
+          given
+        }
+        abstract
+        venue {
+          name
+        }
+        year
+        referenceCount
+        citedByCount
       }
     `
     const res = await request('/api/graphql', query, { id: refObjId })
@@ -126,38 +110,30 @@ export default {
     const query = `
       query getRefObj ($id: String!) {
         refObj (id: $id) {
-          id
-          title
-          authors {
-            family
-            given
-          }
-          abstract
-          venue {
-            name
-          }
-          year
-          referenceCount
+          ...commonFields
           references { id }
-          citedByCount
           citedBys {
-            id
-            title
-            authors {
-              family
-              given
-            }
-            abstract
-            venue {
-              name
-            }
-            year
-            referenceCount
+            ...commonFields
             references { id }
-            citedByCount
             citedBys { id }
           }
         }
+      }
+
+      fragment commonFields on RefObj {
+        id
+        title
+        authors {
+          family
+          given
+        }
+        abstract
+        venue {
+          name
+        }
+        year
+        referenceCount
+        citedByCount
       }
     `
     const res = await request('/api/graphql', query, { id: refObjId })
