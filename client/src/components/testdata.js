@@ -6,7 +6,7 @@ export default {
   graph: new Graph([]),
 
   initialize () {
-    this.initialized = fetch('./static/insitupdf.json')
+    this.initialized = fetch('/api/static/insitupdf.json')
       .then(res => res.json())
       .then(data => {
         this.graph = Graph.fromTestJson({

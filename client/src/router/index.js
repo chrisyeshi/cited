@@ -11,8 +11,6 @@ import Resource from 'vue-resource'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
-// TODO: use vuex
-
 Vue.use(Router)
 Vue.use(Resource)
 Vue.use(Vuetify)

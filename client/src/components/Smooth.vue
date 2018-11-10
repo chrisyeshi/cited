@@ -220,7 +220,7 @@ export default {
   },
   created () {
     this.setLayout(this.$route.query.layout)
-    this.$http.get('./static/insitupdf.json')
+    this.$http.get('/api/static/insitupdf.json')
       .then(res => {
         this.$store.commit('setState', {
           collections: [],

@@ -1,9 +1,11 @@
-import testData from './testdata.js'
+import testData from './testgraphql.js'
 
 export class API {
   constructor (impl) {
     this.impl = impl
-    this.impl.initialize()
+    if (this.impl.initialize) {
+      this.impl.initialize()
+    }
   }
 
   async searchRefObjs (text, { offset = 0, count = 20 } = {}) {

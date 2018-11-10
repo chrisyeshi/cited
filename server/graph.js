@@ -1,5 +1,5 @@
-import _ from 'lodash'
-import { Paper } from './paper.js'
+let _ = require('lodash')
+let { Paper } = require('./paper.js')
 
 const nodeOptTemplate = {
   inGraphCitings: [],
@@ -8,14 +8,15 @@ const nodeOptTemplate = {
   geometry: { height: 0, headerHeight: 0 }
 }
 
-export class Relation {
+class Relation {
   constructor (citing, citedBy) {
     this.citing = citing
     this.citedBy = citedBy
   }
 }
+module.exports.Relation = Relation
 
-export class Node {
+class Node {
   constructor (paper, nodeOpt = nodeOptTemplate) {
     // TODO: validate the arguments
     this.paper = paper
@@ -25,8 +26,9 @@ export class Node {
     this.geometry = opt.geometry
   }
 }
+module.exports.Node = Node
 
-export class Graph {
+class Graph {
   constructor (nodes) {
     // TODO: validate the arguments
     this.nodes = nodes
@@ -198,3 +200,4 @@ export class Graph {
     this.nodes.splice(index, 1)
   }
 }
+module.exports.Graph = Graph
