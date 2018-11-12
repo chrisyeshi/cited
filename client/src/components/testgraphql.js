@@ -25,9 +25,7 @@ export default {
           }
           year
           referenceCount
-          references { id }
           citedByCount
-          citedBys { id }
         }
       }
     `
@@ -42,10 +40,7 @@ export default {
           ...commonFields
           references {
             ...commonFields
-            references { id }
-            citedBys { id }
           }
-          citedBys { id }
         }
       }
 
@@ -76,10 +71,7 @@ export default {
           ...commonFields
           references {
             ...commonFields
-            references { id }
-            citedBys { id }
           }
-          citedBys { id }
         }
       }
 
@@ -111,11 +103,8 @@ export default {
       query getRefObj ($id: String!) {
         refObj (id: $id) {
           ...commonFields
-          references { id }
           citedBys {
             ...commonFields
-            references { id }
-            citedBys { id }
           }
         }
       }

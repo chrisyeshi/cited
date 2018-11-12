@@ -1,80 +1,45 @@
 let express = require('express')
-let express_graphql = require('express-graphql')
-let graphql = require('graphql')
-let _ = require('lodash')
-let data = require('./static/insitupdf.json')
-let { Graph, Node } = require('./graph.js')
-
-let graph = Graph.fromTestJson({
-  papers: data.references,
-  relations: data.relations
-})
-
-let getRefObj = id => _.find(graph.nodes, node => node.paper.id === id).paper
-
-let Author = new graphql.GraphQLObjectType({
-  name: 'Author',
-  fields: {
-    id: { type: graphql.GraphQLString },
-    family: { type: graphql.GraphQLString },
-    given: { type: graphql.GraphQLString }
-  }
-})
-
-let Venue = new graphql.GraphQLObjectType({
-  name: 'Venue',
-  fields: {
-    id: { type: graphql.GraphQLString },
-    name: { type: graphql.GraphQLString }
-  }
-})
-
-let RefObj = new graphql.GraphQLObjectType({
-  name: 'RefObj',
-  fields: () => ({
-    id: { type: graphql.GraphQLString },
-    title: { type: graphql.GraphQLString },
-    authors: { type: new graphql.GraphQLList(Author) },
-    abstract: { type: graphql.GraphQLString },
-    venue: { type: Venue },
-    year: { type: graphql.GraphQLInt },
-    referenceCount: { type: graphql.GraphQLInt },
-    references: {
-      type: new graphql.GraphQLList(RefObj),
-      resolve: ({ citings }) => _.map(citings, ({ id }) => getRefObj(id))
-    },
-    citedByCount: { type: graphql.GraphQLInt },
-    citedBys: {
-      type: new graphql.GraphQLList(RefObj),
-      resolve: ({ citedBys }) => _.map(citedBys, ({ id }) => getRefObj(id))
-    },
-  })
-})
-
-let Query = new graphql.GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    refObj: {
-      type: RefObj,
-      args: { id: { type: graphql.GraphQLString } },
-      resolve: (obj, { id }) => getRefObj(id)
-    },
-    search: {
-      type: new graphql.GraphQLList(RefObj),
-      args: { text: { type: graphql.GraphQLString } },
-      resolve: (obj, { text }) => _.map(graph.nodes, node => node.paper)
-    }
-  }
-})
-
-let schema = new graphql.GraphQLSchema({ query: Query })
+let bodyParser = require('body-parser')
+let cookieSession = require('cookie-session')
+let graphqlHTTP = require('express-graphql')
+let schema = require('./graphqlschema.js')
+let users = require('./users.js')
 
 // Create an express server and a GraphQL endpoint
 let app = express()
-app.use('/graphql', express_graphql({
+app.use(bodyParser.json())
+app.use(cookieSession({ secret: 'definitelygoingtochangethis' }))
+app.use('/graphql', graphqlHTTP(async (req, res, graphQLParams) => {
+  return {
     schema: schema,
-    graphiql: true
+    graphiql: true,
+    context: {
+      user: users.getUserById(req.session.userId)
+    }
+  }
 }))
-app.use('/static', express.static('static'))
+app.all('/signup', async (req, res) => {
+  const user =
+    await users.add({ email: req.body.email, password: req.body.password })
+  req.session.userId = user.id
+  res.send('signed up')
+})
+app.all('/login', async (req, res) => {
+  const user = await users.getUserByEmail(req.body.email)
+  if (!user || user.password !== req.body.password) {
+    res.send('wrong email or password')
+    return
+  }
+  req.session.userId = user.id
+  res.send('logged in')
+})
+app.all('/logout', (req, res) => {
+  req.session.userId = null
+  res.send('logged out')
+})
+app.all('/me', async (req, res) => {
+  res.json(await users.getUserById(req.session.userId))
+})
+app.all('/static', express.static('static'))
 
 app.listen(8000, () => console.log('Express GraphQL Server Now Running On localhost:8000/graphql'));
