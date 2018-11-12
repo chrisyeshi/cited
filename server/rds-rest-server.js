@@ -21,6 +21,18 @@ function fetch(query, resolve) {
   });
 }
 
+function execute(query) {
+  return new Promise(function(resolve, reject) {
+    rds.query(query, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results, fields);
+      }
+    });
+  })
+}
+
 // example: /search?text=intelligence&offset=0&numResult=20 
 app.get('/search', function(req, res){
   let text = req.query.text
