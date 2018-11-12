@@ -157,7 +157,10 @@ export default new Vuex.Store({
       }
     },
     insertToHistory (state, refObj) {
-      state.historyGraph.insert(refObj)
+      try {
+        state.historyGraph.insert(refObj)
+      } catch (error) {
+      }
     },
     removeFromGraph (state, node) {
       state.graph.remove(node)
