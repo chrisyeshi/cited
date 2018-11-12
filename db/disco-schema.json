@@ -1,0 +1,16 @@
+{
+    "version" : 0.1,
+    "database-schema" : {
+        "papers" : {
+            "id"         : "<int>",
+            "title"      : "<string>",
+            "abstract"   : "<string>",
+            "authors"    : "<list(<string>)>",
+            "references" : "<list(<int>)>",
+            "citedBy"    : "<list(<int>)>",
+            "doi"        : "<string>",
+            "year"       : "<int>",
+            "venue"      : "<object>"
+        }
+    }
+}
