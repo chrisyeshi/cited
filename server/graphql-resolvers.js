@@ -50,11 +50,11 @@ class Paper {
 }
 
 var queryResolvers = {
-  getPaper: function ({id}) {
+  getPaper({id}) {
     return db.getPaper(id).then( paperData => Paper.fromDatabase(paperData[0]) )
   },
 
-  searchPaper: function({text}) {
+  searchPaper({text}) {
     return db.searchPaperByTitle({text}).then( results => results.map( result => Paper.fromDatabase(result) ) )   
   }
 }
