@@ -40,6 +40,6 @@ app.all('/logout', (req, res) => {
 app.all('/me', async (req, res) => {
   res.json(await users.getUserById(req.session.userId))
 })
-app.all('/static', express.static('static'))
+app.use('/static', express.static('static'))
 
 app.listen(8000, () => console.log('Express GraphQL Server Now Running On localhost:8000/graphql'));

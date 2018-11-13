@@ -3,11 +3,13 @@ const mysql = require('mysql')
 class RDS {
     constructor({
         host = 'dev-db-server.cs6gjqtgg2dt.us-east-2.rds.amazonaws.com',
+        // host = 'localhost',
         user = 'disco',
         password = 'MakeBestTech:0',
-        database = 'disco'
+        database = 'disco', 
+        port = 3306
     }) {
-        this.db = mysql.createConnection({host, user, password, database})
+        this.db = mysql.createConnection({host, user, password, database, port})
     }
 
     connect() {
@@ -29,37 +31,37 @@ class RDS {
     }
 
     getPaper(paperId) {
-        return this.fetch(`SELECT * FROM papers WHERE id = ${paperId}`)
+      return this.fetch(`SELECT * FROM papers WHERE id = ${paperId}`)
     }
 
     getAuthors(paperHashCodes) {
-        let queryString = paperHashCodes.join(', ')
-        let query = `SELECT authors.id as author_id, authors.name, paper_authors.paper_id FROM paper_authors
-          inner join authors on paper_authors.author_id = authors.id 
-          where paper_authors.paper_id in (${queryString});`
+      let queryString = paperHashCodes.join(', ')
+      let query = `SELECT authors.id as author_id, authors.name, paper_authors.paper_id FROM paper_authors
+        inner join authors on paper_authors.author_id = authors.id 
+        where paper_authors.paper_id in (${queryString});`
         
-        return this.fetch(query)
+      return this.fetch(query)
     }
 
     getReferences(paperHashCode) {
-        return this.fetch(
-            `select * from papers where hexcode in (
-              select reference_id from paper_references where paper_id = '${paperHashCode}' 
-            );`)
+      return this.fetch(
+        `select * from papers where hexcode in (
+            select reference_id from paper_references where paper_id = '${paperHashCode}' 
+        );`)
     }
 
     getCitedBys(paperHashCode) {
-        return this.fetch(`select * from papers where hexcode in (
-              select reference_id from paper_references where reference_id = '${paperHashCode}'
-            );`)
+      return this.fetch(`select * from papers where hexcode in (
+          select paper_id from paper_references where reference_id = '${paperHashCode}'
+        ) limit 10;`)
     }
 
     searchPaperByTitle({text, offset = 0, numResult = 20}) {
-        if(text !== undefined) {
-            return this.fetch(`SELECT * FROM papers WHERE title LIKE '%${text}%' LIMIT ${offset}, ${numResult};`)
-        } else {
-            return null
-        }
+      if(text !== undefined) {
+        return this.fetch(`SELECT * FROM papers WHERE title LIKE '%${text}%' LIMIT ${offset}, ${numResult};`)
+      } else {
+        return null
+      }
     }
 }
 

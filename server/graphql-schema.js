@@ -19,10 +19,10 @@ let schema = buildSchema(`
   type Paper {
     id: Int!
     hashCode: String!
-    title: String
+    title: String!
     abstract: String
     venue: Venue
-    year: Int
+    year: Int!
     referenceCount: Int
     citedByCount: Int
     getAuthor(paperHashCode: String!): [Author]
@@ -53,26 +53,22 @@ class Venue {
 class Paper {
   constructor(data) {
     Object.assign(this, data);
-    this.title = data.title
   }
 
-  getAuthors(paperHashCode) {
-    let code = paperHashCode || this.paperHashCode
-    return db.getAuthors([code]).then(
+  getAuthors() {
+    return db.getAuthors([this.paperHashCode]).then(
       results => results.map( result => new Author(result) )
     )
   }
 
-  getReferences(paperHashCode) {
-    let code = paperHashCode || this.paperHashCode
-    return db.getReferences(code).then(
+  getReferences() {
+    return db.getReferences(this.paperHashCode).then(
       results => results.map( result => new Paper(result) )
     )
   }
 
-  getCitedBys (paperHashCode) {
-    let code = paperHashCode || this.paperHashCode
-    return db.getCitedBys(code).then(
+  getCitedBys() {
+    return db.getCitedBys(this.paperHashCode).then(
       results => results.map( result => new Paper(result) )
     )
   }
