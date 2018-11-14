@@ -10,7 +10,7 @@ let app = express()
 
 // middlewares
 app.use(bodyParser.json())
-app.use(cookieSession({ secret: process.env.COOKIE_SECRET }))
+app.use(cookieSession({ secret: process.env.COOKIE_SECRET || 'malimalihong' }))
 app.use('/graphql', graphqlHTTP(async (req, res, graphQLParams) => {
   return {
     schema: schema,

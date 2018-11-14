@@ -5,8 +5,10 @@
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run dev",
-    "dev": "concurrently --kill-others --names webpack,nodemon \"webpack --watch\" \"nodemon --watch dist --exec 'node -r dotenv/config ./dist/bundle.js'\""
+    "webpack": "webpack --watch",
+    "nodemon": "nodemon --watch dist --exec 'node -r dotenv/config ./dist/bundle.js'",
+    "dev": "webpack && concurrently --kill-others --names webpack,nodemon \"npm run webpack\" \"npm run nodemon\"",
+    "start": "npm run dev"
   },
   "keywords": [],
   "author": "",
