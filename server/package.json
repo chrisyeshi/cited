@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run dev",
-    "dev": "concurrently --kill-others \"webpack --watch\" \"nodemon --watch dist ./dist/bundle.js\""
+    "dev": "concurrently --kill-others --names webpack,nodemon \"webpack --watch\" \"nodemon --watch dist ./dist/bundle.js\""
   },
   "keywords": [],
   "author": "",
