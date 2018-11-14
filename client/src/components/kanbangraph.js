@@ -78,7 +78,6 @@ export class Graph {
     const relation = {
       citings: [],
       citedBys: []
-
     }
     // citings
     const refObjIds = _.map(paper.references, ref => ref.id)
@@ -119,6 +118,7 @@ export class Graph {
       inGraphCitedBys: relation.citedBys
     })
     this.nodes.push(node)
+    console.log(this.nodes)
     return node
   }
 
