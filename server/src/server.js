@@ -1,12 +1,14 @@
-let express = require('express')
-let bodyParser = require('body-parser')
-let cookieSession = require('cookie-session')
-let graphqlHTTP = require('express-graphql')
-let schema = require('./graphqlschema.js')
-let users = require('./users.js')
+import express from 'express'
+import bodyParser from 'body-parser'
+import cookieSession from 'cookie-session'
+import graphqlHTTP from 'express-graphql'
+import schema from './graphqlschema.js'
+import users from './users.js'
 
-// Create an express server and a GraphQL endpoint
+// create an express server and a GraphQL endpoint
 let app = express()
+
+// middlewares
 app.use(bodyParser.json())
 app.use(cookieSession({ secret: 'definitelygoingtochangethis' }))
 app.use('/graphql', graphqlHTTP(async (req, res, graphQLParams) => {
@@ -18,6 +20,9 @@ app.use('/graphql', graphqlHTTP(async (req, res, graphQLParams) => {
     }
   }
 }))
+app.use('/static', express.static('static'))
+
+// paths
 app.all('/signup', async (req, res) => {
   const user =
     await users.add({ email: req.body.email, password: req.body.password })
@@ -40,6 +45,5 @@ app.all('/logout', (req, res) => {
 app.all('/me', async (req, res) => {
   res.json(await users.getUserById(req.session.userId))
 })
-app.use('/static', express.static('static'))
 
-app.listen(8000, () => console.log('Express GraphQL Server Now Running On localhost:8000/graphql'));
+app.listen(8000, () => console.log('Express GraphQL Server Now Running On localhost:8000/graphql'))

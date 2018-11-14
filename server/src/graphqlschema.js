@@ -1,8 +1,7 @@
-let graphql = require('graphql')
-const { makeExecutableSchema } = require('graphql-tools')
-let _ = require('lodash')
-let data = require('./static/insitupdf.json')
-let { Graph, Node } = require('./graph.js')
+import { makeExecutableSchema } from 'graphql-tools'
+import _ from 'lodash'
+import * as data from '../static/insitupdf.json'
+import { Graph } from './graph.js'
 
 const typeDefs = `
   type Query {
@@ -44,18 +43,18 @@ let getRefObj = id => _.find(graph.nodes, node => node.paper.id === id).paper
 
 const resolvers = {
   Query: {
-    search(obj, { text }, context, info) {
+    search (obj, { text }, context, info) {
       return _.map(graph.nodes, node => node.paper)
     },
-    refObj(obj, { id }, context, info) {
+    refObj (obj, { id }, context, info) {
       return getRefObj(id)
     }
   },
   RefObj: {
-    references(refObj, args, context, info) {
+    references (refObj, args, context, info) {
       return _.map(refObj.citings, ({ id }) => getRefObj(id))
     },
-    citedBys(refObj, args, context, info) {
+    citedBys (refObj, args, context, info) {
       return _.map(refObj.citedBys, ({ id }) => getRefObj(id))
     }
   }

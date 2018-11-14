@@ -6,7 +6,7 @@
     "postinstall": "(cd server && npm install); (cd client && npm install)",
     "client": "cd client && npm start",
     "server": "cd server && npm start",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "dev": "concurrently --kill-others \"npm run server\" \"npm run client\"",
     "start": "npm run dev"
   },
   "repository": {
