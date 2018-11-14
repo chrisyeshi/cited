@@ -118,7 +118,6 @@ export class Graph {
       inGraphCitedBys: relation.citedBys
     })
     this.nodes.push(node)
-    console.log(this.nodes)
     return node
   }
 

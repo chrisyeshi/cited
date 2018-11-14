@@ -22,10 +22,6 @@ class Venue {
 class Paper {
   constructor (data) {
     Object.assign(this, data)
-    this.venue = {
-      id: data.conference_id || data.journal_id,
-      name: `temporary`
-    }
   }
 
   static fromDatabase (result) {
@@ -34,7 +30,7 @@ class Paper {
     paper.referenceCount = result.references
     paper.citedByCount = result.citations
     paper.venue =
-      new Venue(paper.conference_id || paper.journal_id, 'temporary')
+      new Venue(paper.conference_id || paper.journal_id, 'workshop')
     paper.abstract = paper.abstract || lorumIpsum({ count: 10 })
     return new Paper(paper)
   }

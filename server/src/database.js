@@ -2,12 +2,11 @@ const mysql = require('mysql')
 
 class RDS {
   constructor ({
-    host = 'dev-db-server.cs6gjqtgg2dt.us-east-2.rds.amazonaws.com',
-    // host = 'localhost',
-    user = 'disco',
-    password = 'MakeBestTech:0',
-    database = 'disco',
-    port = 3306
+    host = process.env.RDS_HOST,
+    user = process.env.RDS_USER,
+    password = process.env.RDS_PASSWORD,
+    database = process.env.RDS_DATABASE,
+    port = process.env.RDS_PORT
   }) {
     this.db = mysql.createConnection({host, user, password, database, port})
   }
