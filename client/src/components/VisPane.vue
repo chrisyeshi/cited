@@ -137,7 +137,10 @@ export default {
           : hoveredInfo.relation === 'citedBy'
             ? hoveredInfo.node.inGraphCitedBys
             : []
-      const relatedNodes = _.map(relatedNodeIds, nodeId => this.$store.state.graph.nodes[nodeId])
+      const getNodeById =
+        id =>
+          _.find(this.$store.state.graph.nodes, node => node.paper.id === id)
+      const relatedNodes = _.map(relatedNodeIds, getNodeById)
       const nodePairs = _.map(relatedNodes, relatedNode => {
         return {
           citing:

@@ -79,22 +79,14 @@ export class Graph {
       citings: [],
       citedBys: []
     }
-    // citings
-    const refObjIds = _.map(paper.references, ref => ref.id)
-    const inCollectionCitings = _.map(refObjIds, id => {
-      if (id === undefined) {
-        return null
+    _.forEach(papers, cPaper => {
+      // paper citing cPaper
+      if (_.find(paper.references, refObj => refObj.id === cPaper.id)) {
+        relation.citings.push(cPaper.id)
       }
-      return papers.findIndex(paper => id === paper.id)
-    })
-    relation.citings = inCollectionCitings.filter(value => {
-      return value !== undefined && value !== null && value !== -1
-    })
-    // citedBys
-    _.forEach(papers, (eachPaper, eachPaperId) => {
-      const refObjIds = _.map(eachPaper.references, ref => ref.id)
-      if (refObjIds.includes(paper.id)) {
-        relation.citedBys.push(eachPaperId)
+      // paper cited by cPaper
+      if (_.find(cPaper.references, refObj => refObj.id === paper.id)) {
+        relation.citedBys.push(cPaper.id)
       }
     })
     return relation
@@ -106,12 +98,13 @@ export class Graph {
     }
     const relation = Graph.computeRelationToCollection(
       paper, _.map(this.nodes, node => node.paper))
-    const newIndex = this.nodes.length
-    _.forEach(relation.citings, index => {
-      this.nodes[index].inGraphCitedBys.push(newIndex)
+    _.forEach(relation.citings, refObjId => {
+      const node = _.find(this.nodes, node => node.paper.id === refObjId)
+      node.inGraphCitedBys.push(paper.id)
     })
-    _.forEach(relation.citedBys, index => {
-      this.nodes[index].inGraphCitings.push(newIndex)
+    _.forEach(relation.citedBys, refObjId => {
+      const node = _.find(this.nodes, node => node.paper.id === refObjId)
+      node.inGraphCitings.push(paper.id)
     })
     const node = new Node(paper, {
       inGraphCitings: relation.citings,

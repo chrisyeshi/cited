@@ -161,9 +161,8 @@ export default new Vuex.Store({
       }
     },
     insertToHistory (state, refObj) {
-      try {
+      if (!state.historyGraph.includes(refObj)) {
         state.historyGraph.insert(refObj)
-      } catch (error) {
       }
     },
     removeFromGraph (state, node) {
