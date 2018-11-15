@@ -3,9 +3,9 @@ import localResolvers from './testresolvers.js'
 import rdsResolvers from './graphql-resolvers.js'
 
 const resolvers =
-  process.env.GRAPHQL_RESOLVERS === 'LOCAL' ? localResolvers
-    : process.env.GRAPHQL_RESOLVERS === 'RDS' ? rdsResolvers
-      : localResolvers
+  process.env.GRAPHQL_RESOLVERS === 'LOCAL' ? localResolvers()
+    : process.env.GRAPHQL_RESOLVERS === 'RDS' ? rdsResolvers()
+      : localResolvers()
 
 const typeDefs = `
   type Query {
