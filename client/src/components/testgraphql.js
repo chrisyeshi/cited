@@ -9,6 +9,52 @@ async function request (uri, query, variables) {
 }
 
 export default {
+  async signIn (email, password) {
+    const mutation = `
+      mutation signIn ($email: String!, $password: String!) {
+        login (email: $email, password: $password) {
+          id
+          email
+          collections {
+            id
+            title
+          }
+        }
+      }
+    `
+    const res = await request('/api/graphql', mutation, { email, password })
+    return res.login
+  },
+
+  async logout () {
+    const mutation = `
+      mutation {
+        logout {
+          id
+        }
+      }
+    `
+    const res = await request('/api/graphql', mutation)
+    return res.logout
+  },
+
+  async me () {
+    const query = `
+      query {
+        me {
+          id
+          email
+          collections {
+            id
+            title
+          }
+        }
+      }
+    `
+    const res = await request('/api/graphql', query)
+    return res.me
+  },
+
   async searchRefObjs (text, { offset, count }) {
     const query = `
       query getSearch ($text: String!) {

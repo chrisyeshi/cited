@@ -11,7 +11,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isSignedIn: false,
     isSearchPaneVisible: true,
     isVisPaneVisible: false,
     visPaneState: 'minor',
@@ -30,6 +29,8 @@ export default new Vuex.Store({
     currRefObj: new Paper(),
     visPaneLOD: 'full',
     isDrawerVisible: false,
+    currUser: undefined,
+    // enables
     enableUserCollectionDropdown: false,
     enableDrawer: true,
     enableDrawerTemporary: false
@@ -79,6 +80,22 @@ export default new Vuex.Store({
     async pushToHistory (context, refObjId) {
       const refObj = await api.getRefObj(refObjId)
       context.commit('insertToHistory', refObj)
+    },
+    async signIn (context, { email, password }) {
+      const user = await api.signIn(email, password)
+      if (!user) {
+        console.log('invalid user')
+      } else {
+        context.commit('setState', { currUser: user })
+      }
+    },
+    logout (context) {
+      api.logout()
+      context.commit('setState', { currUser: null })
+    },
+    async isServerSignedIn (context) {
+      const user = await api.me()
+      context.commit('setState', { currUser: user || null })
     }
   },
   mutations: {
@@ -144,9 +161,6 @@ export default new Vuex.Store({
       state.isVisPaneVisible = true
       state.visPaneState = 'major'
       state.searchPaneState = 'refobj'
-    },
-    toggleIsSignedIn (state) {
-      state.isSignedIn = !state.isSignedIn
     },
     toggleNodeSelected (state, node) {
       state.graph.toggleSelected(node)
@@ -218,10 +232,10 @@ export default new Vuex.Store({
   },
   getters: {
     isSignedIn: state => {
-      return state.isSignedIn
+      return !!state.currUser
     },
     isUserCollectionDropdownVisible: state => {
-      return state.enableUserCollectionDropdown && state.isSignedIn
+      return state.enableUserCollectionDropdown && !!state.currUser
     },
     layout: state => {
       return !state.isSearched

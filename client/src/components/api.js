@@ -8,6 +8,18 @@ export class API {
     }
   }
 
+  async signIn (email, password) {
+    return this.impl.signIn(email, password)
+  }
+
+  async logout () {
+    return this.impl.logout()
+  }
+
+  async me () {
+    return this.impl.me()
+  }
+
   async searchRefObjs (text, { offset = 0, count = 20 } = {}) {
     return this.impl.searchRefObjs(text, { offset, count })
   }

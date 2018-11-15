@@ -32,7 +32,7 @@
       <a class="text-no-wrap mr-3" @click="$emit('onClickCitedBy', refObj)">
         Cited by {{ refObj.citedByCount }}
       </a>
-      <a class="text-no-wrap mr-3" ref="addToCollection" v-show="$store.state.isSignedIn">
+      <a class="text-no-wrap mr-3" ref="addToCollection" v-show="$store.getters.isSignedIn">
         Add to collection ...
       </a>
       <v-menu offset-y :activator="addToCollection">

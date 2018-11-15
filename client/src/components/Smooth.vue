@@ -246,6 +246,9 @@ export default {
           })
       })
       .then(() => {
+        return this.$store.dispatch('isServerSignedIn')
+      })
+      .then(() => {
         this.fetchData()
       })
   },

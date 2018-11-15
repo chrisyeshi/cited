@@ -7,7 +7,7 @@
       <search-box solo @onSearch="onSearch"></search-box>
       <v-slide-y-transition>
         <user-collection-list
-          v-if="$store.state.isSignedIn"
+          v-if="$store.getters.isSignedIn"
           class="user-collection pt-5">
         </user-collection-list>
       </v-slide-y-transition>

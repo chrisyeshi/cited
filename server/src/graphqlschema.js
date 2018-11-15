@@ -8,9 +8,29 @@ const resolvers =
       : localResolvers()
 
 const typeDefs = `
+  type Mutation {
+    signUp (email: String!, password: String!): User
+    login (email: String!, password: String!): User
+    logout: User
+  }
+
   type Query {
-    search(text: String!): [RefObj]
-    refObj(id: String!): RefObj
+    search (text: String!): [RefObj]
+    refObj (id: String!): RefObj
+    me: User
+  }
+
+  type User {
+    id: ID!
+    email: String!
+    password: String!
+    collections: [Collection]
+  }
+
+  type Collection {
+    id: ID!
+    title: String!
+    refObjs: [RefObj]
   }
 
   type RefObj {

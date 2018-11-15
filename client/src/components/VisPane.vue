@@ -9,12 +9,12 @@
               : 'chevron_left' }}
           </v-icon>
           <v-tooltip bottom v-if="$store.state.visPaneCollection === 'history'"
-            :disabled="!$store.state.isSignedIn">
+            :disabled="!$store.getters.isSignedIn">
             <h4 class="body-2 d-flex align-center" slot="activator"
               style="cursor: pointer;"
               @click="createVisPaneCollection">
               History
-              <v-icon v-if="$store.state.isSignedIn" small class="pl-1">
+              <v-icon v-if="$store.getters.isSignedIn" small class="pl-1">
                 add
               </v-icon>
             </h4>
@@ -92,12 +92,13 @@ export default {
       return _.map(authors, author => Author.stringify(author))
     },
     findCommonRelatives () {
+      console.log(JSON.stringify(this.$store.state.graph.nodes))
       const refObjs =
         _.map(this.$store.state.graph.selectedNodes, ({ paper }) => paper)
       this.$store.dispatch('showCommonRelatives', refObjs)
     },
     createVisPaneCollection () {
-      if (this.$store.state.isSignedIn) {
+      if (this.$store.getters.isSignedIn) {
         this.$store.commit('createVisPaneCollection')
       }
     },
