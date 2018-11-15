@@ -138,11 +138,10 @@ export default {
           })
         } else {
           api.searchRefObjs(query.search).then(refObjs => {
-            this.$store.commit('setState', {
-              isSearched: true,
-              searchText: query.search,
-              searchRefObjs: refObjs,
-              searchLabel: { text: 'Search Results', refObj: { title: '' } }
+            this.$store.commit('setSearchResults', {
+              text: query.search,
+              refObjs: refObjs,
+              label: { text: 'Search Results', refObj: { title: '' } }
             })
           })
         }

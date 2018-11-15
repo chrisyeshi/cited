@@ -75,6 +75,10 @@ export default new Vuex.Store({
         query.collection = context.getters.currCollectionId
       }
       router.push({ path: '/smooth', query: query })
+    },
+    async pushToHistory (context, refObjId) {
+      const refObj = await api.getRefObj(refObjId)
+      context.commit('insertToHistory', refObj)
     }
   },
   mutations: {

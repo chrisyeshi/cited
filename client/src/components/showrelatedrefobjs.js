@@ -17,7 +17,7 @@ export default {
         window.flipping.flip()
       })
       if (isHistory) {
-        this.$store.commit('insertToHistory', refObj)
+        this.$store.dispatch('pushToHistory', refObj.id)
       }
     }
   }
