@@ -38,17 +38,17 @@ export class Graph {
         testPapers, (testPaper, index) => Paper.fromTestJson(testPaper, index))
     const nodes = _.map(papers, paper => new Node(paper))
     _.forEach(relations, relation => {
-      nodes[relation.citing].inGraphCitedBys =
-        _.union(nodes[relation.citing].inGraphCitedBys, [relation.citedBy])
-      nodes[relation.citedBy].inGraphCitings =
-        _.union(nodes[relation.citedBy].inGraphCitings, [relation.citing])
+      const citingNode = nodes[relation.citing]
+      const citedByNode = nodes[relation.citedBy]
+      citingNode.inGraphCitedBys =
+        _.union(citingNode.inGraphCitedBys, [ citedByNode.paper.id ])
+      citedByNode.inGraphCitings =
+        _.union(citedByNode.inGraphCitings, [ citingNode.paper.id ])
     })
     _.forEach(nodes, node => {
-      node.paper.citings =
-        _.map(node.inGraphCitings, index => ({ id: nodes[index].paper.id }))
+      node.paper.citings = node.inGraphCitings.slice()
       node.paper.nCitings = node.paper.citings.length
-      node.paper.citedBys =
-        _.map(node.inGraphCitedBys, index => ({ id: nodes[index].paper.id }))
+      node.paper.citedBys = node.inGraphCitedBys.slice()
     })
     return new Graph(nodes)
   }
