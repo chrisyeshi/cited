@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 async function request (uri, query, variables) {
   const res = await fetch(uri, {
     method: 'POST',
@@ -179,6 +181,40 @@ export default {
   },
 
   async getCommonRelatives (refObjIds, opt) {
-    return Promise.resolve()
+    const query = `
+      query getRefObjs ($ids: [String!]!) {
+        refObjs (ids: $ids) {
+          ...commonFields
+          references {
+            ...commonFields
+          }
+          citedBys {
+            ...commonFields
+          }
+        }
+      }
+
+      fragment commonFields on RefObj {
+        id
+        title
+        authors {
+          family
+          given
+        }
+        abstract
+        venue {
+          name
+        }
+        year
+        referenceCount
+        citedByCount
+      }
+    `
+    const res = await request('/api/graphql', query, { ids: refObjIds })
+    const commonReferences =
+      _.intersectionBy(
+        ...(_.map(res.refObjs, refObj => refObj.references)),
+        refObj => refObj.id)
+    return commonReferences
   }
 }

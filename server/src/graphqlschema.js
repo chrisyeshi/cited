@@ -17,6 +17,7 @@ const typeDefs = `
   type Query {
     search (text: String!): [RefObj]
     refObj (id: String!): RefObj
+    refObjs (ids: [String!]!): [RefObj]
     me: User
   }
 

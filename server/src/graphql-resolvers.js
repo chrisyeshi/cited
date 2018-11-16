@@ -1,4 +1,5 @@
 import lorumIpsum from 'lorem-ipsum'
+import _ from 'lodash'
 import Database from './database.js'
 
 export default function () {
@@ -56,25 +57,36 @@ export default function () {
   }
 
   var queryResolvers = {
-    refObj (_, {id}) {
+    refObj (obj, { id }) {
       return db.getPaper(id).then(paperData => Paper.fromDatabase(paperData[0]))
     },
 
-    search (_, {text}) {
+    search (obj, { text }) {
       return db.searchPaperByTitle({text}).then(results => results.map(result => Paper.fromDatabase(result)))
+    },
+
+    refObjs (obj, { ids }) {
+      return Promise.all(_.map(ids, id => {
+        return db.getPaper(id)
+          .then(paperData => Paper.fromDatabase(paperData[0]))
+      }))
     }
   }
 
   let fieldResolvers = {
     Paper: {
       authors (paper) {
-        return db.getAuthors([ paper.hashCode ]).then(
-          results => results.map(result => ({
-            id: result.author_id,
-            family: result.name,
-            given: ''
-          }))
-        )
+        return db.getAuthors([ paper.hashCode ])
+          .then(results => {
+            return results.map(result => ({
+              id: result.author_id,
+              family: result.name,
+              given: ''
+            }))
+          })
+          .catch(() => {
+            return [ { id: 'authorId', family: 'Unknown', given: 'Author' } ]
+          })
       },
 
       references (paper) {

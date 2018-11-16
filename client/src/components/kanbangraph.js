@@ -166,23 +166,19 @@ export class Graph {
     this.nodes = []
   }
 
+  getNodeById (id) {
+    return _.find(this.nodes, node => node.paper.id === id)
+  }
+
   remove (arg) {
     const index = _.isNumber(arg) ? arg : _.indexOf(this.nodes, arg)
     const nodes = this.nodes
     const node = nodes[index]
     _.forEach(node.inGraphCitings, citing => {
-      _.pull(nodes[citing].inGraphCitedBys, index)
+      _.pull(this.getNodeById(citing).inGraphCitedBys, node.paper.id)
     })
     _.forEach(node.inGraphCitedBys, citedBy => {
-      _.pull(nodes[citedBy].inGraphCitings, index)
-    })
-    _.forEach(nodes, node => {
-      node.inGraphCitings = _.map(node.inGraphCitings, citing => {
-        return citing > index ? citing - 1 : citing
-      })
-      node.inGraphCitedBys = _.map(node.inGraphCitedBys, citedBy => {
-        return citedBy > index ? citedBy - 1 : citedBy
-      })
+      _.pull(this.getNodeById(citedBy).inGraphCitings, node.paper.id)
     })
     this.nodes.splice(index, 1)
   }

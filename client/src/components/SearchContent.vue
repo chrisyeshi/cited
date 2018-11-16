@@ -14,7 +14,7 @@
               <template
                 v-for="(refObj, index) in $store.state.searchLabel.refObj">
                 <a :key="`author-${index}`">
-                  {{ refObj.authors[0].family }}, {{ refObj.year }}
+                  {{ refObj.authors[0] ? refObj.authors[0].family : 'Unknown' }}, {{ refObj.year }}
                 </a>
                 <span :key="`and-${index}`"
                   v-if="index < $store.state.searchLabel.refObj.length - 1">

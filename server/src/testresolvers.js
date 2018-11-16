@@ -39,6 +39,9 @@ export default function () {
       refObj (obj, { id }, context, info) {
         return getRefObj(id)
       },
+      refObjs (obj, { ids }, context, info) {
+        return _.map(ids, id => getRefObj(id))
+      },
       me (root, args, { session }) {
         return session.user
       }

@@ -92,7 +92,6 @@ export default {
       return _.map(authors, author => Author.stringify(author))
     },
     findCommonRelatives () {
-      console.log(JSON.stringify(this.$store.state.graph.nodes))
       const refObjs =
         _.map(this.$store.state.graph.selectedNodes, ({ paper }) => paper)
       this.$store.dispatch('showCommonRelatives', refObjs)
