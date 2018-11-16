@@ -9,8 +9,8 @@ const committedUsers = [
   }
 ]
 const localUsers =
-  fs.existsSync('./localusers.json')
-    ? JSON.parse(fs.readFileSync('./localusers.json'))
+  fs.existsSync('./src/localusers.json')
+    ? JSON.parse(fs.readFileSync('./src/localusers.json'))
     : []
 const users = () => ([ ...committedUsers, ...localUsers ])
 
@@ -30,7 +30,7 @@ module.exports.add = async ({ email, password }) => {
   const user = { id: id, email: email, password: password }
   localUsers.push(user)
   fs.writeFile(
-    './localusers.json',
+    './src/localusers.json',
     JSON.stringify(localUsers, null, 2),
     error => { if (error) throw error })
   return user

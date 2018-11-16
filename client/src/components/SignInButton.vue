@@ -11,14 +11,14 @@
             <v-text-field
               ref="email"
               label="E-mail"
-              value="test@test.com"
+              v-model="email"
               required
             ></v-text-field>
             <v-text-field
               ref="password"
               label="Password"
               type="password"
-              value="password"
+              v-model="password"
               id="id"
             ></v-text-field>
             <v-btn type="submit" color="primary">submit</v-btn>
@@ -31,6 +31,7 @@
         <v-icon large color="grey darken-2" key="icon">account_circle</v-icon>
       </v-btn>
       <v-list>
+        <v-subheader>{{ currEmail }}</v-subheader>
         <v-list-tile @click="logout">
           <v-list-tile-title>Logout</v-list-tile-title>
         </v-list-tile>
@@ -44,7 +45,15 @@ export default {
   name: 'SignInButton',
   data () {
     return {
-      isSignInMenuVisible: false
+      isSignInMenuVisible: false,
+      email: 'test@test.com',
+      password: 'password'
+    }
+  },
+  computed: {
+    currEmail () {
+      const currUser = this.$store.state.currUser
+      return currUser ? currUser.email : 'Unknown'
     }
   },
   methods: {
