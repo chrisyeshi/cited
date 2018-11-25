@@ -34,10 +34,9 @@ class RDS {
   }
 
   getAuthors (paperHashCodes) {
-    let queryString = paperHashCodes.join(', ')
     let query = `SELECT authors.id as author_id, authors.name, paper_authors.paper_id FROM paper_authors
       inner join authors on paper_authors.author_id = authors.id 
-      where paper_authors.paper_id in (${queryString});`
+      where paper_authors.paper_id in ('${paperHashCodes}');`
     return this.fetch(query)
   }
 

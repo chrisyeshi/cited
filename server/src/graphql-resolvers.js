@@ -38,7 +38,7 @@ export default function () {
     }
 
     getAuthors () {
-      return db.getAuthors([ this.paperHashCode ]).then(
+      return db.getAuthors(this.paperHashCode).then(
         results => results.map(result => new Author(result))
       )
     }
