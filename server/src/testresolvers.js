@@ -46,6 +46,11 @@ export default function () {
         return session.user
       }
     },
+    CollectionNode: {
+      refObj (collNode, args, context, info) {
+        return graph.getNodeById(collNode.refObjId).paper
+      }
+    },
     RefObj: {
       references (refObj, args, context, info) {
         return _.map(refObj.citings, ({ id }) => getRefObj(id))

@@ -1,11 +1,31 @@
+import { Graph } from './graph.js'
+import * as data from '../static/insitupdf.json'
 const fs = require('fs')
 const _ = require('lodash')
+
+const graph = Graph.fromTestJson({
+  papers: data.references,
+  relations: data.relations
+})
 
 const committedUsers = [
   {
     id: 'user-1-commit',
     email: 'test@test.com',
-    password: 'password'
+    password: 'password',
+    collections: [
+      {
+        id: 'user-1-commit-in-situ-collection',
+        title: 'in situ visualization',
+        nodes: _.map(graph.nodes, node => ({
+          refObjId: node.paper.id,
+          inCollectionReferences:
+            _.map(node.inGraphCitings, index => graph.nodes[index].paper.id),
+          inCollectionCitedBys:
+            _.map(node.inGraphCitedBys, index => graph.nodes[index].paper.id)
+        }))
+      }
+    ]
   }
 ]
 const localUsers =

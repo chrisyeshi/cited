@@ -59,10 +59,8 @@ import VisPane from './VisPane.vue'
 import ResponsiveTextLogo from './ResponsiveTextLogo.vue'
 import UserCollectionList from './UserCollectionList.vue'
 import Flipping from 'flipping/dist/flipping.web.js'
-import { Graph } from './kanbangraph.js'
 import api from './api.js'
 import _ from 'lodash'
-import getNextLayout from './getnextlayout.js'
 
 export default {
   name: 'Smooth',
@@ -151,10 +149,14 @@ export default {
           this.$store.commit('setState', { currRefObj: refObj })
         })
       }
-      if (this.$store.state.collections[query.collection]) {
+      const coll =
+        _.find(
+          this.$store.getters.myCollections,
+          coll => coll.id === query.collection)
+      if (coll) {
         this.$store.commit('setState', {
-          visPaneCollection: this.$store.state.collections[query.collection],
-          graph: this.$store.state.collections[query.collection].graph
+          visPaneCollection: coll,
+          graph: coll.graph
         })
       } else {
         this.$store.commit('setState', {
@@ -164,19 +166,7 @@ export default {
       }
     },
     selectUserCollection (collectionId) {
-      const query = { collection: collectionId }
-      query.layout = getNextLayout(this.$store.getters.layout, {
-        'collection': 'home',
-        'minorsearch': 'search',
-        'minorrefobj': 'refobj'
-      })
-      if (this.$store.state.currRefObj) {
-        query.refobj = this.$store.state.currRefObj.id
-      }
-      this.$router.push({
-        path: '/smooth',
-        query: query
-      })
+      this.$store.dispatch('selectUserCollection', collectionId)
     }
   },
   computed: {
@@ -217,40 +207,10 @@ export default {
   mounted () {
     window.flipping = new Flipping()
   },
-  created () {
+  async created () {
     this.setLayout(this.$route.query.layout)
-    this.$http.get('/api/static/insitupdf.json')
-      .then(res => {
-        this.$store.commit('setState', {
-          collections: [],
-          visPaneCollection: 'history',
-          graph: this.$store.state.historyGraph
-        })
-        this.$store.commit(
-          'createUserCollection',
-          {
-            name: 'information visualization toolkits',
-            graph: Graph.fromTestJson({
-              papers: res.body.references,
-              relations: res.body.relations
-            })
-          })
-        this.$store.commit(
-          'createUserCollection',
-          {
-            name: 'in situ visualization',
-            graph: Graph.fromTestJson({
-              papers: res.body.references,
-              relations: res.body.relations
-            })
-          })
-      })
-      .then(() => {
-        return this.$store.dispatch('isServerSignedIn')
-      })
-      .then(() => {
-        this.fetchData()
-      })
+    await this.$store.dispatch('isServerSignedIn')
+    await this.fetchData()
   },
   watch: {
     '$route' () {

@@ -179,6 +179,10 @@ class Graph {
     this.nodes = []
   }
 
+  getNodeById (id) {
+    return _.find(this.nodes, node => node.paper.id === id)
+  }
+
   remove (arg) {
     const index = _.isNumber(arg) ? arg : _.indexOf(this.nodes, arg)
     const nodes = this.nodes

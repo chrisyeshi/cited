@@ -23,15 +23,21 @@ const typeDefs = `
 
   type User {
     id: ID!
-    email: String!
-    password: String!
+    email: String
+    password: String
     collections: [Collection]
   }
 
   type Collection {
     id: ID!
-    title: String!
-    refObjs: [RefObj]
+    title: String
+    nodes: [CollectionNode]
+  }
+
+  type CollectionNode {
+    refObj: RefObj
+    inCollectionReferences: [ID]
+    inCollectionCitedBys: [ID]
   }
 
   type RefObj {

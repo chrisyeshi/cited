@@ -20,6 +20,25 @@ export default {
           collections {
             id
             title
+            nodes {
+              refObj {
+                id
+                title
+                authors {
+                  family
+                  given
+                }
+                abstract
+                venue {
+                  name
+                }
+                year
+                referenceCount
+                citedByCount
+              }
+              inCollectionReferences
+              inCollectionCitedBys
+            }
           }
         }
       }
@@ -49,6 +68,25 @@ export default {
           collections {
             id
             title
+            nodes {
+              refObj {
+                id
+                title
+                authors {
+                  family
+                  given
+                }
+                abstract
+                venue {
+                  name
+                }
+                year
+                referenceCount
+                citedByCount
+              }
+              inCollectionReferences
+              inCollectionCitedBys
+            }
           }
         }
       }

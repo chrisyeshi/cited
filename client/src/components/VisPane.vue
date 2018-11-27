@@ -20,7 +20,7 @@
             </h4>
             <span>Save to new collection</span>
           </v-tooltip>
-          <input v-else type="text" placeholder="Collection name" @change="$store.commit('setVisPaneCollectionName', $event.target.value)" :value="$store.state.visPaneCollection.name" style="flex: 1;">
+          <input v-else type="text" placeholder="Collection name" @change="$store.commit('setVisPaneCollectionName', $event.target.value)" :value="$store.state.visPaneCollection.title" style="flex: 1;">
           <v-spacer v-if="$store.state.visPaneCollection === 'history'">
           </v-spacer>
           <v-tooltip bottom>

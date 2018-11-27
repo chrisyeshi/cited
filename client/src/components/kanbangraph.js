@@ -68,6 +68,16 @@ export class Graph {
     return new Graph(nodes)
   }
 
+  static fromCollection (coll) {
+    const graphNodes = _.map(coll.nodes, collNode => {
+      return new Node(collNode.refObj, {
+        inGraphCitings: collNode.inCollectionReferences,
+        inGraphCitedBys: collNode.inCollectionCitedBys
+      })
+    })
+    return new Graph(graphNodes)
+  }
+
   static computeInCollectionRelations (papers) {
     return _.map(papers, paper => {
       return this.computeRelationToCollection(paper, papers)

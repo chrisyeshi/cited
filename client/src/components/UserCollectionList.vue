@@ -3,14 +3,14 @@
     <v-subheader v-if="!dense">My Collections</v-subheader>
     <v-divider v-if="!dense"></v-divider>
     <v-list-tile
-      v-for="(collection, index) in $store.state.collections" :key="index"
-      @click="$emit('onCollectionClicked', index)">
+      v-for="(collection, index) in $store.getters.myCollections" :key="index"
+      @click="$emit('onCollectionClicked', collection.id)">
       <v-list-tile-action v-if="dense">
         <v-checkbox></v-checkbox>
       </v-list-tile-action>
       <v-list-tile-content>
         <v-list-tile-title>
-          <a>{{ collection.name }}</a>
+          <a>{{ collection.title }}</a>
         </v-list-tile-title>
         <v-list-tile-sub-title v-if="!dense">Li et al. (2018), Heer et al. (2012), ...</v-list-tile-sub-title>
       </v-list-tile-content>

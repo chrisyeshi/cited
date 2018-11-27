@@ -60,7 +60,7 @@ export default new Vuex.Store({
         'search': [ 'home', 'refobj' ],
         'majorsearch': 'collection'
       })
-      if (context.getters.currCollectionId >= 0) {
+      if (context.getters.currCollectionId) {
         query.collection = context.getters.currCollectionId
       }
       router.push({ path: '/smooth', query: query })
@@ -81,12 +81,36 @@ export default new Vuex.Store({
       const refObj = await api.getRefObj(refObjId)
       context.commit('insertToHistory', refObj)
     },
+    selectUserCollection (context, collId) {
+      const query = { collection: collId }
+      query.layout = getNextLayout(context.getters.layout, {
+        'collection': 'home',
+        'minorsearch': 'search',
+        'minorrefobj': 'refobj'
+      })
+      if (context.state.currRefObj) {
+        query.refobj = context.state.currRefObj.id
+      }
+      router.push({
+        path: '/smooth',
+        query: query
+      })
+    },
+    setCurrUser (context, user) {
+      const colls = _.map(user.collections, coll => ({
+        ...coll,
+        graph: Graph.fromCollection(coll)
+      }))
+      context.commit('setState', {
+        currUser: { ...user, collections: colls }
+      })
+    },
     async signIn (context, { email, password }) {
       const user = await api.signIn(email, password)
       if (!user) {
-        console.log('invalid user')
+        console.log('invalide user')
       } else {
-        context.commit('setState', { currUser: user })
+        context.dispatch('setCurrUser', user)
       }
     },
     logout (context) {
@@ -95,7 +119,11 @@ export default new Vuex.Store({
     },
     async isServerSignedIn (context) {
       const user = await api.me()
-      context.commit('setState', { currUser: user || null })
+      if (!user) {
+        context.commit('setState', { currUser: null })
+      } else {
+        context.dispatch('setCurrUser', user)
+      }
     }
   },
   mutations: {
@@ -198,9 +226,10 @@ export default new Vuex.Store({
     setSearchRefObjs (state, refObjs) {
       state.searchRefObjs = refObjs
     },
-    selectUserCollection (state, index) {
-      state.visPaneCollection = state.collections[index]
-      state.graph = state.collections[index].graph
+    selectUserCollection (state, collId) {
+      state.visPaneCollection =
+        _.find(state.currUser.collections, coll => coll.id === collId)
+      state.graph = state.visPaneCollection.graph
       if (!state.isVisPaneVisible) {
         state.isCollectionBarVisible = true
         state.isSearchPaneVisible = true
@@ -210,15 +239,15 @@ export default new Vuex.Store({
       }
     },
     createUserCollection (state, collection) {
-      state.collections.push(collection)
+      state.currUser.collections.push(collection)
     },
     createVisPaneCollection (state) {
       const collection = { name: '', graph: state.graph }
-      state.collections.push(collection)
+      state.currUser.collections.push(collection)
       state.visPaneCollection = collection
     },
     setVisPaneCollectionName (state, text) {
-      state.visPaneCollection.name = text
+      state.visPaneCollection.title = text
     },
     toggleVisPaneLOD (state) {
       if (state.visPaneLOD === 'full') {
@@ -247,7 +276,14 @@ export default new Vuex.Store({
             : state.visPaneState + state.searchPaneState
     },
     currCollectionId: state => {
-      return _.indexOf(state.collections, state.visPaneCollection)
+      return state.visPaneCollection.id
+    },
+    myCollections: state => {
+      return !state.currUser
+        ? []
+        : !state.currUser.collections
+          ? []
+          : state.currUser.collections
     }
   }
 })
