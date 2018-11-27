@@ -3,6 +3,7 @@ import bodyParser from 'body-parser'
 import cookieSession from 'cookie-session'
 import graphqlHTTP from 'express-graphql'
 import schema from './graphqlschema.js'
+import users from './users.js'
 
 // create an express server and a GraphQL endpoint
 let app = express()
@@ -15,7 +16,8 @@ app.use('/graphql', graphqlHTTP(async (req, res, graphQLParams) => {
     schema: schema,
     graphiql: true,
     context: {
-      session: req.session
+      session: req.session,
+      user: users.getUserById(req.session.userId)
     }
   }
 }))

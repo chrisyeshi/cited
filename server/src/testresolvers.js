@@ -15,7 +15,7 @@ export default function () {
     Mutation: {
       async signUp (obj, { email, password }, { session }, info) {
         const user = await users.add({ email, password })
-        session.user = user
+        session.userId = user.id
         return user
       },
       async login (obj, { email, password }, { session }, info) {
@@ -23,12 +23,12 @@ export default function () {
         if (!user || user.password !== password) {
           return null
         }
-        session.user = user
+        session.userId = user.id
         return user
       },
       logout (obj, args, { session }) {
         const user = session.user
-        session.user = null
+        session.userId = null
         return user
       }
     },
@@ -42,8 +42,8 @@ export default function () {
       refObjs (obj, { ids }, context, info) {
         return _.map(ids, id => getRefObj(id))
       },
-      me (root, args, { session }) {
-        return session.user
+      me (root, args, { session, user }) {
+        return user
       }
     },
     CollectionNode: {
