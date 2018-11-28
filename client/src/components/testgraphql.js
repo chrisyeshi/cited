@@ -253,6 +253,10 @@ export default {
       _.intersectionBy(
         ...(_.map(res.refObjs, refObj => refObj.references)),
         refObj => refObj.id)
-    return commonReferences
+    const commonCitedBys =
+      _.intersectionBy(
+        ...(_.map(res.refObjs, refObj => refObj.citedBys)),
+        refObj => refObj.id)
+    return [ ...commonReferences, ...commonCitedBys ]
   }
 }

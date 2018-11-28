@@ -34,7 +34,16 @@ export default function () {
     },
     Query: {
       search (obj, { text }, context, info) {
-        return _.map(graph.nodes, node => node.paper)
+        if (text === '*') {
+          return _.map(graph.nodes, ({ paper }) => paper)
+        }
+        const words = _.words(_.toLower(text))
+        const nodes = _.filter(graph.nodes, ({ paper }) => {
+          const serialized = _.toLower(JSON.stringify(paper))
+          const hasWords = _.map(words, word => _.includes(serialized, word))
+          return !_.includes(hasWords, false)
+        })
+        return _.map(nodes, ({ paper }) => paper)
       },
       refObj (obj, { id }, context, info) {
         return getRefObj(id)
