@@ -52,10 +52,11 @@ export default new Vuex.Store({
     },
     search (context, text) {
       const collId = context.getters.currCollectionId
+      const random = Date.now()
       if (collId) {
-        router.push(`/smooth/search/${text}/collection/${collId}`)
+        router.push(`/smooth/search/${text}/collection/${collId}#${random}`)
       } else {
-        router.push(`/smooth/search/${text}`)
+        router.push(`/smooth/search/${text}#${random}`)
       }
     },
     showRefObjDetail (context, refObjId) {

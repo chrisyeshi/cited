@@ -158,7 +158,7 @@ export default {
     selectUserCollection (collId) {
       if (this.searchComponent === 'searchPage') {
         this.$router.push(`/smooth/collection/${collId}`)
-      } else if (this.searchComponent === 'searchPane') {
+      } else if (!_.isNil(this.searchText)) {
         this.$router.push(
           `/smooth/search/${this.searchText}/collection/${collId}`)
       } else if (this.searchComponent === 'referenceObject') {
@@ -261,6 +261,8 @@ export default {
       if (this.routeLayout === 'search') {
         if (this.isHistoryEmpty || this.searchComponent === 'searchPage') {
           return 'search'
+        } else if (currLayout === 'visMajor') {
+          return 'visMajor'
         } else {
           return 'searchMajor'
         }
@@ -286,7 +288,7 @@ export default {
   async created () {
     await this.$store.dispatch('isServerSignedIn')
     this.layout = this.nextLayout
-    await this.fetchData()
+    this.fetchData()
   },
   watch: {
     '$route' () {
