@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
   name: 'SearchBox',
   props: {
@@ -38,13 +40,18 @@ export default {
       default: true
     }
   },
+  data () {
+    return { userText: null }
+  },
   computed: {
     text: {
       get () {
-        return this.$store.state.searchText
+        return _.isNil(this.userText)
+          ? this.$store.state.searchText
+          : this.userText
       },
       set (value) {
-        this.$store.commit('setState', { searchText: value })
+        this.userText = value
       }
     }
   },
@@ -52,6 +59,10 @@ export default {
     trace (value) {
       console.log(value)
       return value
+    },
+    onSearch () {
+      this.$emit('onSearch', this.text)
+      this.userText = null
     }
   }
 }

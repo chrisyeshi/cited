@@ -99,7 +99,7 @@ export default {
     },
     async fetchSearch (text) {
       if (_.isNil(text)) {
-        return [ { text: '', refObj: { title: '' } }, [] ]
+        return [ { text: 'Search Results', refObj: { title: '' } }, [] ]
       }
       if (_.startsWith(text, 'citing:')) {
         const refObjId = text.substring('citing:'.length)

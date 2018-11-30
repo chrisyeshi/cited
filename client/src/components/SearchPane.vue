@@ -2,7 +2,10 @@
   <v-layout column>
     <search-content :showFilter="showFilter">
       <v-layout column>
-        <search-paper v-for="(refObj, index) in refObjs" :key="index"
+        <v-flex v-if="refObjs.length === 0">
+          {{ `Your search did not match any documents.` }}
+        </v-flex>
+        <search-paper v-else v-for="(refObj, index) in refObjs" :key="index"
           :refObj="refObj"
           @onClickTitle="showRefObjDetail"
           @onClickVenue="trace"
