@@ -1,6 +1,6 @@
 <template>
   <v-layout column>
-    <search-content v-if="$store.state.searchPaneState === 'search'">
+    <search-content :showFilter="showFilter">
       <v-layout column>
         <search-paper v-for="(refObj, index) in refObjs" :key="index"
           :refObj="refObj"
@@ -12,8 +12,6 @@
         </search-paper>
       </v-layout>
     </search-content>
-    <reference-object v-else :refObj="$store.state.currRefObj">
-    </reference-object>
   </v-layout>
 </template>
 
@@ -39,6 +37,9 @@ export default {
     AppBar,
     ReferenceObject
   },
+  props: {
+    showFilter: Boolean
+  },
   methods: {
     trace (value) {
       console.log(value)
@@ -46,13 +47,6 @@ export default {
     },
     showRefObjDetail (refObj) {
       this.$store.dispatch('showRefObjDetail', refObj.id)
-    },
-    onSearch (text) {
-      window.flipping.read()
-      this.$store.dispatch('search', text)
-      this.$nextTick(() => {
-        window.flipping.flip()
-      })
     }
   },
   computed: {

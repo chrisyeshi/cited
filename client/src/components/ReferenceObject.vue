@@ -2,9 +2,7 @@
   <v-layout column>
     <v-toolbar dense flat class="pb-0" color="transparent">
       <v-layout fill-height align-end>
-        <v-flex
-          :offset-md2="!$store.state.isVisPaneVisible"
-          :md8="!$store.state.isVisPaneVisible">
+        <v-flex :offset-md2="fluid" :md8="fluid">
           <v-layout justify-start class="text-truncate">
             <a @click="trace" class="mr-4 text-no-wrap">
               <v-icon class="pr-1" size=20>add</v-icon>
@@ -29,9 +27,7 @@
     </v-toolbar>
     <v-divider class="my-2"></v-divider>
     <v-container fluid py-2 style="height: calc(100vh - 135px); overflow: auto;">
-      <v-flex
-        :offset-md2="!$store.state.isVisPaneVisible"
-        :md8="!$store.state.isVisPaneVisible">
+      <v-flex :offset-md2="fluid" :md8="fluid">
         <h2 class="mb-2 display-1">{{ refObj.title }}</h2>
         <h4 class="mb-2 subheading">
           <template v-for="(name, index) in authorNames">
@@ -137,7 +133,7 @@ export default {
     SearchPaper
   },
   props: {
-    refObj: Object
+    fluid: Boolean
   },
   data () {
     return {
@@ -154,6 +150,9 @@ export default {
     }
   },
   computed: {
+    refObj () {
+      return this.$store.state.currRefObj
+    },
     authorNames () {
       return _.map(this.refObj.authors, author => Author.stringify(author))
     },

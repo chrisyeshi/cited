@@ -22,6 +22,11 @@ export default new Router({
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
     { path: '/smooth', component: Smooth },
+    { path: '/smooth/search/:searchText', component: Smooth, props: true },
+    { path: '/smooth/refobj/:refObjId', component: Smooth, props: true },
+    { path: '/smooth/collection/:collId', component: Smooth, props: true },
+    { path: '/smooth/search/:searchText/collection/:collId', component: Smooth, props: true },
+    { path: '/smooth/refobj/:refObjId/collection/:collId', component: Smooth, props: true },
     { path: '*', component: NotFound }
   ]
 })

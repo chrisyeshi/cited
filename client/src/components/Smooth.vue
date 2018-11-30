@@ -8,7 +8,7 @@
           @click="$store.commit('toggle', 'isDrawerVisible')">
         </v-toolbar-side-icon>
         <v-toolbar-title class="headline ml-2"
-          @click="$router.push('/smooth?layout=home')" style="cursor: pointer;">
+          @click="$router.push('/smooth')" style="cursor: pointer;">
           Discover
         </v-toolbar-title>
       </v-toolbar>
@@ -31,19 +31,19 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <app-bar>
+    <app-bar :showSearchBox="isAppBarSearchBoxVisible" @toHome="toHome">
       <search-box flat ref="searchBox" @onSearch="onSearch"></search-box>
     </app-bar>
     <v-content>
       <v-layout row overflow-hidden>
-        <component
-          :is="searchComponent" overflow-hidden
-          v-show="$store.getters.layout !== 'collection'"
-          :style="searchPaneStyle">
+        <component :is="searchComponent" overflow-hidden v-bind="searchProps"
+          v-show="isSearchPaneVisible" :style="searchPaneStyle"
+          @onSelectUserCollection="selectUserCollection">
         </component>
         <v-flex
-          v-show="$store.state.isVisPaneVisible" :style="visPaneStyle">
-          <vis-pane></vis-pane>
+          v-show="isVisPaneVisible" :style="visPaneStyle">
+          <vis-pane :size="visPaneSize" @onToggleSize="toggleVisPaneSize">
+          </vis-pane>
         </v-flex>
       </v-layout>
     </v-content>
@@ -55,6 +55,7 @@ import AppBar from './AppBar.vue'
 import SearchBox from './SearchBox.vue'
 import SearchPage from './SearchPage.vue'
 import SearchPane from './SearchPane.vue'
+import ReferenceObject from './ReferenceObject.vue'
 import VisPane from './VisPane.vue'
 import ResponsiveTextLogo from './ResponsiveTextLogo.vue'
 import UserCollectionList from './UserCollectionList.vue'
@@ -69,15 +70,20 @@ export default {
     SearchBox,
     SearchPage,
     SearchPane,
+    ReferenceObject,
     VisPane,
     ResponsiveTextLogo,
     UserCollectionList
   },
   props: {
-    layout: String,
     searchText: String,
     refObjId: String,
-    collectionId: String
+    collId: String
+  },
+  data () {
+    return {
+      layout: 'vis'
+    }
   },
   methods: {
     trace (value) {
@@ -91,130 +97,200 @@ export default {
         window.flipping.flip()
       })
     },
-    setLayout (layoutText) {
-      const shouldCommitLayout = text => {
-        return layoutText === text && this.$store.getters.layout !== text
+    async fetchSearch (text) {
+      if (_.isNil(text)) {
+        return [ { text: '', refObj: { title: '' } }, [] ]
       }
-      if (shouldCommitLayout('home')) {
-        this.$store.commit('toHome')
-      } else if (shouldCommitLayout('search')) {
-        this.$store.commit('toSearch')
-      } else if (shouldCommitLayout('refobj')) {
-        this.$store.commit('toRefObj')
-      } else if (shouldCommitLayout('collection')) {
-        this.$store.commit('toCollection')
-      } else if (shouldCommitLayout('minorsearch')) {
-        this.$store.commit('toMinorSearch')
-      } else if (shouldCommitLayout('minorrefobj')) {
-        this.$store.commit('toMinorRefObj')
-      } else if (shouldCommitLayout('majorsearch')) {
-        this.$store.commit('toMajorSearch')
-      } else if (shouldCommitLayout('majorrefobj')) {
-        this.$store.commit('toMajorRefObj')
+      if (_.startsWith(text, 'citing:')) {
+        const refObjId = text.substring('citing:'.length)
+        const { refObj, citedBys } = await api.getCitedBys(refObjId)
+        return [
+          { text: 'Articles that are citing', refObj: refObj },
+          citedBys
+        ]
       }
+      if (_.startsWith(text, 'citedBy:')) {
+        const refObjId = text.substring('citedBy:'.length)
+        const { refObj, references } = await api.getReferences(refObjId)
+        return [ { text: 'References of', refObj }, references ]
+      }
+      const refObjs = await api.searchRefObjs(text)
+      return [ { text: 'Search Results', refObj: { title: '' } }, refObjs ]
     },
-    fetchData () {
-      const query = this.$route.query
-      if (query.search) {
-        if (_.startsWith(query.search, 'citing:')) {
-          const refObjId = query.search.substring('citing:'.length)
-          api.getCitedBys(refObjId).then(({ refObj, citedBys }) => {
-            this.$store.commit('setSearchResults', {
-              text: query.search,
-              label: { text: 'Articles that are citing', refObj: refObj },
-              refObjs: citedBys
-            })
-          })
-        } else if (_.startsWith(query.search, 'citedBy:')) {
-          const refObjId = query.search.substring('citedBy:'.length)
-          api.getReferences(refObjId).then(({ refObj, references }) => {
-            this.$store.commit('setSearchResults', {
-              text: query.search,
-              label: { text: 'References of', refObj: refObj },
-              refObjs: references
-            })
-          })
-        } else {
-          api.searchRefObjs(query.search).then(refObjs => {
-            this.$store.commit('setSearchResults', {
-              text: query.search,
-              refObjs: refObjs,
-              label: { text: 'Search Results', refObj: { title: '' } }
-            })
-          })
+    async fetchRefObj (refObjId) {
+      if (_.isNil(refObjId)) {
+        return {
+          title: '',
+          abstract: '',
+          authors: [],
+          venue: { title: '' },
+          referenceCount: 0,
+          references: [],
+          citedByCount: 0
         }
       }
-      if (query.refobj) {
-        api.getRefObj(query.refobj).then(refObj => {
-          this.$store.commit('setState', { currRefObj: refObj })
-        })
+      return api.getRefObj(refObjId)
+    },
+    async fetchCollection (collId) {
+      if (_.isNil(collId)) {
+        return [ 'history', this.$store.state.historyGraph ]
       }
       const coll =
-        _.find(
-          this.$store.getters.myCollections,
-          coll => coll.id === query.collection)
-      if (coll) {
+        _.find(this.$store.getters.myCollections, coll => coll.id === collId)
+      return [ coll, coll.graph ]
+    },
+    fetchData () {
+      Promise.all([
+        this.fetchSearch(this.searchText),
+        this.fetchRefObj(this.refObjId),
+        this.fetchCollection(this.collId)
+      ]).then(([ [ label, refObjs ], refObj, [ coll, graph ] ]) => {
         this.$store.commit('setState', {
+          searchText: this.searchText,
+          searchLabel: label,
+          searchRefObjs: refObjs,
+          currRefObj: refObj,
           visPaneCollection: coll,
-          graph: coll.graph
+          graph: graph
         })
+      })
+    },
+    selectUserCollection (collId) {
+      if (this.searchComponent === 'searchPage') {
+        this.$router.push(`/smooth/collection/${collId}`)
+      } else if (this.searchComponent === 'searchPane') {
+        this.$router.push(
+          `/smooth/search/${this.searchText}/collection/${collId}`)
+      } else if (this.searchComponent === 'referenceObject') {
+        this.$router.push(`/smooth/refobj/${this.refObjId}/collection/${collId}`)
       } else {
-        this.$store.commit('setState', {
-          visPaneCollection: 'history',
-          graph: this.$store.state.historyGraph
-        })
+        this.$router.push(`/smooth/collection/${collId}`)
       }
     },
-    selectUserCollection (collectionId) {
-      this.$store.dispatch('selectUserCollection', collectionId)
+    toggleVisPaneSize () {
+      if (this.layout === 'vis') {
+        this.layout = 'visMajor'
+      } else if (this.layout === 'visMajor') {
+        this.layout = 'searchMajor'
+      } else {
+        this.layout = 'vis'
+      }
+    },
+    toHome () {
+      window.flipping.read()
+      this.$router.push('/smooth')
+      this.$nextTick(() => {
+        window.flipping.flip()
+      })
     }
   },
   computed: {
+    isAppBarSearchBoxVisible () {
+      return !_.isNil(this.searchText) || !_.isNil(this.refObjId) || !_.isNil(this.collId)
+    },
     searchComponent () {
-      if (this.$store.state.isSearched) {
-        return 'searchPane'
+      return _.isNil(this.searchText) && _.isNil(this.refObjId) && _.isNil(this.collId)
+        ? 'searchPage'
+        : !_.isNil(this.collId)
+          ? 'searchPane'
+          : !_.isNil(this.searchText)
+            ? 'searchPane'
+            : 'referenceObject'
+    },
+    searchProps () {
+      if (this.searchComponent === 'searchPane') {
+        if (this.layout === 'searchMajor' || this.layout === 'visMajor') {
+          return { showFilter: false }
+        } else {
+          return { showFilter: true }
+        }
       }
-      return 'searchPage'
+      if (this.searchComponent === 'referenceObject') {
+        if (this.layout === 'searchMajor' || this.layout === 'visMajor') {
+          return { fluid: false }
+        } else {
+          return { fluid: true }
+        }
+      }
+      return {}
+    },
+    isSearchPaneVisible () {
+      return this.layout !== 'vis'
     },
     searchPaneStyle () {
-      if (!this.$store.state.isVisPaneVisible) {
-        return {}
-      }
-      if (this.$store.state.visPaneState === 'minor') {
-        return {}
-      }
-      if (this.$store.state.visPaneState === 'major') {
+      if (this.layout === 'visMajor') {
         return {
           flex: '0 0 450px',
           maxWidth: '450px'
         }
       }
-      if (this.$store.state.visPaneState === 'full') {
-        return {}
-      }
+      return {}
+    },
+    isVisPaneVisible () {
+      return this.layout !== 'search'
     },
     visPaneStyle () {
-      if (this.$store.state.visPaneState === 'minor') {
+      if (this.layout === 'searchMajor') {
         return {
           flex: '0 0 315px',
           maxWidth: '315px'
         }
-      } else {
-        return {}
       }
+      return {}
+    },
+    visPaneSize () {
+      if (this.layout === 'vis') {
+        return 'full'
+      } else if (this.layout === 'searchMajor') {
+        return 'minor'
+      } else {
+        return 'major'
+      }
+    },
+    routeLayout () {
+      if (_.isNil(this.collId)) {
+        return 'search'
+      } else if (_.isNil(this.searchText) && _.isNil(this.refObjId)) {
+        return 'vis'
+      } else {
+        return 'split'
+      }
+    },
+    nextLayout () {
+      const currLayout = this.layout
+      if (this.routeLayout === 'search') {
+        if (this.isHistoryEmpty || this.searchComponent === 'searchPage') {
+          return 'search'
+        } else {
+          return 'searchMajor'
+        }
+      } else if (this.routeLayout === 'vis') {
+        return 'vis'
+      } else { // 'split'
+        if (currLayout === 'search') {
+          return 'searchMajor'
+        } else if (currLayout === 'vis') {
+          return 'visMajor'
+        } else {
+          return currLayout
+        }
+      }
+    },
+    isHistoryEmpty () {
+      return this.$store.state.historyGraph.nodes.length === 0
     }
   },
   mounted () {
     window.flipping = new Flipping()
   },
   async created () {
-    this.setLayout(this.$route.query.layout)
     await this.$store.dispatch('isServerSignedIn')
+    this.layout = this.nextLayout
     await this.fetchData()
   },
   watch: {
     '$route' () {
-      this.setLayout(this.$route.query.layout)
+      this.layout = this.nextLayout
       this.fetchData()
     }
   }

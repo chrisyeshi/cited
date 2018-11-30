@@ -3,10 +3,9 @@
     <v-toolbar dense flat class="pb-0" color="transparent">
       <v-layout fill-height align-end>
         <v-layout row align-center justify-start>
-          <v-icon class="pr-3" size=20 @click="$store.dispatch('toggleVisPaneState')">
-            {{ $store.state.visPaneState === 'full'
-              ? 'chevron_right'
-              : 'chevron_left' }}
+          <v-icon v-if="resizable" class="pr-3" size=20
+            @click="$emit('onToggleSize')">
+            {{ size === 'minor' ? 'chevron_left' : 'chevron_right' }}
           </v-icon>
           <v-tooltip bottom v-if="$store.state.visPaneCollection === 'history'"
             :disabled="!$store.getters.isSignedIn">
@@ -24,7 +23,8 @@
           <v-spacer v-if="$store.state.visPaneCollection === 'history'">
           </v-spacer>
           <v-tooltip bottom>
-            <v-icon slot="activator" class="pl-3" size=20 @click="toggleLevelOfDetail">
+            <v-icon slot="activator" class="pl-3" size=20
+              @click="toggleLevelOfDetail">
               zoom_in
             </v-icon>
             <span>Toggle level of detail</span>
@@ -45,7 +45,7 @@
       class="py-0" fluid style="position: relative;"
       @click="$store.commit('clearSelectedNodes')">
       <v-layout column align-content-start ref="cardLayout"
-        :wrap="$store.state.visPaneState !== 'minor'"
+        :wrap="size !== 'minor'"
         style="height: calc(100vh - 135px); overflow: auto;">
         <div v-for="year in years" :key="year">
           <h4 class="text-xs-center column-width">{{ year }}</h4>
@@ -83,6 +83,13 @@ export default {
   components: {
     VisCard
   },
+  props: {
+    size: String,
+    resizable: {
+      type: Boolean,
+      default: true
+    }
+  },
   methods: {
     trace (value) {
       console.log(value)
@@ -107,7 +114,7 @@ export default {
   },
   computed: {
     cardListStyle () {
-      return this.$store.state.visPaneState === 'minor'
+      return this.state === 'minor'
         ? {}
         : { maxHeight: 'calc(100vh - 156px)', overflow: 'auto' }
     },

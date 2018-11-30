@@ -9,7 +9,7 @@
         <user-collection-list
           v-if="$store.getters.isSignedIn"
           class="user-collection pt-5"
-          @onCollectionClicked="selectUserCollection">
+          @onCollectionClicked="$emit('onSelectUserCollection', $event)">
         </user-collection-list>
       </v-slide-y-transition>
     </v-container>
@@ -53,9 +53,6 @@ export default {
       this.$nextTick(() => {
         window.flipping.flip()
       })
-    },
-    selectUserCollection (collectionId) {
-      this.$store.dispatch('selectUserCollection', collectionId)
     }
   },
   mounted () {

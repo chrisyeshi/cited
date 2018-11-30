@@ -5,7 +5,6 @@ import { Graph } from './components/kanbangraph.js'
 import { Paper } from './components/paper.js'
 import router from './router/index.js'
 import api from './components/api.js'
-import getNextLayout from './components/getnextlayout.js'
 
 Vue.use(Vuex)
 
@@ -51,50 +50,28 @@ export default new Vuex.Store({
       const label = { text: 'Common relatives of', refObj: refObjs }
       context.commit('setSearchResults', { label: label, refObjs: relatives })
     },
-    async search (context, text) {
-      if (_.isEmpty(text)) {
-        return
+    search (context, text) {
+      const collId = context.getters.currCollectionId
+      if (collId) {
+        router.push(`/smooth/search/${text}/collection/${collId}`)
+      } else {
+        router.push(`/smooth/search/${text}`)
       }
-      const query = { search: text }
-      query.layout = getNextLayout(context.getters.layout, {
-        'search': [ 'home', 'refobj' ],
-        'majorsearch': 'collection'
-      })
-      if (context.getters.currCollectionId) {
-        query.collection = context.getters.currCollectionId
-      }
-      router.push({ path: '/smooth', query: query })
     },
-    async showRefObjDetail (context, refObjId) {
-      const query = { refobj: refObjId }
-      query.layout = getNextLayout(context.getters.layout, {
-        'refobj': [ 'home', 'search' ],
-        'majorrefobj': [ 'collection', 'majorsearch' ],
-        'minorrefobj': 'minorsearch'
-      })
-      if (context.getters.currCollectionId >= 0) {
-        query.collection = context.getters.currCollectionId
+    showRefObjDetail (context, refObjId) {
+      const collId = context.getters.currCollectionId
+      if (collId) {
+        router.push(`/smooth/refobj/${refObjId}/collection/${collId}`)
+      } else {
+        router.push(`/smooth/refobj/${refObjId}`)
       }
-      router.push({ path: '/smooth', query: query })
+    },
+    selectUserCollection (context, collId) {
+      router.push(`/smooth/collection/${collId}`)
     },
     async pushToHistory (context, refObjId) {
       const refObj = await api.getRefObj(refObjId)
       context.commit('insertToHistory', refObj)
-    },
-    selectUserCollection (context, collId) {
-      const query = { collection: collId }
-      query.layout = getNextLayout(context.getters.layout, {
-        'collection': 'home',
-        'minorsearch': 'search',
-        'minorrefobj': 'refobj'
-      })
-      if (context.state.currRefObj) {
-        query.refobj = context.state.currRefObj.id
-      }
-      router.push({
-        path: '/smooth',
-        query: query
-      })
     },
     setCurrUser (context, user) {
       const colls = _.map(user.collections, coll => ({
@@ -136,60 +113,6 @@ export default new Vuex.Store({
     toggle (state, prop) {
       state[prop] = !state[prop]
     },
-    toHome (state) {
-      state.isSearchPaneVisible = true
-      state.isVisPaneVisible = false
-      state.visPaneState = 'minor'
-      state.isSearched = false
-      state.graph = new Graph([])
-      state.visPaneCollection = 'history'
-    },
-    toSearch (state) {
-      state.isSearchPaneVisible = true
-      state.isSearched = true
-      state.isVisPaneVisible = false
-      state.searchPaneState = 'search'
-    },
-    toRefObj (state) {
-      state.isSearchPaneVisible = true
-      state.isSearched = true
-      state.isVisPaneVisible = false
-      state.searchPaneState = 'refobj'
-    },
-    toCollection (state) {
-      state.isSearchPaneVisible = true
-      state.isSearched = true
-      state.isVisPaneVisible = true
-      state.visPaneState = 'full'
-    },
-    toMinorSearch (state) {
-      state.isSearchPaneVisible = true
-      state.isSearched = true
-      state.isVisPaneVisible = true
-      state.visPaneState = 'minor'
-      state.searchPaneState = 'search'
-    },
-    toMinorRefObj (state) {
-      state.isSearchPaneVisible = true
-      state.isSearched = true
-      state.isVisPaneVisible = true
-      state.visPaneState = 'minor'
-      state.searchPaneState = 'refobj'
-    },
-    toMajorSearch (state) {
-      state.isSearchPaneVisible = true
-      state.isSearched = true
-      state.isVisPaneVisible = true
-      state.visPaneState = 'major'
-      state.searchPaneState = 'search'
-    },
-    toMajorRefObj (state) {
-      state.isSearchPaneVisible = true
-      state.isSearched = true
-      state.isVisPaneVisible = true
-      state.visPaneState = 'major'
-      state.searchPaneState = 'refobj'
-    },
     toggleNodeSelected (state, node) {
       state.graph.toggleSelected(node)
     },
@@ -225,18 +148,6 @@ export default new Vuex.Store({
     },
     setSearchRefObjs (state, refObjs) {
       state.searchRefObjs = refObjs
-    },
-    selectUserCollection (state, collId) {
-      state.visPaneCollection =
-        _.find(state.currUser.collections, coll => coll.id === collId)
-      state.graph = state.visPaneCollection.graph
-      if (!state.isVisPaneVisible) {
-        state.isCollectionBarVisible = true
-        state.isSearchPaneVisible = true
-        state.isVisPaneVisible = true
-        state.isSearched = true
-        state.visPaneState = 'full'
-      }
     },
     createUserCollection (state, collection) {
       state.currUser.collections.push(collection)

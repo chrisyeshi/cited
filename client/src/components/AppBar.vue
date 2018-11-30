@@ -7,13 +7,13 @@
       @click="$store.commit('toggle', 'isDrawerVisible')">
     </v-toolbar-side-icon>
     <responsive-text-logo
-      v-if="!minimal && $store.getters.layout !== 'home'"
-      :full="fullLogo" @click="toHome" class="ml-2">
+      v-if="!minimal && showSearchBox"
+      :full="fullLogo" @click="$emit('toHome')" class="ml-2">
     </responsive-text-logo>
     <v-container v-if="!fullLogo" fill-height class="pa-2">
       <v-layout row fill-height justify-center align-center>
         <v-flex xs12 :md10="!minimal">
-          <slot v-if="$store.getters.layout !== 'home'"></slot>
+          <slot v-if="showSearchBox"></slot>
         </v-flex>
       </v-layout>
     </v-container>
@@ -50,7 +50,8 @@ export default {
     fullLogo: {
       type: Boolean,
       default: false
-    }
+    },
+    showSearchBox: Boolean
   },
   components: {
     SignInButton,
@@ -61,18 +62,6 @@ export default {
     trace (value) {
       console.log(value)
       return value
-    },
-    toHome () {
-      window.flipping.read()
-      this.$router.push({
-        path: '/smooth',
-        query: {
-          layout: 'home'
-        }
-      })
-      this.$nextTick(() => {
-        window.flipping.flip()
-      })
     }
   }
 }

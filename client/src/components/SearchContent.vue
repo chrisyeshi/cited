@@ -2,7 +2,7 @@
   <v-layout column v-resize="onResize">
     <v-toolbar dense flat class="pb-0" color="transparent">
       <v-layout fill-height align-end class="text-truncate">
-        <v-flex :offset-md2="!$store.state.isVisPaneVisible" class="px-2">
+        <v-flex :offset-md2="isFilterVisible" class="px-2">
           <h4>
             <span>
               {{ $store.state.searchLabel.text }}
@@ -52,7 +52,7 @@
             v-model="includeWebsites">
           </v-checkbox>
         </v-flex>
-        <v-flex :md10="!$store.state.isVisPaneVisible" class="px-2">
+        <v-flex :md10="isFilterVisible" class="px-2">
           <slot></slot>
         </v-flex>
       </v-layout>
@@ -65,6 +65,9 @@ import _ from 'lodash'
 
 export default {
   name: 'SearchContent',
+  props: {
+    showFilter: Boolean
+  },
   data () {
     return {
       windowSize: { width: 0, height: 0 },
@@ -77,7 +80,7 @@ export default {
   },
   computed: {
     isFilterVisible () {
-      if (this.$store.state.isVisPaneVisible) {
+      if (!this.showFilter) {
         return false
       }
       if (this.windowSize.width >= 960) {
@@ -86,7 +89,7 @@ export default {
       return this.isManualShowFilter
     },
     isFilterIconVisible () {
-      if (this.$store.state.isVisPaneVisible) {
+      if (!this.showFilter) {
         return true
       }
       return this.windowSize.width < 960

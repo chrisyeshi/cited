@@ -1,24 +1,20 @@
-import getNextLayout from './getnextlayout.js'
-
 export default {
   methods: {
-    showRelatedRefObjs (relation, refObj, isHistory = true) {
-      window.flipping.read()
-      const query = { search: `${relation}:${refObj.id}` }
-      query.layout = getNextLayout(this.$store.getters.layout, {
-        'minorsearch': [ 'home', 'search', 'refobj', 'minorrefobj' ],
-        'majorsearch': [ 'collection', 'majorrefobj' ]
-      })
-      if (this.$store.getters.currCollectionId >= 0) {
-        query.collection = this.$store.getters.currCollectionId
+    async showRelatedRefObjs (relation, refObj, isHistory = true) {
+      if (isHistory) {
+        await this.$store.dispatch('pushToHistory', refObj.id)
       }
-      this.$router.push({ path: '/smooth', query: query })
+      window.flipping.read()
+      const searchText = `${relation}:${refObj.id}`
+      if (this.$store.getters.currCollectionId) {
+        const collId = this.$store.getters.currCollectionId
+        this.$router.push(`/smooth/search/${searchText}/collection/${collId}`)
+      } else {
+        this.$router.push(`/smooth/search/${searchText}`)
+      }
       this.$nextTick(() => {
         window.flipping.flip()
       })
-      if (isHistory) {
-        this.$store.dispatch('pushToHistory', refObj.id)
-      }
     }
   }
 }
