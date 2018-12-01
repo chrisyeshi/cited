@@ -4,6 +4,12 @@
       <v-layout fill-height align-end>
         <v-flex :offset-md2="fluid" :md8="fluid">
           <v-layout justify-start class="text-truncate">
+            <a @click="$emit('addToCurrColl', refObj)" class="mr-4 text-no-wrap">
+              <v-icon class="pr-1" size=20>add</v-icon>
+              <span class="text-truncate">
+                Add to {{ $store.getters.currCollTitle }}
+              </span>
+            </a>
             <a @click="trace" class="mr-4 text-no-wrap">
               <v-icon class="pr-1" size=20>add</v-icon>
               <span class="text-truncate">Add to ...</span>

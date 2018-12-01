@@ -11,7 +11,8 @@
           @onClickVenue="trace"
           @onClickYear="trace"
           @onClickCiting="showRelatedRefObjs('citedBy', $event)"
-          @onClickCitedBy="showRelatedRefObjs('citing', $event)">
+          @onClickCitedBy="showRelatedRefObjs('citing', $event)"
+          @onClickAddToCurrColl="$emit('addToCurrColl', $event)">
         </search-paper>
       </v-layout>
     </search-content>

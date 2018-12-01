@@ -1,6 +1,6 @@
 export default {
   methods: {
-    async showRelatedRefObjs (relation, refObj, isHistory = true) {
+    async showRelatedRefObjs (relation, refObj, isHistory = false) {
       if (isHistory) {
         await this.$store.dispatch('pushToHistory', refObj.id)
       }

@@ -190,6 +190,10 @@ export default new Vuex.Store({
     currCollectionId: state => {
       return state.visPaneCollection.id
     },
+    currCollTitle: state => {
+      return state.visPaneCollection === 'history'
+        ? 'history' : state.visPaneCollection.title
+    },
     myCollections: state => {
       return !state.currUser
         ? []

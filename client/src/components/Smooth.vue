@@ -38,7 +38,8 @@
       <v-layout row overflow-hidden>
         <component :is="searchComponent" overflow-hidden v-bind="searchProps"
           v-show="isSearchPaneVisible" :style="searchPaneStyle"
-          @onSelectUserCollection="selectUserCollection">
+          @onSelectUserCollection="selectUserCollection"
+          @addToCurrColl="addToCurrColl">
         </component>
         <v-flex
           v-show="isVisPaneVisible" :style="visPaneStyle">
@@ -182,6 +183,10 @@ export default {
       this.$nextTick(() => {
         window.flipping.flip()
       })
+    },
+    async addToCurrColl (refObj) {
+      await this.$store.dispatch('pushToHistory', refObj.id)
+      this.layout = this.nextLayout
     }
   },
   computed: {

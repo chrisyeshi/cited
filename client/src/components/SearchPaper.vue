@@ -32,8 +32,13 @@
       <a class="text-no-wrap mr-3" @click="$emit('onClickCitedBy', refObj)">
         Cited by {{ refObj.citedByCount }}
       </a>
-      <a class="text-no-wrap mr-3" ref="addToCollection" v-show="$store.getters.isSignedIn">
-        Add to collection ...
+      <a class="text-no-wrap mr-3"
+        @click="$emit('onClickAddToCurrColl', refObj)">
+        Add to {{ $store.getters.currCollTitle }}
+      </a>
+      <a class="text-no-wrap mr-3" ref="addToCollection"
+        v-show="$store.getters.isSignedIn">
+        Add to ...
       </a>
       <v-menu offset-y :activator="addToCollection">
         <user-collection-list dense></user-collection-list>
