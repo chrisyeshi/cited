@@ -66,16 +66,6 @@ export default {
   background-color: transparent;
 }
 
-.user-collection >>> .v-subheader {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-.user-collection >>> .v-list__tile {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
 .responsive-font-size {
   text-align: center;
 }
