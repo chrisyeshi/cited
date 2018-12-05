@@ -41,13 +41,28 @@
           @onSelectUserCollection="selectUserCollection"
           @addToCurrColl="addToCurrColl">
         </component>
-        <v-flex
+        <v-flex id="vis-flex"
           v-show="isVisPaneVisible" :style="visPaneStyle">
           <vis-pane :size="visPaneSize" @onToggleSize="toggleVisPaneSize">
           </vis-pane>
         </v-flex>
       </v-layout>
     </v-content>
+    <div v-show="this.$store.state.isTour" id="popper"
+      class="theme--dark popper" style="z-index: 1000;">
+      <v-card dark max-width='400px'>
+        <v-card-title>
+          {{ currTourStepText }}
+        </v-card-title>
+        <v-card-actions>
+          <v-btn small flat @click="prevTourStep">Previous</v-btn>
+          <v-btn small flat @click="nextTourStep">
+            {{ this.$store.state.currTourStep === 6 ? 'Real-World Example' : 'Next' }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+      <span class="popper__arrow"></span>
+    </div>
   </v-app>
 </template>
 
@@ -61,6 +76,7 @@ import VisPane from './VisPane.vue'
 import ResponsiveTextLogo from './ResponsiveTextLogo.vue'
 import UserCollectionList from './UserCollectionList.vue'
 import Flipping from 'flipping/dist/flipping.web.js'
+import Popper from 'popper.js'
 import api from './api.js'
 import _ from 'lodash'
 
@@ -77,13 +93,15 @@ export default {
     UserCollectionList
   },
   props: {
-    searchText: String,
+    isTour: Boolean,
+    currTourStep: Number,
+    routeSearchText: String,
     refObjId: String,
     collId: String
   },
   data () {
     return {
-      layout: 'vis'
+      popper: null
     }
   },
   methods: {
@@ -100,12 +118,13 @@ export default {
     },
     async fetchSearch (text) {
       if (_.isNil(text)) {
-        return [ { text: 'Search Results', refObj: { title: '' } }, [] ]
+        return [ text, { text: 'Search Results', refObj: { title: '' } }, [] ]
       }
       if (_.startsWith(text, 'citing:')) {
         const refObjId = text.substring('citing:'.length)
         const { refObj, citedBys } = await api.getCitedBys(refObjId)
         return [
+          text,
           { text: 'Articles that are citing', refObj: refObj },
           citedBys
         ]
@@ -113,10 +132,10 @@ export default {
       if (_.startsWith(text, 'citedBy:')) {
         const refObjId = text.substring('citedBy:'.length)
         const { refObj, references } = await api.getReferences(refObjId)
-        return [ { text: 'References of', refObj }, references ]
+        return [ text, { text: 'References of', refObj }, references ]
       }
       const refObjs = await api.searchRefObjs(text)
-      return [ { text: 'Search Results', refObj: { title: '' } }, refObjs ]
+      return [ text, { text: 'Search Results', refObj: { title: '' } }, refObjs ]
     },
     async fetchRefObj (refObjId) {
       if (_.isNil(refObjId)) {
@@ -142,12 +161,12 @@ export default {
     },
     fetchData () {
       Promise.all([
-        this.fetchSearch(this.searchText),
+        this.fetchSearch(this.routeSearchText),
         this.fetchRefObj(this.refObjId),
         this.fetchCollection(this.collId)
-      ]).then(([ [ label, refObjs ], refObj, [ coll, graph ] ]) => {
+      ]).then(([ [ text, label, refObjs ], refObj, [ coll, graph ] ]) => {
         this.$store.commit('setState', {
-          searchText: this.searchText,
+          searchText: text,
           searchLabel: label,
           searchRefObjs: refObjs,
           currRefObj: refObj,
@@ -163,7 +182,8 @@ export default {
         this.$router.push(
           `/smooth/search/${this.searchText}/collection/${collId}`)
       } else if (this.searchComponent === 'referenceObject') {
-        this.$router.push(`/smooth/refobj/${this.refObjId}/collection/${collId}`)
+        this.$router.push(
+          `/smooth/refobj/${this.refObjId}/collection/${collId}`)
       } else {
         this.$router.push(`/smooth/collection/${collId}`)
       }
@@ -187,11 +207,48 @@ export default {
     async addToCurrColl (refObj) {
       await this.$store.dispatch('pushToHistory', refObj.id)
       this.layout = this.nextLayout
+    },
+    prevTourStep () {
+      this.$router.push(`/smooth/demo/${this.$store.state.currTourStep - 1}`)
+    },
+    nextTourStep () {
+      this.$router.push(`/smooth/demo/${this.$store.state.currTourStep + 1}`)
+    },
+    updatePopper () {
+      if (!this.$store.state.isTour) {
+        return
+      }
+      this.$nextTick(() => {
+        if (!this.popper) {
+          const referenceEl = document.querySelector(this.$store.state.tourReferenceSelector)
+          const popperEl = document.querySelector('#popper')
+          /* eslint-disable no-new */
+          this.popper = new Popper(referenceEl, popperEl, {
+            placement: this.$store.state.popperPlacement,
+            modifiers: {
+              preventOverflow: { enabled: false },
+              hide: { enabled: false }
+            }
+          })
+        } else {
+          window.popper = this.popper
+          this.popper.reference =
+            document.querySelector(this.$store.state.tourReferenceSelector)
+          this.popper.options.placement = this.$store.state.popperPlacement
+          this.popper.update()
+        }
+      })
     }
   },
   computed: {
+    isTourDialogVisible () {
+      return true
+    },
     isAppBarSearchBoxVisible () {
       return !_.isNil(this.searchText) || !_.isNil(this.refObjId) || !_.isNil(this.collId)
+    },
+    searchText () {
+      return this.$store.state.searchText
     },
     searchComponent () {
       return _.isNil(this.searchText) && _.isNil(this.refObjId) && _.isNil(this.collId)
@@ -252,6 +309,14 @@ export default {
         return 'major'
       }
     },
+    layout: {
+      get () {
+        return this.$store.state.layout
+      },
+      set (value) {
+        this.$store.commit('setState', { layout: value })
+      }
+    },
     routeLayout () {
       if (_.isNil(this.collId)) {
         return 'search'
@@ -285,18 +350,33 @@ export default {
     },
     isHistoryEmpty () {
       return this.$store.state.historyGraph.nodes.length === 0
+    },
+    currTourStepText () {
+      return this.$store.state.tourText
     }
   },
   mounted () {
     window.flipping = new Flipping()
+    this.updatePopper()
+  },
+  updated () {
+    this.updatePopper()
   },
   async created () {
-    await this.$store.dispatch('isServerSignedIn')
-    this.layout = this.nextLayout
-    this.fetchData()
+    if (this.isTour) {
+      this.$store.dispatch('toTourStep', this.currTourStep)
+    } else {
+      await this.$store.dispatch('isServerSignedIn')
+      this.layout = this.nextLayout
+      this.fetchData()
+    }
   },
   watch: {
     '$route' () {
+      if (this.isTour) {
+        this.$store.dispatch('toTourStep', this.currTourStep)
+        return
+      }
       this.layout = this.nextLayout
       this.fetchData()
     }
@@ -305,4 +385,72 @@ export default {
 </script>
 
 <style scoped>
+.popper .popper__arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 5px;
+}
+
+.popper[x-placement^="top"],
+.tooltip[x-placement^="top"] {
+    margin-bottom: 10px;
+}
+.popper[x-placement^="top"] .popper__arrow,
+.tooltip[x-placement^="top"] .tooltip-arrow {
+    border-width: 5px 5px 0 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    bottom: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.popper[x-placement^="bottom"],
+.tooltip[x-placement^="bottom"] {
+    margin-top: 10px;
+}
+.tooltip[x-placement^="bottom"] .tooltip-arrow,
+.popper[x-placement^="bottom"] .popper__arrow {
+    border-width: 0 5px 5px 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    top: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.tooltip[x-placement^="right"],
+.popper[x-placement^="right"] {
+    margin-left: 10px;
+}
+.popper[x-placement^="right"] .popper__arrow,
+.tooltip[x-placement^="right"] .tooltip-arrow {
+    border-width: 5px 5px 5px 0;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    left: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+}
+.popper[x-placement^="left"],
+.tooltip[x-placement^="left"] {
+    margin-right: 10px;
+}
+.popper[x-placement^="left"] .popper__arrow,
+.tooltip[x-placement^="left"] .tooltip-arrow {
+    border-width: 5px 0 5px 5px;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    right: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
   <v-layout fill-height>
     <v-menu
-      v-show="$store.state.currUser === null" offset-y
+      v-show="!$store.getters.isSignedIn" offset-y
       :close-on-content-click="false"
       v-model="isSignInMenuVisible">
       <v-btn slot="activator" flat key="text">SIGN IN</v-btn>

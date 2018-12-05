@@ -148,7 +148,7 @@ export class Graph {
   get relations () {
     return _.flatten(_.map(this.nodes, (node, index) => {
       const citings = node.inGraphCitings
-      return _.map(citings, citing => new Relation(citing, index))
+      return _.map(citings, citing => new Relation(citing, node.paper.id))
     }))
   }
 

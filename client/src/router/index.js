@@ -22,11 +22,19 @@ export default new Router({
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
     { path: '/smooth', component: Smooth },
-    { path: '/smooth/search/:searchText', component: Smooth, props: true },
+    { path: '/smooth/search/:routeSearchText', component: Smooth, props: true },
     { path: '/smooth/refobj/:refObjId', component: Smooth, props: true },
     { path: '/smooth/collection/:collId', component: Smooth, props: true },
-    { path: '/smooth/search/:searchText/collection/:collId', component: Smooth, props: true },
+    { path: '/smooth/search/:routeSearchText/collection/:collId', component: Smooth, props: true },
     { path: '/smooth/refobj/:refObjId/collection/:collId', component: Smooth, props: true },
+    {
+      path: '/smooth/demo/:currTourStep?',
+      component: Smooth,
+      props: (route) => ({
+        isTour: true,
+        currTourStep: parseInt(route.params.currTourStep) || 0
+      })
+    },
     { path: '*', component: NotFound }
   ]
 })

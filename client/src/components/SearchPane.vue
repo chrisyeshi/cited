@@ -6,6 +6,7 @@
           {{ `Your search did not match any documents.` }}
         </v-flex>
         <search-paper v-else v-for="(refObj, index) in refObjs" :key="index"
+          :id="`search-paper-${index}`"
           :refObj="refObj"
           @onClickTitle="showRefObjDetail"
           @onClickVenue="trace"

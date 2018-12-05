@@ -31,6 +31,7 @@
           </v-tooltip>
           <v-tooltip bottom>
             <v-icon slot="activator" class="pl-2" size=20 color="orange"
+              id="vis-common-relative"
               :disabled="!$store.state.graph.isAnyNodeSelected"
               @click="findCommonRelatives">
               device_hub
@@ -47,7 +48,7 @@
       <v-layout column align-content-start ref="cardLayout"
         :wrap="size !== 'minor'"
         style="height: calc(100vh - 135px); overflow: auto;">
-        <div v-for="year in years" :key="year">
+        <div v-for="year in years" :key="year" :id="`vis-year-${year}`">
           <h4 class="text-xs-center column-width">{{ year }}</h4>
           <v-layout
             class="pa-1" align-content-start column :style="cardListStyle">
@@ -55,6 +56,7 @@
               class="mt-1 mb-2 mx-1">
               <vis-card
                 :ref="`card-${card.paper.id}`"
+                :id="`vis-card-${card.paper.id}`"
                 slot-scope="{ hover }"
                 :class="{ 'elevation-6': hover }"
                 :card="card">
@@ -90,6 +92,11 @@ export default {
       default: true
     }
   },
+  data () {
+    return {
+      refObjEdges: []
+    }
+  },
   methods: {
     trace (value) {
       console.log(value)
@@ -110,52 +117,39 @@ export default {
     },
     toggleLevelOfDetail () {
       this.$store.commit('toggleVisPaneLOD')
-    }
-  },
-  computed: {
-    cardListStyle () {
-      return this.state === 'minor'
-        ? {}
-        : { maxHeight: 'calc(100vh - 156px)', overflow: 'auto' }
     },
-    cardsByYears () {
-      let byYears = {}
-      for (let i = 0; i < this.$store.state.graph.nodes.length; ++i) {
-        const node = this.$store.state.graph.nodes[i]
-        const year = node.paper.year
-        byYears[year] = byYears[year] || []
-        byYears[year].push(node)
-      }
-      return byYears
-    },
-    years () {
-      let yearNums = _.map(_.keys(this.cardsByYears), _.toNumber)
-      yearNums.sort()
-      return yearNums
-    },
-    refObjEdges () {
-      if (!this.$store.state.hoveredGraphNode) {
-        return []
-      }
-      const hoveredInfo = this.$store.state.hoveredGraphNode
-      const relatedNodeIds =
-        hoveredInfo.relation === 'citing'
-          ? hoveredInfo.node.inGraphCitings
-          : hoveredInfo.relation === 'citedBy'
-            ? hoveredInfo.node.inGraphCitedBys
-            : []
-      const getNodeById =
-        id =>
-          _.find(this.$store.state.graph.nodes, node => node.paper.id === id)
-      const relatedNodes = _.map(relatedNodeIds, getNodeById)
-      const nodePairs = _.map(relatedNodes, relatedNode => {
-        return {
-          citing:
-            hoveredInfo.relation === 'citing' ? relatedNode : hoveredInfo.node,
-          citedBy:
-            hoveredInfo.relation === 'citing' ? hoveredInfo.node : relatedNode
+    getRefObjEdges () {
+      let nodePairs = []
+      if (this.$store.state.showAllRelations) {
+        nodePairs =
+          _.map(this.$store.state.graph.relations, ({ citing, citedBy }) => ({
+            citing: this.$store.state.graph.getNodeById(citing),
+            citedBy: this.$store.state.graph.getNodeById(citedBy)
+          }))
+      } else {
+        if (!this.$store.state.hoveredGraphNode) {
+          return []
         }
-      })
+        const hoveredInfo = this.$store.state.hoveredGraphNode
+        const relatedNodeIds =
+          hoveredInfo.relation === 'citing'
+            ? hoveredInfo.node.inGraphCitings
+            : hoveredInfo.relation === 'citedBy'
+              ? hoveredInfo.node.inGraphCitedBys
+              : []
+        const getNodeById =
+          id =>
+            _.find(this.$store.state.graph.nodes, node => node.paper.id === id)
+        const relatedNodes = _.map(relatedNodeIds, getNodeById)
+        nodePairs = _.map(relatedNodes, relatedNode => {
+          return {
+            citing:
+              hoveredInfo.relation === 'citing' ? relatedNode : hoveredInfo.node,
+            citedBy:
+              hoveredInfo.relation === 'citing' ? hoveredInfo.node : relatedNode
+          }
+        })
+      }
       const componentPairs = _.map(nodePairs, ({ citing, citedBy }) => {
         return {
           citing: this.$refs[`card-${citing.paper.id}`][0],
@@ -180,6 +174,46 @@ export default {
         return `M${start.x} ${start.y} C ${start.x - halfGap} ${start.y - halfHeader}, ${end.x + halfGap} ${end.y + halfHeader}, ${end.x} ${end.y}`
       })
       return paths
+    }
+  },
+  computed: {
+    cardListStyle () {
+      return this.state === 'minor'
+        ? {}
+        : { maxHeight: 'calc(100vh - 156px)', overflow: 'auto' }
+    },
+    cardsByYears () {
+      let byYears = {}
+      for (let i = 0; i < this.$store.state.graph.nodes.length; ++i) {
+        const node = this.$store.state.graph.nodes[i]
+        const year = node.paper.year
+        byYears[year] = byYears[year] || []
+        byYears[year].push(node)
+      }
+      return byYears
+    },
+    years () {
+      let yearNums = _.map(_.keys(this.cardsByYears), _.toNumber)
+      yearNums.sort()
+      return yearNums
+    },
+    hoveredGraphNode () {
+      return this.$store.state.hoveredGraphNode
+    },
+    showAllRelations () {
+      return this.$store.state.showAllRelations
+    }
+  },
+  watch: {
+    hoveredGraphNode () {
+      this.$nextTick(() => {
+        this.refObjEdges = this.getRefObjEdges()
+      })
+    },
+    showAllRelations () {
+      this.$nextTick(() => {
+        this.refObjEdges = this.getRefObjEdges()
+      })
     }
   }
 }

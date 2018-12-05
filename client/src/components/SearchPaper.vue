@@ -32,7 +32,7 @@
       <a class="text-no-wrap mr-3" @click="$emit('onClickCitedBy', refObj)">
         Cited by {{ refObj.citedByCount }}
       </a>
-      <a class="text-no-wrap mr-3"
+      <a class="text-no-wrap mr-3 addToCurrColl"
         @click="$emit('onClickAddToCurrColl', refObj)">
         Add to {{ $store.getters.currCollTitle }}
       </a>

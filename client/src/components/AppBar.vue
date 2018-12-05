@@ -26,7 +26,7 @@
         </v-btn>
         <user-collection-list></user-collection-list>
       </v-menu>
-      <sign-in-button></sign-in-button>
+      <sign-in-button v-if="$store.state.enableSignIn"></sign-in-button>
     </v-toolbar-items>
   </v-toolbar>
 </template>

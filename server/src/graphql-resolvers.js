@@ -1,4 +1,4 @@
-import lorumIpsum from 'lorem-ipsum'
+import loremIpsum from 'lorem-ipsum'
 import _ from 'lodash'
 import Database from './database.js'
 
@@ -33,7 +33,7 @@ export default function () {
       paper.citedByCount = result.citations
       paper.venue =
         new Venue(paper.conference_id || paper.journal_id, 'workshop')
-      paper.abstract = paper.abstract || lorumIpsum({ count: 10 })
+      paper.abstract = paper.abstract || loremIpsum({ count: 10 })
       return new Paper(paper)
     }
 

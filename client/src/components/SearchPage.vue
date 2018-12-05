@@ -1,10 +1,13 @@
 <template>
   <v-layout column>
     <v-container style="max-width: 600px;">
-      <h1 class="pa-4 grey--text text--darken-2 responsive-font-size">
+      <h1 id="home-title"
+        class="pa-4 grey--text text--darken-2 responsive-font-size">
         Discovery Engine
       </h1>
-      <search-box solo @onSearch="onSearch"></search-box>
+      <search-box ref="searchBox" id="home-search-box" solo
+        @onSearch="onSearch">
+      </search-box>
       <v-slide-y-transition>
         <user-collection-list
           v-if="$store.getters.isSignedIn"
@@ -40,7 +43,7 @@ export default {
       }
       this.animateSearchText(text.slice(0, text.length - 1), interval, () => {
         setTimeout(() => {
-          this.$store.commit('setState', { searchText: text })
+          this.$refs.searchBox.userText = text
           if (callback) {
             callback()
           }
@@ -56,7 +59,9 @@ export default {
     }
   },
   mounted () {
-    this.animateSearchText('visualization', 20)
+    if (this.$store.state.enableInitSearchText) {
+      this.animateSearchText(this.$store.state.initSearchText, 20)
+    }
   }
 }
 </script>
