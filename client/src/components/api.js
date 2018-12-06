@@ -1,4 +1,10 @@
-import testData from './testgraphql.js'
+import testGraphQL from './testgraphql.js'
+import testData from './testdata.js'
+
+const apiEngine =
+  process.env.API_ENGINE === 'LOCAL' ? testData
+    : process.env.API_ENGINE === 'GRAPHQL' ? testGraphQL
+      : testGraphQL
 
 export class API {
   constructor (impl) {
@@ -45,4 +51,4 @@ export class API {
   }
 }
 
-export default new API(testData)
+export default new API(apiEngine)

@@ -43,7 +43,9 @@ export default {
       }
       this.animateSearchText(text.slice(0, text.length - 1), interval, () => {
         setTimeout(() => {
-          this.$refs.searchBox.userText = text
+          if (this.$refs.searchBox) {
+            this.$refs.searchBox.userText = text
+          }
           if (callback) {
             callback()
           }

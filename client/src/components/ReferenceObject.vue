@@ -130,6 +130,17 @@ import { Author } from './paper.js'
 import SearchPaper from './SearchPaper.vue'
 import showRelatedRefObjs from './showrelatedrefobjs.js'
 
+const emptyRefObj = {
+  title: '',
+  abstract: '',
+  year: 0,
+  authors: [],
+  venue: { name: '' },
+  referenceCount: 0,
+  references: [],
+  citedByCount: 0
+}
+
 export default {
   name: 'ReferenceObject',
   mixins: [
@@ -157,7 +168,7 @@ export default {
   },
   computed: {
     refObj () {
-      return this.$store.state.currRefObj
+      return this.$store.state.currRefObj || emptyRefObj
     },
     authorNames () {
       return _.map(this.refObj.authors, author => Author.stringify(author))

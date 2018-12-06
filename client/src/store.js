@@ -56,7 +56,7 @@ export default new Vuex.Store({
     visPaneState: 'minor',
     searchPaneState: 'search',
     isSearched: false,
-    searchText: '',
+    searchText: null,
     searchLabel: { text: '', refObj: { title: '' } },
     collectionTitle: '',
     // TODO: graph duplicates with visPaneCollection and historyCollection
@@ -105,21 +105,21 @@ export default new Vuex.Store({
       const collId = context.getters.currCollectionId
       const random = Date.now()
       if (collId) {
-        router.push(`/smooth/search/${text}/collection/${collId}#${random}`)
+        router.push(`/demo/search/${text}/collection/${collId}#${random}`)
       } else {
-        router.push(`/smooth/search/${text}#${random}`)
+        router.push(`/demo/search/${text}#${random}`)
       }
     },
     showRefObjDetail (context, refObjId) {
       const collId = context.getters.currCollectionId
       if (collId) {
-        router.push(`/smooth/refobj/${refObjId}/collection/${collId}`)
+        router.push(`/demo/refobj/${refObjId}/collection/${collId}`)
       } else {
-        router.push(`/smooth/refobj/${refObjId}`)
+        router.push(`/demo/refobj/${refObjId}`)
       }
     },
     selectUserCollection (context, collId) {
-      router.push(`/smooth/collection/${collId}`)
+      router.push(`/demo/collection/${collId}`)
     },
     async pushToHistory (context, refObjId) {
       const refObj = await api.getRefObj(refObjId)
@@ -338,7 +338,14 @@ export default new Vuex.Store({
           showAllRelations: true
         })
       } else if (tourStep === 7) {
-        router.push('/smooth/collection/insituvis')
+        context.commit('setState', {
+          isTour: false,
+          showAllRelations: false,
+          layout: 'vis',
+          currRefObj: null,
+          searchText: null
+        })
+        router.push('/demo/collection/insituvis')
       }
     }
   },

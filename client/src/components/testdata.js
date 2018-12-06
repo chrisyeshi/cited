@@ -1,66 +1,106 @@
+import * as data from './insitupdf.json'
 import { Graph } from './kanbangraph.js'
 import _ from 'lodash'
 
+const graph = Graph.fromTestJson({
+  papers: data.references,
+  relations: data.relations
+})
+let isSignedIn = true
+const user = {
+  id: 'user-id',
+  email: 'Guest',
+  password: 'hello, world!',
+  collections: [
+    {
+      id: 'insituvis',
+      title: 'in situ visualization',
+      nodes: _.map(graph.nodes, graphNode => ({
+        refObj: graphNode.paper,
+        inCollectionReferences: graphNode.inGraphCitings,
+        inCollectionCitedBys: graphNode.inGraphCitedBys
+      }))
+    }
+  ]
+}
+
+function getRawRefObj (refObjId) {
+  return graph.getNodeById(refObjId).paper
+}
+
+function getRawRefObjs (refObjIds) {
+  return _.map(refObjIds, getRawRefObj)
+}
+
 export default {
 
-  graph: new Graph([]),
-
-  initialize () {
-    this.initialized = fetch('/api/static/insitupdf.json')
-      .then(res => res.json())
-      .then(data => {
-        this.graph = Graph.fromTestJson({
-          papers: data.references,
-          relations: data.relations
-        })
-      })
+  async signIn (email, password) {
+    isSignedIn = true
+    return user
   },
 
-  async searchRefObjs (text, { offset, count }) {
-    await this.initialized
-    return _.map(this.graph.nodes, ({ paper }) => paper)
+  async logout () {
+    isSignedIn = false
+    return user
+  },
+
+  async me () {
+    return isSignedIn ? user : null
+  },
+
+  async searchRefObjs (text) {
+    if (text === '*') {
+      return _.map(graph.nodes, ({ paper }) => paper)
+    }
+    const words = _.words(_.toLower(text))
+    const nodes = _.filter(graph.nodes, ({ paper }) => {
+      const serialized = _.toLower(JSON.stringify(paper))
+      const hasWords = _.map(words, word => _.includes(serialized, word))
+      return !_.includes(hasWords, false)
+    })
+    return _.map(nodes, ({ paper }) => paper)
   },
 
   async getRefObj (refObjId) {
-    await this.initialized
-    const paper =
-      _.find(this.graph.nodes, node => node.paper.id === refObjId).paper
-    paper.citings =
-      _.map(
-        paper.citings,
-        ({ id }) =>
-          _.find(this.graph.nodes, node => node.paper.id === id).paper)
-    return paper
+    const rawRefObj = getRawRefObj(refObjId)
+    const refObj = {
+      ...rawRefObj,
+      referenceCount: rawRefObj.nCitings,
+      references: _.map(rawRefObj.references, getRawRefObj),
+      citedByCount: rawRefObj.nCitedBys
+    }
+    return refObj
   },
 
-  getRefObjs (refObjIds) {
-    return Promise.resolve()
-  },
-
-  async getReferences (refObjId, { offset, count }) {
-    await this.initialized
-    const paper =
-      _.find(this.graph.nodes, node => node.paper.id === refObjId).paper
+  async getReferences (refObjId) {
+    const refObj = getRawRefObj(refObjId)
+    const references = getRawRefObjs(refObj.references)
     return {
-      refObj: paper,
-      references: _.map(paper.citings, ({ id }) =>
-        _.find(this.graph.nodes, node => node.paper.id === id).paper)
+      refObj: refObj,
+      references: references
     }
   },
 
-  async getCitedBys (refObjId, { offset, count }) {
-    await this.initialized
-    const paper =
-      _.find(this.graph.nodes, node => node.paper.id === refObjId).paper
+  async getCitedBys (refObjId) {
+    const refObj = getRawRefObj(refObjId)
+    const citedBys = getRawRefObjs(refObj.citedBys)
     return {
-      refObj: paper,
-      citedBys: _.map(paper.citedBys, ({ id }) =>
-        _.find(this.graph.nodes, node => node.paper.id === id).paper)
+      refObj: refObj,
+      citedBys: citedBys
     }
   },
 
-  async getCommonRelatives (refObjIds, opt) {
-    await this.initialized
-    return _.map(this.graph.nodes, ({ paper }) => paper)
+  async getCommonRelatives (refObjIds) {
+    const refObjs = getRawRefObjs(refObjIds)
+    const commonReferences =
+      _.intersectionBy(
+        ...(_.map(refObjs, refObj => refObj.references)),
+        refObjId => refObjId)
+    const commonCitedBys =
+      _.intersectionBy(
+        ...(_.map(refObjs, refObj => refObj.citedBys)),
+        refObjId => refObjId)
+    const resRefObjIds = [ ...commonReferences, ...commonCitedBys ]
+    return getRawRefObjs(resRefObjIds)
   }
 }

@@ -8,7 +8,7 @@
           @click="$store.commit('toggle', 'isDrawerVisible')">
         </v-toolbar-side-icon>
         <v-toolbar-title class="headline ml-2"
-          @click="$router.push('/smooth')" style="cursor: pointer;">
+          @click="$router.push('/demo')" style="cursor: pointer;">
           Discover
         </v-toolbar-title>
       </v-toolbar>
@@ -55,7 +55,10 @@
           {{ currTourStepText }}
         </v-card-title>
         <v-card-actions>
-          <v-btn small flat @click="prevTourStep">Previous</v-btn>
+          <v-btn v-if="this.$store.state.currTourStep !== 0" small flat
+            @click="prevTourStep">
+            Previous
+          </v-btn>
           <v-btn small flat @click="nextTourStep">
             {{ this.$store.state.currTourStep === 6 ? 'Real-World Example' : 'Next' }}
           </v-btn>
@@ -177,15 +180,15 @@ export default {
     },
     selectUserCollection (collId) {
       if (this.searchComponent === 'searchPage') {
-        this.$router.push(`/smooth/collection/${collId}`)
+        this.$router.push(`/demo/collection/${collId}`)
       } else if (!_.isNil(this.searchText)) {
         this.$router.push(
-          `/smooth/search/${this.searchText}/collection/${collId}`)
+          `/demo/search/${this.searchText}/collection/${collId}`)
       } else if (this.searchComponent === 'referenceObject') {
         this.$router.push(
-          `/smooth/refobj/${this.refObjId}/collection/${collId}`)
+          `/demo/refobj/${this.refObjId}/collection/${collId}`)
       } else {
-        this.$router.push(`/smooth/collection/${collId}`)
+        this.$router.push(`/demo/collection/${collId}`)
       }
     },
     toggleVisPaneSize () {
@@ -199,7 +202,7 @@ export default {
     },
     toHome () {
       window.flipping.read()
-      this.$router.push('/smooth')
+      this.$router.push('/demo')
       this.$nextTick(() => {
         window.flipping.flip()
       })
@@ -209,10 +212,10 @@ export default {
       this.layout = this.nextLayout
     },
     prevTourStep () {
-      this.$router.push(`/smooth/demo/${this.$store.state.currTourStep - 1}`)
+      this.$router.push(`/tour/${this.$store.state.currTourStep - 1}`)
     },
     nextTourStep () {
-      this.$router.push(`/smooth/demo/${this.$store.state.currTourStep + 1}`)
+      this.$router.push(`/tour/${this.$store.state.currTourStep + 1}`)
     },
     updatePopper () {
       if (!this.$store.state.isTour) {
@@ -248,16 +251,14 @@ export default {
       return !_.isNil(this.searchText) || !_.isNil(this.refObjId) || !_.isNil(this.collId)
     },
     searchText () {
-      return this.$store.state.searchText
+      return this.routeSearchText || this.$store.state.searchText
     },
     searchComponent () {
       return _.isNil(this.searchText) && _.isNil(this.refObjId) && _.isNil(this.collId)
         ? 'searchPage'
-        : !_.isNil(this.collId)
+        : !_.isNil(this.searchText)
           ? 'searchPane'
-          : !_.isNil(this.searchText)
-            ? 'searchPane'
-            : 'referenceObject'
+          : 'referenceObject'
     },
     searchProps () {
       if (this.searchComponent === 'searchPane') {
@@ -363,10 +364,10 @@ export default {
     this.updatePopper()
   },
   async created () {
+    await this.$store.dispatch('isServerSignedIn')
     if (this.isTour) {
       this.$store.dispatch('toTourStep', this.currTourStep)
     } else {
-      await this.$store.dispatch('isServerSignedIn')
       this.layout = this.nextLayout
       this.fetchData()
     }

@@ -8,9 +8,9 @@ export default {
       const searchText = `${relation}:${refObj.id}`
       if (this.$store.getters.currCollectionId) {
         const collId = this.$store.getters.currCollectionId
-        this.$router.push(`/smooth/search/${searchText}/collection/${collId}`)
+        this.$router.push(`/demo/search/${searchText}/collection/${collId}`)
       } else {
-        this.$router.push(`/smooth/search/${searchText}`)
+        this.$router.push(`/demo/search/${searchText}`)
       }
       this.$nextTick(() => {
         window.flipping.flip()

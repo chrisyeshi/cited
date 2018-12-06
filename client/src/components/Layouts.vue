@@ -9,7 +9,7 @@
         <router-link to="/contail">Contail</router-link>
       </v-list-tile>
       <v-list-tile>
-        <router-link to="/smooth">Smooth</router-link>
+        <router-link to="/demo">Smooth</router-link>
       </v-list-tile>
     </v-list>
   </v-container>
