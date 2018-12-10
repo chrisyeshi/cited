@@ -73,18 +73,21 @@
       </section>
       <section id="sign-up" class="pb-5 grey darken-3 white--text">
         <v-container>
-          <h1 class="mt-2 text--white">Sign up to get product notification:</h1>
-          <!-- <p class="mt-3 subheading">Sign up to get product notification.</p> -->
-          <v-text-field dark solo outline hide-details single-line
-            class="mt-2"
-            v-model="email"
-            name="email"
-            label="Email"
-            placeholder="im@gmail.com"
-            id="signUp"
-            append-icon="send"
-            @click:append="send"
-          ></v-text-field>
+          <h1 class="mt-2 text--white">Sign up for product update:</h1>
+          <v-form class="mt-2"
+            :action="`https://formspree.io/${toEmail}`" method="POST">
+            <v-layout wrap>
+              <v-flex xs12 sm10>
+                <v-text-field dark outline hide-details single-line
+                  v-model="email" name="email" label="Email"
+                  placeholder="im@email.com" id="email" required>
+                </v-text-field>
+              </v-flex>
+              <v-flex xs12 sm2 :pl-3="$vuetify.breakpoint.smAndUp">
+                <v-btn large block type="submit">Submit</v-btn>
+              </v-flex>
+            </v-layout>
+          </v-form>
         </v-container>
       </section>
     </v-content>
@@ -109,11 +112,13 @@ export default {
     getImgUrl (img) {
       return require('../assets/' + img)
     },
-    send () {
-      console.log(this.email)
-    },
     scrollToTop () {
       window.scrollTo({ top: 0 })
+    }
+  },
+  computed: {
+    toEmail () {
+      return process.env.LANDING_EMAIL
     }
   },
   mounted () {
