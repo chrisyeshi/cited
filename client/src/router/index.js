@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import LandingPage from '@/components/LandingPage'
 import Kanban from '@/components/Kanban'
 import Contail from '@/components/Contail'
+import Referson from '@/components/Referson'
 import Smooth from '@/components/Smooth'
 import NotFound from '@/components/NotFound'
 import Resource from 'vue-resource'
@@ -42,6 +43,7 @@ export default new Router({
     },
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
+    { path: '/referson', component: Referson },
     { path: '*', component: NotFound }
   ]
 })
