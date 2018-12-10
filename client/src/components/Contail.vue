@@ -156,14 +156,9 @@ export default {
     source: String
   },
   created: function () {
-    // this.$http.get('/static/flare.json').then(function (res) {
-    //   console.log(res.body)
-    //   Circo(res.body, '#vis-context')
-    // })
     this.$http.get('/api/static/insitupdf.json').then(function (res) {
       var data = res.body
       var refs = data.references
-      console.log(refs)
       // this.papers = refs.sort((a, b) => a.year - b.year)
       this.papers = refs
       let c = Circo({
