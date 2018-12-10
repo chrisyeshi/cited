@@ -16,6 +16,7 @@ Vue.use(Vuetify)
 
 export default new Router({
   mode: 'history',
+  base: process.env.BASE_URL || '/',
   routes: [
     { path: '/', component: LandingPage },
     { path: '/demo', component: Smooth },
