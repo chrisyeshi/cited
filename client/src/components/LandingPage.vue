@@ -72,7 +72,7 @@
         </v-container>
       </section>
       <section id="sign-up" class="pb-5 grey darken-3 white--text">
-        <v-container>
+        <v-container grid-list-md>
           <h1 class="mt-2 text--white">Sign up for product update:</h1>
           <v-form class="mt-2"
             :action="`https://formspree.io/${toEmail}`" method="POST">
@@ -83,7 +83,7 @@
                   placeholder="im@email.com" id="email" required>
                 </v-text-field>
               </v-flex>
-              <v-flex xs12 sm2 :pl-3="$vuetify.breakpoint.smAndUp">
+              <v-flex xs12 sm2>
                 <v-btn large block type="submit">Submit</v-btn>
               </v-flex>
             </v-layout>
