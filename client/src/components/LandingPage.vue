@@ -21,7 +21,7 @@
             <!-- In particular, there is no easy way to traverse multiple papers' references/citations to discover new works. Our solution allows researchers to intuitively traverse the vast network of research papers by utilizing graph visualization techniques and set theory. Furthermore, we aim to bring the research community together by allowing researchers to create and share paper collections as well as anonymous paper reviews. -->
           </p>
           <div class="text-xs-center">
-            <v-btn large color="success" to="/tour/0">Demo</v-btn>
+            <v-btn large color="secondary" to="/tour/0">Demo</v-btn>
             <v-btn large color="error" href="#sign-up">Sign Up</v-btn>
           </div>
         </v-container>

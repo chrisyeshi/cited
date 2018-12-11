@@ -101,6 +101,9 @@ export default {
         ...(_.map(refObjs, refObj => refObj.citedBys)),
         refObjId => refObjId)
     const resRefObjIds = [ ...commonReferences, ...commonCitedBys ]
-    return getRawRefObjs(resRefObjIds)
+    return {
+      refObjs: refObjs,
+      relatives: getRawRefObjs(resRefObjIds)
+    }
   }
 }

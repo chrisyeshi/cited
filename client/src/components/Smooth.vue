@@ -137,6 +137,16 @@ export default {
         const { refObj, references } = await api.getReferences(refObjId)
         return [ text, { text: 'References of', refObj }, references ]
       }
+      if (_.startsWith(text, 'common:')) {
+        const refObjIdStr = text.substring('common:'.length)
+        const refObjIds = _.split(refObjIdStr, '&')
+        const { refObjs, relatives } = await api.getCommonRelatives(refObjIds)
+        return [
+          text,
+          { text: 'Common relatives of', refObj: refObjs },
+          relatives
+        ]
+      }
       const refObjs = await api.searchRefObjs(text)
       return [ text, { text: 'Search Results', refObj: { title: '' } }, refObjs ]
     },
@@ -169,6 +179,8 @@ export default {
         this.fetchCollection(this.collId)
       ]).then(([ [ text, label, refObjs ], refObj, [ coll, graph ] ]) => {
         this.$store.commit('setState', {
+          isTour: false,
+          showAllRelations: false,
           searchText: text,
           searchLabel: label,
           searchRefObjs: refObjs,
@@ -225,16 +237,14 @@ export default {
         if (!this.popper) {
           const referenceEl = document.querySelector(this.$store.state.tourReferenceSelector)
           const popperEl = document.querySelector('#popper')
-          /* eslint-disable no-new */
           this.popper = new Popper(referenceEl, popperEl, {
             placement: this.$store.state.popperPlacement,
             modifiers: {
-              preventOverflow: { enabled: false },
+              preventOverflow: { enabled: true, boundariesElement: window },
               hide: { enabled: false }
             }
           })
         } else {
-          window.popper = this.popper
           this.popper.reference =
             document.querySelector(this.$store.state.tourReferenceSelector)
           this.popper.options.placement = this.$store.state.popperPlacement
