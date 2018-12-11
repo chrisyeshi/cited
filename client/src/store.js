@@ -96,10 +96,9 @@ export default new Vuex.Store({
       }
     },
     async showCommonRelatives (context, refObjs) {
-      const relatives =
-        await api.getCommonRelatives(_.map(refObjs, ({ id }) => id))
-      const label = { text: 'Common relatives of', refObj: refObjs }
-      context.commit('setSearchResults', { label: label, refObjs: relatives })
+      const refObjIds = _.map(refObjs, refObj => refObj.id)
+      const text = _.join(refObjIds, '&')
+      context.dispatch('search', 'common:' + text)
     },
     search (context, text) {
       const collId = context.getters.currCollectionId
