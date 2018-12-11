@@ -7,54 +7,72 @@
         <v-btn flat href="#sign-up">Sign Up</v-btn>
       </v-toolbar-items>
     </v-toolbar>
-    <v-content>
+    <v-content fluid>
       <section class="mb-5">
         <v-container>
           <h1 class="mt-4 responsive-font-size">
             Discovery Engine
           </h1>
           <h3 class="headline text-xs-center">
-            A research paper discovery tool that fits researchers’ habits.
+            A paper discovery and management tool for researchers helping researchers.
           </h3>
-          <p class="mt-4 subheading">
-            Researchers are proposing cutting-edge ideas to transform the human race everyday. However, the software for discovering and communicating new research is becoming obsolete. The biggest problem we have with the existing tools is that they are not designed around researchers' habits.
-            <!-- In particular, there is no easy way to traverse multiple papers' references/citations to discover new works. Our solution allows researchers to intuitively traverse the vast network of research papers by utilizing graph visualization techniques and set theory. Furthermore, we aim to bring the research community together by allowing researchers to create and share paper collections as well as anonymous paper reviews. -->
-          </p>
-          <div class="text-xs-center">
-            <v-btn large color="secondary" to="/tour/0">Demo</v-btn>
+          <div class="text-xs-center" style="margin-bottom: 1em;">
+            <v-btn large color="success" to="/tour/0">Demo</v-btn>
             <v-btn large color="error" href="#sign-up">Sign Up</v-btn>
           </div>
-        </v-container>
-      </section>
-      <v-divider></v-divider>
-      <section style="height: 350px; overflow: hidden; display: flex; justify-content: center;">
-        <img ref="discovery" class="translateX" src="../assets/graph-five.png"
-          style="height: 100%;">
-      </section>
-      <v-divider></v-divider>
-      <section class="mb-5">
-        <v-container>
-          <h1 class="mt-2">Research Discovery</h1>
-          <p class="mt-3 subheading">
-            Other than a general search engine for research works, we believe we can further utilize the relationships between papers, namely references and citations. By incoporating graph visualization, we aim to allow researchers to easily traverse the citation network of papers, which we believe many researchers have been doing manually.
-          </p>
+          <v-divider></v-divider>
+          <section style="height: 350px; overflow: hidden; display: flex; justify-content: center;">
+            <img ref="discovery" class="translateX" src="../assets/graph-five.png"
+              style="height: 100%;">
+          </section>
+          <v-layout row wrap align-center>
+            <v-flex xs12 md4>
+              <v-card class="elevation-0 transparent">
+                <v-card-title primary-title class="layout justify-center">
+                  <div class="headline text-xs-center">Researcher-Centric Design</div>
+                </v-card-title>
+                <v-card-text>
+                  Researchers are proposing cutting-edge ideas to transform the human race everyday.
+                  However, current search engines and research assistant tools are not designed around researchers' habits,
+                  in which researchers often need to manually traverse references and citations of interested papers.
+                  Here we aim to provide a highly usable tool for researchers to easily discover the most relevant papers to their research tasks.
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs12 md4>
+              <v-card class="elevation-0 transparent">
+                <v-card-title primary-title class="layout justify-center">
+                  <div class="headline text-xs-center">Smart Management</div>
+                </v-card-title>
+                <v-card-text>
+                  Our tool can help researchers to effectively collect, organize and management related papers for different research topics.
+                  For each collections of papers created by researchers, our tool automatically arrange and visualize the papers and their relationships in meaningful graphs.
+                  Graph visualization allows people to see the inner relationships and identify the most important or influential papers.
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs12 md4>
+              <v-card class="elevation-0 transparent">
+                <v-card-title primary-title class="layout justify-center">
+                  <div class="headline">Collaborative Discovery</div>
+                </v-card-title>
+                <v-card-text>
+                  We aim to bring the research community together to help junior researchers.
+                  Researchers can share these collections with their peers and also generate references from these collections to help them write papers.
+                  We believe the community can help by providing anonymous reviews and comments.
+                  Together, we can build a strong community and a database with the most accurate meta data of research papers.
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
         </v-container>
       </section>
       <v-divider></v-divider>
       <section>
-        <v-parallax height=350 class="community"
+        <!-- <v-parallax height=350 class="community"
           :src="getImgUrl('hans-peter-gauster-1024-unsplash.jpg')">
-        </v-parallax>
+        </v-parallax> -->
         <!-- Photo by Hans-Peter Gauster on Unsplash -->
-      </section>
-      <v-divider></v-divider>
-      <section class="mb-5">
-        <v-container>
-          <h1 class="mt-2">Community</h1>
-          <p class="mt-3 subheading">
-            We aim to bring the research community together to help junior researchers. We believe the community can help by providing anonymous reviews and comments. Furthermore, we aim to collaboratively build a database with the most accurate meta data of research papers. This database can then be used as the groundtruth for citing research works.
-          </p>
-        </v-container>
       </section>
       <v-divider></v-divider>
       <section>
@@ -65,12 +83,14 @@
       <v-divider></v-divider>
       <section class="mb-5">
         <v-container>
-          <h1 class="mt-2">Manage Paper Collections</h1>
+          <h1 class="mt-2">Why We Build This Tool</h1>
           <p class="mt-3 subheading">
-            Researchers can create paper collections of their liking. Graph visualization allows people to see the inner relationships of the papers. Researchers can share these collections with their peers and also generate references from these collections to help them write papers.
+            We are so used to looking for new papers based on the references/citations of the papers we found interesting. However, it is surprising that no tool is providing this functionality.
+            After we read a paper, we often have questions, comments, and even new ideas that we want to discuss with other researchers. However, there isn’t a place for this.
           </p>
         </v-container>
       </section>
+      <v-divider></v-divider>
       <section id="sign-up" class="pb-5 grey darken-3 white--text">
         <v-container grid-list-md>
           <h1 class="mt-2 text--white">Sign up for product update:</h1>
