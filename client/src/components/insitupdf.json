@@ -210,6 +210,34 @@
         "year": 2010,
         "citationCount": 162,
         "authors": "F. Zheng, H. Abbasi, C. Docan, J. Lofstead, Q. Liu, S. Klasky, M. Parashar, N. Podhorszki, K. Schwan, and M. Wolf"
+    }, {
+        "title": "Canopus: A Paradigm Shift Towards Elastic Extreme-Scale Data Analytics on HPC Storage",
+        "abstract": "Scientific simulations on high performance computing (HPC) platforms generate large quantities of data. To bridge the widening gap between compute and I/O, and enable data to be more efficiently stored and analyzed, simulation outputs need to be refactored, reduced, and appropriately mapped to storage tiers. However, a systematic solution to support these steps has been lacking on the current HPC software ecosystem. To that end, this paper develops Canopus, a progressive JPEGlike data management scheme for storing and analyzing big scientific data. It co-designs the data decimation, compression and data storage, taking the hardware characteristics of each storage tier into considerations. With reasonably low overhead, our approach refactors simulation data into a much smaller, reduced-accuracy base dataset, and a series of deltas that is used to augment the accuracy if needed. The base dataset and deltas are compressed and written to multiple storage tiers. Data saved on different tiers can then be selectively retrieved to restore the level of accuracy that satisfies data analytics. Thus, Canopus provides a paradigm shift towards elastic data analytics and enables end users to make trade-offs between analysis speed and accuracy on-the-fly. We evaluate the impact of Canopus on unstructured triangular meshes, a pervasive data model used by scientific modeling and simulations. In particular, we demonstrate the progressive data exploration of Canopus using the “blob detection” use case on the fusion simulation data.",
+        "journel": "CLUSTER",
+        "year": 2017,
+        "citationCount": 1,
+        "authors": "Tao Lu, Eric Suchyta, Dave Pugmire, Jong Choi, Scott Klasky, Qing Liu, Norbert Podhorszki, Mark Ainsworth, and Matthew Wolf"
+    }, {
+        "title": "Massively Parallel Volume Rendering Using 2-3 Swap Image Compositing",
+        "abstract": "The ever-increasing amounts of simulation data produced by scientists demand high-end parallel visualization capability. However, image compositing, which requires interprocessor communication, is often the bottleneck stage for parallel rendering of large volume data sets. Existing image compositing solutions either incur a large number of messages exchanged among processors (such as the direct send method), or limit the number of processors that can be effectively utilized (such as the binary swap method). We introduce a new image compositing algorithm, called 2-3 swap, which combines the flexibility of the direct send method and the optimality of the binary swap method. The 2-3 swap algorithm allows an arbitrary number of processors to be used for compositing, and fully utilizes all participating processors throughout the course of the compositing. We experiment with this image compositing solution on a supercomputer with thousands of processors, and demonstrate its great flexibility as well as scalability.",
+        "journal": "SC",
+        "year": 2008,
+        "citationCount": 11,
+        "authors": "Hongfeng Yu, Chaoli Wang, and Kwan-Liu Ma"
+    }, {
+        "title": "Efficient Sort-Last Rendering Using Compression-Based Image Compositing",
+        "abstract": "State of the art scientific simulations are currently working with data set sizes on the order of a billion cells. Parallel rendering is a promising approach for interactively visualizing multiple isosurface variables from data sets of this magnitude. In sort-last rendering, each processor creates a depth buffered image of its assigned objects. All processors’ images are composited together to create a final result. Improving the efficiency of this compositing step is key to interactive parallel rendering. This paper presents a compression-based image compositing algorithm which can provide significant savings in both communication and compositing costs.",
+        "journal": "EG",
+        "year": 1998,
+        "citationCount": 68,
+        "authors": "James Ahrens, and James Painter"
+    }, {
+        "title": "Explorable images for visualizing volume data",
+        "abstract": "We present a technique which automatically converts a small number of single-view volume rendered images of the same 3D data set into a compact representation of that data set. This representation is a multi-layered image, or an explorable image, which enables interactive exploration of volume data in transfer function space without accessing the original data. We achieve this by automatically extracting layers depicted in composited images. The layers can then be recombined in different ways to simulate opacity changes and recoloring of individual features. Our results demonstrate that explorable images are especially useful when the volume data is too large for interactive exploration, takes too long to render due to the underlying mesh structure or desired shading effect, or if the original volume data is not available. Explorable images can offer real-time image-based interaction as a preview mechanism for remote visualization or visualization of large volume data on low-end hardware, within a mobile device, or a Web browser.",
+        "journal": "PacificVis",
+        "year": 2010,
+        "citationCount": 10,
+        "authors": "Anna Tikhonova, Carlos D. Correa, and Kwan-Liu Ma"
     }
 ],
 "relations": [
@@ -432,6 +460,24 @@
     }, {
         "citedBy": 13,
         "citing": 18
+    }, {
+        "citedBy": 29,
+        "citing": 2
+    }, {
+        "citedBy": 21,
+        "citing": 30
+    }, {
+        "citedBy": 30,
+        "citing": 31
+    }, {
+        "citedBy": 27,
+        "citing": 31
+    }, {
+        "citedBy": 21,
+        "citing": 32
+    }, {
+        "citedBy": 32,
+        "citing": 31
     }
 ]
 }
