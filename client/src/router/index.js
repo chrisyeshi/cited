@@ -2,14 +2,15 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import Router from 'vue-router'
 import LandingPage from '@/components/LandingPage'
-import Kanban from '@/components/Kanban'
-import Contail from '@/components/Contail'
-import Referson from '@/components/Referson'
-import Smooth from '@/components/Smooth'
 import NotFound from '@/components/NotFound'
 import Resource from 'vue-resource'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
+
+const Kanban = () => import('@/components/Kanban')
+const Contail = () => import('@/components/Contail')
+const Referson = () => import('@/components/Referson')
+const Smooth = () => import('@/components/Smooth')
 
 Vue.use(Router)
 Vue.use(Resource)
