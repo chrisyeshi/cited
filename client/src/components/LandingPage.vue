@@ -36,7 +36,8 @@
             <v-flex xs12 md6 style="height: 350px; overflow: hidden; display: flex; justify-content: center; position: relative;">
               <img ref="discovery" class="translateX"
                 src="../assets/graph-eight.png" style="height: 100%;">
-              <div class="fade-right hidden-sm-and-down"></div>
+              <div class="hidden-sm-and-down" :style="fadeLeft"></div>
+              <div class="hidden-sm-and-down" :style="fadeRight"></div>
             </v-flex>
             <v-flex xs12 md6 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
@@ -54,7 +55,8 @@
             <v-flex xs12 md6 order-md2 style="height: 350px; overflow: hidden; display: flex; align-content: center; position: relative;">
               <img src="../assets/comments-narrow.jpg" ref="community"
                 class="translateY" style="position: absolute; width: 100%">
-              <div class="fade-top-bottom hidden-sm-and-down"></div>
+              <div class="hidden-sm-and-down" :style="fadeTop"></div>
+              <div class="hidden-sm-and-down" :style="fadeBottom"></div>
             </v-flex>
             <v-flex xs12 md6 order-md1 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
@@ -73,7 +75,8 @@
               <v-parallax height=350 class="collection"
                 :src="getImgUrl('graph-insitu.png')">
               </v-parallax>
-              <div class="fade-top-bottom"></div>
+              <div class="hidden-sm-and-down" :style="fadeTop"></div>
+              <div class="hidden-sm-and-down" :style="fadeBottom"></div>
             </v-flex>
             <v-flex xs12 md6 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
@@ -120,20 +123,55 @@ export default {
   },
   data () {
     return {
-      email: ''
+      email: '',
+      bgRgbArr: [250, 250, 250]
     }
   },
   methods: {
     getImgUrl (img) {
       return require('../assets/' + img)
+    },
+    fadeEdge (side) {
+      const fadeLength = '8px'
+      const [ r, g, b ] = this.bgRgbArr
+      const rgbaTransparent = `rgba(${r}, ${g}, ${b}, 0.0)`
+      const rgbaOpaque = `rgba(${r}, ${g}, ${b}, 1.0)`
+      const style = {
+        position: 'absolute',
+        display: 'block',
+        width: side === 'left' || side === 'right' ? fadeLength : '100%',
+        height: side === 'top' || side === 'bottom' ? fadeLength : '100%',
+        backgroundImage:
+          `linear-gradient(to ${side}, ${rgbaTransparent} 0%, ${rgbaOpaque} 100%)`
+      }
+      style[side] = '0px'
+      return style
     }
   },
   computed: {
     toEmail () {
       return process.env.LANDING_EMAIL
+    },
+    fadeLeft () {
+      return this.fadeEdge('left')
+    },
+    fadeRight () {
+      return this.fadeEdge('right')
+    },
+    fadeTop () {
+      return this.fadeEdge('top')
+    },
+    fadeBottom () {
+      return this.fadeEdge('bottom')
     }
   },
   mounted () {
+    const bgRgbStr =
+      getComputedStyle(document.querySelector('.application')).backgroundColor
+    const rgbStr =
+      bgRgbStr.substring(bgRgbStr.indexOf('(') + 1, bgRgbStr.indexOf(')'))
+    const rgbStrs = rgbStr.split(',')
+    this.bgRgbArr = rgbStrs.map(str => parseInt(str.trim()))
     const discovery = basicScroll.create({
       elem: this.$refs.discovery,
       from: 'top-bottom',
@@ -174,35 +212,6 @@ export default {
 
 .action-buttons-container .v-btn {
   width: 130px;
-}
-
-.fade-right {
-  position: absolute;
-  right: 0px;
-  display: block;
-  width: 1%;
-  height: 100%;
-  background-image:
-    linear-gradient(
-      to right,
-      rgba(250, 250, 250, 0.0),
-      rgba(250, 250, 250, 1.0)
-      100%);
-}
-
-.fade-top-bottom {
-  position: absolute;
-  top: 0px;
-  display: block;
-  width: 100%;
-  height: 100%;
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(250, 250, 250, 1.0) 0%,
-      rgba(250, 250, 250, 0.0) 2%,
-      rgba(250, 250, 250, 0.0) 98%,
-      rgba(250, 250, 250, 1.0) 100%);
 }
 
 @media screen and (min-width: 1080px) {
