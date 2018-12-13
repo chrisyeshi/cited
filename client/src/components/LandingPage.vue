@@ -21,7 +21,7 @@
                 A new paper discovery experience, for researchers, by researchers.
               </h3>
             </v-flex>
-            <v-flex class="mt-4 text-xs-center">
+            <v-flex class="mt-4 text-xs-center action-buttons-container">
               <v-btn large dark color="cyan darken-4" to="/tour/0">Demo</v-btn>
               <v-btn large color="error" href="#sign-up">Sign Up</v-btn>
             </v-flex>
@@ -171,6 +171,10 @@ export default {
 .container {
   max-width: 1185px;
   padding: 0px;
+}
+
+.action-buttons-container .v-btn {
+  width: 130px;
 }
 
 .fade-right {
