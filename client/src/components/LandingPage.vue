@@ -1,10 +1,10 @@
 <template>
   <v-app>
     <v-toolbar app flat scroll-off-screen inverted-scroll>
-      <responsive-text-logo full @click="scrollToTop"></responsive-text-logo>
+      <responsive-text-logo full @click="$vuetify.goTo(0)"></responsive-text-logo>
       <v-toolbar-items>
         <v-btn flat to="/tour/0">Demo</v-btn>
-        <v-btn flat href="#sign-up">Sign Up</v-btn>
+        <v-btn flat @click="$vuetify.goTo('#sign-up')">Sign Up</v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
@@ -23,7 +23,9 @@
             </v-flex>
             <v-flex class="mt-4 text-xs-center action-buttons-container">
               <v-btn large dark color="cyan darken-4" to="/tour/0">Demo</v-btn>
-              <v-btn large color="error" href="#sign-up">Sign Up</v-btn>
+              <v-btn large color="error" @click="$vuetify.goTo('#sign-up')">
+                Sign Up
+              </v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -124,9 +126,6 @@ export default {
   methods: {
     getImgUrl (img) {
       return require('../assets/' + img)
-    },
-    scrollToTop () {
-      window.scrollTo({ top: 0 })
     }
   },
   computed: {
