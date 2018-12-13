@@ -48,7 +48,7 @@
         </v-flex>
       </v-layout>
     </v-content>
-    <div v-show="this.$store.state.isTour" id="popper"
+    <div v-show="isTour" id="popper"
       class="theme--dark popper" style="z-index: 1000;">
       <v-card dark max-width='400px'>
         <v-card-title>
@@ -83,6 +83,8 @@ import Popper from 'popper.js'
 import api from './api.js'
 import _ from 'lodash'
 
+let popper = null
+
 export default {
   name: 'Smooth',
   components: {
@@ -101,11 +103,6 @@ export default {
     routeSearchText: String,
     refObjId: String,
     collId: String
-  },
-  data () {
-    return {
-      popper: null
-    }
   },
   methods: {
     trace (value) {
@@ -230,14 +227,11 @@ export default {
       this.$router.push(`/tour/${this.$store.state.currTourStep + 1}`)
     },
     updatePopper () {
-      if (!this.$store.state.isTour) {
-        return
-      }
-      this.$nextTick(() => {
-        if (!this.popper) {
+      if (this.isTour) {
+        if (!popper) {
           const referenceEl = document.querySelector(this.$store.state.tourReferenceSelector)
           const popperEl = document.querySelector('#popper')
-          this.popper = new Popper(referenceEl, popperEl, {
+          popper = new Popper(referenceEl, popperEl, {
             placement: this.$store.state.popperPlacement,
             modifiers: {
               preventOverflow: { enabled: true, boundariesElement: window },
@@ -245,12 +239,17 @@ export default {
             }
           })
         } else {
-          this.popper.reference =
-            document.querySelector(this.$store.state.tourReferenceSelector)
-          this.popper.options.placement = this.$store.state.popperPlacement
-          this.popper.update()
+          popper.reference =
+              document.querySelector(this.$store.state.tourReferenceSelector)
+          popper.options.placement = this.$store.state.popperPlacement
+          popper.update()
         }
-      })
+      } else {
+        if (popper) {
+          popper.destroy()
+          popper = null
+        }
+      }
     }
   },
   computed: {
@@ -374,12 +373,14 @@ export default {
     this.updatePopper()
   },
   async created () {
-    await this.$store.dispatch('isServerSignedIn')
+    const signedIn = this.$store.dispatch('isServerSignedIn')
     if (this.isTour) {
       this.$store.dispatch('toTourStep', this.currTourStep)
     } else {
-      this.layout = this.nextLayout
-      this.fetchData()
+      signedIn.then(() => {
+        this.layout = this.nextLayout
+        this.fetchData()
+      })
     }
   },
   watch: {

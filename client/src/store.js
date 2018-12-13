@@ -83,7 +83,8 @@ export default new Vuex.Store({
     enableUserCollectionDropdown: false,
     enableDrawer: true,
     enableDrawerTemporary: false,
-    enableInitSearchText: true
+    enableInitSearchText: true,
+    enableCreateCollection: false
   },
   actions: {
     toggleVisPaneState (context) {
@@ -153,7 +154,7 @@ export default new Vuex.Store({
         context.dispatch('setCurrUser', user)
       }
     },
-    async toTourStep (context, tourStep) {
+    toTourStep (context, tourStep) {
       if (tourStep === 0) {
         context.commit('setState', {
           isTour: true,

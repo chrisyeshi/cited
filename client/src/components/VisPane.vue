@@ -8,19 +8,23 @@
             {{ size === 'minor' ? 'chevron_left' : 'chevron_right' }}
           </v-icon>
           <v-tooltip bottom v-if="$store.state.visPaneCollection === 'history'"
-            :disabled="!$store.getters.isSignedIn">
+            :disabled="isCreateCollectionTooltipDisabled">
             <h4 class="body-2 d-flex align-center" slot="activator"
-              style="cursor: pointer;"
-              @click="createVisPaneCollection">
+              v-on="enableCreateCollection ? { click: createVisPaneCollection } : {}">
               History
-              <v-icon v-if="$store.getters.isSignedIn" small class="pl-1">
+              <v-icon v-if="!isCreateCollectionTooltipDisabled" small
+                class="pl-1">
                 add
               </v-icon>
             </h4>
             <span>Save to new collection</span>
           </v-tooltip>
+          <h4 v-else-if="!enableCreateCollection"
+            class="body-2 d-flex align-center">
+            {{ $store.state.visPaneCollection.title }}
+          </h4>
           <input v-else type="text" placeholder="Collection name" @change="$store.commit('setVisPaneCollectionName', $event.target.value)" :value="$store.state.visPaneCollection.title" style="flex: 1;">
-          <v-spacer v-if="$store.state.visPaneCollection === 'history'">
+          <v-spacer v-if="$store.state.visPaneCollection === 'history' || !enableCreateCollection">
           </v-spacer>
           <v-tooltip bottom>
             <v-icon slot="activator" class="pl-3" size=20
@@ -202,6 +206,15 @@ export default {
     },
     showAllRelations () {
       return this.$store.state.showAllRelations
+    },
+    enableCreateCollection () {
+      return this.$store.state.enableCreateCollection
+    },
+    isCreateCollectionTooltipDisabled () {
+      return !this.isSignedIn || !this.enableCreateCollection
+    },
+    isSignedIn () {
+      return this.$store.getters.isSignedIn
     }
   },
   watch: {
