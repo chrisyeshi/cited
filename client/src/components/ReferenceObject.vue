@@ -91,13 +91,15 @@
               <v-layout row align-center class="mb-3">
                 <v-icon xLarge>face</v-icon>
                 <div class="ml-1 caption grey--text text--darken-1">
-                  <div>Chris</div>
-                  <div>Tuesday, October 30, 2018</div>
+                  <div>Thomas Edison</div>
+                  <div>Monday, January 14, 1889</div>
                 </div>
               </v-layout>
-              <div class="body-1">This paper looks really interesting! However, the user study can be done in a different way, which I think can significantly improve the paper.</div>
+              <div class="body-1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </div>
               <v-layout row align-center class="mt-2 body-1">
-                <a>like (523)</a><span class="mx-2">-</span><a>reply</a>
+                <a>reply</a>
               </v-layout>
             </div>
           </v-card-title>
@@ -108,13 +110,72 @@
               <v-layout row align-center class="mb-3">
                 <v-icon xLarge>face</v-icon>
                 <div class="ml-1 caption grey--text text--darken-1">
-                  <div>Chris</div>
-                  <div>Tuesday, October 30, 2018</div>
+                  <div>Marie Curie</div>
+                  <div>Tuesday, February 16, 1897</div>
                 </div>
               </v-layout>
-              <div class="body-1">This paper looks really interesting! However, the user study can be done in a different way, which I think can significantly improve the paper.</div>
+              <div class="body-1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </div>
               <v-layout row align-center class="mt-2 body-1">
-                <a>like (523)</a><span class="mx-2">-</span><a>reply</a>
+                <a>reply</a>
+              </v-layout>
+            </div>
+          </v-card-title>
+        </v-card>
+        <v-card class="mb-3">
+          <v-card-title>
+            <div>
+              <v-layout row align-center class="mb-3">
+                <v-icon xLarge>face</v-icon>
+                <div class="ml-1 caption grey--text text--darken-1">
+                  <div>Albert Einstein</div>
+                  <div>Wednesday, March 3, 1920</div>
+                </div>
+              </v-layout>
+              <div class="body-1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nulla porttitor massa.
+              </div>
+              <v-layout row align-center class="mt-2 body-1">
+                <a>reply</a>
+              </v-layout>
+            </div>
+          </v-card-title>
+        </v-card>
+        <v-card class="mb-3">
+          <v-card-title>
+            <div>
+              <v-layout row align-center class="mb-3">
+                <v-icon xLarge>face</v-icon>
+                <div class="ml-1 caption grey--text text--darken-1">
+                  <div>Alan Turing</div>
+                  <div>Thursday, April 24, 1952</div>
+                </div>
+              </v-layout>
+              <div class="body-1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </div>
+              <v-layout row align-center class="mt-2 body-1">
+                <a>reply</a>
+              </v-layout>
+            </div>
+          </v-card-title>
+        </v-card>
+        <v-card class="mb-3">
+          <v-card-title>
+            <div>
+              <v-layout row align-center class="mb-3">
+                <v-icon xLarge>face</v-icon>
+                <div class="ml-1 caption grey--text text--darken-1">
+                  <div>Richard Feynman</div>
+                  <div>Friday, May 30, 1958</div>
+                </div>
+              </v-layout>
+              <div class="body-1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </div>
+              <v-layout row align-center class="mt-2 body-1">
+                <a>reply</a>
               </v-layout>
             </div>
           </v-card-title>

@@ -22,7 +22,7 @@
               </h3>
             </v-flex>
             <v-flex class="mt-4 text-xs-center">
-              <v-btn large color="secondary" to="/tour/0">Demo</v-btn>
+              <v-btn large dark color="cyan darken-4" to="/tour/0">Demo</v-btn>
               <v-btn large color="error" href="#sign-up">Sign Up</v-btn>
             </v-flex>
           </v-layout>
@@ -31,9 +31,10 @@
       <section class="py-5 my-5">
         <v-container>
           <v-layout row wrap align-center>
-            <v-flex xs12 md6 style="height: 350px; overflow: hidden; display: flex; justify-content: center;">
+            <v-flex xs12 md6 style="height: 350px; overflow: hidden; display: flex; justify-content: center; position: relative;">
               <img ref="discovery" class="translateX"
                 src="../assets/graph-eight.png" style="height: 100%;">
+              <div class="fade-right hidden-sm-and-down"></div>
             </v-flex>
             <v-flex xs12 md6 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
@@ -48,17 +49,16 @@
       <section class="py-5 my-5">
         <v-container>
           <v-layout row wrap align-center>
-            <v-flex xs12 md6 order-md2>
-              <v-parallax height=350 class="community"
-                :src="getImgUrl('hans-peter-gauster-1024-unsplash.jpg')">
-              </v-parallax>
-            <!-- Photo by Hans-Peter Gauster on Unsplash -->
+            <v-flex xs12 md6 order-md2 style="height: 350px; overflow: hidden; display: flex; align-content: center; position: relative;">
+              <img src="../assets/comments-narrow.jpg" ref="community"
+                class="translateY" style="position: absolute; width: 100%">
+              <div class="fade-top-bottom hidden-sm-and-down"></div>
             </v-flex>
             <v-flex xs12 md6 order-md1 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
               <h2 class="display-1 font-weight-light">Community</h2>
               <p class="subheading mt-4">
-                We find exchanging ideas with other researchers to be extremely inspiring. Discovery engine aims to bring the research community together by allowing people to comment on and discuss about existing works.
+                We find exchanging ideas with others to be fundamentally important for research. Discovery engine aims to bring the research community together by allowing people to comment on and discuss about existing works.
               </p>
             </v-flex>
           </v-layout>
@@ -67,11 +67,11 @@
       <section class="py-5 my-5">
         <v-container>
           <v-layout row wrap align-center>
-            <v-flex xs12 md6>
+            <v-flex xs12 md6 style="position: relative;">
               <v-parallax height=350 class="collection"
                 :src="getImgUrl('graph-insitu.png')">
               </v-parallax>
-            <!-- Photo by Hans-Peter Gauster on Unsplash -->
+              <div class="fade-top-bottom"></div>
             </v-flex>
             <v-flex xs12 md6 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
@@ -147,6 +147,18 @@ export default {
       }
     })
     discovery.start()
+    const community = basicScroll.create({
+      elem: this.$refs.community,
+      from: 'top-bottom',
+      to: 'bottom-top',
+      props: {
+        '--ty': {
+          from: '0%',
+          to: '-30%'
+        }
+      }
+    })
+    community.start()
   }
 }
 </script>
@@ -159,6 +171,35 @@ export default {
 .container {
   max-width: 1185px;
   padding: 0px;
+}
+
+.fade-right {
+  position: absolute;
+  right: 0px;
+  display: block;
+  width: 1%;
+  height: 100%;
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(250, 250, 250, 0.0),
+      rgba(250, 250, 250, 1.0)
+      100%);
+}
+
+.fade-top-bottom {
+  position: absolute;
+  top: 0px;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(250, 250, 250, 1.0) 0%,
+      rgba(250, 250, 250, 0.0) 2%,
+      rgba(250, 250, 250, 0.0) 98%,
+      rgba(250, 250, 250, 1.0) 100%);
 }
 
 @media screen and (min-width: 1080px) {
@@ -181,6 +222,11 @@ export default {
 
 .translateX {
   transform: translateX(var(--tx));
+  will-change: transform;
+}
+
+.translateY {
+  transform: translateY(var(--ty));
   will-change: transform;
 }
 </style>
