@@ -3,8 +3,14 @@
     <v-toolbar app flat scroll-off-screen inverted-scroll>
       <responsive-text-logo full @click="$vuetify.goTo(0)"></responsive-text-logo>
       <v-toolbar-items>
-        <v-btn flat to="/tour/0">Demo</v-btn>
-        <v-btn flat @click="$vuetify.goTo('#sign-up')">Sign Up</v-btn>
+        <v-btn flat to="/tour/0"
+          v-ga="$ga.event.bind(this, 'buttons', 'click', 'toolbar demo')">
+          Demo
+        </v-btn>
+        <v-btn flat @click="$vuetify.goTo('#sign-up')"
+          v-ga="$ga.event.bind(this, 'buttons', 'click', 'toolbar sign up')">
+          Sign Up
+        </v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
@@ -22,8 +28,12 @@
               </h3>
             </v-flex>
             <v-flex class="mt-4 text-xs-center action-buttons-container">
-              <v-btn large dark color="cyan darken-4" to="/tour/0">Demo</v-btn>
-              <v-btn large color="error" @click="$vuetify.goTo('#sign-up')">
+              <v-btn large dark color="cyan darken-4" to="/tour/0"
+                v-ga="$ga.event.bind(this, 'buttons', 'click', 'center demo')">
+                Demo
+              </v-btn>
+              <v-btn large color="error" @click="$vuetify.goTo('#sign-up')"
+                v-ga.click="$ga.event.bind(this, 'buttons', 'click', 'center sign up')">
                 Sign Up
               </v-btn>
             </v-flex>
@@ -92,17 +102,25 @@
         <v-container grid-list-lg :px-5="$vuetify.breakpoint.smAndUp"
           :px-4="$vuetify.breakpoint.xsOnly">
           <h1 class="mt-2 pb-2 text--white">Sign up for product update:</h1>
-          <v-form class="mt-2"
-            :action="`https://formspree.io/${toEmail}`" method="POST">
+          <v-form class="mt-2" v-model="isEmailValid">
             <v-layout wrap>
               <v-flex xs12 sm10>
                 <v-text-field dark outline hide-details single-line
                   v-model="email" name="email" label="Email"
-                  placeholder="im@email.com" id="email" required>
+                  :rules="emailRules" placeholder="im@email.com"
+                  id="email" required>
                 </v-text-field>
               </v-flex>
               <v-flex xs12 sm2>
-                <v-btn large block type="submit">Submit</v-btn>
+                <v-btn large block :disabled="!isEmailValid"
+                  @click="submitEmail">
+                  Submit
+                </v-btn>
+              </v-flex>
+              <v-flex xs12>
+                <v-alert type="success" :value="isSignUpAlertVisible">
+                  Thank you for signing up!
+                </v-alert>
               </v-flex>
             </v-layout>
           </v-form>
@@ -124,12 +142,26 @@ export default {
   data () {
     return {
       email: '',
-      bgRgbArr: [250, 250, 250]
+      isEmailValid: false,
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+/.test(v) || 'E-mail must be valid'
+      ],
+      bgRgbArr: [250, 250, 250],
+      isSignUpAlertVisible: false
     }
   },
   methods: {
+    trace (value) {
+      console.log(value)
+      return value
+    },
     getImgUrl (img) {
       return require('../assets/' + img)
+    },
+    submitEmail () {
+      this.isSignUpAlertVisible = true
+      this.$ga.event('emails', 'sign up', this.email)
     },
     fadeEdge (side) {
       const fadeLength = '8px'

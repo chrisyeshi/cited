@@ -6,6 +6,7 @@ import { Paper } from './components/paper.js'
 import router from './router/index.js'
 import api from './components/api.js'
 import loremIpsum from 'lorem-ipsum'
+import * as ga from 'vue-analytics'
 
 Vue.use(Vuex)
 
@@ -122,6 +123,7 @@ export default new Vuex.Store({
       router.push(`/demo/collection/${collId}`)
     },
     async pushToHistory (context, refObjId) {
+      ga.event('links', 'click', 'add to current collection')
       const refObj = await api.getRefObj(refObjId)
       context.commit('insertToHistory', refObj)
     },

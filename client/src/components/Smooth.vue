@@ -201,13 +201,16 @@ export default {
       }
     },
     toggleVisPaneSize () {
-      if (this.layout === 'vis') {
+      const prevLayout = this.layout
+      if (prevLayout === 'vis') {
         this.layout = 'visMajor'
-      } else if (this.layout === 'visMajor') {
+      } else if (prevLayout === 'visMajor') {
         this.layout = 'searchMajor'
       } else {
         this.layout = 'vis'
       }
+      const currLayout = this.layout
+      this.$ga.event('layout', 'toggle to', currLayout)
     },
     toHome () {
       window.flipping.read()
@@ -263,7 +266,7 @@ export default {
       return this.routeSearchText || this.$store.state.searchText
     },
     searchComponent () {
-      return _.isNil(this.searchText) && _.isNil(this.refObjId) && _.isNil(this.collId)
+      return _.isNil(this.routeSearchText) && _.isNil(this.refObjId) && _.isNil(this.collId)
         ? 'searchPage'
         : !_.isNil(this.searchText)
           ? 'searchPane'
