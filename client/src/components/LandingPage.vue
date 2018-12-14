@@ -45,7 +45,7 @@
           <v-layout row wrap align-center>
             <v-flex xs12 md6 style="height: 350px; overflow: hidden; display: flex; justify-content: center; position: relative;">
               <img ref="discovery" class="translateX"
-                src="../assets/graph-eight.webp" style="height: 100%;">
+                src="../assets/graph-eight-min.png" style="height: 100%;">
               <div class="hidden-sm-and-down" :style="fadeLeft"></div>
               <div class="hidden-sm-and-down" :style="fadeRight"></div>
             </v-flex>
@@ -63,10 +63,10 @@
         <v-container>
           <v-layout row wrap align-center>
             <v-flex xs12 md6 order-md2 style="height: 350px; overflow: hidden; display: flex; align-content: center; position: relative;">
-              <img src="../assets/comments-narrow.webp" ref="community"
+              <img src="../assets/comments-narrow-min.jpg" ref="community"
                 class="translateY" style="position: absolute; width: 100%">
-              <div class="hidden-sm-and-down" :style="fadeTop"></div>
-              <div class="hidden-sm-and-down" :style="fadeBottom"></div>
+              <div :style="fadeTop"></div>
+              <div :style="fadeBottom"></div>
             </v-flex>
             <v-flex xs12 md6 order-md1 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
@@ -83,10 +83,10 @@
           <v-layout row wrap align-center>
             <v-flex xs12 md6 style="position: relative;">
               <v-parallax height=350 class="collection"
-                :src="getImgUrl('graph-insitu.webp')">
+                :src="getImgUrl('graph-insitu-min.png')">
               </v-parallax>
-              <div class="hidden-sm-and-down" :style="fadeTop"></div>
-              <div class="hidden-sm-and-down" :style="fadeBottom"></div>
+              <div :style="fadeTop"></div>
+              <div :style="fadeBottom"></div>
             </v-flex>
             <v-flex xs12 md6 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
