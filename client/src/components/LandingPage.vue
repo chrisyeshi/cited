@@ -102,13 +102,14 @@
         <v-container grid-list-lg :px-5="$vuetify.breakpoint.smAndUp"
           :px-4="$vuetify.breakpoint.xsOnly">
           <h1 class="mt-2 pb-2 text--white">Sign up for product update:</h1>
-          <v-form class="mt-2" v-model="isEmailValid">
+          <v-form class="mt-2" v-model="isEmailValid"
+            @submit.prevent="submitEmail">
             <v-layout wrap>
               <v-flex xs12 sm10>
                 <v-text-field dark outline hide-details single-line
                   v-model="email" name="email" label="Email"
                   :rules="emailRules" placeholder="im@email.com"
-                  id="email" required>
+                  id="email" @input="isSignUpAlertVisible = false" required>
                 </v-text-field>
               </v-flex>
               <v-flex xs12 sm2>
@@ -118,8 +119,11 @@
                 </v-btn>
               </v-flex>
               <v-flex xs12>
-                <v-alert type="success" :value="isSignUpAlertVisible">
+                <v-alert v-if="isEmailValid" type="success" :value="isSignUpAlertVisible">
                   Thank you for signing up!
+                </v-alert>
+                <v-alert v-if="!isEmailValid" type="error" :value="isSignUpAlertVisible">
+                  Please enter a valid email address.
                 </v-alert>
               </v-flex>
             </v-layout>
