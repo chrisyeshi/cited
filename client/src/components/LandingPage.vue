@@ -53,7 +53,10 @@
               :px-4="$vuetify.breakpoint.xsOnly">
               <h2 class="display-1 font-weight-light">Paper Discovery</h2>
               <p class="subheading mt-4">
-                We are so used to looking for new papers by tracing from the citations of the papers we found interesting. Discovery engine facilitates this habit with graph visualization, which allows us to not only search papers by content, but also discover papers by traversing the paper relationships.
+                We are so used to looking for new papers by tracing from the citations of the papers we found interesting.
+              </p>
+              <p class="subheading">
+                Discovery engine facilitates this habit with graph visualization, which allows us to not only search papers by content, but also discover papers by traversing the paper relationships.
               </p>
             </v-flex>
           </v-layout>
@@ -72,7 +75,10 @@
               :px-4="$vuetify.breakpoint.xsOnly">
               <h2 class="display-1 font-weight-light">Community</h2>
               <p class="subheading mt-4">
-                We find exchanging ideas with others to be fundamentally important for research. Discovery engine aims to bring the research community together by allowing people to comment on and discuss about existing works.
+                We find exchanging ideas with others to be fundamentally important for research.
+              </p>
+              <p class="subheading">
+                Discovery engine aims to bring the research community together by allowing people to comment on and discuss about existing works.
               </p>
             </v-flex>
           </v-layout>
@@ -103,7 +109,8 @@
           :px-4="$vuetify.breakpoint.xsOnly">
           <h1 class="mt-2 pb-2 text--white">Sign up for product update:</h1>
           <v-form class="mt-2" v-model="isEmailValid"
-            @submit.prevent="submitEmail">
+            :action="`https://formspree.io/${toEmail}`" method="POST"
+            @submit="submitEmail">
             <v-layout wrap>
               <v-flex xs12 sm10>
                 <v-text-field dark outline hide-details single-line
@@ -113,7 +120,7 @@
                 </v-text-field>
               </v-flex>
               <v-flex xs12 sm2>
-                <v-btn large block :disabled="!isEmailValid"
+                <v-btn large block type="submit" :disabled="!isEmailValid"
                   @click="submitEmail">
                   Submit
                 </v-btn>
@@ -232,6 +239,8 @@ export default {
       }
     })
     community.start()
+
+    window.$ga = this.$ga
   }
 }
 </script>
