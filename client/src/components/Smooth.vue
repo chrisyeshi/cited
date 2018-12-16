@@ -266,7 +266,7 @@ export default {
       return this.routeSearchText || this.$store.state.searchText
     },
     searchComponent () {
-      return _.isNil(this.routeSearchText) && _.isNil(this.refObjId) && _.isNil(this.collId)
+      return _.isNil(this.searchText) && _.isNil(this.refObjId) && _.isNil(this.collId)
         ? 'searchPage'
         : !_.isNil(this.searchText)
           ? 'searchPane'
