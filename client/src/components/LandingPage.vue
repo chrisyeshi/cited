@@ -115,8 +115,9 @@
               <v-flex xs12 sm10>
                 <v-text-field dark outline hide-details single-line
                   v-model="email" name="email" label="Email"
-                  :rules="emailRules" placeholder="im@email.com"
-                  id="email" @input="isSignUpAlertVisible = false" required>
+                  autocomplete="email" :rules="emailRules"
+                  placeholder="im@email.com" id="email"
+                  @input="isSignUpAlertVisible = false" required>
                 </v-text-field>
               </v-flex>
               <v-flex xs12 sm2>
@@ -137,6 +138,19 @@
           </v-form>
         </v-container>
       </section>
+      <v-footer dark class="pa-3">
+        <v-layout row justify-center>
+          <span>Contact us:</span>
+          &nbsp;
+          <a ref="ourEmail" class="white--text"
+            style="text-decoration: underline;" @click="copyEmail">
+            {{ toEmail }}
+          </a>
+          <v-snackbar v-model="isCopyEmailSnackbarVisible" bottom :timeout="1000">
+            Copied
+          </v-snackbar>
+        </v-layout>
+      </v-footer>
     </v-content>
   </v-app>
 </template>
@@ -159,7 +173,8 @@ export default {
         v => /.+@.+/.test(v) || 'E-mail must be valid'
       ],
       bgRgbArr: [250, 250, 250],
-      isSignUpAlertVisible: false
+      isSignUpAlertVisible: false,
+      isCopyEmailSnackbarVisible: false
     }
   },
   methods: {
@@ -173,6 +188,10 @@ export default {
     submitEmail () {
       this.isSignUpAlertVisible = true
       this.$ga.event('emails', 'sign up', this.email)
+    },
+    copyEmail () {
+      navigator.clipboard.writeText(this.toEmail)
+      this.isCopyEmailSnackbarVisible = true
     },
     fadeEdge (side) {
       const fadeLength = '8px'
