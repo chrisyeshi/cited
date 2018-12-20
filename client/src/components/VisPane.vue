@@ -198,34 +198,19 @@ export default {
       })
       return paths
     },
-    getListsByCategory (categorizeBy) {
-      const byProp = {}
-      for (let i = 0; i < this.$store.state.graph.nodes.length; ++i) {
-        const node = this.$store.state.graph.nodes[i]
-        const prop =
-          categorizeBy === 'year' ? node.paper.year
-            : categorizeBy === 'venue' ? node.paper.venue.id
-              : categorizeBy === 'last-author'
-                ? node.paper.authors[node.paper.authors.length - 1].id
-                : null
-        byProp[prop] = byProp[prop] || []
-        byProp[prop].push(node)
+    getCategories (getCategoryId, getName, graph) {
+      const nodes = graph.nodes
+      const byCategoryId = {}
+      for (let iNode = 0; iNode < nodes.length; ++iNode) {
+        const node = nodes[iNode]
+        const categoryId = getCategoryId(node)
+        byCategoryId[categoryId] = byCategoryId[categoryId] || []
+        byCategoryId[categoryId].push(node)
       }
-      const getCategoryName = (categorizeBy, categoryId) => {
-        if (categorizeBy === 'year') {
-          return categoryId
-        }
-        if (categorizeBy === 'venue') {
-          return this.$store.state.graph.getVenueById(categoryId).name
-        }
-        if (categorizeBy === 'last-author') {
-          const author = this.$store.state.graph.getAuthorById(categoryId)
-          return `${author.family}, ${author.given}`
-        }
-      }
-      return _.map(byProp, (list, prop) => {
-        return { name: getCategoryName(categorizeBy, prop), list: list }
-      })
+      return _.map(byCategoryId, (list, categoryId) => ({
+        name: getName(graph, categoryId),
+        list: list
+      }))
     }
   },
   computed: {
@@ -256,17 +241,40 @@ export default {
       }
       return {}
     },
+    graph () {
+      return this.$store.state.graph
+    },
     cardCategories () {
-      const categories = this.getListsByCategory(this.categorizeBy)
-      categories.sort((a, b) => {
-        if (this.categorizeBy === 'year') {
-          return _.toNumber(a.year) - _.toNumber(b.year)
+      const categoryConfig = {
+        year: {
+          getCategoryId (node) { return node.paper.year },
+          getName (graph, categoryId) { return categoryId },
+          sortBy (a, b) { return _.toNumber(a.year) - _.toNumber(b.year) }
+        },
+        venue: {
+          getCategoryId (node) { return node.paper.venue.id },
+          getName (graph, categoryId) {
+            return graph.getVenueById(categoryId).name
+          },
+          sortBy (a, b) { return b.list.length - a.list.length }
+        },
+        'last-author': {
+          getCategoryId (node) {
+            return node.paper.authors[node.paper.authors.length - 1].id
+          },
+          getName (graph, categoryId) {
+            const author = graph.getAuthorById(categoryId)
+            return `${author.family}, ${author.given}`
+          },
+          sortBy (a, b) { return b.list.length - a.list.length }
         }
-        if (this.categorizeBy === 'venue' ||
-          this.categorizeBy === 'last-author') {
-          return b.list.length - a.list.length
-        }
-      })
+      }
+      const categories =
+        this.getCategories(
+          categoryConfig[this.categorizeBy].getCategoryId,
+          categoryConfig[this.categorizeBy].getName,
+          this.graph)
+      categories.sort(categoryConfig[this.categorizeBy].sortBy)
       return categories
     },
     hoveredGraphNode () {
