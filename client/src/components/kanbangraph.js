@@ -152,6 +152,13 @@ export class Graph {
     }))
   }
 
+  get authors () {
+    const dupAuthors = _.map(this.nodes, node => node.paper.authors)
+    const flatAuthors = _.flatten(dupAuthors)
+    const uniqAuthors = _.uniqBy(flatAuthors, author => author.id)
+    return uniqAuthors
+  }
+
   toggleSelectedByIndex (index) {
     const node = this.nodes[index]
     this.nodes.splice(index, 1, { ...node, isSelected: !node.isSelected })
@@ -178,6 +185,12 @@ export class Graph {
 
   getNodeById (id) {
     return _.find(this.nodes, node => node.paper.id === id)
+  }
+
+  getNodesByAuthorId (authorId) {
+    return _.filter(this.nodes, node => {
+      return _.find(node.paper.authors, author => author.id === authorId)
+    })
   }
 
   getAuthorById (authorId) {

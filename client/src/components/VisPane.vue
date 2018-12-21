@@ -26,6 +26,23 @@
           <input v-else type="text" placeholder="Collection name" @change="$store.commit('setVisPaneCollectionName', $event.target.value)" :value="$store.state.visPaneCollection.title" style="flex: 1;">
           <v-spacer v-if="$store.state.visPaneCollection === 'history' || !enableCreateCollection">
           </v-spacer>
+          <v-menu offset-y max-height=400 :close-on-content-click="false">
+            <v-icon slot="activator" class="pl-2" size=20>filter_list</v-icon>
+            <v-list dense subheader>
+              <v-subheader>Authors</v-subheader>
+              <v-list-tile v-for="author in graphAuthors" :key="author.id"
+                @click="trace">
+                <v-list-tile-action>
+                  <v-checkbox></v-checkbox>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    {{ author.family }}, {{ author.given }}
+                  </v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
           <v-menu offset-y>
             <v-icon slot="activator" class="pl-2" size=20>view_column</v-icon>
             <v-list>
@@ -243,6 +260,11 @@ export default {
     },
     graph () {
       return this.$store.state.graph
+    },
+    graphAuthors () {
+      return _.sortBy(this.graph.authors, [
+        author => { return -this.graph.getNodesByAuthorId(author.id).length }
+      ])
     },
     cardCategories () {
       const categoryConfig = {
