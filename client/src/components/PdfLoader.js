@@ -1,4 +1,5 @@
 import pdfjsLib from 'pdfjs-dist'
+import axios from 'axios'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = '../../node_modules/pdfjs-dist/build/webpack/pdf.worker.min.js'
 
@@ -66,7 +67,6 @@ export default class PdfLoader {
           authorRowIndex++
           authors = items[authorRowIndex].str
         }
-
         authors = authors.replace('and', ',').split(',')
         return new Promise((resolve, reject) => {
           resolve({authors, title})
@@ -103,6 +103,14 @@ export default class PdfLoader {
     return refs.map((ref) => '[' + ref)
   }
 
+  extract (refText) {
+    if (refText[refText.length - 1].length > 500) {
+      refText[refText.length - 1] = refText[refText.length - 1].slice(0, 500)
+    }
+    let refQuery = refText.map(rt => '\'' + rt.replace(/\[.+\]/, '').replace('- ', '').replace('&', '') + '\'').join('+')
+    return axios('/api/anystyle?refs=' + encodeURIComponent(refQuery))
+  }
+
   /**
    * Get all references from a scholar paper in PDF
    * TODO: Support papers with more than 2 pages of references
@@ -127,8 +135,10 @@ export default class PdfLoader {
         if (!refStart) return text.getTextContent()
       }).then((text) => {
         if (!refStart) refText = this.getReferenceTexts(text.items).concat(refText)
+        return this.extract(this.sanitize(refText))
+      }).then((refs) => {
         return new Promise((resolve, reject) => {
-          resolve(this.sanitize(refText))
+          resolve(refs)
         })
       })
     })
