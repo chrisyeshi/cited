@@ -180,6 +180,26 @@ export class Graph {
     return _.find(this.nodes, node => node.paper.id === id)
   }
 
+  getAuthorById (authorId) {
+    for (let iNode = 0; iNode < this.nodes.length; ++iNode) {
+      const node = this.nodes[iNode]
+      const author =
+        _.find(node.paper.authors, author => author.id === authorId)
+      if (author) {
+        return author
+      }
+    }
+    return null
+  }
+
+  getVenueById (venueId) {
+    const node = _.find(this.nodes, node => node.paper.venue.id === venueId)
+    if (node) {
+      return node.paper.venue
+    }
+    return null
+  }
+
   remove (arg) {
     const index = _.isNumber(arg) ? arg : _.indexOf(this.nodes, arg)
     const nodes = this.nodes

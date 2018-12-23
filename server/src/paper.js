@@ -58,7 +58,13 @@ class Paper {
     const authors =
       _.map(
         _.split(testPaper.authors, ', '),
-        text => new Author('authorId', text, ''))
+        text => {
+          const nameSegments = _.split(text)
+          const familyName = nameSegments[nameSegments.length - 1]
+          const givenName = nameSegments[0]
+          const authorId = `${familyName},${givenName}hash06`
+          return new Author(authorId, familyName, givenName)
+        })
     const abstract = testPaper.abstract
     const year = testPaper.year
     const venue = { id: 'venueId', name: testPaper.journal }

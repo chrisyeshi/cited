@@ -26,8 +26,24 @@
           <input v-else type="text" placeholder="Collection name" @change="$store.commit('setVisPaneCollectionName', $event.target.value)" :value="$store.state.visPaneCollection.title" style="flex: 1;">
           <v-spacer v-if="$store.state.visPaneCollection === 'history' || !enableCreateCollection">
           </v-spacer>
+          <v-menu offset-y>
+            <v-icon slot="activator" class="pl-2" size=20>view_column</v-icon>
+            <v-list>
+              <v-subheader>Categorize by ...</v-subheader>
+              <v-divider></v-divider>
+              <v-list-tile @click="categorizeBy = 'year'">
+                <v-list-tile-title>Year</v-list-tile-title>
+              </v-list-tile>
+              <v-list-tile @click="categorizeBy = 'last-author'">
+                <v-list-tile-title>Last Author</v-list-tile-title>
+              </v-list-tile>
+              <v-list-tile @click="categorizeBy = 'venue'">
+                <v-list-tile-title>Venue</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
           <v-tooltip bottom>
-            <v-icon slot="activator" class="pl-3" size=20
+            <v-icon slot="activator" class="pl-2" size=20
               @click="toggleLevelOfDetail">
               zoom_in
             </v-icon>
@@ -49,21 +65,19 @@
     <v-container
       class="py-0" fluid style="position: relative;"
       @click="$store.commit('clearSelectedNodes')">
-      <v-layout column align-content-start ref="cardLayout"
-        :wrap="size !== 'minor'"
-        style="height: calc(100vh - 135px); overflow: auto;">
-        <div v-for="year in years" :key="year" :id="`vis-year-${year}`">
-          <h4 class="text-xs-center column-width">{{ year }}</h4>
-          <v-layout
-            class="pa-1" align-content-start column :style="cardListStyle">
-            <v-hover v-for="(card, index) in cardsByYears[year]" :key="index"
+      <v-layout align-content-start ref="cardLayout"
+        :column="isColumn" :row="isRow" :wrap="isWrap"
+        :style="`height: calc(100vh - ${topOffset}px); overflow: auto;`">
+        <div v-for="category in cardCategories" :key="category.name"
+          :id="`vis-category-${category.name}`">
+          <h4 class="text-xs-center column-width">{{ category.name }}</h4>
+          <v-layout class="pa-1" align-content-start column
+            :style="cardListStyle">
+            <v-hover v-for="(card, index) in category.list" :key="index"
               class="mt-1 mb-2 mx-1">
-              <vis-card
-                :ref="`card-${card.paper.id}`"
-                :id="`vis-card-${card.paper.id}`"
-                slot-scope="{ hover }"
-                :class="{ 'elevation-6': hover }"
-                :card="card">
+              <vis-card :ref="`card-${card.paper.id}`"
+                :id="`vis-card-${card.paper.id}`" slot-scope="{ hover }"
+                :class="{ 'elevation-6': hover }" :card="card">
               </vis-card>
             </v-hover>
           </v-layout>
@@ -98,7 +112,12 @@ export default {
   },
   data () {
     return {
-      refObjEdges: []
+      refObjEdges: [],
+      // TODO: programmatically calculate the offset and height
+      topOffset: 135,
+      colHeaderHeight: 21,
+      layout: 'horizontal-wrap',
+      categorizeBy: 'year'
     }
   },
   methods: {
@@ -178,28 +197,77 @@ export default {
         return `M${start.x} ${start.y} C ${start.x - halfGap} ${start.y - halfHeader}, ${end.x + halfGap} ${end.y + halfHeader}, ${end.x} ${end.y}`
       })
       return paths
+    },
+    getListsByCategory (categorizeBy) {
+      const byProp = {}
+      for (let i = 0; i < this.$store.state.graph.nodes.length; ++i) {
+        const node = this.$store.state.graph.nodes[i]
+        const prop =
+          categorizeBy === 'year' ? node.paper.year
+            : categorizeBy === 'venue' ? node.paper.venue.id
+              : categorizeBy === 'last-author'
+                ? node.paper.authors[node.paper.authors.length - 1].id
+                : null
+        byProp[prop] = byProp[prop] || []
+        byProp[prop].push(node)
+      }
+      const getCategoryName = (categorizeBy, categoryId) => {
+        if (categorizeBy === 'year') {
+          return categoryId
+        }
+        if (categorizeBy === 'venue') {
+          return this.$store.state.graph.getVenueById(categoryId).name
+        }
+        if (categorizeBy === 'last-author') {
+          const author = this.$store.state.graph.getAuthorById(categoryId)
+          return `${author.family}, ${author.given}`
+        }
+      }
+      return _.map(byProp, (list, prop) => {
+        return { name: getCategoryName(categorizeBy, prop), list: list }
+      })
     }
   },
   computed: {
-    cardListStyle () {
-      return this.state === 'minor'
-        ? {}
-        : { maxHeight: 'calc(100vh - 156px)', overflow: 'auto' }
-    },
-    cardsByYears () {
-      let byYears = {}
-      for (let i = 0; i < this.$store.state.graph.nodes.length; ++i) {
-        const node = this.$store.state.graph.nodes[i]
-        const year = node.paper.year
-        byYears[year] = byYears[year] || []
-        byYears[year].push(node)
+    isColumn () {
+      if (this.size === 'minor' || this.layout === 'horizontal-wrap') {
+        return true
       }
-      return byYears
+      return false
     },
-    years () {
-      let yearNums = _.map(_.keys(this.cardsByYears), _.toNumber)
-      yearNums.sort()
-      return yearNums
+    isRow () {
+      return !this.isColumn
+    },
+    isWrap () {
+      if (this.layout === 'horizontal-wrap' && this.size !== 'minor') {
+        return true
+      }
+      return false
+    },
+    cardListTopOffset () {
+      return this.topOffset + this.colHeaderHeight
+    },
+    cardListStyle () {
+      if (this.isWrap) {
+        return {
+          maxHeight: `calc(100vh - ${this.cardListTopOffset}px)`,
+          overflow: 'auto'
+        }
+      }
+      return {}
+    },
+    cardCategories () {
+      const categories = this.getListsByCategory(this.categorizeBy)
+      categories.sort((a, b) => {
+        if (this.categorizeBy === 'year') {
+          return _.toNumber(a.year) - _.toNumber(b.year)
+        }
+        if (this.categorizeBy === 'venue' ||
+          this.categorizeBy === 'last-author') {
+          return b.list.length - a.list.length
+        }
+      })
+      return categories
     },
     hoveredGraphNode () {
       return this.$store.state.hoveredGraphNode
