@@ -14,18 +14,20 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
-      <section class="py-5 px-3 my-5">
+      <section class="py-6 px-3 my-5">
         <v-container grid-list-lg>
           <v-layout column>
-            <v-flex>
-              <h1 class="mt-5 responsive-font-size">
-                Discovery Engine
-              </h1>
+            <v-flex tag="h1" class="mt-5 responsive-font-size">
+              Discovery Engine
             </v-flex>
             <v-flex>
-              <h3 class="title font-weight-light text-xs-center">
-                A new paper discovery experience, for researchers, by researchers.
-              </h3>
+              <v-layout row>
+                <v-flex xs12 offset-sm1 sm10 offset-md2 md8 tag="h3"
+                  class="title font-weight-light text-xs-center"
+                  style="line-height: 125% !important;">
+                    We are in the early stage of building a better paper discovery experience, for researchers, by researchers. Join us along the journey.
+                </v-flex>
+              </v-layout>
             </v-flex>
             <v-flex class="mt-4 text-xs-center action-buttons-container">
               <v-btn large dark color="cyan darken-4" to="/tour/0"
@@ -40,7 +42,7 @@
           </v-layout>
         </v-container>
       </section>
-      <section class="py-5 my-5">
+      <section class="py-6 my-5">
         <v-container>
           <v-layout row wrap align-center>
             <v-flex xs12 md6 style="height: 350px; overflow: hidden; display: flex; justify-content: center; position: relative;">
@@ -62,7 +64,7 @@
           </v-layout>
         </v-container>
       </section>
-      <section class="py-5 my-5">
+      <section class="py-6 my-5">
         <v-container>
           <v-layout row wrap align-center>
             <v-flex xs12 md6 order-md2 style="height: 350px; overflow: hidden; display: flex; align-content: center; position: relative;">
@@ -84,7 +86,7 @@
           </v-layout>
         </v-container>
       </section>
-      <section class="py-5 my-5">
+      <section class="py-6 my-5">
         <v-container>
           <v-layout row wrap align-center>
             <v-flex xs12 md6 style="position: relative;">
@@ -104,7 +106,8 @@
           </v-layout>
         </v-container>
       </section>
-      <section id="sign-up" class="py-5 mt-5 grey darken-3 white--text">
+      <section id="sign-up"
+        class="py-5 mt-5 grey darken-3 white--text">
         <v-container grid-list-lg :px-5="$vuetify.breakpoint.smAndUp"
           :px-4="$vuetify.breakpoint.xsOnly">
           <h1 class="mt-2 pb-2 text--white">Sign up for product update:</h1>
@@ -267,6 +270,11 @@ export default {
 <style scoped>
 .responsive-font-size {
   text-align: center;
+}
+
+.py-6 {
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 
 .container {
