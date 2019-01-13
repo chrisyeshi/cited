@@ -25,7 +25,7 @@
                 <v-flex xs12 offset-sm1 sm10 offset-md2 md8 tag="h3"
                   class="title font-weight-light text-xs-center"
                   style="line-height: 125% !important;">
-                    We are in the early stage of building a better paper discovery experience, for researchers, by researchers. Join us along the journey.
+                    A better paper discovery experience, for researchers, by researchers.
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -43,6 +43,34 @@
         </v-container>
       </section>
       <section class="py-6 my-5">
+        <v-container class="px-4">
+          <v-layout row>
+            <v-flex xs12 sm10 offset-md1>
+              <h2 class="display-1 font-weight-light text-xs-center">
+                Literature Study Made Easy.
+              </h2>
+              <p class="mt-4 subheading">
+                As researchers, we juggle multiple tools (e.g. Google Scholar, Mandeley, etc.) to find and organize our references. We find the current user experience severely outdated and many aspects can tailor more to researchers' habits, especially the way we find new papers from related works of the papers we read.
+              </p>
+              <p class="subheading">
+                We are in the early stage of building a one-stop solution to facilitate literature study. The core technology that binds everything together is a graph visualization to represent the citation network. The biggest challenge we are facing is building the highest fidelity paper database. Here we invite you to join our journey.
+              </p>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </section>
+      <section class="py-6 my-5">
+        <v-container class="px-4">
+          <v-layout row>
+            <v-flex xs12 sm10 offset-md1>
+              <h2 class="display-2 font-weight-light text-xs-center">
+                Our Concept.
+              </h2>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </section>
+      <section class="py-6 my-5">
         <v-container>
           <v-layout row wrap align-center>
             <v-flex xs12 md6 style="height: 350px; overflow: hidden; display: flex; justify-content: center; position: relative;">
@@ -53,7 +81,7 @@
             </v-flex>
             <v-flex xs12 md6 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
-              <h2 class="display-1 font-weight-light">Paper Discovery</h2>
+              <h2 class="display-1 font-weight-light">Graph Visualization</h2>
               <p class="subheading mt-4">
                 We are so used to looking for new papers by tracing from the citations of the papers we found interesting.
               </p>
@@ -75,12 +103,15 @@
             </v-flex>
             <v-flex xs12 md6 order-md1 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
-              <h2 class="display-1 font-weight-light">Community</h2>
-              <p class="subheading mt-4">
+              <h2 class="display-1 font-weight-light">Reputation System</h2>
+              <!-- <p class="subheading mt-4">
                 We find exchanging ideas with others to be fundamentally important for research.
+              </p> -->
+              <p class="subheading mt-4">
+                Manually making sure our bibliography entries are correct is annoying. We are dedicated to build a groundtruth database of bibliographies by allowing reputable community members to edit our database entries.
               </p>
               <p class="subheading">
-                Discovery engine aims to bring the research community together by allowing people to comment on and discuss about existing works.
+                Also, we aim to encourage collaboration of the research community by allowing reputable members to anonymously comment on papers.
               </p>
             </v-flex>
           </v-layout>
@@ -89,14 +120,15 @@
       <section class="py-6 my-5">
         <v-container>
           <v-layout row wrap align-center>
-            <v-flex xs12 md6 style="position: relative;">
+            <v-flex xs12 md6 order-md1 style="position: relative;">
               <v-parallax height=350 class="collection"
                 :src="getImgUrl('graph-insitu-min.png')">
               </v-parallax>
               <div :style="fadeTop"></div>
               <div :style="fadeBottom"></div>
             </v-flex>
-            <v-flex xs12 md6 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
+            <v-flex xs12 md6 order-md2 class="py-5"
+              :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
               <h2 class="display-1 font-weight-light">Reference Management</h2>
               <p class="subheading mt-4">
@@ -110,7 +142,10 @@
         class="py-5 mt-5 grey darken-3 white--text">
         <v-container grid-list-lg :px-5="$vuetify.breakpoint.smAndUp"
           :px-4="$vuetify.breakpoint.xsOnly">
-          <h1 class="mt-2 pb-2 text--white">Sign up for product update:</h1>
+          <h1 class="mt-2 pb-2 text--white title font-weight-light"
+            style="line-height: 125% !important;">
+            We are currently perfecting the graph visualization. Let's revolutionize literature study together.
+          </h1>
           <v-form class="mt-2" v-model="isEmailValid"
             :action="`https://formspree.io/${toEmail}`" method="POST"
             @submit="submitEmail">
@@ -273,8 +308,8 @@ export default {
 }
 
 .py-6 {
-  padding-top: 100px;
-  padding-bottom: 100px;
+  padding-top: 80px;
+  padding-bottom: 80px;
 }
 
 .container {
