@@ -5,11 +5,11 @@
       <v-toolbar-items>
         <v-btn flat to="/tour/0"
           v-ga="$ga.event.bind(this, 'buttons', 'click', 'toolbar demo')">
-          Demo
+          Alpha Demo
         </v-btn>
-        <v-btn flat @click="$vuetify.goTo('#sign-up')"
+        <v-btn flat @click="$vuetify.goTo('#sign-up')" color="error"
           v-ga="$ga.event.bind(this, 'buttons', 'click', 'toolbar sign up')">
-          Sign Up
+          Contact Us
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
@@ -17,8 +17,15 @@
       <section class="py-6 px-3 my-5">
         <v-container grid-list-lg>
           <v-layout column>
-            <v-flex tag="h1" class="mt-5 responsive-font-size">
-              Discovery Engine
+            <v-flex class="mt-5"
+              style="display: flex; justify-content: center;">
+              <div style="position: relative;">
+                <h1 class="responsive-font-size">Discovery Engine</h1>
+                <p class="title white--text px-2 py-1"
+                  style="position: absolute; top: -18px; right: -20px; border-radius: 25px; background: #FC5457;">
+                  alpha
+                </p>
+              </div>
             </v-flex>
             <v-flex>
               <v-layout row>
@@ -32,11 +39,11 @@
             <v-flex class="mt-4 text-xs-center action-buttons-container">
               <v-btn large dark color="cyan darken-4" to="/tour/0"
                 v-ga="$ga.event.bind(this, 'buttons', 'click', 'center demo')">
-                Demo
+                Alpha Demo
               </v-btn>
               <v-btn large color="error" @click="$vuetify.goTo('#sign-up')"
                 v-ga.click="$ga.event.bind(this, 'buttons', 'click', 'center sign up')">
-                Sign Up
+                Contact Us
               </v-btn>
             </v-flex>
           </v-layout>
@@ -64,7 +71,7 @@
           <v-layout row>
             <v-flex xs12 sm10 offset-md1>
               <h2 class="display-2 font-weight-light text-xs-center">
-                Our Concept.
+                Our Goals.
               </h2>
             </v-flex>
           </v-layout>
@@ -104,9 +111,6 @@
             <v-flex xs12 md6 order-md1 class="py-5" :px-5="$vuetify.breakpoint.smAndUp"
               :px-4="$vuetify.breakpoint.xsOnly">
               <h2 class="display-1 font-weight-light">Reputation System</h2>
-              <!-- <p class="subheading mt-4">
-                We find exchanging ideas with others to be fundamentally important for research.
-              </p> -->
               <p class="subheading mt-4">
                 Manually making sure our bibliography entries are correct is annoying. We are dedicated to build a groundtruth database of bibliographies by allowing reputable community members to edit our database entries.
               </p>
