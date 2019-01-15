@@ -19,7 +19,7 @@
       <v-spacer
         @click.stop="$store.commit('toggleNodeSelected', card)"
         class="fill-height px-2 d-flex align-center text-truncate body-1">
-        <span v-if="lod === 'author' || lod === 'title'">
+        <span>
           {{ card.paper.authors[0].family.slice(0, 10) }}, {{ card.paper.year }}
         </span>
       </v-spacer>

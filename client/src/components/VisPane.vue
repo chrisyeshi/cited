@@ -80,11 +80,11 @@
     </v-toolbar>
     <v-divider class="my-2"></v-divider>
     <v-container
-      class="py-0" fluid style="position: relative;"
+      class="py-0" fluid style="position: relative; overflow: auto;"
       @click="$store.commit('clearSelectedNodes')">
       <v-layout align-content-start ref="cardLayout"
         :column="isColumn" :row="isRow" :wrap="isWrap"
-        :style="`height: calc(100vh - ${topOffset}px); overflow: auto;`">
+        :style="`height: calc(100vh - ${topOffset}px); overflow: visible;`">
         <div v-for="category in cardCategories" :key="category.name"
           :id="`vis-category-${category.name}`">
           <h4 class="text-xs-center column-width">{{ category.name }}</h4>
@@ -345,6 +345,7 @@ export default {
   background: rgb(100, 100, 200, 0);
   /*opacity: 0.3;*/
   pointer-events: none;
+  overflow: visible;
 }
 
 .overlay path {
