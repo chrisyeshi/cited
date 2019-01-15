@@ -83,7 +83,7 @@ export default new Vuex.Store({
     enableSignIn: true,
     enableUserCollectionDropdown: false,
     enableDrawer: true,
-    enableDrawerTemporary: false,
+    enableDrawerTemporary: true,
     enableInitSearchText: true,
     enableCreateCollection: false
   },

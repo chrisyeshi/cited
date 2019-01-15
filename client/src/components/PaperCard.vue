@@ -10,9 +10,9 @@
           <v-system-bar status ref="header" :style="{ padding: '0px', 'background-color': card.isSelected ? 'orange' : undefined }">
             <span class="header-item"
               :style="{ 'background-color': inNetworkReferenceColor }"
-              @mouseover="$emit('mouseoverrefcount', card.index)"
-              @mouseout="$emit('mouseoutrefcount', card.index)"
-              @click="$emit('clickrefcount', card.index)">
+              @mouseover="$emit('mouseoverrefcount', card.paper.id)"
+              @mouseout="$emit('mouseoutrefcount', card.paper.id)"
+              @click="$emit('clickrefcount', card.paper.id)">
               <span>&lt; {{ card.inGraphCitings.length }} / {{ card.paper.references.length }}</span>
             </span>
             <v-spacer style="height: 100%;"
@@ -21,9 +21,9 @@
             <v-icon light @click="$emit('remove', card.index)">close</v-icon>
             <span class="header-item"
               :style="{ 'background-color': inNetworkCitationColor }"
-              @mouseover="$emit('mouseovercitecount', card.index)"
-              @mouseout="$emit('mouseoutcitecount', card.index)"
-              @click="$emit('clickcitecount', card.index)">
+              @mouseover="$emit('mouseovercitecount', card.paper.id)"
+              @mouseout="$emit('mouseoutcitecount', card.paper.id)"
+              @click="$emit('clickcitecount', card.paper.id)">
               <span>{{ card.inGraphCitedBys.length }} / {{ card.paper.citationCount }} &gt;</span>
             </span>
           </v-system-bar>
