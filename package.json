@@ -95,6 +95,7 @@
     "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
+    "pdfjs": "^2.1.0",
     "pdfjs-dist": "^2.0.943"
   }
 }

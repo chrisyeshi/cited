@@ -39,6 +39,12 @@ export default class PdfLoader {
     })
   }
 
+  getPage (pageNumber) {
+    return this.load().then((pdf) => {
+      return pdf.getPage(pageNumber)
+    })
+  }
+
   /**
    * parse PDF conetent to get paper info (title, author, etc.,)
    */
@@ -135,6 +141,7 @@ export default class PdfLoader {
         if (!refStart) return text.getTextContent()
       }).then((text) => {
         if (!refStart) refText = this.getReferenceTexts(text.items).concat(refText)
+        // debugger
         return this.extract(this.sanitize(refText))
       }).then((refs) => {
         return new Promise((resolve, reject) => {

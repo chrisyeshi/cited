@@ -89,34 +89,42 @@
             </v-card>
           </v-flex>
           <v-flex xs7 fill-height class="pa-2">
-            <v-card>
-              <v-card-title>
-                All References
-                <v-spacer></v-spacer>
-                <v-text-field
-                  v-model="search"
-                  append-icon="search"
-                  label="Search"
-                  single-line
-                  hide-details
-                ></v-text-field>
-              </v-card-title>
-              <v-data-table
-                :headers="headers"
-                :items="references"
-                :search="search"
-                :rows-per-page-items="[10, 15, 25, 50]"
-              >
-                <template slot="items" slot-scope="props">
-                  <td>{{ props.item.title }}</td>
-                  <td class="text-xs-right">{{ props.item.year }}</td>
-                  <td class="text-xs-right">{{ showAuthorNames(props.item.authorNames) }}</td>
-                  <td class="text-xs-right">{{ props.item.citedBysCount }}</td>
-                </template>
-                <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                  Your search for "{{ search }}" found no results.
-                </v-alert>
-              </v-data-table>
+            <v-toolbar dense>
+              <v-toolbar-title>PDF Viewer</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
+            <v-card fill-height>
+              <v-card>
+                <v-card-title>
+                  All References
+                  <v-spacer></v-spacer>
+                  <v-text-field
+                    v-model="search"
+                    append-icon="search"
+                    label="Search"
+                    single-line
+                    hide-details
+                  ></v-text-field>
+                </v-card-title>
+                <v-data-table
+                  :headers="headers"
+                  :items="references"
+                  :search="search"
+                  :rows-per-page-items="[10, 15, 25, 50]"
+                >
+                  <template slot="items" slot-scope="props">
+                    <td>{{ props.item.title }}</td>
+                    <td class="text-xs-right">{{ props.item.year }}<br /></td>
+                    <td class="text-xs-right">{{ showAuthorNames(props.item.authorNames) }}</td>
+                    <td class="text-xs-right">{{ props.item.citedBysCount }}</td>
+                  </template>
+                  <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                    Your search for "{{ search }}" found no results.
+                  </v-alert>
+                </v-data-table>
+              </v-card>
+              <canvas id="the-canvas"></canvas>
+              <div id="text-layer" class="textLayer"></div>
             </v-card>
           </v-flex>
         </v-layout>
@@ -131,11 +139,15 @@
 <script>
 import PdfLoader from './PdfLoader'
 import {PaperGraph} from '../../../model/PaperGraph'
+let pdfjsLib = window['pdfjs-dist/build/pdf']
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js'
 
 export default {
-  name: 'Contail',
+  name: 'Referson',
   data () {
     return {
+      pdfFiles: [],
       papers: [],
       references: [],
       drawer: false,
@@ -143,11 +155,12 @@ export default {
       graph: [],
       search: '',
       dialog: false,
+      canvas: null,
       headers: [
         { text: 'Title', value: 'title', sortable: false },
         { text: 'Year', value: 'year' },
         { text: 'Authors', value: 'authorNames', sortable: false },
-        { text: 'CitedBysCount', value: 'citedBysCount' }
+        { text: 'Cited By', value: 'citedBysCount' }
       ]
     }
   },
@@ -161,12 +174,43 @@ export default {
 
     toggle (index) {
       const i = this.selected.indexOf(index)
-
       if (i > -1) {
         this.selected.splice(i, 1)
       } else {
         this.selected.push(index)
       }
+    },
+
+    renderPdf (page) {
+      let scale = 1.5
+      let viewport = page.getViewport({scale: scale})
+      this.canvas = document.getElementById('the-canvas')
+      this.canvas.height = viewport.height
+      this.canvas.width = viewport.width
+      // Render PDF page into canvas context
+      let context = this.canvas.getContext('2d')
+      let renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      }
+      let renderTask = page.render(renderContext)
+      renderTask.promise.then(() => {
+        console.log('Page rendered')
+        return page.getTextContent()
+      }).then((textContent) => {
+        let textLayer = document.getElementById('text-layer')
+        textLayer.style.left = this.canvas.offsetLeft + 'px'
+        textLayer.style.top = this.canvas.offsetTop + 'px'
+        textLayer.style.width = this.canvas.width + 'px'
+        textLayer.style.height = this.canvas.height + 'px'
+
+        pdfjsLib.renderTextLayer({
+          textContent: textContent,
+          container: textLayer,
+          viewport: viewport,
+          textDivs: []
+        })
+      })
     },
 
     showAuthorNames (authors) {
@@ -182,6 +226,7 @@ export default {
 
     openFiles ($event) {
       let files = $event.target.files
+      this.pdfFiles = files
       let getAllPdfs = []
       let getAllPaperInfos = []
       let getAllReferences = []
@@ -189,12 +234,24 @@ export default {
       this.dialog = true
       for (let file of files) {
         let fileReader = new FileReader()
-        getAllPdfs.push(new Promise(function (resolve, reject) {
+        getAllPdfs.push(new Promise((resolve, reject) => {
           fileReader.onload = (evt) => {
             let pdf = new PdfLoader(new Uint8Array(evt.target.result))
             resolve(pdf)
+            pdf.getPage(1).then(page => {
+              console.log(page)
+              this.renderPdf(page)
+            })
           }
         }))
+        // fileReader.onload = (evt) => {
+        //   return pdfjsLib.getDocument(new Uint8Array(evt.target.result)).then(pdf => {
+        //     pdf.getPage(1).then(page => {
+        //       console.log(page)
+        //       this.renderPdf(page)
+        //     })
+        //   })
+        // }
         fileReader.readAsArrayBuffer(file)
       }
       Promise.all(getAllPdfs).then(pdfs => {
@@ -202,6 +259,7 @@ export default {
           getAllPaperInfos.push(pdf.getInfo())
           getAllReferences.push(pdf.getReferences())
         }
+
         return Promise.all(getAllPaperInfos)
       }).then(papers => {
         Promise.all(getAllReferences).then((allRefs) => {
@@ -271,5 +329,92 @@ export default {
   border-radius: 50%;
   display: inline-block;
   margin-right: 0.5em;
+}
+
+#text-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 0.2;
+  line-height: 1.0;
+}
+
+#text-layer > div {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+.textLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 0.2;
+  line-height: 1.0;
+}
+
+.textLayer > div {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  -webkit-transform-origin: 0% 0%;
+  -moz-transform-origin: 0% 0%;
+  -o-transform-origin: 0% 0%;
+  -ms-transform-origin: 0% 0%;
+  transform-origin: 0% 0%;
+}
+
+.textLayer .highlight {
+  margin: -1px;
+  padding: 1px;
+
+  background-color: rgb(180, 0, 170);
+  border-radius: 4px;
+}
+
+.textLayer .highlight.begin {
+  border-radius: 4px 0px 0px 4px;
+}
+
+.textLayer .highlight.end {
+  border-radius: 0px 4px 4px 0px;
+}
+
+.textLayer .highlight.middle {
+  border-radius: 0px;
+}
+
+.textLayer .highlight.selected {
+  background-color: rgb(0, 100, 0);
+}
+
+.textLayer ::selection { background: rgb(0,0,255); }
+.textLayer ::-moz-selection { background: rgb(0,0,255); }
+
+.textLayer .endOfContent {
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 100%;
+  right: 0px;
+  bottom: 0px;
+  z-index: -1;
+  cursor: default;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
+
+.textLayer .endOfContent.active {
+  top: 0px;
 }
 </style>
