@@ -49,16 +49,17 @@ export default {
   },
 
   async searchRefObjs (text) {
-    if (text === '*') {
-      return _.map(graph.nodes, ({ paper }) => paper)
-    }
     const words = _.words(_.toLower(text))
     const nodes = _.filter(graph.nodes, ({ paper }) => {
       const serialized = _.toLower(JSON.stringify(paper))
       const hasWords = _.map(words, word => _.includes(serialized, word))
       return !_.includes(hasWords, false)
     })
-    return _.map(nodes, ({ paper }) => paper)
+    if (nodes.length > 0) {
+      return _.map(nodes, ({ paper }) => paper)
+    }
+    // return the whole list when nothing matches...
+    return _.map(graph.nodes, ({ paper }) => paper)
   },
 
   async getRefObj (refObjId) {

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
-export function getColRowsByYears (nodes) {
-  const years = nodes.map(node => node.paper.year)
+export function getColRowsByYears (graph) {
+  const years = graph.nodes.map(node => node.paper.year)
   let onlyUnique = (value, index, self) => self.indexOf(value) === index
   let yearUniqueNum = years.filter(onlyUnique).sort((a, b) => a - b)
   let yearUniqueStr = yearUniqueNum.map(year => year.toString())
@@ -9,14 +9,14 @@ export function getColRowsByYears (nodes) {
   yearUniqueStr.forEach(yearStr => {
     yearPapers[yearStr] = []
   })
-  nodes.forEach(node => {
+  graph.nodes.forEach(node => {
     const paper = node.paper
     yearPapers[paper.year.toString()].push(paper)
   })
   yearUniqueStr.forEach(yearStr => {
     yearPapers[yearStr].sort((a, b) => b.citationCount - a.citationCount)
   })
-  const colRows = nodes.map(node => {
+  const colRows = graph.nodes.map(node => {
     const paper = node.paper
     return {
       col: yearUniqueStr.indexOf(paper.year.toString()),
@@ -26,8 +26,8 @@ export function getColRowsByYears (nodes) {
   return colRows
 }
 
-export function getColRowsByCitedLevels (nodes) {
-  const citedByLevels = getPaperCitedByLevels(nodes)
+export function getColRowsByCitedLevels (graph) {
+  const citedByLevels = getPaperCitedByLevels(graph)
   let colRows = {}
   let columnCounters = []
   const maxCitedByLevel = getMaxProp(citedByLevels)
@@ -43,63 +43,65 @@ export function getColRowsByCitedLevels (nodes) {
   return colRows
 }
 
-export function getColRowsByOptimalYearIntervals (nodes) {
-  const citedByLevels = getPaperCitedByLevels(nodes)
-  const citingLevels = getPaperCitingLevels(nodes)
-  const paperIds = Object.keys(citedByLevels)
+export function getColRowsByOptimalYearIntervals (graph) {
+  const citedByLevels = getPaperCitedByLevels(graph)
+  const citingLevels = getPaperCitingLevels(graph)
+  const paperIndexes = Object.keys(citedByLevels)
   const maxCitedByLevel = getMaxProp(citedByLevels)
   const columnCount = maxCitedByLevel + 1
-  const paperColIntervals = paperIds.map(paperId => {
-    const citedByLevel = citedByLevels[paperId]
-    const citingLevel = citingLevels[paperId]
+  const paperColIntervals = paperIndexes.map(paperIndex => {
+    const citedByLevel = citedByLevels[paperIndex]
+    const citingLevel = citingLevels[paperIndex]
     return {
       min: citingLevel,
       max: columnCount - 1 - citedByLevel
     }
   })
 
-  const years = nodes.map(node => node.paper.year)
+  const years = graph.nodes.map(node => node.paper.year)
   const optimalYearIntervals = getMostEvenIntervals(years, columnCount)
 
-  let sortedPaperIds = paperIds.slice()
+  let sortedPaperIndexes = paperIndexes.slice()
   let colIntervals = paperColIntervals.slice()
   let grid = optimalYearIntervals.map(() => ([]))
-  while (sortedPaperIds.length > 0) {
-    sortedPaperIds.sort((a, b) => {
+  while (sortedPaperIndexes.length > 0) {
+    sortedPaperIndexes.sort((a, b) => {
       const aRange = colIntervals[a].max - colIntervals[a].min
       const bRange = colIntervals[b].max - colIntervals[b].min
       return aRange - bRange
     })
     let i = 0
-    for (; i < sortedPaperIds.length; ++i) {
-      const paperId = sortedPaperIds[i]
-      const colInterval = colIntervals[paperId]
+    for (; i < sortedPaperIndexes.length; ++i) {
+      const paperIndex = sortedPaperIndexes[i]
+      const colInterval = colIntervals[paperIndex]
       if (colInterval.min === colInterval.max) {
-        grid[colInterval.min].push(paperId)
+        grid[colInterval.min].push(paperIndex)
         continue
       }
       let yearErrors = []
       for (let iCol = colInterval.min; iCol <= colInterval.max; ++iCol) {
-        const year = years[paperId]
+        const year = years[paperIndex]
         const yearInterval = optimalYearIntervals[iCol]
         yearErrors[iCol] = Math.max(0, yearInterval.min - year, year - yearInterval.max)
       }
       const iCols = getMinIndexes(yearErrors)
       if (iCols.length === 1) {
         const iCol = iCols[0]
-        grid[iCol].push(paperId)
-        colIntervals = updateColIntervals(paperId, iCol, nodes, colIntervals)
+        grid[iCol].push(paperIndex)
+        colIntervals =
+          updateColIntervals(paperIndex, iCol, graph, colIntervals)
         break
       }
       iCols.sort((a, b) => {
         return grid[a].length - grid[b].length
       })
       const iCol = iCols[0]
-      grid[iCol].push(paperId)
-      colIntervals = updateColIntervals(paperId, iCol, nodes, colIntervals)
+      grid[iCol].push(paperIndex)
+      colIntervals =
+        updateColIntervals(paperIndex, iCol, graph, colIntervals)
       break
     }
-    sortedPaperIds = sortedPaperIds.slice(i + 1)
+    sortedPaperIndexes = sortedPaperIndexes.slice(i + 1)
   }
 
   return toPaperColRows(grid)
@@ -141,31 +143,32 @@ export function moveColRow (fromColRows, paperId, toColRow) {
   return toPaperColRows(toGrid)
 }
 
-export function getPaperCitedByLevels (nodes) {
-  return getPaperLevels(nodes, 'inGraphCitedBys', 'inGraphCitings')
+export function getPaperCitedByLevels (graph) {
+  return getPaperLevels(graph, 'inGraphCitedBys', 'inGraphCitings')
 }
 
-export function getPaperCitingLevels (nodes) {
-  return getPaperLevels(nodes, 'inGraphCitings', 'inGraphCitedBys')
+export function getPaperCitingLevels (graph) {
+  return getPaperLevels(graph, 'inGraphCitings', 'inGraphCitedBys')
 }
 
-function getPaperLevels (nodes, rootProp, connProp) {
-  let levels = _.times(nodes.length, _.constant(0))
-  const rootIds = nodes.reduce((paperIds, node, paperId) => {
+function getPaperLevels (graph, rootProp, connProp) {
+  let levels = _.times(graph.nodes.length, _.constant(0))
+  const rootIndexes = graph.nodes.reduce((paperIndexes, node, paperIndex) => {
     if (node[rootProp].length === 0) {
-      paperIds.push(paperId)
+      paperIndexes.push(paperIndex)
     }
-    return paperIds
+    return paperIndexes
   }, [])
-  rootIds.forEach(paperId => { levels[paperId] = 0 })
-  let bfsQueue = [].concat(rootIds)
+  rootIndexes.forEach(paperIndex => { levels[paperIndex] = 0 })
+  let bfsQueue = [].concat(rootIndexes)
   while (bfsQueue.length > 0) {
-    const currId = bfsQueue.shift()
-    const paperIds = nodes[currId][connProp]
+    const currIndex = bfsQueue.shift()
+    const paperIds = graph.nodes[currIndex][connProp]
+    const paperIndexes = _.map(paperIds, paperId => _.findIndex(graph.nodes, node => node.paper.id === paperId))
 
-    paperIds.forEach(paperId => {
-      levels[paperId] = levels[paperId] ? Math.max(levels[currId] + 1, levels[paperId]) : levels[currId] + 1
-      bfsQueue.push(paperId)
+    paperIndexes.forEach(paperIndex => {
+      levels[paperIndex] = levels[paperIndex] ? Math.max(levels[currIndex] + 1, levels[paperIndex]) : levels[currIndex] + 1
+      bfsQueue.push(paperIndex)
     })
   }
   return levels
@@ -188,19 +191,23 @@ function getMinIndexes (numbers) {
   return indexes
 }
 
-function updateColIntervals (paperId, iCol, nodes, colIntervals) {
+function updateColIntervals (paperIndex, iCol, graph, colIntervals) {
   let colInts = colIntervals.slice()
-  colInts[paperId] = { min: iCol, max: iCol }
-  nodes[paperId].inGraphCitings.forEach(citingId => {
-    let interval = colIntervals[citingId]
-    colInts[citingId] = {
+  colInts[paperIndex] = { min: iCol, max: iCol }
+  graph.nodes[paperIndex].inGraphCitings.forEach(citingId => {
+    const citingIndex =
+      _.findIndex(graph.nodes, node => node.paper.id === citingId)
+    let interval = colIntervals[citingIndex]
+    colInts[citingIndex] = {
       min: interval.min,
       max: Math.min(iCol - 1, interval.max)
     }
   })
-  nodes[paperId].inGraphCitedBys.forEach(citedById => {
-    let interval = colIntervals[citedById]
-    colInts[citedById] = {
+  graph.nodes[paperIndex].inGraphCitedBys.forEach(citedById => {
+    const citedByIndex =
+      _.findIndex(graph.nodes, node => node.paper.id === citedById)
+    let interval = colIntervals[citedByIndex]
+    colInts[citedByIndex] = {
       min: Math.max(iCol + 1, interval.min),
       max: interval.max
     }

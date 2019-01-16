@@ -19,8 +19,8 @@
       <v-spacer
         @click.stop="$store.commit('toggleNodeSelected', card)"
         class="fill-height px-2 d-flex align-center text-truncate body-1">
-        <span v-if="lod === 'author'">
-          {{ formatAuthorNames(card.paper.authors)[0].slice(0, 10) }}, {{ card.paper.year }}
+        <span>
+          {{ card.paper.authors[0].family.slice(0, 10) }}, {{ card.paper.year }}
         </span>
       </v-spacer>
       <v-icon @click="$store.commit('removeFromGraph', card)">close</v-icon>

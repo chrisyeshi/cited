@@ -187,11 +187,11 @@ export default {
           key: index,
           citedBy: {
             x: citedBy.rect.left + marginLeft,
-            y: citedBy.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
+            y: citedBy.rect.top + this.graph.getNodeById(relation.citedBy).geometry.headerHeight / 2
           },
           citing: {
             x: citing.rect.right + marginLeft,
-            y: citing.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
+            y: citing.rect.top + this.graph.getNodeById(relation.citing).geometry.headerHeight / 2
           }
         }
       })
@@ -199,15 +199,17 @@ export default {
     curves: function () {
       const marginLeft = 24
       return this.visibleRelations.map((relation, index) => {
-        let citedBy = this.cards[relation.citedBy]
-        let citing = this.cards[relation.citing]
+        let citedBy =
+          _.find(this.cards, card => card.paper.id === relation.citedBy)
+        let citing =
+          _.find(this.cards, card => card.paper.id === relation.citing)
         const start = {
           x: citedBy.rect.left + marginLeft,
-          y: citedBy.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
+          y: citedBy.rect.top + this.graph.getNodeById(relation.citedBy).geometry.headerHeight / 2
         }
         const end = {
           x: citing.rect.right + marginLeft,
-          y: citing.rect.top + this.graph.nodes[relation.citedBy].geometry.headerHeight / 2
+          y: citing.rect.top + this.graph.getNodeById(relation.citing).geometry.headerHeight / 2
         }
         const interpolate = (beg, end, ratio) => {
           return ratio * (end - beg) + beg
@@ -223,7 +225,8 @@ export default {
       const colRows = this.cards.map(node => node.colRow)
       const grid = layout.toPaperGrid(colRows)
       const yearIntervals = grid.map(column => {
-        const colPapers = column.map(paperId => this.graph.nodes[paperId].paper)
+        const colPapers =
+          column.map(paperIndex => this.graph.nodes[paperIndex].paper)
         const colYears = colPapers.map(paper => paper.year)
         return colYears.reduce((interval, year) => ({
           min: Math.min(year, interval.min),
@@ -335,49 +338,49 @@ export default {
       this.graph.clear()
       this.cards = []
     },
-    handleMouseOverRefCount: function (paperIndex) {
+    handleMouseOverRefCount: function (paperId) {
       if (this.showLinkMethod === 'show-link-hover') {
         this.visiblePaperRefLinks =
-          _.union(this.visiblePaperRefLinks, [ paperIndex ])
+          _.union(this.visiblePaperRefLinks, [ paperId ])
       }
     },
-    handleMouseOutRefCount: function (paperIndex) {
+    handleMouseOutRefCount: function (paperId) {
       if (this.showLinkMethod === 'show-link-hover') {
         this.visiblePaperRefLinks =
-          _.without(this.visiblePaperRefLinks, paperIndex)
+          _.without(this.visiblePaperRefLinks, paperId)
       }
     },
-    handleClickRefCount: function (paperIndex) {
+    handleClickRefCount: function (paperId) {
       if (this.showLinkMethod === 'show-link-click') {
-        if (_.includes(this.visiblePaperRefLinks, paperIndex)) {
+        if (_.includes(this.visiblePaperRefLinks, paperId)) {
           this.visiblePaperRefLinks =
-            _.without(this.visiblePaperRefLinks, paperIndex)
+            _.without(this.visiblePaperRefLinks, paperId)
         } else {
           this.visiblePaperRefLinks =
-            _.union(this.visiblePaperRefLinks, [ paperIndex ])
+            _.union(this.visiblePaperRefLinks, [ paperId ])
         }
       }
     },
-    handleMouseOverCiteCount: function (paperIndex) {
+    handleMouseOverCiteCount: function (paperId) {
       if (this.showLinkMethod === 'show-link-hover') {
         this.visiblePaperCiteLinks =
-          _.union(this.visiblePaperCiteLinks, [ paperIndex ])
+          _.union(this.visiblePaperCiteLinks, [ paperId ])
       }
     },
-    handleMouseOutCiteCount: function (paperIndex) {
+    handleMouseOutCiteCount: function (paperId) {
       if (this.showLinkMethod === 'show-link-hover') {
         this.visiblePaperCiteLinks =
-          _.without(this.visiblePaperCiteLinks, paperIndex)
+          _.without(this.visiblePaperCiteLinks, paperId)
       }
     },
-    handleClickCiteCount: function (paperIndex) {
+    handleClickCiteCount: function (paperId) {
       if (this.showLinkMethod === 'show-link-click') {
-        if (_.includes(this.visiblePaperCiteLinks, paperIndex)) {
+        if (_.includes(this.visiblePaperCiteLinks, paperId)) {
           this.visiblePaperCiteLinks =
-            _.without(this.visiblePaperCiteLinks, paperIndex)
+            _.without(this.visiblePaperCiteLinks, paperId)
         } else {
           this.visiblePaperCiteLinks =
-            _.union(this.visiblePaperCiteLinks, [ paperIndex ])
+            _.union(this.visiblePaperCiteLinks, [ paperId ])
         }
       }
     },
@@ -420,15 +423,15 @@ export default {
       throw new Error(`wrong layout method ${method}`)
     },
     layoutByYears: function (graph) {
-      const colRows = layout.getColRowsByYears(graph.nodes)
+      const colRows = layout.getColRowsByYears(graph)
       return this.getCardsByColRows(graph, colRows)
     },
     layoutByRefLevel: function (graph) {
-      const colRows = layout.getColRowsByCitedLevels(graph.nodes)
+      const colRows = layout.getColRowsByCitedLevels(graph)
       return this.getCardsByColRows(graph, colRows)
     },
     layoutByOptimized: function (graph) {
-      const colRows = layout.getColRowsByOptimalYearIntervals(graph.nodes)
+      const colRows = layout.getColRowsByOptimalYearIntervals(graph)
       return this.getCardsByColRows(graph, colRows)
     },
     getCardsByColRows: function (graph, colRows) {
