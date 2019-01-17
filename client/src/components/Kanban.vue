@@ -55,6 +55,9 @@
           <v-list-tile v-on:click="computedShowLinkMethod = 'show-link-all'">
             <v-list-tile-title>show all links</v-list-tile-title>
           </v-list-tile>
+          <v-list-tile @click="computedShowLinkMethod = 'show-link-between'">
+            <v-list-tile-title>show link between columns</v-list-tile-title>
+          </v-list-tile>
         </v-list>
       </v-menu>
       <v-menu open-on-hover offset-y close-delay=0>
@@ -65,6 +68,9 @@
           </v-list-tile>
           <v-list-tile v-on:click="computedLayoutMethod = 'layout-by-reference-level'">
             <v-list-tile-title>layout by reference level</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="computedLayoutMethod = 'layout-by-cite-level'">
+            <v-list-tile-title>layout by citation level</v-list-tile-title>
           </v-list-tile>
           <v-list-tile v-on:click="computedLayoutMethod = 'layout-by-optimized'">
             <v-list-tile-title>layout hybrid</v-list-tile-title>
@@ -83,7 +89,7 @@
           <span
             v-for="(yearInterval, index) in yearIntervalLabels" v-bind:key="index"
             v-bind:style="yearIntervalStyle" class="year-range">
-            <h2>{{ yearInterval }}</h2>
+            <h2 class="subheading">{{ yearInterval }}</h2>
           </span>
         </div>
         <div ref="graphContainer" class="graph-container"
@@ -149,8 +155,9 @@ export default {
       this.cards = this.layoutByMethod(this.graph, this.layoutMethod)
       this.nextTickLayoutPaperCards()
     })
-    this.colWidth = 300
-    this.cardSpacing = 24
+    this.colWidth = 180
+    this.cardSpacing = 48
+    this.cardVerticalSpacing = 10
     return {
       graph: {
         nodes: []
@@ -161,7 +168,7 @@ export default {
       visibleRelations: [],
       visiblePaperRefLinks: [],
       visiblePaperCiteLinks: [],
-      layoutMethod: 'layout-by-optimized',
+      layoutMethod: 'layout-by-cite-level',
       showLinkMethod: 'show-link-hover',
       isDrawerVisible: false,
       searchText: '',
@@ -214,7 +221,7 @@ export default {
         const interpolate = (beg, end, ratio) => {
           return ratio * (end - beg) + beg
         }
-        const ratio = 0.75
+        const ratio = 0.5
         return {
           key: index,
           path: `M${start.x} ${start.y} C ${interpolate(start.x, end.x, ratio)} ${start.y}, ${interpolate(end.x, start.x, ratio)} ${end.y}, ${end.x} ${end.y}`
@@ -268,6 +275,10 @@ export default {
         this.showLinkMethod = method
         if (method === 'show-link-all') {
           this.showLinks(this.graph.relations)
+        } else if (method === 'show-link-between') {
+          const relations =
+            this.getRelationsBetweenColumns(this.cards, this.graph)
+          this.showLinks(relations)
         } else {
           this.visiblePaperRefLinks = []
           this.visiblePaperCiteLinks = []
@@ -400,6 +411,20 @@ export default {
     alsoScrollYearsContainer: function (evt) {
       this.$refs.yearsContainer.scrollLeft = this.$refs.graphContainer.scrollLeft
     },
+    getRelationsBetweenColumns: function (cards, graph) {
+      const relations = _.filter(graph.relations, relation => {
+        const citingId = relation.citing
+        const citedById = relation.citedBy
+        const citingIndex =
+          _.findIndex(graph.nodes, node => node.paper.id === citingId)
+        const citedByIndex =
+          _.findIndex(graph.nodes, node => node.paper.id === citedById)
+        const citingCol = cards[citingIndex].colRow.col
+        const citedByCol = cards[citedByIndex].colRow.col
+        return citingCol === citedByCol - 1
+      })
+      return relations
+    },
     showLinks: function (relations) {
       this.visibleRelations = relations
     },
@@ -417,6 +442,8 @@ export default {
         return this.layoutByYears(graph)
       } else if (this.layoutMethod === 'layout-by-reference-level') {
         return this.layoutByRefLevel(graph)
+      } else if (this.layoutMethod === 'layout-by-cite-level') {
+        return this.layoutByCiteLevel(graph)
       } else if (this.layoutMethod === 'layout-by-optimized') {
         return this.layoutByOptimized(graph)
       }
@@ -428,6 +455,10 @@ export default {
     },
     layoutByRefLevel: function (graph) {
       const colRows = layout.getColRowsByCitedLevels(graph)
+      return this.getCardsByColRows(graph, colRows)
+    },
+    layoutByCiteLevel: function (graph) {
+      const colRows = layout.getColRowsByCitingLevels(graph)
       return this.getCardsByColRows(graph, colRows)
     },
     layoutByOptimized: function (graph) {
@@ -453,7 +484,7 @@ export default {
               height: cardHeight
             })
           }
-          top += cardHeight + this.cardSpacing
+          top += cardHeight + this.cardVerticalSpacing
         })
       })
       return cards
@@ -501,9 +532,10 @@ export default {
     },
     updateGeos: function () {
       this.$refs.paperCards.forEach(component => {
+        window.header = component.$refs.header
         this.graph.nodes[component.card.index].geometry = {
           height: component.$el.clientHeight,
-          headerHeight: component.$refs.header.computedHeight
+          headerHeight: component.$refs.header.clientHeight
         }
       })
     },
@@ -576,7 +608,7 @@ export default {
   stroke: #a55;
   fill: none;
   stroke-opacity: 0.7;
-  stroke-width: 5px;
+  stroke-width: 2px;
 }
 
 .kanban {

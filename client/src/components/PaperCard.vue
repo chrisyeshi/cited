@@ -1,5 +1,20 @@
 <template>
-  <transition name="background">
+  <div v-if="minimal" ref="header" :index="card.index"
+    :class="{ animate: !isDragging, 'front-most': isDragging }"
+    class="paper-card caption py-1 px-3"
+    :style="cardStyle"
+    style="background: white; border-radius: 20px; border-style: solid; border-width: 1px;"
+    @mousedown.stop="dragElement"
+    @mouseover="emitPaperId('mouseoverrefcount', 'mouseovercitecount')"
+    @mouseout="emitPaperId('mouseoutrefcount', 'mouseoutcitecount')"
+    @click="emitPaperId('clickrefcount', 'clickcitecount')">
+    <div class="text-xs-center font-weight-bold">
+      {{ card.paper.authors[0].family.slice(0, 10) }} {{ card.paper.year }}
+    </div>
+    <div class="text-truncate">{{ card.paper.title }}</div>
+    <div class="text-xs-center d-flex"><span class="text-truncate" style="width: 25px;">{{ card.paper.venue.name }}</span>-<span>Cited by {{ card.paper.citedByCount }}</span></div>
+  </div>
+  <transition v-else name="background">
     <div class="paper-card"
       v-bind:index="card.index"
       v-bind:class="{ animate: !isDragging, 'front-most': isDragging }"
@@ -27,7 +42,7 @@
               <span>{{ card.inGraphCitedBys.length }} / {{ card.paper.citationCount }} &gt;</span>
             </span>
           </v-system-bar>
-          <v-card-text>
+          <v-card-text class="caption">
             <h4>
               <a @click="$emit('clicktitle', card.index)">{{ card.paper.title }}</a>
             </h4>
@@ -71,6 +86,7 @@ export default {
   },
   data () {
     return {
+      minimal: true,
       isDragging: false,
       rect: { ...this.card.rect }
     }
@@ -81,7 +97,7 @@ export default {
       return _.map(this.paper.authors, author => Author.stringify(author))
     },
     cardStyle: function () {
-      const paddingRight = 24
+      const paddingRight = 0
       const style = {
         left: this.rect.left + 'px',
         top: this.rect.top + 'px',
@@ -112,6 +128,11 @@ export default {
     }
   },
   methods: {
+    emitPaperId: function (...evts) {
+      _.forEach(evts, evt => {
+        this.$emit(evt, this.card.paper.id)
+      })
+    },
     dragElement: function (evt) {
       if (!this.draggable) {
         return

@@ -43,6 +43,22 @@ export function getColRowsByCitedLevels (graph) {
   return colRows
 }
 
+export function getColRowsByCitingLevels (graph) {
+  const citingLevels = getPaperCitingLevels(graph)
+  let colRows = {}
+  let columnCounters = []
+  Object.keys(citingLevels).forEach(paperId => {
+    const colId = citingLevels[paperId]
+    const rowId = columnCounters[colId] ? columnCounters[colId] : 0
+    colRows[paperId] = {
+      col: colId,
+      row: rowId
+    }
+    columnCounters[colId] = rowId + 1
+  })
+  return colRows
+}
+
 export function getColRowsByOptimalYearIntervals (graph) {
   const citedByLevels = getPaperCitedByLevels(graph)
   const citingLevels = getPaperCitingLevels(graph)
