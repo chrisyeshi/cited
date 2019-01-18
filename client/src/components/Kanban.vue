@@ -311,8 +311,8 @@ export default {
           this.cardVerticalSpacing = 10
         } else if (style === 'paper-style-card') {
           this.colWidth = 250
-          this.cardSpacing = 16
-          this.cardVerticalSpacing = 16
+          this.cardSpacing = 24
+          this.cardVerticalSpacing = 24
         }
         this.nextTickLayoutPaperCards()
       }
@@ -565,7 +565,7 @@ export default {
       this.$refs.paperCards.forEach(component => {
         this.graph.nodes[component.card.index].geometry = {
           height: component.$el.clientHeight,
-          headerHeight: component.$refs.header.clientHeight
+          headerHeight: component.$refs.header.clientHeight || component.$refs.header.computedHeight
         }
       })
     },

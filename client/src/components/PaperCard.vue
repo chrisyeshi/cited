@@ -232,6 +232,10 @@ a:hover {
   z-index: 99999;
 }
 
+.v-card {
+  background: rgba(255, 255, 255, 0.8);
+}
+
 .background-enter-active .v-card {
   transition: background-color 2s ease-in;
 }
