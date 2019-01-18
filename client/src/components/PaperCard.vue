@@ -1,9 +1,9 @@
 <template>
-  <div v-if="minimal" ref="header" :index="card.index"
+  <div v-if="paperStyle === 'chip'" ref="header" :index="card.index"
     :class="{ animate: !isDragging, 'front-most': isDragging }"
     class="paper-card caption py-1 px-3"
     :style="cardStyle"
-    style="background: white; border-radius: 20px; border-style: solid; border-width: 1px;"
+    style="background: rgba(255, 255, 255, 0.8); border-radius: 20px; border-style: solid; border-width: 1px;"
     @mousedown.stop="dragElement"
     @mouseover="emitPaperId('mouseoverrefcount', 'mouseovercitecount')"
     @mouseout="emitPaperId('mouseoutrefcount', 'mouseoutcitecount')"
@@ -82,11 +82,14 @@ export default {
     draggable: {
       type: Boolean,
       default: true
+    },
+    paperStyle: {
+      type: String,
+      default: 'chip'
     }
   },
   data () {
     return {
-      minimal: true,
       isDragging: false,
       rect: { ...this.card.rect }
     }
@@ -203,7 +206,6 @@ export default {
   position: absolute;
   white-space: normal;
   word-break: break-all;
-  margin-bottom: 100px;
 }
 
 a {

@@ -77,6 +77,17 @@
           </v-list-tile>
         </v-list>
       </v-menu>
+      <v-menu open-on-hover offset-y close-delay=0>
+        <v-btn icon slot="activator"><v-icon>credit_card</v-icon></v-btn>
+        <v-list>
+          <v-list-tile @click="computedPaperStyle ='paper-style-card'">
+            <v-list-tile-title>card with more info</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="computedPaperStyle ='paper-style-chip'">
+            <v-list-tile-title>chip with minimal info</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
       <v-btn icon @click="clearGraph"><v-icon>crop_landscape</v-icon></v-btn>
       <v-btn icon to="/contail"><v-icon>data_usage</v-icon></v-btn>
       <v-btn icon><v-icon>account_circle</v-icon></v-btn>
@@ -94,9 +105,13 @@
         </div>
         <div ref="graphContainer" class="graph-container"
           @scroll="alsoScrollYearsContainer">
+          <svg class="overlay">
+            <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
+          </svg>
           <div class="cards-container" ref="cardsContainer">
             <paper-card
               ref="paperCards"
+              :paperStyle="computedPaperStyle === 'paper-style-chip' ? 'chip' : 'card'"
               v-for="card in cards" v-bind:key="card.index"
               v-bind:card="card"
               v-on:update:card="updateCard($event)"
@@ -111,9 +126,6 @@
               v-on:remove="handleRemoveCard($event)"
               v-on:dragend="movePaperCard"></paper-card>
           </div>
-          <svg class="overlay">
-            <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
-          </svg>
         </div>
       </v-container>
     </v-content>
@@ -170,6 +182,7 @@ export default {
       visiblePaperCiteLinks: [],
       layoutMethod: 'layout-by-cite-level',
       showLinkMethod: 'show-link-hover',
+      paperStyle: 'paper-style-chip',
       isDrawerVisible: false,
       searchText: '',
       isSearching: false,
@@ -284,6 +297,24 @@ export default {
           this.visiblePaperCiteLinks = []
           this.showLinks([])
         }
+      }
+    },
+    computedPaperStyle: {
+      get: function () {
+        return this.paperStyle
+      },
+      set: function (style) {
+        this.paperStyle = style
+        if (style === 'paper-style-chip') {
+          this.colWidth = 180
+          this.cardSpacing = 48
+          this.cardVerticalSpacing = 10
+        } else if (style === 'paper-style-card') {
+          this.colWidth = 250
+          this.cardSpacing = 16
+          this.cardVerticalSpacing = 16
+        }
+        this.nextTickLayoutPaperCards()
       }
     }
   },
@@ -500,7 +531,7 @@ export default {
           centerYs.push(height / 2)
         } else {
           const lastCenterY = centerYs[centerYs.length - 1]
-          centerYs.push(lastCenterY + this.cardSpacing + height)
+          centerYs.push(lastCenterY + this.cardVerticalSpacing + height)
         }
         return centerYs
       }, [])
@@ -532,7 +563,6 @@ export default {
     },
     updateGeos: function () {
       this.$refs.paperCards.forEach(component => {
-        window.header = component.$refs.header
         this.graph.nodes[component.card.index].geometry = {
           height: component.$el.clientHeight,
           headerHeight: component.$refs.header.clientHeight
