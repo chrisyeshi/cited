@@ -9,7 +9,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 const Kanban = () => import('@/components/Kanban')
 const Contail = () => import('@/components/Contail')
-const Referson = () => import('@/components/Referson')
+const PaperSight = () => import('@/components/PaperSight/PaperSight')
 const Smooth = () => import('@/components/Smooth')
 
 Vue.use(Router)
@@ -45,7 +45,7 @@ export default new Router({
     },
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
-    { path: '/referson', component: Referson },
+    { path: '/papersight', component: PaperSight },
     { path: '*', component: NotFound }
   ]
 })
