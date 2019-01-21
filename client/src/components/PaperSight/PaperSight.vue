@@ -30,6 +30,7 @@
           dense
           :items="viewerModes"
           v-model="viewer"
+          @change="setPdfViewerMode()"
           box
           label="PDF Viewer"
         ></v-select>
@@ -42,99 +43,25 @@
             <v-flex ref="MainPanel" xs7 fill-height class="pa-2">
             <v-card v-bind:class="{hidden: isViewingPdf}" fill-height>
               <RefList ref="PaperRefList"></RefList>
-              <PdfViewer v-bind:class="{hidden: !isViewingPdf}" ref="PaperViewer"></PdfViewer>
             </v-card>
             <v-card  v-bind:class="{hidden: !isViewingPdf}" fill-height>
-              <div ref="EmbeddedViewer"></div>
               <PdfViewer ref="PaperViewer"></PdfViewer>
             </v-card>
           </v-flex>
           <v-flex xs5 fill-height class="pa-2">
-            <v-toolbar dense>
-              <v-toolbar-title>Papers</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" small outline @click="selectFiles">
-                + Add Papers
-              </v-btn>
-            </v-toolbar>
-            <v-card>
-              <v-list two-line>
-                <template v-for="(paper, index) in papers">
-                  <v-list-tile
-                    :key="paper.title"
-                    avatar
-                    ripple
-                    @click="viewPaper(index)"
-                  >
-                    <v-list-tile-content v-if="isViewingPdf && selectedPaper == index">
-                      <v-list-tile-title style="height: 2.5em">
-                        <v-layout row>
-                          <v-flex xs2>
-                            <v-subheader>Title: </v-subheader>
-                          </v-flex>
-                          <v-flex xs10>
-                            <v-text-field
-                              required
-                              :value=paper.title
-                            ></v-text-field>
-                          </v-flex>
-                        </v-layout>
-                      </v-list-tile-title>
-                      <v-list-tile-title style="height: 2.5em">
-                        <v-layout row>
-                          <v-flex xs2>
-                            <v-subheader>Authors: </v-subheader>
-                          </v-flex>
-                          <v-flex xs10>
-                            <v-text-field
-                              required
-                              full-width
-                              :value=showAuthorNames(paper.authors)
-                            ></v-text-field>
-                          </v-flex>
-                        </v-layout>
-                      </v-list-tile-title>
-                    </v-list-tile-content>
-                      <v-list-tile-content v-else>
-                      <v-list-tile-title><span class="dot" v-bind:style="'background-color: ' + paper.color"></span>
-                        {{ paper.title }}
-                      </v-list-tile-title>
-                      <v-list-tile-sub-title class="text--primary">{{ showAuthorNames(paper.authors) }}</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action v-if="isViewingPdf">
-                      <v-list-tile-action-text>{{ paper.year }}</v-list-tile-action-text>
-                      <v-icon
-                        @click="toggle(index)"
-                      >
-                        check
-                      </v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-action v-else>
-                      <v-list-tile-action-text>{{ paper.year }}</v-list-tile-action-text>
-                      <v-icon
-                        v-if="selected.indexOf(index) < 0"
-                        color="grey lighten-1"
-                        @click="toggle(index)"
-                      >
-                        star_border
-                      </v-icon>
-                      <v-icon
-                        v-else
-                        color="yellow darken-2"
-                        @click="toggle(index)"
-                      >
-                        star
-                      </v-icon>
-                    </v-list-tile-action>
-
-                  </v-list-tile>
-                  <v-divider
-                    v-if="index + 1 < papers.length"
-                    :key="index"
-                  ></v-divider>
-                </template>
-              </v-list>
-            </v-card>
+            <div v-bind:class="{hidden: !isEditingPaperInfo}">
+              <PaperInforEditor
+                ref="PaperInfoEditor"
+                @editPaperInfoDone="editPaperInfoDone"
+              ></PaperInforEditor>
+            </div>
+            <PaperList
+              v-bind:class="{hidden: isEditingPaperInfo}"
+              ref="PaperList"
+              @viewPaper="viewPaper"
+              @editPaperInfo="editPaperInfo"
+              @selectFiles="selectFiles"
+            ></PaperList>
           </v-flex>
         </v-layout>
       </v-container>
@@ -148,27 +75,31 @@
 <script>
 import PdfParser from './PdfParser'
 import PdfViewer from './PdfViewer'
+import PaperList from './PaperList'
+import PaperInforEditor from './PaperInfoEditor'
 import RefList from './RefList'
 import {PaperGraph} from '../../../../model/PaperGraph'
 
 export default {
   name: 'PaperSight',
   components: {
+    PaperList,
+    PaperInforEditor,
     RefList,
     PdfViewer
   },
   data () {
     return {
       pdfFiles: [],
-      papers: [],
       drawer: false,
       selected: [],
       graph: [],
       dialog: false,
       isViewingPdf: false,
       viewerModes: ['embed', 'pdfjs'],
-      viewer: 'embed',
-      selectedPaper: null
+      viewer: 'pdfjs',
+      selectedPaper: null,
+      isEditingPaperInfo: false
     }
   },
   created: function () {
@@ -188,30 +119,25 @@ export default {
       }
     },
 
-    showAuthorNames (authors) {
-      if (Array.isArray(authors)) {
-        return authors.map((author) => author.name).join(', ')
-      }
+    setPdfViewerMode () {
+      this.$refs.PaperViewer.setMode(this.viewer)
+    },
+
+    editPaperInfo (paper) {
+      this.isEditingPaperInfo = true
+      this.$refs.PaperInfoEditor.setValues(paper)
+    },
+
+    editPaperInfoDone (paper) {
+      this.isEditingPaperInfo = false
     },
 
     viewPaper (index) {
       this.isViewingPdf = true
       if (this.selectedPaper === index) return
+      let viewport = this.$refs.MainPanel.getBoundingClientRect()
       this.selectedPaper = index
-      if (this.viewer === 'embed') {
-        this.$refs.EmbeddedViewer.innerHTML = ''
-        let embed = document.createElement('embed')
-        let viewport = this.$refs.MainPanel.getBoundingClientRect()
-        embed.style.width = (viewport.width - viewport.left) + 'px'
-        embed.style.height = viewport.height + 'px'
-        embed.src = this.pdfFiles[index]
-        this.$refs.EmbeddedViewer.appendChild(embed)
-      } else {
-        new PdfParser(this.pdfFiles[index]).getPage(1).then(page => {
-          this.$refs.PaperViewer.renderPage(page)
-          this.$refs.PaperViewer.renderText(page)
-        })
-      }
+      this.$refs.PaperViewer.render(this.pdfFiles[index], viewport)
     },
 
     selectFiles () {
@@ -293,7 +219,8 @@ export default {
               this.graph.getPaperById(rid).citedBysCount = this.graph.getCitedBys(rid).length
             })
             newPaper.citedBysCount = this.graph.getCitedBys(newPaper.id).length
-            this.papers.push(newPaper)
+            // this.papers.push(newPaper)
+            this.$refs.PaperList.addPaper(newPaper)
           }
           this.$refs.PaperRefList.update(this.graph.getPapers().sort((a, b) => b.citedBysCount - a.citedBysCount))
           this.dialog = false
