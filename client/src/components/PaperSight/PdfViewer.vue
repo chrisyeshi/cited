@@ -1,10 +1,10 @@
 <template>
   <v-card style="text-align: center">
-    <div v-if="usePdfjs" style="margin: 0 auto">
+    <div v-bind:class="{hidden: !usePdfjs}" style="margin: 0 auto">
       <canvas ref="PdfCanvas"></canvas>
       <div ref="TextLayer" class="textLayer"></div>
     </div>
-    <div v-else ref="EmbeddedViewer"></div>
+    <div v-bind:class="{hidden: usePdfjs}" ref="EmbeddedViewer"></div>
   </v-card>
 </template>
 
@@ -88,6 +88,10 @@ export default {
 </script>
 
 <style>
+
+.hidden {
+  display: none;
+}
 
 .textLayer {
   position: absolute;
