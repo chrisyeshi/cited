@@ -20,10 +20,16 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-toolbar app fixed clipped-left flat>
-      <v-toolbar-side-icon></v-toolbar-side-icon>
+    <v-toolbar app fixed clipped-left flat dark color="blue darken-4">
+      <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
       <v-toolbar-title>PaperSight</v-toolbar-title>
-      <v-btn @click="isViewingPdf=false" flat>Show All References</v-btn>
+      <v-layout justify-space-around class="ma-4 appbar-icons">
+        <v-icon left large @click="isViewingPdf=false" v-bind:class="{active: !isViewingPdf}">view_list</v-icon>
+        <v-icon left large @click="isViewingPdf=true"  v-bind:class="{active: isViewingPdf}">book</v-icon>
+        <v-icon left large>device_hub</v-icon>
+        <v-icon left large>bubble_chart</v-icon>
+      </v-layout>
+
       <v-spacer></v-spacer>
       <v-flex xs1 class="ma-2">
         <v-select
@@ -96,6 +102,7 @@ export default {
       graph: [],
       dialog: false,
       isViewingPdf: false,
+      tabs: ['references'],
       viewerModes: ['embed', 'pdfjs'],
       viewer: 'pdfjs',
       selectedPaper: null,
@@ -121,6 +128,11 @@ export default {
 
     setPdfViewerMode () {
       this.$refs.PaperViewer.setMode(this.viewer)
+      if (this.viewer === 'embed') {
+        let viewport = this.$refs.MainPanel.getBoundingClientRect()
+        this.$refs.PaperViewer.setViewport(viewport)
+      }
+      this.$refs.PaperViewer.render()
     },
 
     editPaperInfo (paper) {
@@ -135,9 +147,9 @@ export default {
     viewPaper (index) {
       this.isViewingPdf = true
       if (this.selectedPaper === index) return
-      let viewport = this.$refs.MainPanel.getBoundingClientRect()
       this.selectedPaper = index
-      this.$refs.PaperViewer.render(this.pdfFiles[index], viewport)
+      this.$refs.PaperViewer.setUrl(this.pdfFiles[index])
+      this.$refs.PaperViewer.render()
     },
 
     selectFiles () {
@@ -234,5 +246,18 @@ export default {
 <style scoped>
 .hidden {
   display: none;
+}
+
+.appbar-icons i {
+  padding: 10px 20px;
+}
+
+.appbar-icons i.active {
+  border-bottom: 3px solid #fff;
+}
+
+.appbar-icons i:hover {
+  color: #eeeeee;
+  background-color: steelblue;
 }
 </style>

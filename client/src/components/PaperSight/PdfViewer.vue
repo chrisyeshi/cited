@@ -1,8 +1,27 @@
 <template>
   <v-card style="text-align: center">
     <div v-bind:class="{hidden: !usePdfjs}" style="margin: 0 auto">
-      <canvas ref="PdfCanvas"></canvas>
-      <div ref="TextLayer" class="textLayer"></div>
+      <v-toolbar dense>
+        <v-toolbar-title>PDF Reader</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="zoomIn()">
+          <v-icon>zoom_in</v-icon>
+        </v-btn>
+        <v-btn icon @click="zoomOut()">
+          <v-icon>zoom_out</v-icon>
+        </v-btn>
+        <v-btn icon :disabled="pageNumber<2" @click="pageNumber-=1">
+          <v-icon>keyboard_arrow_left</v-icon>
+        </v-btn>
+        <input type="text" value="1" size="2" v-model="pageNumber" class="page-number-input"/> / {{pageTotal}}
+        <v-btn icon :disabled="pageNumber>=pageTotal" @click="pageNumber+=1">
+          <v-icon>keyboard_arrow_right</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-card style="overflow: scroll">
+        <canvas ref="PdfCanvas"></canvas>
+        <div ref="TextLayer" class="textLayer"></div>
+      </v-card>
     </div>
     <div v-bind:class="{hidden: usePdfjs}" ref="EmbeddedViewer"></div>
   </v-card>
@@ -20,8 +39,16 @@ export default {
       usePdfjs: true,
       scale: 1.2,
       pageNumber: 1,
+      pageTotal: 10,
+      viewport: null,
+      pdfUrl: null,
       pdfFile: null,
-      viewport: null
+      page: null
+    }
+  },
+  watch: {
+    pageNumber: function () {
+      this.pdfjsRender()
     }
   },
   methods: {
@@ -33,23 +60,50 @@ export default {
       }
     },
 
-    render (pdfUrl, viewport) {
+    setViewport (viewport) {
+      this.viewport = viewport
+    },
+
+    setUrl (url) {
+      this.pdfUrl = url
+    },
+
+    zoomOut () {
+      this.scale -= 0.2
+      this.pdfjsRender()
+    },
+
+    zoomIn () {
+      this.scale += 0.2
+      this.pdfjsRender()
+    },
+
+    render () {
+      if (this.pdfUrl === null) return
       if (this.usePdfjs) {
-        new PdfParser(pdfUrl).getPage(this.pageNumber).then(page => {
-          this.renderPage(page)
-          this.renderText(page)
-        })
+        this.pdfFile = new PdfParser(this.pdfUrl)
+        this.pageNumber = 1
+        this.scale = 1.2
+        this.pdfjsRender()
       } else {
         this.$refs.EmbeddedViewer.innerHTML = ''
         let embed = document.createElement('embed')
-        embed.style.width = (viewport.width - viewport.left) + 'px'
-        embed.style.height = viewport.height + 'px'
-        embed.src = pdfUrl
+        embed.style.width = (this.viewport.width - this.viewport.left) + 'px'
+        embed.style.height = this.viewport.height + 'px'
+        embed.src = this.pdfUrl
         this.$refs.EmbeddedViewer.appendChild(embed)
       }
     },
 
-    renderPage (page) {
+    pdfjsRender () {
+      let pageNumber = parseInt(this.pageNumber) || 1
+      this.pdfFile.getPage(pageNumber).then(page => {
+        this.pdfjsRenderPage(page)
+        this.pdfjsRenderText(page)
+      })
+    },
+
+    pdfjsRenderPage (page) {
       // this.scale = canvas.width / page.getViewport(1.0).width
       this.viewport = page.getViewport(this.scale)
       this.canvas = this.$refs.PdfCanvas
@@ -65,7 +119,7 @@ export default {
       return renderTask.promise
     },
 
-    renderText (page) {
+    pdfjsRenderText (page) {
       return page.getTextContent().then((textContent) => {
         let textLayer = this.$refs.TextLayer
         textLayer.innerHTML = ''
@@ -91,6 +145,14 @@ export default {
 
 .hidden {
   display: none;
+}
+
+.page-number-input {
+  width: 2.5em;
+  text-align: right;
+  padding-right: 0.25em;
+  border: 1px solid #aaa;
+  margin-right: 0.5em;
 }
 
 .textLayer {
