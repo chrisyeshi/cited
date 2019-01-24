@@ -44,6 +44,37 @@
         <span>Find common ancestors/descendants</span>
       </v-tooltip>
       <v-menu open-on-hover offset-y close-delay=0>
+        <v-btn icon slot="activator"><v-icon>settings</v-icon></v-btn>
+        <v-list>
+          <v-list-tile>
+            <v-list-tile-title>spring {{ globalSpringConstant }}</v-list-tile-title>
+            <v-list-tile-action>
+              <v-slider v-model="computedSpringConstant" min="1" max="50000"></v-slider>
+            </v-list-tile-action>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-title>electrostatic {{ electroConstant }}</v-list-tile-title>
+            <v-slider v-model="computedElectroConstant" min="1" max="1000"></v-slider>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-title>segments {{ nEdgeSegments }}</v-list-tile-title>
+            <v-slider v-model="computedNEdgeSegments" min="2" max="32"></v-slider>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-title>force ratio {{ forceConstant.toFixed(4) }}</v-list-tile-title>
+            <v-slider v-model="computedForceConstant" min="1" max="1000"></v-slider>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-title>interval {{ edgeInterval }}</v-list-tile-title>
+            <v-slider v-model="computedEdgeInterval" min="10" max="1000"></v-slider>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-title>compatibility threshold {{ compatibilityThreshold.toFixed(2) }}</v-list-tile-title>
+            <v-slider v-model="computedCompatibilityThreshold" min="0" max="1000"></v-slider>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+      <v-menu open-on-hover offset-y close-delay=0>
         <v-btn icon slot="activator"><v-icon>gesture</v-icon></v-btn>
         <v-list>
           <v-list-tile v-on:click="computedShowLinkMethod = 'show-link-hover'">
@@ -106,7 +137,7 @@
         <div ref="graphContainer" class="graph-container"
           @scroll="alsoScrollYearsContainer">
           <svg class="overlay">
-            <path v-for="curve in curves" :key="curve.key" :d="curve.path"></path>
+            <path v-for="(curve, index) in edges" :key="index" :d="curve.path"></path>
           </svg>
           <div class="cards-container" ref="cardsContainer">
             <paper-card
@@ -170,6 +201,8 @@ export default {
     this.colWidth = 180
     this.cardSpacing = 48
     this.cardVerticalSpacing = 10
+    this.isMovingEdge = false
+    this.edgeCompatibilityLists = []
     return {
       graph: {
         nodes: []
@@ -186,7 +219,14 @@ export default {
       isDrawerVisible: false,
       searchText: '',
       isSearching: false,
-      drawerComponent: 'search-results'
+      drawerComponent: 'search-results',
+      edgePts: [],
+      globalSpringConstant: 10000,
+      electroConstant: 1,
+      nEdgeSegments: 8,
+      forceConstant: 0.001,
+      edgeInterval: 200,
+      compatibilityThreshold: 0.5
     }
   },
   watch: {
@@ -238,6 +278,18 @@ export default {
         return {
           key: index,
           path: `M${start.x} ${start.y} C ${interpolate(start.x, end.x, ratio)} ${start.y}, ${interpolate(end.x, start.x, ratio)} ${end.y}, ${end.x} ${end.y}`
+        }
+      })
+    },
+    edges: function () {
+      return _.map(this.edgePts, pts => {
+        const firstPt = `M ${pts[0].x} ${pts[0].y}`
+        const otherPts = _.map(_.slice(pts, 1), pt => {
+          return `L ${pt.x} ${pt.y}`
+        })
+        const ptStrs = _.concat([ firstPt ], otherPts)
+        return {
+          path: _.join(ptStrs, ' ')
         }
       })
     },
@@ -315,6 +367,60 @@ export default {
           this.cardVerticalSpacing = 24
         }
         this.nextTickLayoutPaperCards()
+      }
+    },
+    computedSpringConstant: {
+      get: function () {
+        return this.globalSpringConstant
+      },
+      set: function (value) {
+        this.globalSpringConstant = value
+        this.beginMoveEdges()
+      }
+    },
+    computedElectroConstant: {
+      get: function () {
+        return this.electroConstant
+      },
+      set: function (value) {
+        this.electroConstant = value
+        this.beginMoveEdges()
+      }
+    },
+    computedNEdgeSegments: {
+      get: function () {
+        return this.nEdgeSegments
+      },
+      set: function (value) {
+        this.nEdgeSegments = value
+        this.updateEdges()
+      }
+    },
+    computedForceConstant: {
+      get: function () {
+        return (this.forceConstant - 0.001) / (0.01 - 0.001) * (1000 - 1) + 1
+      },
+      set: function (value) {
+        this.forceConstant = (value - 1) / (1000 - 1) * (0.01 - 0.001) + 0.001
+        this.beginMoveEdges()
+      }
+    },
+    computedEdgeInterval: {
+      get: function () {
+        return this.edgeInterval
+      },
+      set: function (value) {
+        this.edgeInterval = value
+        this.beginMoveEdges()
+      }
+    },
+    computedCompatibilityThreshold: {
+      get: function () {
+        return this.compatibilityThreshold * 1000
+      },
+      set: function (value) {
+        this.compatibilityThreshold = value / 1000
+        this.updateEdges()
       }
     }
   },
@@ -434,10 +540,12 @@ export default {
       this.graph.toggleSelectedByIndex(paperIndex)
       const colRows = this.cards.map(node => node.colRow)
       this.cards = this.getCardsByColRows(this.graph, colRows)
+      this.updateEdges()
     },
     handleRemoveCard: function (paperIndex) {
       this.graph.remove(paperIndex)
       this.cards = this.layoutByMethod(this.graph, this.layoutMethod)
+      this.updateEdges()
     },
     alsoScrollYearsContainer: function (evt) {
       this.$refs.yearsContainer.scrollLeft = this.$refs.graphContainer.scrollLeft
@@ -458,6 +566,7 @@ export default {
     },
     showLinks: function (relations) {
       this.visibleRelations = relations
+      this.updateEdges()
     },
     getVisibleLinks: function (paperRefLinks, paperCiteLinks) {
       return this.graph.getUnionRelations(paperCiteLinks, paperRefLinks)
@@ -467,6 +576,7 @@ export default {
       const newColRow = this.getColRowByRect(this.cards, node.rect)
       const newColRows = layout.moveColRow(oldColRows, node.index, newColRow)
       this.cards = this.getCardsByColRows(this.graph, newColRows)
+      this.updateEdges()
     },
     layoutByMethod: function (graph, method) {
       if (this.layoutMethod === 'layout-by-year') {
@@ -559,6 +669,7 @@ export default {
         this.updateGeos()
         const colRows = this.cards.map(_.property('colRow'))
         this.cards = this.getCardsByColRows(this.graph, colRows)
+        this.updateEdges()
       })
     },
     updateGeos: function () {
@@ -569,8 +680,218 @@ export default {
         }
       })
     },
-    console: function (value) {
-      console.log(value)
+    updateEdges: function () {
+      const marginLeft = 24
+      const nSegmentsPerEdge = this.nEdgeSegments
+      const nPtsPerEdge = nSegmentsPerEdge + 1
+      const edgeEndPts = this.visibleRelations.map((relation, index) => {
+        let citedBy =
+          _.find(this.cards, card => card.paper.id === relation.citedBy)
+        let citing =
+          _.find(this.cards, card => card.paper.id === relation.citing)
+        const beg = {
+          x: citedBy.rect.left + marginLeft,
+          y: citedBy.rect.top + this.graph.getNodeById(relation.citedBy).geometry.headerHeight / 2
+        }
+        const end = {
+          x: citing.rect.right + marginLeft,
+          y: citing.rect.top + this.graph.getNodeById(relation.citing).geometry.headerHeight / 2
+        }
+        return { beg, end }
+      })
+      this.edgeCompatibilityLists = _.map(edgeEndPts, () => ([]))
+      for (let iEdge = 0; iEdge < edgeEndPts.length; ++iEdge) {
+        for (let jEdge = iEdge + 1; jEdge < edgeEndPts.length; ++jEdge) {
+          const score =
+            this.edgeCompatibility(edgeEndPts[iEdge], edgeEndPts[jEdge])
+          if (score > this.compatibilityThreshold) {
+            this.edgeCompatibilityLists[iEdge].push(jEdge)
+            this.edgeCompatibilityLists[jEdge].push(iEdge)
+          }
+        }
+      }
+      const interpolate = (beg, end, ratio) => {
+        return ratio * (end - beg) + beg
+      }
+      this.edgePts = _.map(edgeEndPts, ({ beg, end }) => {
+        const pts = []
+        pts[0] = beg
+        pts[nPtsPerEdge - 1] = end
+        for (let iPt = 1; iPt < nPtsPerEdge - 1; ++iPt) {
+          const ratio = (iPt) / (nPtsPerEdge - 1)
+          pts[iPt] = {
+            x: interpolate(beg.x, end.x, ratio),
+            y: interpolate(beg.y, end.y, ratio)
+          }
+        }
+        return pts
+      })
+      this.beginMoveEdges()
+    },
+    beginMoveEdges: function () {
+      if (this.isMovingEdge) {
+        return
+      }
+      console.log('begin edge iteration')
+      this.isMovingEdge = true
+      this.moveEdges()
+    },
+    lengthEdge (edge) {
+      return this.distancePt(edge.beg, edge.end)
+    },
+    lengthPt (pt) {
+      return Math.sqrt(pt.x * pt.x + pt.y * pt.y)
+    },
+    distancePt (a, b) {
+      return this.lengthPt(this.minusPt(b, a))
+    },
+    minusPt (a, b) {
+      return { x: a.x - b.x, y: a.y - b.y }
+    },
+    plusPt (a, b) {
+      return { x: a.x + b.x, y: a.y + b.y }
+    },
+    timesPt (pt, C) {
+      return { x: pt.x * C, y: pt.y * C }
+    },
+    dotPt (a, b) {
+      return a.x * b.x + a.y * b.y
+    },
+    moveEdges: function () {
+      const nSegmentsPerEdge = this.nEdgeSegments
+      const electroConstant = this.electroConstant
+      const forceConstant = this.forceConstant
+      const nPtsPerEdge = nSegmentsPerEdge + 1
+      const forces = []
+      for (let iEdge = 0; iEdge < this.edgePts.length; ++iEdge) {
+        const thisPts = this.edgePts[iEdge]
+        forces[iEdge] = forces[iEdge] || []
+        forces[iEdge][0] = { x: 0, y: 0 }
+        forces[iEdge][nPtsPerEdge - 1] = { x: 0, y: 0 }
+        for (let iPt = 1; iPt < nPtsPerEdge - 1; ++iPt) {
+          // spring force
+          const thisLength =
+            this.distancePt(thisPts[0], thisPts[thisPts.length - 1])
+          const springConstant = this.globalSpringConstant / thisLength
+          const frontDelta = this.minusPt(thisPts[iPt - 1], thisPts[iPt])
+          const backDelta = this.minusPt(thisPts[iPt + 1], thisPts[iPt])
+          const springForce = this.plusPt(frontDelta, backDelta)
+          // electrostatic force
+          let electroForce = { x: 0, y: 0 }
+          _.forEach(this.edgeCompatibilityLists[iEdge], jEdge => {
+            const thatPts = this.edgePts[jEdge]
+            const delta = this.minusPt(thatPts[iPt], thisPts[iPt])
+            electroForce = this.plusPt(electroForce, delta)
+          })
+          // for (let jEdge = 0; jEdge < this.edgePts.length; ++jEdge) {
+          //   if (iEdge === jEdge) {
+          //     continue
+          //   }
+          //   const thatPts = this.edgePts[jEdge]
+          //   const delta = this.minusPt(thatPts[iPt], thisPts[iPt])
+          //   electroForce = this.plusPt(electroForce, delta)
+          // }
+          // combined force
+          forces[iEdge][iPt] =
+            this.plusPt(
+              this.timesPt(springForce, springConstant),
+              this.timesPt(electroForce, electroConstant))
+        }
+      }
+      // stop iteration if force is small enough
+      const maxForce =
+        _.max(
+          _.map(
+            _.flatten(forces),
+            force => _.max([ Math.abs(force.x), Math.abs(force.y) ])))
+      // console.log(maxForce)
+      if (maxForce === undefined || maxForce < 100) {
+        this.isMovingEdge = false
+        console.log('stop edge iteration')
+        return
+      }
+      // move points
+      const newEdgePts = []
+      for (let iEdge = 0; iEdge < this.edgePts.length; ++iEdge) {
+        newEdgePts[iEdge] = newEdgePts[iEdge] || []
+        newEdgePts[iEdge][0] = this.edgePts[iEdge][0]
+        newEdgePts[iEdge][nPtsPerEdge - 1] =
+          this.edgePts[iEdge][nPtsPerEdge - 1]
+        for (let iPt = 1; iPt < nPtsPerEdge - 1; ++iPt) {
+          newEdgePts[iEdge][iPt] =
+            this.plusPt(
+              this.edgePts[iEdge][iPt],
+              this.timesPt(forces[iEdge][iPt], forceConstant))
+        }
+      }
+      this.edgePts = newEdgePts
+      setTimeout(this.moveEdges.bind(this), this.edgeInterval)
+    },
+    angleCompatibility (aEdge, bEdge) {
+      const aVector = this.minusPt(aEdge.end, aEdge.beg)
+      const bVector = this.minusPt(bEdge.end, bEdge.beg)
+      const aLength = this.lengthEdge(aEdge)
+      const bLength = this.lengthEdge(bEdge)
+      const score = Math.abs(this.dotPt(aVector, bVector) / (aLength * bLength))
+      return score
+    },
+    scaleCompatibility (aEdge, bEdge) {
+      const aLength = this.lengthEdge(aEdge)
+      const bLength = this.lengthEdge(bEdge)
+      const avgLength = (aLength + bLength) / 2
+      const score =
+        2 / (avgLength / Math.min(aLength, bLength) + Math.max(aLength, bLength) / avgLength)
+      // console.log('scale compatibility:', score)
+      return score
+    },
+    positionCompatibility (aEdge, bEdge) {
+      const aLength = this.lengthEdge(aEdge)
+      const bLength = this.lengthEdge(bEdge)
+      const avgLength = (aLength + bLength) / 2
+      const aMid = this.timesPt(this.plusPt(aEdge.beg, aEdge.end), 0.5)
+      const bMid = this.timesPt(this.plusPt(bEdge.beg, bEdge.end), 0.5)
+      const score = avgLength / (avgLength + this.distancePt(aMid, bMid))
+      // console.log('position compatibility: ', score)
+      return score
+    },
+    visibilityCompatibility (aEdge, bEdge) {
+      const projectPointOnLine = (pt, edge) => {
+        const edgeLength = this.lengthEdge(edge)
+        const ratio = ((edge.beg.y - pt.y) * (edge.beg.y - edge.end.y) - (edge.beg.x - pt.x) * (edge.end.x - edge.beg.x)) / (edgeLength * edgeLength)
+        return this.plusPt(
+          edge.beg, this.timesPt(this.minusPt(edge.end, edge.beg), ratio))
+      }
+      // const pt = projectPointOnLine(
+      //   { x: 0.0, y: 1.5 },
+      //   {
+      //     beg: { x: 0.0, y: 0.0 },
+      //     end: { x: 1.0, y: 1.0 }
+      //   })
+      // console.log(pt)
+      const edgeVisibility = (aEdge, bEdge) => {
+        const I0 = projectPointOnLine(bEdge.beg, aEdge)
+        const I1 = projectPointOnLine(bEdge.end, aEdge)
+        const IMid = this.timesPt(this.plusPt(I0, I1), 0.5)
+        const PMid = this.timesPt(this.plusPt(aEdge.beg, aEdge.end), 0.5)
+        return Math.max(
+          0, 1 - 2 * this.distancePt(PMid, IMid) / this.distancePt(I0, I1))
+      }
+      // console.log(edgeVisibility(aEdge, bEdge), edgeVisibility(bEdge, aEdge))
+      const score = Math.min(
+        edgeVisibility(aEdge, bEdge), edgeVisibility(bEdge, aEdge))
+      // console.log(score)
+      return score
+    },
+    endPtCompatibility (aEdge, bEdge) {
+      const isSameBeg = Math.abs(aEdge.beg.x - bEdge.beg.x) < 0.001 && Math.abs(aEdge.beg.y - bEdge.beg.y) < 0.001
+      const isSameEnd = Math.abs(aEdge.end.x - bEdge.end.x) < 0.001 && Math.abs(aEdge.end.y - bEdge.end.y) < 0.001
+      if (isSameBeg || isSameEnd) {
+        return 1
+      }
+      return 0
+    },
+    edgeCompatibility (aEdge, bEdge) {
+      return this.angleCompatibility(aEdge, bEdge) * this.scaleCompatibility(aEdge, bEdge) * this.positionCompatibility(aEdge, bEdge) * this.visibilityCompatibility(aEdge, bEdge) * this.endPtCompatibility(aEdge, bEdge)
     }
   }
 }
