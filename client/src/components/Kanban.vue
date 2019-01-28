@@ -151,7 +151,7 @@
           @scroll="alsoScrollYearsContainer">
           <svg class="overlay">
             <path v-for="(curve, index) in edges" :key="index" :d="curve.path"
-              :stroke-width="curve.width || 1">
+              :stroke-width="curve.width || 1" :stroke-opacity="curve.opacity || 0.7">
             </path>
           </svg>
           <div class="cards-container" ref="cardsContainer">
@@ -729,12 +729,14 @@ export default {
         })
         const citedByWeightPrefixSum =
           _.reduce(sortedCitedBys, (result, citedBy) => {
-            result = _.concat(result, citedBy.weight + _.last(result))
+            // result = _.concat(result, citedBy.weight + _.last(result))
+            result = _.concat(result, 1 + _.last(result))
             return result
           }, [ 0 ])
         const citingWeightPrefixSum =
           _.reduce(sortedCitings, (result, citing) => {
-            result = _.concat(result, citing.weight + _.last(result))
+            // result = _.concat(result, citing.weight + _.last(result))
+            result = _.concat(result, 1 + _.last(result))
             return result
           }, [ 0 ])
         const citedByWeight = _.last(citedByWeightPrefixSum)
@@ -743,11 +745,13 @@ export default {
         const citingThickness = thickness * citingWeight
         const citedByYOffsets = _.map(sortedCitedBys, (citedBy, index) => {
           const accumWeight = citedByWeightPrefixSum[index]
-          return -citedByThickness / 2 + thickness * accumWeight + 0.5 * thickness * citedBy.weight
+          // return -citedByThickness / 2 + thickness * accumWeight + 0.5 * thickness * citedBy.weight
+          return -citedByThickness / 2 + thickness * accumWeight + 0.5 * thickness * 1
         })
         const citingYOffsets = _.map(sortedCitings, (citing, index) => {
           const accumWeight = citingWeightPrefixSum[index]
-          return -citingThickness / 2 + thickness * accumWeight + 0.5 * thickness * citing.weight
+          // return -citingThickness / 2 + thickness * accumWeight + 0.5 * thickness * citing.weight
+          return -citingThickness / 2 + thickness * accumWeight + 0.5 * thickness * 1
         })
         const citedByEndPts = _.map(citedByYOffsets, yOffset => {
           return {
@@ -789,9 +793,13 @@ export default {
           return ratio * (end - beg) + beg
         }
         const ratio = 0.5
+        // const width = weight * thickness
+        const width = thickness
         return {
           path: `M${citedByEndPt.x} ${citedByEndPt.y} C ${interpolate(citedByEndPt.x, citingEndPt.x, ratio)} ${citedByEndPt.y}, ${interpolate(citingEndPt.x, citedByEndPt.x, ratio)} ${citingEndPt.y}, ${citingEndPt.x} ${citingEndPt.y}`,
-          width: weight * thickness
+          // path: `M ${citedByEndPt.x} ${citedByEndPt.y} L ${citedByEndPt.x - width / 2} ${citedByEndPt.y} L ${citingEndPt.x + width / 2} ${citingEndPt.y} L ${citingEndPt.x} ${citingEndPt.y}`,
+          width: width,
+          opacity: Math.min(0.75, weight * 0.25)
         }
       })
     }
@@ -960,6 +968,7 @@ function makeRiverGraph (graph, relations) {
     const paths = _.filter(inRelationPaths, path => path.length === maxLength)
     // console.log(maxLength, inRelationPaths, paths)
     _.forEach(paths, path => {
+      // riverGraph.incrementEdgeWeight(path.links[0])
       _.forEach(path.links, link => {
         riverGraph.incrementEdgeWeight(link)
       })
@@ -1031,7 +1040,7 @@ function makeRiverGraph (graph, relations) {
 .overlay path {
   stroke: #a55;
   fill: none;
-  stroke-opacity: 0.7;
+  /*stroke-opacity: 0.7;*/
   /*stroke-width: 2px;*/
 }
 
