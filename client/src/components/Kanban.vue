@@ -186,9 +186,12 @@ import SearchResults from './SearchResults.vue'
 import CommonRelatives from './CommonRelatives.vue'
 import { create as createRect } from './rect.js'
 import { Graph } from './kanbangraph.js'
+import { RiverGraph } from './rivergraph.js'
 import FDEB from './forcedirectededgebundling.js'
 import * as layout from './gridbasedlayout.js'
 import * as api from './crossref.js'
+import Vec from './vec.js'
+import svg from './svgpath.js'
 import _ from 'lodash'
 
 // TODO: consider using https://haltu.github.io/muuri/
@@ -219,6 +222,8 @@ export default {
     this.cardVerticalSpacing = 10
     this.marginLeft = 24
     this.fdeb = new FDEB((edgePts) => { this.edgePts = edgePts })
+    this.edgeThickness = 2
+    this.edgeSpacing = 2
     return {
       graph: {
         nodes: []
@@ -237,7 +242,8 @@ export default {
       isSearching: false,
       drawerComponent: 'search-results',
       edgePts: [],
-      edgeLayout: 'river'
+      edgeLayout: 'river',
+      riverWidthMode: 'river-width-constant'
     }
   },
   watch: {
@@ -265,17 +271,19 @@ export default {
       })
     },
     riverPaths: function () {
-      const riverGraph = makeRiverGraph(this.graph, this.visibleRelations)
-      return this.makeRiverCurves(riverGraph)
-      // return _.map(
-      //   riverGraph.weightedRelations, ({ relation, weight }) => {
-      //     this.makeRiverCurve()
-
-      //     return {
-      //       ...this.makeCurve(relation),
-      //       width: weight * 2
-      //     }
-      //   })
+      const riverGraph =
+        RiverGraph.buildFromRelations(this.graph, this.visibleRelations)
+      const getRiverWidths = (connections, thickness) => {
+        if (this.riverWidthMode === 'river-width-constant') {
+          return _.map(connections, () => thickness)
+        } else if (this.riverWidthMode === 'river-width-by-weight') {
+          return _.map(connections, conn => conn.weight * thickness)
+        }
+      }
+      const getOpacities = (connections) => {
+        return _.map(connections, ({ weight }) => Math.min(0.75, weight * 0.25))
+      }
+      return this.makeRiverCurves(riverGraph, getRiverWidths, getOpacities)
     },
     edges: function () {
       return this.edgeLayout === 'force-directed-edge-bundling'
@@ -315,6 +323,30 @@ export default {
         'margin-left': this.cardSpacing / 2 + 'px',
         'margin-right': this.cardSpacing / 2 + 'px'
       }
+    },
+    topCardRect: function () {
+      for (let iCard = 0; iCard < this.cards.length; ++iCard) {
+        const card = this.cards[iCard]
+        if (card.colRow.row === 0) {
+          return card.rect
+        }
+      }
+    },
+    cardColRows: function () {
+      return _.map(this.cards, card => card.colRow)
+    },
+    cardColRowsByPaperId: function () {
+      const byId = {}
+      _.forEach(this.cards, card => {
+        byId[card.paper.id] = card.colRow
+      })
+      return byId
+    },
+    maxCardCol: function () {
+      return _.max(_.map(this.cardColRows, colRow => colRow.col))
+    },
+    maxCardRow: function () {
+      return _.max(_.map(this.cardColRows, colRow => colRow.row))
     },
     computedLayoutMethod: {
       get: function () {
@@ -680,12 +712,8 @@ export default {
         x: citing.rect.right + this.marginLeft,
         y: citing.rect.top + this.graph.getNodeById(relation.citing).geometry.headerHeight / 2
       }
-      const interpolate = (beg, end, ratio) => {
-        return ratio * (end - beg) + beg
-      }
-      const ratio = 0.5
       return {
-        path: `M${start.x} ${start.y} C ${interpolate(start.x, end.x, ratio)} ${start.y}, ${interpolate(end.x, start.x, ratio)} ${end.y}, ${end.x} ${end.y}`
+        path: svg.makeRatioCurve(start, end, 0.5)
       }
     },
     updateEdges: function () {
@@ -707,8 +735,53 @@ export default {
       })
       this.fdeb.edgeEndPts = edgeEndPts
     },
-    makeRiverCurves: function (riverGraph) {
-      const thickness = 2
+    getVerticalGapHighways: function (relations) {
+      const colRowsById = this.cardColRowsByPaperId
+      let maxCardCol = this.maxCardCol
+      let maxCardRow = this.maxCardRow
+      const highways = []
+      for (let col = 0; col < maxCardCol - 1; ++col) {
+        const gapRelations =
+          _.map(
+            relations,
+            ({ relation }, index) => ({
+              relation: {
+                citedBy: {
+                  paperId: relation.citedBy,
+                  colRow: colRowsById[relation.citedBy]
+                },
+                citing: {
+                  paperId: relation.citing,
+                  colRow: colRowsById[relation.citing]
+                }
+              },
+              index: index
+            }))
+        const colRelations = _.filter(gapRelations, ({ relation }) => {
+          const citedByColRow = relation.citedBy.colRow
+          const citingColRow = relation.citing.colRow
+          return citingColRow.col === col && citedByColRow.col === col + 1
+        })
+        const sortedColRelations = _.sortBy(colRelations, ({ relation }) => {
+          return -(relation.citing.colRow.row * (maxCardRow + 1) + relation.citedBy.colRow.row)
+        })
+        _.forEach(sortedColRelations, ({ relation, index }) => {
+          const minRow =
+            Math.min(relation.citedBy.colRow.row, relation.citing.colRow.row)
+          const maxRow =
+            Math.max(relation.citedBy.colRow.row, relation.citing.colRow.row)
+          for (let row = minRow; row < maxRow; ++row) {
+            highways[col] = highways[col] || []
+            highways[col][row] = highways[col][row] || []
+            highways[col][row].push(index)
+          }
+        })
+      }
+      return highways
+    },
+    getRiverNodeInfos: function (riverGraph, getWidths, getOpacities) {
+      const thickness = this.edgeThickness
+      const spacing = this.edgeSpacing
       const nodeInfos = {}
       _.forEach(riverGraph.nodes, node => {
         const card = _.find(this.cards, card => card.paper.id === node.paperId)
@@ -727,31 +800,21 @@ export default {
           const y = citingCard.rect.top - card.rect.top
           return -y / x
         })
-        const citedByWeightPrefixSum =
-          _.reduce(sortedCitedBys, (result, citedBy) => {
-            // result = _.concat(result, citedBy.weight + _.last(result))
-            result = _.concat(result, 1 + _.last(result))
-            return result
-          }, [ 0 ])
-        const citingWeightPrefixSum =
-          _.reduce(sortedCitings, (result, citing) => {
-            // result = _.concat(result, citing.weight + _.last(result))
-            result = _.concat(result, 1 + _.last(result))
-            return result
-          }, [ 0 ])
-        const citedByWeight = _.last(citedByWeightPrefixSum)
-        const citingWeight = _.last(citingWeightPrefixSum)
-        const citedByThickness = thickness * citedByWeight
-        const citingThickness = thickness * citingWeight
+        const nCitedBy = node.citedBys.length
+        const nCiting = node.citings.length
+        const citedByOpacities = getOpacities(sortedCitedBys)
+        const citingOpacities = getOpacities(sortedCitings)
+        const citedByWidths = getWidths(sortedCitedBys, thickness)
+        const citingWidths = getWidths(sortedCitings, thickness)
+        const citedByRunningWidths = prefixSum(citedByWidths, spacing)
+        const citingRunningWidths = prefixSum(citingWidths, spacing)
+        const citedByWidth = _.last(citedByRunningWidths) + nCitedBy * spacing
+        const citingWidth = _.last(citingRunningWidths) + nCiting * spacing
         const citedByYOffsets = _.map(sortedCitedBys, (citedBy, index) => {
-          const accumWeight = citedByWeightPrefixSum[index]
-          // return -citedByThickness / 2 + thickness * accumWeight + 0.5 * thickness * citedBy.weight
-          return -citedByThickness / 2 + thickness * accumWeight + 0.5 * thickness * 1
+          return -citedByWidth / 2 + citedByRunningWidths[index] + index * spacing + 0.5 * citedByWidths[index]
         })
         const citingYOffsets = _.map(sortedCitings, (citing, index) => {
-          const accumWeight = citingWeightPrefixSum[index]
-          // return -citingThickness / 2 + thickness * accumWeight + 0.5 * thickness * citing.weight
-          return -citingThickness / 2 + thickness * accumWeight + 0.5 * thickness * 1
+          return -citingWidth / 2 + citingRunningWidths[index] + index * spacing + 0.5 * citingWidths[index]
         })
         const citedByEndPts = _.map(citedByYOffsets, yOffset => {
           return {
@@ -765,217 +828,157 @@ export default {
             y: card.rect.top + this.graph.getNodeById(node.paperId).geometry.headerHeight / 2 + yOffset
           }
         })
+        const citedByColRows =
+          _.map(
+            sortedCitedBys, info => this.cardColRowsByPaperId[info.paperId])
+        const citingColRows =
+          _.map(
+            sortedCitings, info => this.cardColRowsByPaperId[info.paperId])
+        const zipInfo =
+          (infos, endPts, widths, opacities, colRows) => _.zipWith(
+            infos, endPts, widths, opacities, colRows,
+            (citedBy, endPt, width, opacity, colRow) => ({
+              ...citedBy, endPt, width, opacity, colRow
+            }))
+        const toInfoObj = infos => {
+          return _.reduce(infos, (obj, info) => {
+            obj[info.paperId] = info
+            return obj
+          }, {})
+        }
         const citedByInfo =
-          _.zipWith(
-            citedByEndPts, sortedCitedBys,
-            (endPt, citedBy) => ({ ...citedBy, endPt }))
+          toInfoObj(
+            zipInfo(
+              sortedCitedBys, citedByEndPts, citedByWidths, citedByOpacities,
+              citedByColRows))
         const citingInfo =
-          _.zipWith(
-            citingEndPts, sortedCitings,
-            (endPt, citing) => ({ ...citing, endPt }))
-        nodeInfos[node.paperId] =
-          { citedBys: citedByInfo, citings: citingInfo }
+          toInfoObj(
+            zipInfo(
+              sortedCitings, citingEndPts, citingWidths, citingOpacities,
+              citingColRows))
+        nodeInfos[node.paperId] = {
+          citedBys: citedByInfo,
+          citings: citingInfo,
+          colRow: this.cardColRowsByPaperId[node.paperId],
+          paperId: node.paperId
+        }
       })
-      return _.map(riverGraph.weightedRelations, ({ relation, weight }) => {
+      return nodeInfos
+    },
+    getRelationInfos: function (relations, nodeInfos, highways) {
+      return _.map(relations, ({ relation, weight }, index) => {
         const citedById = relation.citedBy
         const citingId = relation.citing
-        const citedByLinkIndex =
-          _.findIndex(
-            nodeInfos[citedById].citings,
-            citing => citing.paperId === citingId)
-        const citingLinkIndex =
-          _.findIndex(
-            nodeInfos[citingId].citedBys,
-            citedBy => citedBy.paperId === citedById)
-        const citedByEndPt = nodeInfos[citedById].citings[citedByLinkIndex].endPt
-        const citingEndPt = nodeInfos[citingId].citedBys[citingLinkIndex].endPt
-        const interpolate = (beg, end, ratio) => {
-          return ratio * (end - beg) + beg
-        }
-        const ratio = 0.5
-        // const width = weight * thickness
-        const width = thickness
+        const citedByInfo = nodeInfos[citedById]
+        const citingInfo = nodeInfos[citingId]
+        const citingColRow = citingInfo.colRow
+        const lanes = { gapIndex: citingColRow.col }
+        _.forEach(highways[lanes.gapIndex], (currLanes, row) => {
+          const iLane = _.indexOf(currLanes, index)
+          if (iLane >= 0) {
+            lanes[row] = {
+              laneIndex: iLane,
+              totalLane: currLanes.length
+            }
+          }
+        })
         return {
-          path: `M${citedByEndPt.x} ${citedByEndPt.y} C ${interpolate(citedByEndPt.x, citingEndPt.x, ratio)} ${citedByEndPt.y}, ${interpolate(citingEndPt.x, citedByEndPt.x, ratio)} ${citingEndPt.y}, ${citingEndPt.x} ${citingEndPt.y}`,
-          // path: `M ${citedByEndPt.x} ${citedByEndPt.y} L ${citedByEndPt.x - width / 2} ${citedByEndPt.y} L ${citingEndPt.x + width / 2} ${citingEndPt.y} L ${citingEndPt.x} ${citingEndPt.y}`,
-          width: width,
-          opacity: Math.min(0.75, weight * 0.25)
+          citedBy: citedByInfo,
+          citing: citingInfo,
+          lanes: { ...lanes },
+          weight: weight
         }
       })
-    }
-  }
-}
-
-class Link {
-  constructor (citedById, citingId) {
-    this.citedById = citedById
-    this.citingId = citingId
-  }
-}
-
-class Path {
-  constructor (links = []) {
-    this.links = links
-  }
-
-  get length () {
-    return this.links.length
-  }
-
-  get paperIds () {
-    return _.uniq(
-      _.flatten(_.map(this.links, link => ([ link.citedById, link.citingId ]))))
-  }
-}
-
-class RiverNode {
-  constructor (paperId, citedBys, citings) {
-    this.paperId = paperId
-    this.citedBys =
-      _.map(
-        citedBys,
-        citedBy => ({ paperId: citedBy.paperId, weight: citedBy.weight }))
-    this.citings =
-      _.map(
-        citings,
-        citing => ({ paperId: citing.paperId, weight: citing.weight }))
-  }
-}
-
-class RiverGraph {
-  constructor (nodes) {
-    this.nodes = nodes
-  }
-
-  decrementEdgeWeight (link) {
-    const citedByNode = this.getNodeById(link.citedById)
-    const citedByLink =
-      _.find(citedByNode.citings, citing => citing.paperId === link.citingId)
-    --citedByLink.weight
-    if (citedByLink.weight === 0) {
-      _.pull(citedByNode.citings, citedByLink)
-    }
-
-    const citingNode = this.getNodeById(link.citingId)
-    const citingLink =
-      _.find(citingNode.citedBys, citedBy => citedBy.paperId === link.citedById)
-    --citingLink.weight
-    if (citingLink.weight === 0) {
-      _.pull(citingNode.citedBys, citingLink)
-    }
-  }
-
-  getNodeById (paperId) {
-    return _.find(this.nodes, node => node.paperId === paperId)
-  }
-
-  incrementEdgeWeight (link) {
-    const citedByNode = this.getNodeById(link.citedById)
-    const citedByLink =
-      _.find(citedByNode.citings, citing => citing.paperId === link.citingId)
-    if (!citedByLink) {
-      citedByNode.citings.push({ paperId: link.citingId, weight: 1 })
-    } else {
-      ++citedByLink.weight
-    }
-    const citingNode = this.getNodeById(link.citingId)
-    const citingLink =
-      _.find(citingNode.citedBys, citedBy => citedBy.paperId === link.citedById)
-    if (!citingLink) {
-      citingNode.citedBys.push({ paperId: link.citedById, weight: 1 })
-    } else {
-      ++citingLink.weight
-    }
-  }
-
-  get relations () {
-    return _.flatten(_.map(this.nodes, (node, index) => {
-      const citings = node.citings
-      return _.map(
-        citings, citing => ({ citing: citing.paperId, citedBy: node.paperId }))
-    }))
-  }
-
-  get weightedRelations () {
-    return _.flatten(_.map(this.nodes, (node, index) => {
-      const citings = node.citings
-      return _.map(
-        citings, citing => ({
-          relation: {
-            citing: citing.paperId, citedBy: node.paperId
-          },
-          weight: citing.weight
-        }))
-    }))
-  }
-}
-
-function getAllPathsBetween (graph, citedById, citingId) {
-  return getAllPathsBetweenRecursive(graph, citedById, citingId, new Path())
-}
-
-function getAllPathsBetweenRecursive (graph, citedById, citingId, path) {
-  if (citingId === citedById) {
-    return path
-  }
-  const node = graph.getNodeById(citingId)
-  if (node.inGraphCitedBys.length === 0) {
-    return false
-  }
-
-  const paths = _.concat(..._.map(node.inGraphCitedBys, currCitedById => {
-    return getAllPathsBetweenRecursive(
-      graph, citedById, currCitedById, new Path([ ...path.links, new Link(currCitedById, citingId) ]))
-  }))
-
-  return _.filter(paths, path => path)
-}
-
-function getPaperIdsInRelations (relations) {
-  return _.uniq(
-    _.flatten(
-      _.map(relations, relation => ([ relation.citedBy, relation.citing ]))))
-}
-
-function includesAll (bigArr, smallArr) {
-  const includes = _.map(smallArr, value => _.includes(bigArr, value))
-  return _.reduce(includes, (result, value) => {
-    result = result && value
-    return result
-  }, true)
-}
-
-function makeRiverGraph (graph, relations) {
-  const paperIds = getPaperIdsInRelations(relations)
-  const riverGraph =
-    new RiverGraph(_.map(paperIds, paperId => {
-      return new RiverNode(paperId, [], [])
-    }))
-  // console.log(relations)
-  _.forEach(relations, ({ citedBy: citedById, citing: citingId }) => {
-    const allPaths = getAllPathsBetween(graph, citedById, citingId)
-    if (allPaths.length === 0) {
-      throw new Error('no path?')
-    }
-    if (allPaths.length === 1 && allPaths[0].length !== 1) {
-      throw new Error(`the graph doesn't have this direct relation?`)
-    }
-    // console.log({ citedBy: citedById, citing: citingId }, allPaths)
-    const inRelationPaths = _.filter(allPaths, path => {
-      return includesAll(paperIds, path.paperIds)
-    })
-    const maxLength = _.max(_.map(inRelationPaths, path => path.length))
-    const paths = _.filter(inRelationPaths, path => path.length === maxLength)
-    // console.log(maxLength, inRelationPaths, paths)
-    _.forEach(paths, path => {
-      // riverGraph.incrementEdgeWeight(path.links[0])
-      _.forEach(path.links, link => {
-        riverGraph.incrementEdgeWeight(link)
+    },
+    makeRiverCurves: function (riverGraph, getWidths, getOpacities) {
+      const nodeInfos =
+        this.getRiverNodeInfos(riverGraph, getWidths, getOpacities)
+      const highways = this.getVerticalGapHighways(riverGraph.weightedRelations)
+      const relationInfos =
+        this.getRelationInfos(riverGraph.weightedRelations, nodeInfos, highways)
+      return _.map(relationInfos, relationInfo => {
+        const citedById = relationInfo.citedBy.paperId
+        const citingId = relationInfo.citing.paperId
+        const citedByInfo = relationInfo.citedBy.citings[citingId]
+        const citingInfo = relationInfo.citing.citedBys[citedById]
+        const citedByColRow = relationInfo.citedBy.colRow
+        const citingColRow = relationInfo.citing.colRow
+        const laneInfo = relationInfo.lanes
+        const isNeighborColumnRelation =
+          info => Math.abs(citedByInfo.colRow.col - citingInfo.colRow.col) === 1
+        const isSameRowRelation = info => citedByColRow.row === citingColRow.row
+        const pathData =
+          isNeighborColumnRelation(relationInfo)
+            ? isSameRowRelation(relationInfo)
+              ? svg.makeRatioCurve(citedByInfo.endPt, citingInfo.endPt, 0.5)
+              : this.makeOrthoPath(citedByInfo, citingInfo, laneInfo)
+            : isSameRowRelation(relationInfo)
+              ? svg.makeRatioCurve(citedByInfo.endPt, citingInfo.endPt, 0.2)
+              : svg.makeRatioCurve(citedByInfo.endPt, citingInfo.endPt, 0.2)
+        return {
+          path: pathData,
+          width: citedByInfo.width,
+          opacity: citedByInfo.opacity
+        }
       })
-    })
-  })
-  // console.log(riverGraph)
-  return riverGraph
+    },
+    makeOrthoPath (citedByInfo, citingInfo, laneInfo) {
+      const thickness = this.edgeThickness
+      const spacing = this.edgeSpacing
+      const citedByPt = citedByInfo.endPt
+      const citingPt = citingInfo.endPt
+      const mid = Vec.mid(citedByPt, citingPt)
+      const signY =
+        (citingPt.y - citedByPt.y) / Math.abs(citingPt.y - citedByPt.y)
+      const topY = this.topCardRect.center.y
+      const segLen = this.topCardRect.height + this.cardVerticalSpacing
+      const halfGap = this.cardVerticalSpacing
+      const arcRadius = halfGap
+      const signedArcRadius = arcRadius * signY
+      const citedByRow = citedByInfo.colRow.row
+      const citingRow = citingInfo.colRow.row
+      const minRow = Math.min(citedByRow, citingRow)
+      const maxRow = Math.max(citedByRow, citingRow)
+      const minPt = _.minBy([ citedByPt, citingPt ], pt => pt.y)
+      const maxPt = _.maxBy([ citedByPt, citingPt ], pt => pt.y)
+      const getLaneX = (lane, totalLane, midX, thickness) => {
+        const leftMost =
+          midX - 0.5 * (totalLane * thickness + (totalLane - 1) * spacing)
+        return leftMost + lane * thickness + lane * spacing + 0.5 * thickness
+      }
+      const firstLaneX =
+        getLaneX(
+          laneInfo[minRow].laneIndex, laneInfo[minRow].totalLane, mid.x,
+          thickness)
+      const firstSegY = topY + (minRow + 1) * segLen - halfGap
+      let pathData = `M ${minPt.x} ${minPt.y}`
+      pathData += ` L ${firstLaneX + signedArcRadius} ${minPt.y} Q ${firstLaneX} ${minPt.y} ${firstLaneX} ${minPt.y + arcRadius} L ${firstLaneX} ${firstSegY}`
+      for (let iSeg = minRow + 1; iSeg < maxRow - 1; ++iSeg) {
+        const laneX =
+          getLaneX(
+            laneInfo[iSeg].laneIndex, laneInfo[iSeg].totalLane, mid.x,
+            thickness)
+        const minSegY = topY + iSeg * segLen + halfGap
+        const maxSegY = topY + (iSeg + 1) * segLen - halfGap
+        pathData += ` L ${laneX} ${minSegY} L ${laneX} ${maxSegY}`
+      }
+      const lastLaneX =
+        getLaneX(
+          laneInfo[maxRow - 1].laneIndex, laneInfo[maxRow - 1].totalLane, mid.x,
+          thickness)
+      const lastSegY = topY + (maxRow - 1) * segLen + halfGap
+      pathData += ` L ${lastLaneX} ${lastSegY} L ${lastLaneX} ${maxPt.y - arcRadius} Q ${lastLaneX} ${maxPt.y} ${lastLaneX - signedArcRadius} ${maxPt.y}`
+      pathData += ` L ${maxPt.x} ${maxPt.y}`
+      return pathData
+    }
+  }
+}
+
+function prefixSum (values, spacing = 0) {
+  return _.reduce(values, (result, value) => {
+    result = _.concat(result, value + _.last(result))
+    return result
+  }, [ 0 ])
 }
 
 </script>

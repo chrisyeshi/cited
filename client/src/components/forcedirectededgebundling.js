@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Vec from './vec.js'
 
 export default class {
   constructor (callback) {
@@ -162,59 +163,6 @@ class Edge {
   }
 }
 
-class Vec {
-  constructor (x = 0, y = 0) {
-    this.x = x
-    this.y = y
-  }
-
-  get length () {
-    return Math.sqrt(this.length2)
-  }
-
-  get length2 () {
-    return this.x * this.x + this.y * this.y
-  }
-
-  static distance (aVec, bVec) {
-    return Vec.minus(bVec, aVec).length
-  }
-
-  static distance2 (aVec, bVec) {
-    return Vec.minus(bVec, aVec).length2
-  }
-
-  static equal (aVec, bVec, epsilon) {
-    return equal(aVec.x, bVec.x, epsilon) && equal(aVec.y, bVec.y, epsilon)
-  }
-
-  static interpolate (aVec, bVec, ratio) {
-    return new Vec(
-      interpolate(aVec.x, bVec.x, ratio),
-      interpolate(aVec.y, bVec.y, ratio))
-  }
-
-  static mid (aVec, bVec) {
-    return this.interpolate(aVec, bVec, 0.5)
-  }
-
-  static minus (aVec, bVec) {
-    return new Vec(aVec.x - bVec.x, aVec.y - bVec.y)
-  }
-
-  static plus (aVec, bVec) {
-    return new Vec(aVec.x + bVec.x, aVec.y + bVec.y)
-  }
-
-  static times (vec, constant) {
-    return new Vec(vec.x * constant, vec.y * constant)
-  }
-
-  static dot (aVec, bVec) {
-    return aVec.x * bVec.x + aVec.y * bVec.y
-  }
-}
-
 function breakEdgeIntoSegments (nSegmentsPerEdge, { beg, end }) {
   const nPtsPerEdge = nSegmentsPerEdge + 1
   const pts = []
@@ -269,10 +217,6 @@ function computeSpringForce (curr, prev, next, beg, end, springConstant) {
   return Vec.times(springDelta, localSpringConstant)
 }
 
-function equal (a, b, epsilon) {
-  return Math.abs(a - b) <= epsilon
-}
-
 function getCompatibleEdgeLists (edgeEndPts, threshold = 0) {
   const indexLists = _.map(edgeEndPts, () => ([]))
   for (let iEdge = 0; iEdge < edgeEndPts.length; ++iEdge) {
@@ -292,10 +236,6 @@ function getMaxForce (forces) {
     _.map(
       _.flatten(forces),
       force => _.max([ Math.abs(force.x), Math.abs(force.y) ])))
-}
-
-function interpolate (beg, end, ratio) {
-  return ratio * (end - beg) + beg
 }
 
 function nextEdgePts (edgePts, forces, forceConstant) {
