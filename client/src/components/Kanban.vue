@@ -151,7 +151,7 @@
           @scroll="alsoScrollYearsContainer">
           <svg class="overlay">
             <path v-for="(curve, index) in edges" :key="index" :d="curve.path"
-              :stroke-width="curve.width || 1" :stroke-opacity="curve.opacity || 0.9" :stroke="curve.color || '#a55'">
+              :stroke-width="curve.width || 1" :stroke-opacity="curve.opacity || 0.8" :stroke="curve.color || '#a55'">
             </path>
           </svg>
           <div class="cards-container" ref="cardsContainer">
@@ -223,8 +223,10 @@ export default {
     this.cardVerticalSpacing = 10
     this.marginLeft = 24
     this.fdeb = new FDEB((edgePts) => { this.edgePts = edgePts })
-    this.edgeThickness = 2
-    this.edgeSpacing = 2
+    this.edgeThickness = 1.5
+    this.edgeSpacing = 1.5
+    this.horizontalEdgeElevation = 0.2
+    this.orthoEdgeArcRadius = 1.5 * this.cardVerticalSpacing
     return {
       graph: {
         nodes: []
@@ -287,7 +289,28 @@ export default {
           return interpolateColor(scalar)
         })
       }
-      return this.makeRiverCurves(riverGraph, getRiverWidths, getColors)
+      return this.makeCurves(
+        riverGraph,
+        node => node.paperId,
+        node => node.citedBys,
+        node => node.citings,
+        conn => conn.paperId,
+        conn => conn.weight,
+        getRiverWidths,
+        getColors)
+    },
+    highwayPaths: function () {
+      const getWidths = (conns, thickness) => _.map(conns, () => thickness)
+      const getColors = conns => _.map(conns, () => interpolateColor(0.5))
+      return this.makeCurves(
+        this.graph,
+        node => node.paper.id,
+        node => node.inGraphCitedBys,
+        node => node.inGraphCitings,
+        conn => conn,
+        conn => 1,
+        getWidths,
+        getColors)
     },
     edges: function () {
       return this.edgeLayout === 'force-directed-edge-bundling'
@@ -296,7 +319,9 @@ export default {
           ? this.curves
           : this.edgeLayout === 'river'
             ? this.riverPaths
-            : []
+            : this.edgeLayout === 'highway'
+              ? this.highwayPaths
+              : []
     },
     yearIntervalLabels: function () {
       const colRows = this.cards.map(node => node.colRow)
@@ -745,31 +770,26 @@ export default {
       let maxCardRow = this.maxCardRow
       const highways = []
       for (let col = 0; col < maxCardCol - 1; ++col) {
-        const gapRelations =
-          _.map(
-            relations,
-            ({ relation }, index) => ({
-              relation: {
-                citedBy: {
-                  paperId: relation.citedBy,
-                  colRow: colRowsById[relation.citedBy]
-                },
-                citing: {
-                  paperId: relation.citing,
-                  colRow: colRowsById[relation.citing]
-                }
-              },
-              index: index
-            }))
-        const colRelations = _.filter(gapRelations, ({ relation }) => {
+        const gapRelations = _.map(relations, (relation, index) => ({
+          index: index,
+          citedBy: {
+            paperId: relation.citedBy,
+            colRow: colRowsById[relation.citedBy]
+          },
+          citing: {
+            paperId: relation.citing,
+            colRow: colRowsById[relation.citing]
+          }
+        }))
+        const colRelations = _.filter(gapRelations, (relation) => {
           const citedByColRow = relation.citedBy.colRow
           const citingColRow = relation.citing.colRow
           return citingColRow.col === col && citedByColRow.col === col + 1
         })
-        const sortedColRelations = _.sortBy(colRelations, ({ relation }) => {
+        const sortedColRelations = _.sortBy(colRelations, (relation) => {
           return -(relation.citing.colRow.row * (maxCardRow + 1) + relation.citedBy.colRow.row)
         })
-        _.forEach(sortedColRelations, ({ relation, index }) => {
+        _.forEach(sortedColRelations, (relation) => {
           const minRow =
             Math.min(relation.citedBy.colRow.row, relation.citing.colRow.row)
           const maxRow =
@@ -777,35 +797,47 @@ export default {
           for (let row = minRow; row < maxRow; ++row) {
             highways[col] = highways[col] || []
             highways[col][row] = highways[col][row] || []
-            highways[col][row].push(index)
+            highways[col][row].push(relation.index)
           }
         })
       }
       return highways
     },
-    getRiverNodeInfos: function (riverGraph, getWidths, getColors) {
+    getNodeInfos: function (graph, getNodePaperId, getInGraphCitedBys, getInGraphCitings, getConnPaperId, getConnWeight, getWidths, getColors) {
       const thickness = this.edgeThickness
       const spacing = this.edgeSpacing
       const nodeInfos = {}
-      _.forEach(riverGraph.nodes, node => {
-        const card = _.find(this.cards, card => card.paper.id === node.paperId)
-        const sortedCitedBys = _.sortBy(node.citedBys, citedBy => {
-          const citedById = citedBy.paperId
-          const citedByCard =
-            _.find(this.cards, card => card.paper.id === citedById)
-          const x = citedByCard.rect.left - card.rect.right
-          const y = citedByCard.rect.top - card.rect.top
-          return y / x
-        })
-        const sortedCitings = _.sortBy(node.citings, citing => {
-          const citingCard =
-            _.find(this.cards, card => card.paper.id === citing.paperId)
-          const x = citingCard.rect.right - card.rect.left
-          const y = citingCard.rect.top - card.rect.top
-          return -y / x
-        })
-        const nCitedBy = node.citedBys.length
-        const nCiting = node.citings.length
+      _.forEach(graph.nodes, node => {
+        const card =
+          _.find(this.cards, card => card.paper.id === getNodePaperId(node))
+        const sortedCitedBys = _.map(
+          _.sortBy(getInGraphCitedBys(node), citedBy => {
+            const citedById = getConnPaperId(citedBy)
+            const citedByCard =
+              _.find(this.cards, card => card.paper.id === citedById)
+            const x = citedByCard.rect.left - card.rect.right
+            const y = citedByCard.rect.top - card.rect.top
+            return y / x
+          }),
+          conn => ({
+            paperId: getConnPaperId(conn),
+            weight: getConnWeight(conn)
+          }))
+        const sortedCitings = _.map(
+          _.sortBy(getInGraphCitings(node), citing => {
+            const citingCard =
+              _.find(
+                this.cards, card => card.paper.id === getConnPaperId(citing))
+            const x = citingCard.rect.right - card.rect.left
+            const y = citingCard.rect.top - card.rect.top
+            return -y / x
+          }),
+          conn => ({
+            paperId: getConnPaperId(conn),
+            weight: getConnWeight(conn)
+          }))
+        const nCitedBy = getInGraphCitedBys(node).length
+        const nCiting = getInGraphCitings(node).length
         const citedByColors = getColors(sortedCitedBys)
         const citingColors = getColors(sortedCitings)
         const citedByWidths = getWidths(sortedCitedBys, thickness)
@@ -823,13 +855,13 @@ export default {
         const citedByEndPts = _.map(citedByYOffsets, yOffset => {
           return {
             x: card.rect.right + this.marginLeft,
-            y: card.rect.top + this.graph.getNodeById(node.paperId).geometry.headerHeight / 2 + yOffset
+            y: card.rect.top + this.graph.getNodeById(getNodePaperId(node)).geometry.headerHeight / 2 + yOffset
           }
         })
         const citingEndPts = _.map(citingYOffsets, yOffset => {
           return {
             x: card.rect.left + this.marginLeft,
-            y: card.rect.top + this.graph.getNodeById(node.paperId).geometry.headerHeight / 2 + yOffset
+            y: card.rect.top + this.graph.getNodeById(getNodePaperId(node)).geometry.headerHeight / 2 + yOffset
           }
         })
         const citedByColRows =
@@ -860,17 +892,17 @@ export default {
             zipInfo(
               sortedCitings, citingEndPts, citingWidths, citingColors,
               citingColRows))
-        nodeInfos[node.paperId] = {
+        nodeInfos[getNodePaperId(node)] = {
           citedBys: citedByInfo,
           citings: citingInfo,
-          colRow: this.cardColRowsByPaperId[node.paperId],
-          paperId: node.paperId
+          colRow: this.cardColRowsByPaperId[getNodePaperId(node)],
+          paperId: getNodePaperId(node)
         }
       })
       return nodeInfos
     },
     getRelationInfos: function (relations, nodeInfos, highways) {
-      return _.map(relations, ({ relation, weight }, index) => {
+      return _.map(relations, (relation, index) => {
         const citedById = relation.citedBy
         const citingId = relation.citing
         const citedByInfo = nodeInfos[citedById]
@@ -890,16 +922,18 @@ export default {
           citedBy: citedByInfo,
           citing: citingInfo,
           lanes: { ...lanes },
-          weight: weight
+          weight: relation.weight
         }
       })
     },
-    makeRiverCurves: function (riverGraph, getWidths, getColors) {
+    makeCurves: function (graph, getNodePaperId, getInGraphCitedBys, getInGraphCitings, getConnPaperId, getConnWeight, getWidths, getColors) {
       const nodeInfos =
-        this.getRiverNodeInfos(riverGraph, getWidths, getColors)
-      const highways = this.getVerticalGapHighways(riverGraph.weightedRelations)
+        this.getNodeInfos(
+          graph, getNodePaperId, getInGraphCitedBys, getInGraphCitings,
+          getConnPaperId, getConnWeight, getWidths, getColors)
+      const highways = this.getVerticalGapHighways(graph.relations)
       const relationInfos =
-        this.getRelationInfos(riverGraph.weightedRelations, nodeInfos, highways)
+        this.getRelationInfos(graph.relations, nodeInfos, highways)
       return _.map(relationInfos, relationInfo => {
         const citedById = relationInfo.citedBy.paperId
         const citingId = relationInfo.citing.paperId
@@ -915,14 +949,14 @@ export default {
           isNeighborColumnRelation(relationInfo)
             ? isSameRowRelation(relationInfo)
               ? svg.makeFixedCurve(
-                citedByInfo.endPt, citingInfo.endPt, 0.5 * this.cardSpacing)
+                citedByInfo.endPt, citingInfo.endPt, 0.15 * this.cardSpacing)
               : this.makeOrthoPath(citedByInfo, citingInfo, laneInfo)
             : isSameRowRelation(relationInfo)
               ? svg.makeElevatedCurve(
-                citedByInfo.endPt, citingInfo.endPt, 0.5 * this.cardSpacing,
-                0.25 * this.topCardRect.height)
+                citedByInfo.endPt, citingInfo.endPt, 0.3 * this.cardSpacing,
+                this.horizontalEdgeElevation * this.topCardRect.height)
               : svg.makeFixedCurve(
-                citedByInfo.endPt, citingInfo.endPt, this.cardSpacing)
+                citedByInfo.endPt, citingInfo.endPt, 0.3 * this.cardSpacing)
         return {
           path: pathData,
           width: citedByInfo.width,
@@ -941,8 +975,7 @@ export default {
       const topY = this.topCardRect.center.y
       const segLen = this.topCardRect.height + this.cardVerticalSpacing
       const halfGap = this.cardVerticalSpacing
-      const arcRadius = halfGap
-      const signedArcRadius = arcRadius * signY
+      const arcRadius = this.orthoEdgeArcRadius
       const citedByRow = citedByInfo.colRow.row
       const citingRow = citingInfo.colRow.row
       const minRow = Math.min(citedByRow, citingRow)
@@ -959,8 +992,18 @@ export default {
           laneInfo[minRow].laneIndex, laneInfo[minRow].totalLane, mid.x,
           thickness)
       const firstSegY = topY + (minRow + 1) * segLen - halfGap
+      const minArcRadius = topY + minRow * segLen + arcRadius - minPt.y
+      const signedMinArcRadius = minArcRadius * signY
+      const lastLaneX =
+        getLaneX(
+          laneInfo[maxRow - 1].laneIndex, laneInfo[maxRow - 1].totalLane, mid.x,
+          thickness)
+      const maxArcRadius = maxPt.y - (topY + maxRow * segLen - arcRadius)
+      const signedMaxArcRadius = maxArcRadius * signY
       let pathData = `M ${minPt.x} ${minPt.y}`
-      pathData += ` L ${firstLaneX + signedArcRadius} ${minPt.y} Q ${firstLaneX} ${minPt.y} ${firstLaneX} ${minPt.y + arcRadius} L ${firstLaneX} ${firstSegY}`
+      pathData += ` L ${firstLaneX + signedMinArcRadius} ${minPt.y}` +
+        ` Q ${firstLaneX} ${minPt.y} ${firstLaneX} ${minPt.y + minArcRadius}` +
+        ` L ${firstLaneX} ${firstSegY}`
       for (let iSeg = minRow + 1; iSeg < maxRow; ++iSeg) {
         const prevLaneX =
           getLaneX(
@@ -974,13 +1017,13 @@ export default {
         const minSegY = topY + iSeg * segLen + halfGap
         const maxSegY = topY + (iSeg + 1) * segLen - halfGap
         pathData += ` C ${prevLaneX} ${prevSegY + halfGap} ${laneX} ${minSegY - halfGap} ${laneX} ${minSegY}`
-        pathData += ` L ${laneX} ${maxSegY}`
+        if (iSeg === maxRow - 1) {
+          pathData += ` L ${lastLaneX} ${maxPt.y - maxArcRadius}`
+        } else {
+          pathData += ` L ${laneX} ${maxSegY}`
+        }
       }
-      const lastLaneX =
-        getLaneX(
-          laneInfo[maxRow - 1].laneIndex, laneInfo[maxRow - 1].totalLane, mid.x,
-          thickness)
-      pathData += ` Q ${lastLaneX} ${maxPt.y} ${lastLaneX - signedArcRadius} ${maxPt.y}`
+      pathData += ` Q ${lastLaneX} ${maxPt.y} ${lastLaneX - signedMaxArcRadius} ${maxPt.y}`
       pathData += ` L ${maxPt.x} ${maxPt.y}`
       return pathData
     }

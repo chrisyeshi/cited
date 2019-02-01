@@ -92,22 +92,26 @@ export class RiverGraph {
     return _.flatten(_.map(this.nodes, (node, index) => {
       const citings = node.citings
       return _.map(
-        citings, citing => ({ citing: citing.paperId, citedBy: node.paperId }))
-    }))
-  }
-
-  get weightedRelations () {
-    return _.flatten(_.map(this.nodes, (node, index) => {
-      const citings = node.citings
-      return _.map(
         citings, citing => ({
-          relation: {
-            citing: citing.paperId, citedBy: node.paperId
-          },
+          citing: citing.paperId,
+          citedBy: node.paperId,
           weight: citing.weight
         }))
     }))
   }
+
+  // get weightedRelations () {
+  //   return _.flatten(_.map(this.nodes, (node, index) => {
+  //     const citings = node.citings
+  //     return _.map(
+  //       citings, citing => ({
+  //         relation: {
+  //           citing: citing.paperId, citedBy: node.paperId
+  //         },
+  //         weight: citing.weight
+  //       }))
+  //   }))
+  // }
 }
 
 function getPaperIdsInRelations (relations) {

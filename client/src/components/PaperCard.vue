@@ -117,12 +117,14 @@ export default {
     },
     citingStyle: function () {
       return {
+        opacity: 0.8,
         backgroundColor: this.relationColor(this.card.inGraphCitings.length),
         flex: `0 0 6px`
       }
     },
     citedByStyle: function () {
       return {
+        opacity: 0.8,
         backgroundColor: this.relationColor(this.card.inGraphCitedBys.length),
         flex: `0 0 6px`
       }
