@@ -151,7 +151,7 @@
           @scroll="alsoScrollYearsContainer">
           <svg class="overlay">
             <path v-for="(curve, index) in edges" :key="index" :d="curve.path"
-              :stroke-width="curve.width || 1" :stroke-opacity="curve.opacity || 0.7" :stroke="curve.color || '#a55'">
+              :stroke-width="curve.width || 1" :stroke-opacity="curve.opacity || 0.9" :stroke="curve.color || '#a55'">
             </path>
           </svg>
           <div class="cards-container" ref="cardsContainer">
@@ -283,16 +283,10 @@ export default {
       }
       const getColors = (connections) => {
         return _.map(connections, ({ weight }) => {
-          // 1 - exp(ln(1)-0.4*x)
           const scalar = 1 - Math.exp(Math.log(1) - 0.35 * weight)
-          // window.d3Interpolate = d3Interpolate
-          // window.d3ScaleChromatic = d3ScaleChromatic
           return interpolateColor(scalar)
         })
       }
-      // const getOpacities = (connections) => {
-      //   return _.map(connections, ({ weight }) => Math.min(0.75, weight * 0.25))
-      // }
       return this.makeRiverCurves(riverGraph, getRiverWidths, getColors)
     },
     edges: function () {
