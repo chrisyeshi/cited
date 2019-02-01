@@ -151,7 +151,7 @@
           @scroll="alsoScrollYearsContainer">
           <svg class="overlay">
             <path v-for="(curve, index) in edges" :key="index" :d="curve.path"
-              :stroke-width="curve.width || 1" :stroke-opacity="curve.opacity || 0.7">
+              :stroke-width="curve.width || 1" :stroke-opacity="curve.opacity || 0.7" :stroke="curve.color || '#a55'">
             </path>
           </svg>
           <div class="cards-container" ref="cardsContainer">
@@ -193,6 +193,7 @@ import * as api from './crossref.js'
 import Vec from './vec.js'
 import svg from './svgpath.js'
 import _ from 'lodash'
+import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 
 // TODO: consider using https://haltu.github.io/muuri/
 
@@ -280,10 +281,19 @@ export default {
           return _.map(connections, conn => conn.weight * thickness)
         }
       }
-      const getOpacities = (connections) => {
-        return _.map(connections, ({ weight }) => Math.min(0.75, weight * 0.25))
+      const getColors = (connections) => {
+        return _.map(connections, ({ weight }) => {
+          // 1 - exp(ln(1)-0.4*x)
+          const scalar = 1 - Math.exp(Math.log(1) - 0.35 * weight)
+          // window.d3Interpolate = d3Interpolate
+          // window.d3ScaleChromatic = d3ScaleChromatic
+          return interpolateColor(scalar)
+        })
       }
-      return this.makeRiverCurves(riverGraph, getRiverWidths, getOpacities)
+      // const getOpacities = (connections) => {
+      //   return _.map(connections, ({ weight }) => Math.min(0.75, weight * 0.25))
+      // }
+      return this.makeRiverCurves(riverGraph, getRiverWidths, getColors)
     },
     edges: function () {
       return this.edgeLayout === 'force-directed-edge-bundling'
@@ -779,7 +789,7 @@ export default {
       }
       return highways
     },
-    getRiverNodeInfos: function (riverGraph, getWidths, getOpacities) {
+    getRiverNodeInfos: function (riverGraph, getWidths, getColors) {
       const thickness = this.edgeThickness
       const spacing = this.edgeSpacing
       const nodeInfos = {}
@@ -802,8 +812,8 @@ export default {
         })
         const nCitedBy = node.citedBys.length
         const nCiting = node.citings.length
-        const citedByOpacities = getOpacities(sortedCitedBys)
-        const citingOpacities = getOpacities(sortedCitings)
+        const citedByColors = getColors(sortedCitedBys)
+        const citingColors = getColors(sortedCitings)
         const citedByWidths = getWidths(sortedCitedBys, thickness)
         const citingWidths = getWidths(sortedCitings, thickness)
         const citedByRunningWidths = prefixSum(citedByWidths, spacing)
@@ -835,10 +845,10 @@ export default {
           _.map(
             sortedCitings, info => this.cardColRowsByPaperId[info.paperId])
         const zipInfo =
-          (infos, endPts, widths, opacities, colRows) => _.zipWith(
-            infos, endPts, widths, opacities, colRows,
-            (citedBy, endPt, width, opacity, colRow) => ({
-              ...citedBy, endPt, width, opacity, colRow
+          (infos, endPts, widths, colors, colRows) => _.zipWith(
+            infos, endPts, widths, colors, colRows,
+            (citedBy, endPt, width, color, colRow) => ({
+              ...citedBy, endPt, width, color, colRow
             }))
         const toInfoObj = infos => {
           return _.reduce(infos, (obj, info) => {
@@ -849,12 +859,12 @@ export default {
         const citedByInfo =
           toInfoObj(
             zipInfo(
-              sortedCitedBys, citedByEndPts, citedByWidths, citedByOpacities,
+              sortedCitedBys, citedByEndPts, citedByWidths, citedByColors,
               citedByColRows))
         const citingInfo =
           toInfoObj(
             zipInfo(
-              sortedCitings, citingEndPts, citingWidths, citingOpacities,
+              sortedCitings, citingEndPts, citingWidths, citingColors,
               citingColRows))
         nodeInfos[node.paperId] = {
           citedBys: citedByInfo,
@@ -890,9 +900,9 @@ export default {
         }
       })
     },
-    makeRiverCurves: function (riverGraph, getWidths, getOpacities) {
+    makeRiverCurves: function (riverGraph, getWidths, getColors) {
       const nodeInfos =
-        this.getRiverNodeInfos(riverGraph, getWidths, getOpacities)
+        this.getRiverNodeInfos(riverGraph, getWidths, getColors)
       const highways = this.getVerticalGapHighways(riverGraph.weightedRelations)
       const relationInfos =
         this.getRelationInfos(riverGraph.weightedRelations, nodeInfos, highways)
@@ -910,15 +920,19 @@ export default {
         const pathData =
           isNeighborColumnRelation(relationInfo)
             ? isSameRowRelation(relationInfo)
-              ? svg.makeRatioCurve(citedByInfo.endPt, citingInfo.endPt, 0.5)
+              ? svg.makeFixedCurve(
+                citedByInfo.endPt, citingInfo.endPt, 0.5 * this.cardSpacing)
               : this.makeOrthoPath(citedByInfo, citingInfo, laneInfo)
             : isSameRowRelation(relationInfo)
-              ? svg.makeRatioCurve(citedByInfo.endPt, citingInfo.endPt, 0.2)
-              : svg.makeRatioCurve(citedByInfo.endPt, citingInfo.endPt, 0.2)
+              ? svg.makeElevatedCurve(
+                citedByInfo.endPt, citingInfo.endPt, 0.5 * this.cardSpacing,
+                0.25 * this.topCardRect.height)
+              : svg.makeFixedCurve(
+                citedByInfo.endPt, citingInfo.endPt, this.cardSpacing)
         return {
           path: pathData,
           width: citedByInfo.width,
-          opacity: citedByInfo.opacity
+          color: citedByInfo.color
         }
       })
     },
@@ -929,7 +943,7 @@ export default {
       const citingPt = citingInfo.endPt
       const mid = Vec.mid(citedByPt, citingPt)
       const signY =
-        (citingPt.y - citedByPt.y) / Math.abs(citingPt.y - citedByPt.y)
+        (citingPt.y - citedByPt.y) / Math.abs(citingPt.y - citedByPt.y) || 1
       const topY = this.topCardRect.center.y
       const segLen = this.topCardRect.height + this.cardVerticalSpacing
       const halfGap = this.cardVerticalSpacing
@@ -953,21 +967,26 @@ export default {
       const firstSegY = topY + (minRow + 1) * segLen - halfGap
       let pathData = `M ${minPt.x} ${minPt.y}`
       pathData += ` L ${firstLaneX + signedArcRadius} ${minPt.y} Q ${firstLaneX} ${minPt.y} ${firstLaneX} ${minPt.y + arcRadius} L ${firstLaneX} ${firstSegY}`
-      for (let iSeg = minRow + 1; iSeg < maxRow - 1; ++iSeg) {
+      for (let iSeg = minRow + 1; iSeg < maxRow; ++iSeg) {
+        const prevLaneX =
+          getLaneX(
+            laneInfo[iSeg - 1].laneIndex, laneInfo[iSeg - 1].totalLane, mid.x,
+            thickness)
+        const prevSegY = topY + iSeg * segLen - halfGap
         const laneX =
           getLaneX(
             laneInfo[iSeg].laneIndex, laneInfo[iSeg].totalLane, mid.x,
             thickness)
         const minSegY = topY + iSeg * segLen + halfGap
         const maxSegY = topY + (iSeg + 1) * segLen - halfGap
-        pathData += ` L ${laneX} ${minSegY} L ${laneX} ${maxSegY}`
+        pathData += ` C ${prevLaneX} ${prevSegY + halfGap} ${laneX} ${minSegY - halfGap} ${laneX} ${minSegY}`
+        pathData += ` L ${laneX} ${maxSegY}`
       }
       const lastLaneX =
         getLaneX(
           laneInfo[maxRow - 1].laneIndex, laneInfo[maxRow - 1].totalLane, mid.x,
           thickness)
-      const lastSegY = topY + (maxRow - 1) * segLen + halfGap
-      pathData += ` L ${lastLaneX} ${lastSegY} L ${lastLaneX} ${maxPt.y - arcRadius} Q ${lastLaneX} ${maxPt.y} ${lastLaneX - signedArcRadius} ${maxPt.y}`
+      pathData += ` Q ${lastLaneX} ${maxPt.y} ${lastLaneX - signedArcRadius} ${maxPt.y}`
       pathData += ` L ${maxPt.x} ${maxPt.y}`
       return pathData
     }
@@ -1041,7 +1060,7 @@ function prefixSum (values, spacing = 0) {
 }
 
 .overlay path {
-  stroke: #a55;
+  /*stroke: #a55;*/
   fill: none;
   /*stroke-opacity: 0.7;*/
   /*stroke-width: 2px;*/

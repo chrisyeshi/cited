@@ -39,7 +39,6 @@ export class RiverGraph {
       const maxLength = _.max(_.map(inRelationPaths, path => path.length))
       const paths = _.filter(inRelationPaths, path => path.length === maxLength)
       _.forEach(paths, path => {
-        // riverGraph.incrementEdgeWeight(path.links[0])
         _.forEach(path.links, link => {
           riverGraph.incrementEdgeWeight(link)
         })
