@@ -223,8 +223,8 @@ export default {
     this.cardVerticalSpacing = 10
     this.marginLeft = 24
     this.fdeb = new FDEB((edgePts) => { this.edgePts = edgePts })
-    this.edgeThickness = 1.5
-    this.edgeSpacing = 1.5
+    this.edgeThickness = 2
+    this.edgeSpacing = 5
     this.horizontalEdgeElevation = 0.2
     this.orthoEdgeArcRadius = 1.5 * this.cardVerticalSpacing
     return {
@@ -764,6 +764,64 @@ export default {
       })
       this.fdeb.edgeEndPts = edgeEndPts
     },
+    getClusteredHighways: function (relations) {
+      const colRowsById = this.cardColRowsByPaperId
+      let maxCardCol = this.maxCardCol
+      let maxCardRow = this.maxCardRow
+      const highways = []
+      for (let col = 0; col < maxCardCol - 1; ++col) {
+        const gapRelations = _.map(relations, (relation, index) => ({
+          index: index,
+          citedBy: {
+            paperId: relation.citedBy,
+            colRow: colRowsById[relation.citedBy]
+          },
+          citing: {
+            paperId: relation.citing,
+            colRow: colRowsById[relation.citing]
+          }
+        }))
+        const colRelations = _.filter(gapRelations, (relation) => {
+          const citedByColRow = relation.citedBy.colRow
+          const citingColRow = relation.citing.colRow
+          return citingColRow.col === col && citedByColRow.col === col + 1
+        })
+        const sortedColRelations = _.sortBy(colRelations, (relation) => {
+          return -(relation.citing.colRow.row * (maxCardRow + 1) + relation.citedBy.colRow.row)
+        })
+        _.forEach(sortedColRelations, (relation) => {
+          const minRow =
+            Math.min(relation.citedBy.colRow.row, relation.citing.colRow.row)
+          const maxRow =
+            Math.max(relation.citedBy.colRow.row, relation.citing.colRow.row)
+          for (let row = minRow; row < maxRow; ++row) {
+            highways[col] = highways[col] || []
+            highways[col][row] = highways[col][row] || []
+            const prevLane = _.last(highways[col][row])
+            const prevLaneCitings =
+              _.uniq(
+                _.map(
+                  prevLane, relationIndex => relations[relationIndex].citing))
+            const prevLaneCiting =
+              prevLaneCitings.length === 1 ? prevLaneCitings[0] : null
+            const prevLaneCitedBys =
+              _.uniq(
+                _.map(
+                  prevLane, relationIndex => relations[relationIndex].citedBy))
+            const prevLaneCitedBy =
+              prevLaneCitedBys.length === 1 ? prevLaneCitedBys[0] : null
+            const currCiting = relations[relation.index].citing
+            const currCitedBy = relations[relation.index].citedBy
+            if (prevLaneCiting === currCiting || prevLaneCitedBy === currCitedBy) {
+              _.last(highways[col][row]).push(relation.index)
+            } else {
+              highways[col][row].push([ relation.index ])
+            }
+          }
+        })
+      }
+      return highways
+    },
     getVerticalGapHighways: function (relations) {
       const colRowsById = this.cardColRowsByPaperId
       let maxCardCol = this.maxCardCol
@@ -805,7 +863,7 @@ export default {
     },
     getNodeInfos: function (graph, getNodePaperId, getInGraphCitedBys, getInGraphCitings, getConnPaperId, getConnWeight, getWidths, getColors) {
       const thickness = this.edgeThickness
-      const spacing = this.edgeSpacing
+      const spacing = 0 // this.edgeSpacing
       const nodeInfos = {}
       _.forEach(graph.nodes, node => {
         const card =
@@ -910,11 +968,13 @@ export default {
         const citingColRow = citingInfo.colRow
         const lanes = { gapIndex: citingColRow.col }
         _.forEach(highways[lanes.gapIndex], (currLanes, row) => {
-          const iLane = _.indexOf(currLanes, index)
+          const iLane = _.findIndex(currLanes, lane => _.includes(lane, index))
           if (iLane >= 0) {
+            const iSubLane = _.indexOf(currLanes[iLane], index)
             lanes[row] = {
               laneIndex: iLane,
-              totalLane: currLanes.length
+              subLaneIndex: iSubLane,
+              totalLanes: _.map(currLanes, lane => lane.length)
             }
           }
         })
@@ -931,7 +991,7 @@ export default {
         this.getNodeInfos(
           graph, getNodePaperId, getInGraphCitedBys, getInGraphCitings,
           getConnPaperId, getConnWeight, getWidths, getColors)
-      const highways = this.getVerticalGapHighways(graph.relations)
+      const highways = this.getClusteredHighways(graph.relations)
       const relationInfos =
         this.getRelationInfos(graph.relations, nodeInfos, highways)
       return _.map(relationInfos, relationInfo => {
@@ -982,22 +1042,27 @@ export default {
       const maxRow = Math.max(citedByRow, citingRow)
       const minPt = _.minBy([ citedByPt, citingPt ], pt => pt.y)
       const maxPt = _.maxBy([ citedByPt, citingPt ], pt => pt.y)
-      const getLaneX = (lane, totalLane, midX, thickness) => {
+      const getLaneX = (lane, subLane, totalLanes, midX, thickness) => {
+        const totalLane = _.sum(totalLanes)
+        const totalGap = totalLanes.length - 1
         const leftMost =
-          midX - 0.5 * (totalLane * thickness + (totalLane - 1) * spacing)
-        return leftMost + lane * thickness + lane * spacing + 0.5 * thickness
+          midX - 0.5 * (totalLane * thickness + totalGap * spacing)
+        const laneWidths =
+          _.map(totalLanes, nSubLane => nSubLane * thickness)
+        const runningLaneWidths = prefixSum(laneWidths)
+        return leftMost + runningLaneWidths[lane] + lane * spacing + subLane * thickness + 0.5 * thickness
       }
       const firstLaneX =
         getLaneX(
-          laneInfo[minRow].laneIndex, laneInfo[minRow].totalLane, mid.x,
-          thickness)
+          laneInfo[minRow].laneIndex, laneInfo[minRow].subLaneIndex,
+          laneInfo[minRow].totalLanes, mid.x, thickness)
       const firstSegY = topY + (minRow + 1) * segLen - halfGap
       const minArcRadius = topY + minRow * segLen + arcRadius - minPt.y
       const signedMinArcRadius = minArcRadius * signY
       const lastLaneX =
         getLaneX(
-          laneInfo[maxRow - 1].laneIndex, laneInfo[maxRow - 1].totalLane, mid.x,
-          thickness)
+          laneInfo[maxRow - 1].laneIndex, laneInfo[maxRow - 1].subLaneIndex,
+          laneInfo[maxRow - 1].totalLanes, mid.x, thickness)
       const maxArcRadius = maxPt.y - (topY + maxRow * segLen - arcRadius)
       const signedMaxArcRadius = maxArcRadius * signY
       let pathData = `M ${minPt.x} ${minPt.y}`
@@ -1007,13 +1072,13 @@ export default {
       for (let iSeg = minRow + 1; iSeg < maxRow; ++iSeg) {
         const prevLaneX =
           getLaneX(
-            laneInfo[iSeg - 1].laneIndex, laneInfo[iSeg - 1].totalLane, mid.x,
-            thickness)
+            laneInfo[iSeg - 1].laneIndex, laneInfo[iSeg - 1].subLaneIndex,
+            laneInfo[iSeg - 1].totalLanes, mid.x, thickness)
         const prevSegY = topY + iSeg * segLen - halfGap
         const laneX =
           getLaneX(
-            laneInfo[iSeg].laneIndex, laneInfo[iSeg].totalLane, mid.x,
-            thickness)
+            laneInfo[iSeg].laneIndex, laneInfo[iSeg].subLaneIndex,
+            laneInfo[iSeg].totalLanes, mid.x, thickness)
         const minSegY = topY + iSeg * segLen + halfGap
         const maxSegY = topY + (iSeg + 1) * segLen - halfGap
         pathData += ` C ${prevLaneX} ${prevSegY + halfGap} ${laneX} ${minSegY - halfGap} ${laneX} ${minSegY}`
