@@ -139,14 +139,6 @@
     <v-content app>
       <v-container ref="kanbanContainer" fluid class="kanban-container"
         @mousedown="deselectAllNodes">
-        <div ref="yearsContainer" class="years-container"
-          :style="`margin: 5px -${cardSpacing / 2}px;`">
-          <span
-            v-for="(yearInterval, index) in yearIntervalLabels" v-bind:key="index"
-            v-bind:style="yearIntervalStyle" class="year-range">
-            <h2 class="subheading">{{ yearInterval }}</h2>
-          </span>
-        </div>
         <div ref="graphContainer" class="graph-container"
           @scroll="alsoScrollYearsContainer">
           <svg class="overlay">
@@ -224,7 +216,9 @@ export default {
     this.marginLeft = 24
     this.fdeb = new FDEB((edgePts) => { this.edgePts = edgePts })
     this.edgeThickness = 2
-    this.edgeSpacing = 5
+    this.edgeSpacing = 0
+    this.laneSpacing = 5
+    this.sublaneSpacing = 0
     this.horizontalEdgeElevation = 0.2
     this.orthoEdgeArcRadius = 1.5 * this.cardVerticalSpacing
     return {
@@ -863,7 +857,7 @@ export default {
     },
     getNodeInfos: function (graph, getNodePaperId, getInGraphCitedBys, getInGraphCitings, getConnPaperId, getConnWeight, getWidths, getColors) {
       const thickness = this.edgeThickness
-      const spacing = 0 // this.edgeSpacing
+      const spacing = this.edgeSpacing
       const nodeInfos = {}
       _.forEach(graph.nodes, node => {
         const card =
@@ -1026,7 +1020,8 @@ export default {
     },
     makeOrthoPath (citedByInfo, citingInfo, laneInfo) {
       const thickness = this.edgeThickness
-      const spacing = this.edgeSpacing
+      const laneSpacing = this.laneSpacing
+      const sublaneSpacing = this.sublaneSpacing
       const citedByPt = citedByInfo.endPt
       const citingPt = citingInfo.endPt
       const mid = Vec.mid(citedByPt, citingPt)
@@ -1042,15 +1037,17 @@ export default {
       const maxRow = Math.max(citedByRow, citingRow)
       const minPt = _.minBy([ citedByPt, citingPt ], pt => pt.y)
       const maxPt = _.maxBy([ citedByPt, citingPt ], pt => pt.y)
-      const getLaneX = (lane, subLane, totalLanes, midX, thickness) => {
+      const getLaneX = (lane, sublane, totalLanes, midX, thickness) => {
         const totalLane = _.sum(totalLanes)
         const totalGap = totalLanes.length - 1
         const leftMost =
-          midX - 0.5 * (totalLane * thickness + totalGap * spacing)
+          midX - 0.5 * (totalLane * thickness + totalGap * laneSpacing)
         const laneWidths =
-          _.map(totalLanes, nSubLane => nSubLane * thickness)
+          _.map(
+            totalLanes,
+            nSublane => nSublane * thickness + (nSublane - 1) * sublaneSpacing)
         const runningLaneWidths = prefixSum(laneWidths)
-        return leftMost + runningLaneWidths[lane] + lane * spacing + subLane * thickness + 0.5 * thickness
+        return leftMost + runningLaneWidths[lane] + lane * laneSpacing + sublane * thickness + sublane * sublaneSpacing + 0.5 * thickness
       }
       const firstLaneX =
         getLaneX(
