@@ -201,36 +201,37 @@ export default {
                 this.graph.insertAuthor(author)
                 return author
               })
+            if (refs && refs.data) {
+              let paperRefs = JSON.parse(refs.data)
+              let references = paperRefs.map((ref) => {
+                let refPaper = {}
+                if (Array.isArray(ref.author)) {
+                  refPaper.authors = ref.author.map((author) => {
+                    let authorName = [author.given, author.family].join(' ')
+                    return this.graph.insertAuthor({name: authorName})
+                  }).filter((id) => Number.isInteger(id))
+                }
+                if (Array.isArray(ref.title)) {
+                  refPaper.title = ref.title[0]
+                  refPaper.authorNames = []
+                  refPaper.authors = (!Array.isArray(ref.author)) ? ref.author : ref.author.map((author) => {
+                    let authorName = {name: [author.given, author.family].join(' ')}
+                    refPaper.authorNames.push(authorName)
+                    return this.graph.insertAuthor(authorName)
+                  })
+                  refPaper.year = Array.isArray(ref.date) ? ref.date[0] : 'unknown'
+                  refPaper.id = this.graph.insertPaper(refPaper)
+                  return refPaper
+                }
+              }).filter(p => p !== undefined && p.hasOwnProperty('id'))
 
-            let paperRefs = JSON.parse(refs.data)
-            let references = paperRefs.map((ref) => {
-              let refPaper = {}
-              if (Array.isArray(ref.author)) {
-                refPaper.authors = ref.author.map((author) => {
-                  let authorName = [author.given, author.family].join(' ')
-                  return this.graph.insertAuthor({name: authorName})
-                }).filter((id) => Number.isInteger(id))
-              }
-              if (Array.isArray(ref.title)) {
-                refPaper.title = ref.title[0]
-                refPaper.authorNames = []
-                refPaper.authors = (!Array.isArray(ref.author)) ? ref.author : ref.author.map((author) => {
-                  let authorName = {name: [author.given, author.family].join(' ')}
-                  refPaper.authorNames.push(authorName)
-                  return this.graph.insertAuthor(authorName)
-                })
-                refPaper.year = Array.isArray(ref.date) ? ref.date[0] : 'unknown'
-                refPaper.id = this.graph.insertPaper(refPaper)
-                return refPaper
-              }
-            }).filter(p => p !== undefined && p.hasOwnProperty('id'))
-
-            newPaper.references = references.map((ref) => ref.id)
-            this.graph.insertPaper(newPaper)
-            newPaper.references.forEach(rid => {
-              this.graph.getPaperById(rid).citedBysCount = this.graph.getCitedBys(rid).length
-            })
-            newPaper.citedBysCount = this.graph.getCitedBys(newPaper.id).length
+              newPaper.references = references.map((ref) => ref.id)
+              this.graph.insertPaper(newPaper)
+              newPaper.references.forEach(rid => {
+                this.graph.getPaperById(rid).citedBysCount = this.graph.getCitedBys(rid).length
+              })
+              newPaper.citedBysCount = this.graph.getCitedBys(newPaper.id).length
+            }
             // this.papers.push(newPaper)
             this.$refs.PaperList.addPaper(newPaper)
           }
