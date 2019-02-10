@@ -20,22 +20,18 @@ export default class PdfLoader {
    * in metadata, parse pdf content to get the info.
    */
   getInfo () {
-    return new Promise((resolve, reject) => {
-      this.load().then((pdf) => {
-        pdf.getMetadata().then((md) => {
-          let info = md.info
-          let year = (info.CreationDate) ? info.CreationDate.slice(2, 6) : 'unknown'
-          let authors = (info.Author) ? info.Author.replace('and', ',').split(',') : false
-          let title = (info.Title && info.Title.length > 10) ? info.Title : false
-          if (authors && title) {
-            resolve({year, authors, title})
-          } else {
-            this.parseInfo().then((info) => {
-              resolve(Object.assign({year}, info))
-            })
-          }
-        })
-      })
+    return this.load().then((pdf) => {
+      return pdf.getMetadata()
+    }).then((md) => {
+      let info = md.info
+      let year = (info.CreationDate) ? info.CreationDate.slice(2, 6) : 'unknown'
+      let authors = (info.Author) ? info.Author.replace('and', ',').split(',') : false
+      let title = (info.Title && info.Title.length > 10) ? info.Title : false
+      if (authors && title) {
+        return this.parseInfo({year, authors, title})
+      } else {
+        return this.parseInfo({year})
+      }
     })
   }
 
@@ -48,15 +44,45 @@ export default class PdfLoader {
   /**
    * parse PDF conetent to get paper info (title, author, etc.,)
    */
-  parseInfo () {
+  parseInfo (info) {
     return this.load().then((pdf) => {
-      return pdf.getPage(1).then((text) => {
-        return text.getTextContent()
-      }).then((content) => {
+      return pdf.getPage(1)
+    }).then((text) => {
+      return text.getTextContent()
+    }).then((content) => {
+      let items = content.items
+      let paperInfo = {}
+      let abstract = []
+      let keywords = []
+      let abstractStart = false
+      let keywordStart = false
+      for (let i = 0; i < items.length; i++) {
+        let item = items[i]
+        if (item.str.match(/ntroduction$/i)) {
+          break
+        }
+        if (keywordStart && item.str.length > 3) {
+          keywords.push(item.str)
+        }
+        if (item.str.match(/eywords:?$/i) || item.str.match(/^Index Terms$/i)) {
+          abstractStart = false
+          keywordStart = true
+        }
+        if (abstractStart) {
+          abstract.push(item.str)
+        }
+        if (item.str.match(/bstract$/i)) {
+          abstractStart = true
+        }
+      }
+      abstract = abstract.join('').replace(/\s+/g, ' ')
+      keywords = keywords.join('')
+      if (info.title && info.authors) {
+        paperInfo = Object.assign({}, info)
+      } else {
         const MIN_TITLE_LENGTH = 10
         const MIN_NAME_LENGTH = 5
         const MAX_ROWS_PARSE = 30
-        let items = content.items
         let topRows = items.slice(0, MAX_ROWS_PARSE).filter((item) => item.str.length > MIN_TITLE_LENGTH)
         let largestText = Math.max(...topRows.map((item) => item.height))
         let titleRowIndex = items.slice(0, MAX_ROWS_PARSE).map((item) => item.height).indexOf(largestText)
@@ -68,15 +94,18 @@ export default class PdfLoader {
           authorRowIndex++
           authors = items[authorRowIndex].str
         }
-
         while (authors.length < MIN_NAME_LENGTH) {
           authorRowIndex++
           authors = items[authorRowIndex].str
         }
         authors = authors.replace('and', ',').split(',')
-        return new Promise((resolve, reject) => {
-          resolve({authors, title})
-        })
+        paperInfo = {title, authors}
+      }
+      paperInfo.abstract = abstract
+      paperInfo.keywords = keywords
+      paperInfo.year = info.year
+      return new Promise((resolve, reject) => {
+        resolve(paperInfo)
       })
     })
   }

@@ -40,6 +40,16 @@
             label="Authors"
             required
           ></v-text-field>
+          <v-textarea
+            rows=12
+            v-model="abstract"
+            label="Abstract"
+          ></v-textarea>
+          <v-text-field
+            v-model="keywords"
+            label="Keywords"
+            required
+          ></v-text-field>
         </v-form>
       </v-container>
     </v-card>
@@ -57,13 +67,14 @@ export default {
     author: '',
     authorRules: [
       v => !!v || 'At least one author name is required'
-    ]
+    ],
+    abstract: '',
+    keywords: ''
   }),
 
   methods: {
-    setValues ({title, authors}) {
-      this.title = title
-      this.author = authors
+    setValues (paper) {
+      Object.assign(this, paper)
     },
     validate () {
       if (this.$refs.form.validate()) {

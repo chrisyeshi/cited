@@ -193,8 +193,7 @@ export default {
             let paper = papers[i]
             let refs = allRefs[i]
             let newPaper = {}
-            newPaper.title = paper.title
-            newPaper.year = paper.year
+            newPaper = Object.assign({}, paper)
             newPaper.authors = paper.authors.filter(authorName => authorName !== '')
               .map((authorName) => {
                 let author = {name: authorName}
