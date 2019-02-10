@@ -45,18 +45,18 @@ export function getColRowsByCitedLevels (graph) {
 
 export function getColRowsByCitingLevels (graph) {
   const citingLevels = getPaperCitingLevels(graph)
-  let colRows = {}
-  let columnCounters = []
+  const grid = []
   Object.keys(citingLevels).forEach(paperId => {
-    const colId = citingLevels[paperId]
-    const rowId = columnCounters[colId] ? columnCounters[colId] : 0
-    colRows[paperId] = {
-      col: colId,
-      row: rowId
-    }
-    columnCounters[colId] = rowId + 1
+    grid[citingLevels[paperId]] = grid[citingLevels[paperId]] || []
+    grid[citingLevels[paperId]].push(paperId)
   })
-  return colRows
+  const sortedGrid = _.map(grid, column => {
+    const sortedColumn = _.sortBy(column, paperId => {
+      return -graph.nodes[paperId].inGraphCitedBys.length
+    })
+    return sortedColumn
+  })
+  return toPaperColRows(sortedGrid)
 }
 
 export function getColRowsByOptimalYearIntervals (graph) {

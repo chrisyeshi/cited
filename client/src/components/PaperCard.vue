@@ -1,18 +1,22 @@
 <template>
   <div v-if="paperStyle === 'chip'" ref="header" :index="card.index"
     :class="{ animate: !isDragging, 'front-most': isDragging }"
-    class="paper-card caption py-1 px-3"
+    class="paper-card caption"
     :style="cardStyle"
-    style="background: rgba(255, 255, 255, 0.8); border-radius: 20px; border-style: solid; border-width: 1px;"
+    style="background: rgba(255, 255, 255, 0.8); border-radius: 8px; border-style: solid; border-width: 1px; display: flex; overflow: hidden;"
     @mousedown.stop="dragElement"
     @mouseover="emitPaperId('mouseoverrefcount', 'mouseovercitecount')"
     @mouseout="emitPaperId('mouseoutrefcount', 'mouseoutcitecount')"
     @click="emitPaperId('clickrefcount', 'clickcitecount')">
-    <div class="text-xs-center font-weight-bold">
-      {{ card.paper.authors[0].family.slice(0, 10) }} {{ card.paper.year }}
+    <div :style="citingStyle"></div>
+    <div style="flex-grow: 1; min-width: 0;" class="py-1 px-2">
+      <div class="text-xs-center font-weight-bold">
+        {{ card.paper.authors[0].family.slice(0, 10) }} {{ card.paper.year }}
+      </div>
+      <div class="text-xs-center text-truncate">{{ card.paper.title }}</div>
+      <div class="text-xs-center" style="display: flex;"><span class="text-truncate" style="flex: 1 1 25px;">{{ card.paper.venue.name }}</span><span class="mx-2">-</span><span>Cited by {{ card.paper.citedByCount }}</span></div>
     </div>
-    <div class="text-truncate">{{ card.paper.title }}</div>
-    <div class="text-xs-center d-flex"><span class="text-truncate" style="width: 25px;">{{ card.paper.venue.name }}</span>-<span>Cited by {{ card.paper.citedByCount }}</span></div>
+    <div :style="citedByStyle"></div>
   </div>
   <transition v-else name="background">
     <div class="paper-card"
@@ -70,6 +74,7 @@
 import { create as createRect } from './rect.js'
 import _ from 'lodash'
 import { Author } from './paper.js'
+import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 
 export default {
   name: 'PaperCard',
@@ -110,6 +115,20 @@ export default {
       const height = { height: this.rect.height + 'px' }
       return this.autoHeight ? style : { ...style, ...height }
     },
+    citingStyle: function () {
+      return {
+        opacity: 0.8,
+        backgroundColor: this.relationColor(this.card.inGraphCitings.length),
+        flex: `0 0 6px`
+      }
+    },
+    citedByStyle: function () {
+      return {
+        opacity: 0.8,
+        backgroundColor: this.relationColor(this.card.inGraphCitedBys.length),
+        flex: `0 0 6px`
+      }
+    },
     inNetworkCitationColor: function () {
       return this.getColor({
         maxLevel: 4,
@@ -131,6 +150,10 @@ export default {
     }
   },
   methods: {
+    relationColor: function (count) {
+      const scalar = 1 - Math.exp(Math.log(1) - 0.2 * count)
+      return interpolateColor(scalar)
+    },
     emitPaperId: function (...evts) {
       _.forEach(evts, evt => {
         this.$emit(evt, this.card.paper.id)

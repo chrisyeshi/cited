@@ -15,6 +15,28 @@ export class Relation {
   }
 }
 
+class Link {
+  constructor (citedById, citingId) {
+    this.citedById = citedById
+    this.citingId = citingId
+  }
+}
+
+class Path {
+  constructor (links = []) {
+    this.links = links
+  }
+
+  get length () {
+    return this.links.length
+  }
+
+  get paperIds () {
+    return _.uniq(
+      _.flatten(_.map(this.links, link => ([ link.citedById, link.citingId ]))))
+  }
+}
+
 export class Node {
   constructor (paper, nodeOpt = nodeOptTemplate) {
     // TODO: validate the arguments
@@ -211,6 +233,27 @@ export class Graph {
       return node.paper.venue
     }
     return null
+  }
+
+  getAllPathsBetween (citedById, citingId) {
+    return this.getAllPathsBetweenRecursive(citedById, citingId, new Path())
+  }
+
+  getAllPathsBetweenRecursive (citedById, citingId, path) {
+    if (citingId === citedById) {
+      return path
+    }
+    const node = this.getNodeById(citingId)
+    if (node.inGraphCitedBys.length === 0) {
+      return false
+    }
+
+    const paths = _.concat(..._.map(node.inGraphCitedBys, currCitedById => {
+      return this.getAllPathsBetweenRecursive(
+        citedById, currCitedById, new Path([ ...path.links, new Link(currCitedById, citingId) ]))
+    }))
+
+    return _.filter(paths, path => path)
   }
 
   remove (arg) {
