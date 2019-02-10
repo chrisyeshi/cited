@@ -18,9 +18,9 @@
       :rows-per-page-items="[10, 15, 25, 50]"
     >
       <template slot="items" slot-scope="props">
-        <td>{{ props.item.title }}</td>
+        <td class="subheading">{{ props.item.title }} <span class="caption" v-if="props.item.venue">({{ props.item.venue }})</span></td>
         <td class="text-xs-right">{{ props.item.year }}<br /></td>
-        <td class="text-xs-right">{{ showAuthorNames(props.item.authorNames) }}</td>
+        <td class="text-xs-right">{{ showAuthorNames(props.item.authorNames) }}<br /></td>
         <td class="text-xs-right">{{ props.item.citedBysCount }}</td>
       </template>
       <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -38,9 +38,9 @@ export default {
       search: '',
       references: [],
       headers: [
-        { text: 'Title', value: 'title', sortable: false },
+        { text: 'Title & Authors', value: 'titleAndAuthors', sortable: false },
         { text: 'Year', value: 'year' },
-        { text: 'Authors', value: 'authorNames', sortable: false },
+        { text: 'Authors', value: 'authorNames' },
         { text: 'Cited By', value: 'citedBysCount' }
       ]
     }
@@ -48,6 +48,9 @@ export default {
   methods: {
     update (paperReferences) {
       this.references = paperReferences
+    },
+    showTitle (title) {
+      return (title.length > 64) ? title.slice(0, 63) + ' ...' : title
     },
     showAuthorNames (authors) {
       if (Array.isArray(authors)) {

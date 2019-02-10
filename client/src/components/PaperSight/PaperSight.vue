@@ -171,15 +171,6 @@ export default {
           let pdf = new PdfParser(url)
           resolve(pdf)
         }))
-        // let fileReader = new FileReader()
-        // getAllPdfs.push(new Promise((resolve, reject) => {
-        //   fileReader.onload = (evt) => {
-        //     let pdf = new PdfParser(evt.target.result)
-        //     resolve(pdf)
-        //     this.pdfFiles.push(pdf)
-        //   }
-        // }))
-        // fileReader.readAsArrayBuffer(file)
       }
       Promise.all(getAllPdfs).then(pdfs => {
         for (let pdf of pdfs) {
@@ -218,6 +209,7 @@ export default {
                     refPaper.authorNames.push(authorName)
                     return this.graph.insertAuthor(authorName)
                   })
+                  refPaper.venue = (ref['container-title']) ? ref['container-title'][0].replace(/-/g, '') : ''
                   refPaper.year = Array.isArray(ref.date) ? ref.date[0] : 'unknown'
                   refPaper.id = this.graph.insertPaper(refPaper)
                   return refPaper
