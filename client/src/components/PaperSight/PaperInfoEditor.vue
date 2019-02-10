@@ -74,6 +74,7 @@ export default {
 
   methods: {
     setValues (paper) {
+      console.log(JSON.parse(JSON.stringify(paper)))
       Object.assign(this, paper)
     },
     validate () {

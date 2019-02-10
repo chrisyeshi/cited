@@ -75,7 +75,7 @@ export default {
 
     editPaperInfo (index) {
       let paper = this.papers[index]
-      paper.authors = this.showAuthorNames(paper.authors)
+      paper.author = this.showAuthorNames(paper.authors)
       this.$emit('editPaperInfo', paper)
       this.$emit('viewPaper', index)
     },
