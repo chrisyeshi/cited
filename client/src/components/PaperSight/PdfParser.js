@@ -20,22 +20,18 @@ export default class PdfLoader {
    * in metadata, parse pdf content to get the info.
    */
   getInfo () {
-    return new Promise((resolve, reject) => {
-      this.load().then((pdf) => {
-        pdf.getMetadata().then((md) => {
-          let info = md.info
-          let year = info.CreationDate.slice(2, 6) || 'unknown'
-          let authors = (info.Author) ? info.Author.replace('and', ',').split(',') : false
-          let title = (info.Title && info.Title.length > 10) ? info.Title : false
-          if (authors && title) {
-            resolve({year, authors, title})
-          } else {
-            this.parseInfo().then((info) => {
-              resolve(Object.assign({year}, info))
-            })
-          }
-        })
-      })
+    return this.load().then((pdf) => {
+      return pdf.getMetadata()
+    }).then((md) => {
+      let info = md.info
+      let year = (info.CreationDate) ? info.CreationDate.slice(2, 6) : 'unknown'
+      let authors = (info.Author) ? info.Author.replace('and', ',').split(',') : false
+      let title = (info.Title && info.Title.length > 10) ? info.Title : false
+      if (authors && title) {
+        return this.parseInfo({year, authors, title})
+      } else {
+        return this.parseInfo({year})
+      }
     })
   }
 
@@ -48,15 +44,45 @@ export default class PdfLoader {
   /**
    * parse PDF conetent to get paper info (title, author, etc.,)
    */
-  parseInfo () {
+  parseInfo (info) {
     return this.load().then((pdf) => {
-      return pdf.getPage(1).then((text) => {
-        return text.getTextContent()
-      }).then((content) => {
+      return pdf.getPage(1)
+    }).then((text) => {
+      return text.getTextContent()
+    }).then((content) => {
+      let items = content.items
+      let paperInfo = {}
+      let abstract = []
+      let keywords = []
+      let abstractStart = false
+      let keywordStart = false
+      for (let i = 0; i < items.length; i++) {
+        let item = items[i]
+        if (item.str.match(/ntroduction$/i)) {
+          break
+        }
+        if (keywordStart && item.str.length > 3) {
+          keywords.push(item.str)
+        }
+        if (item.str.match(/eywords:?$/i) || item.str.match(/^Index Terms$/i)) {
+          abstractStart = false
+          keywordStart = true
+        }
+        if (abstractStart) {
+          abstract.push(item.str)
+        }
+        if (item.str.match(/bstract$/i)) {
+          abstractStart = true
+        }
+      }
+      abstract = abstract.join('').replace(/\s+/g, ' ')
+      keywords = keywords.join('')
+      if (info.title && info.authors) {
+        paperInfo = Object.assign({}, info)
+      } else {
         const MIN_TITLE_LENGTH = 10
         const MIN_NAME_LENGTH = 5
         const MAX_ROWS_PARSE = 30
-        let items = content.items
         let topRows = items.slice(0, MAX_ROWS_PARSE).filter((item) => item.str.length > MIN_TITLE_LENGTH)
         let largestText = Math.max(...topRows.map((item) => item.height))
         let titleRowIndex = items.slice(0, MAX_ROWS_PARSE).map((item) => item.height).indexOf(largestText)
@@ -68,15 +94,18 @@ export default class PdfLoader {
           authorRowIndex++
           authors = items[authorRowIndex].str
         }
-
         while (authors.length < MIN_NAME_LENGTH) {
           authorRowIndex++
           authors = items[authorRowIndex].str
         }
         authors = authors.replace('and', ',').split(',')
-        return new Promise((resolve, reject) => {
-          resolve({authors, title})
-        })
+        paperInfo = {title, authors}
+      }
+      paperInfo.abstract = abstract
+      paperInfo.keywords = keywords
+      paperInfo.year = info.year
+      return new Promise((resolve, reject) => {
+        resolve(paperInfo)
       })
     })
   }
@@ -86,9 +115,10 @@ export default class PdfLoader {
    * @param {Array of pdfText Objects} texts
    */
   getReferenceTexts (texts) {
+    // console.log(texts)
     let result = texts
     for (const [index, item] of texts.entries()) {
-      if (item.str.toLowerCase() === 'eferences' || item.str.toLowerCase() === 'references') {
+      if (item.str.toLowerCase() === 'eferences' || item.str.toLowerCase() === 'references' || item.str.match(/^\d+.*references$/i)) {
         result = texts.slice(index + 1)
         break
       }
@@ -100,20 +130,60 @@ export default class PdfLoader {
    * Remove or replace phrases that prevent references to be parsed correctly
    * @param {Array of pdfText Objects} texts
    */
-  sanitize (texts) {
-    let refs = texts
-      .map((item) => item.str.replace(/\[(O|o)nline.*\]/g, 'online'))
-      .join(' ').split('[')
-
-    refs.shift()
-    return refs.map((ref) => '[' + ref)
+  sanitizeUrl (urlString) {
+    return urlString
+      .replace(/\[.+\]/, '')
+      .replace(/'/g, '')
+      .replace(/\(/g, '')
+      .replace(/\)/g, '')
+      .replace('- ', '')
+      .replace('&', '')
   }
 
-  extract (refText) {
-    if (refText[refText.length - 1].length > 500) {
-      refText[refText.length - 1] = refText[refText.length - 1].slice(0, 500)
+  sanitize (texts) {
+    return texts.map((item) => item.str.replace(/\[(O|o)nline.*\]/g, 'online'))
+  }
+
+  extract (refTexts) {
+    let refItems = []
+    let refLabelPatterns = [
+      new RegExp(/^\[(.+)\]/),
+      new RegExp(/^(\d{1,2})\./)
+    ]
+    let labelPattern = null
+    let currentRefItem = ''
+    refTexts.forEach(refText => {
+      if (labelPattern === null) {
+        for (let i = 0; i < refLabelPatterns.length; i++) {
+          let pattern = refLabelPatterns[i]
+          if (refText.match(pattern)) {
+            labelPattern = pattern
+            break
+          }
+        }
+      } else {
+        let match = refText.match(labelPattern)
+        if (match) {
+          // console.log(match)
+          if (match[1].match(/^\d+$/)) {
+            if (Number(match[1]) === refItems.length + 2) {
+              refItems.push(currentRefItem)
+              currentRefItem = ''
+            }
+          } else {
+            refItems.push(currentRefItem)
+            currentRefItem = ''
+          }
+        } else {
+          currentRefItem += refText
+        }
+      }
+    })
+    // refItems.shift()
+    if (refItems[refItems.length - 1].length > 500) {
+      refItems[refItems.length - 1] = refItems[refItems.length - 1].slice(0, 500)
     }
-    let refQuery = refText.map(rt => '\'' + rt.replace(/\[.+\]/, '').replace('- ', '').replace('&', '') + '\'').join('+')
+    let refQuery = refItems.map(rt => '\'' + this.sanitizeUrl(rt) + '\'').join('+')
     return axios('/api/anystyle?refs=' + encodeURIComponent(refQuery))
   }
 
@@ -135,14 +205,25 @@ export default class PdfLoader {
             resolve(refText)
           })
         } else {
+          // TODO: keep looking up until we found the start of Reference section
           return pdf.getPage(pdf.numPages - 1)
         }
       }).then((text) => {
         if (!refStart) return text.getTextContent()
       }).then((text) => {
-        if (!refStart) refText = this.getReferenceTexts(text.items).concat(refText)
+        let moreRefText = []
+        if (!refStart) {
+          moreRefText = this.getReferenceTexts(text.items)
+          refText = moreRefText.concat(refText)
+        }
         // debugger
-        return this.extract(this.sanitize(refText))
+        if (!refStart && moreRefText.length === text.items.length) { // this means no references found
+          return new Promise((resolve, reject) => {
+            resolve()
+          })
+        } else {
+          return this.extract(refText.map(r => r.str))
+        }
       }).then((refs) => {
         return new Promise((resolve, reject) => {
           resolve(refs)
