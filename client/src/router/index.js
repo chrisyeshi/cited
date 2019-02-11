@@ -7,9 +7,10 @@ import Resource from 'vue-resource'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
-const Kanban = () => import('@/components/Kanban')
 const Contail = () => import('@/components/Contail')
+const Kanban = () => import('@/components/Kanban')
 const PaperSight = () => import('@/components/PaperSight/PaperSight')
+const ParseVis = () => import('@/components/ParseVis')
 const Smooth = () => import('@/components/Smooth')
 
 Vue.use(Router)
@@ -46,6 +47,7 @@ export default new Router({
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
     { path: '/papersight', component: PaperSight },
+    { path: '/parsevis', component: ParseVis },
     { path: '*', component: NotFound }
   ]
 })
