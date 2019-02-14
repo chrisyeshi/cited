@@ -6,6 +6,7 @@ import { Paper } from './components/paper.js'
 import router from './router/index.js'
 import api from './components/api.js'
 import loremIpsum from 'lorem-ipsum'
+import pvStore from './storepv.js'
 import * as ga from 'vue-analytics'
 
 Vue.use(Vuex)
@@ -51,6 +52,9 @@ const demoPapers = {
 }
 
 export default new Vuex.Store({
+  modules: {
+    parseVis: pvStore
+  },
   state: {
     isSearchPaneVisible: true,
     isVisPaneVisible: false,
