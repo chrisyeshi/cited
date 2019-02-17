@@ -100,7 +100,6 @@ export class PaperGraph {
 
   getReferences (paperId) {
     let paper = this.graph.papers[paperId]
-    console.log(paper.title, paper.references)
     if (Array.isArray(paper.references)) {
       return paper.references.map(ref => {
         return this.graph.papers[ref]

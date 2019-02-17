@@ -73,9 +73,17 @@ export default {
       this.$emit('viewPaper', index)
     },
 
+    updatePaper (newPaperInfo) {
+      let paper = this.papers.find(p => p.id === newPaperInfo.id)
+      Object.keys(newPaperInfo).forEach(info => {
+        if (paper.hasOwnProperty(info) && info !== 'id') {
+          paper[info] = newPaperInfo[info]
+        }
+      })
+    },
+
     editPaperInfo (index) {
       let paper = this.papers[index]
-      paper.author = this.showAuthorNames(paper.authors)
       this.$emit('editPaperInfo', paper)
       this.$emit('viewPaper', index)
     },

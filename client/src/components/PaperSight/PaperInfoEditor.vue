@@ -29,24 +29,24 @@
           lazy-validation
         >
           <v-text-field
-            v-model="title"
+            v-model="paper.title"
             :rules="titleRules"
             label="Paper Title"
             required
           ></v-text-field>
           <v-text-field
-            v-model="author"
+            v-model="paper.authorNames"
             :rules="authorRules"
             label="Authors"
             required
           ></v-text-field>
           <v-textarea
             rows=12
-            v-model="abstract"
+            v-model="paper.abstract"
             label="Abstract"
           ></v-textarea>
           <v-text-field
-            v-model="keywords"
+            v-model="paper.keywords"
             label="Keywords"
             required
           ></v-text-field>
@@ -60,26 +60,32 @@
 export default {
   data: () => ({
     valid: true,
-    title: '',
     titleRules: [
       v => !!v || 'Paper title is required'
     ],
-    author: '',
+
     authorRules: [
       v => !!v || 'At least one author name is required'
     ],
-    abstract: '',
-    keywords: ''
+    paper: {
+      title: '',
+      authorNames: '',
+      authors: [],
+      keywords: '',
+      abstract: ''
+    }
   }),
 
   methods: {
     setValues (paper) {
-      console.log(JSON.parse(JSON.stringify(paper)))
-      Object.assign(this, paper)
+      Object.assign(this.paper, paper)
+      this.paper.authorNames = this.showAuthorNames(paper.authors)
     },
     validate () {
       if (this.$refs.form.validate()) {
         this.snackbar = true
+        this.paper.authors = this.paper.authorNames.split(',').map(name => { return {name} })
+        this.$emit('editPaperInfoDone', this.paper)
       }
     },
     reset () {
@@ -87,6 +93,11 @@ export default {
     },
     resetValidation () {
       this.$refs.form.resetValidation()
+    },
+    showAuthorNames (authors) {
+      if (Array.isArray(authors)) {
+        return authors.map((author) => author.name).join(',')
+      }
     }
   }
 }

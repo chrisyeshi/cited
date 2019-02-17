@@ -85,6 +85,7 @@ import PaperList from './PaperList'
 import PaperInforEditor from './PaperInfoEditor'
 import RefList from './RefList'
 import {PaperGraph} from '../../../../model/PaperGraph'
+// import Dexie from 'dexie'
 
 export default {
   name: 'PaperSight',
@@ -98,7 +99,6 @@ export default {
     return {
       pdfFiles: [],
       drawer: false,
-      selected: [],
       graph: [],
       dialog: false,
       isViewingPdf: false,
@@ -106,24 +106,26 @@ export default {
       viewerModes: ['embed', 'pdfjs'],
       viewer: 'pdfjs',
       selectedPaper: null,
+      localDb: null,
       isEditingPaperInfo: false
     }
   },
   created: function () {
     this.graph = new PaperGraph({})
+    // this.localDb = new Dexie('PaperDb')
+    // this.localDb.version(1).stores({
+    //   collections: '++id, name, paperIds',
+    //   papers: 'id, year, authors, venue, citedByCount, references, abstract, keywords',
+    //   authors: 'id, name',
+    //   venues: 'id, name, type'
+    // })
+    // this.localDb.papers.toArray().then(papers => {
+    //   console.log(papers)
+    // })
   },
   methods: {
     hover: function (index) {
       // console.log(index)
-    },
-
-    toggle (index) {
-      const i = this.selected.indexOf(index)
-      if (i > -1) {
-        this.selected.splice(i, 1)
-      } else {
-        this.selected.push(index)
-      }
     },
 
     setPdfViewerMode () {
@@ -142,6 +144,11 @@ export default {
 
     editPaperInfoDone (paper) {
       this.isEditingPaperInfo = false
+      if (paper !== undefined) {
+        let savedPaper = this.graph.getPaperById(paper.id)
+        savedPaper = paper
+        this.$refs.PaperList.updatePaper(savedPaper)
+      }
     },
 
     viewPaper (index) {
@@ -217,11 +224,13 @@ export default {
               }).filter(p => p !== undefined && p.hasOwnProperty('id'))
 
               newPaper.references = references.map((ref) => ref.id)
-              this.graph.insertPaper(newPaper)
+              newPaper.id = this.graph.insertPaper(newPaper)
               newPaper.references.forEach(rid => {
                 this.graph.getPaperById(rid).citedBysCount = this.graph.getCitedBys(rid).length
               })
               newPaper.citedBysCount = this.graph.getCitedBys(newPaper.id).length
+              // this.localDb.papers.bulkAdd(references)
+              // this.localDb.papers.add(newPaper)
             }
             // this.papers.push(newPaper)
             this.$refs.PaperList.addPaper(newPaper)
