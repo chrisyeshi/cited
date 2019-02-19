@@ -13,7 +13,10 @@
       <div class="cards-container" :style="cardsContainerStyle">
         <!-- TODO: render different styles depend on the article type -->
         <div v-for="(node, index) in visGraph.nodes" :key="index"
-          :style="getCardStyle(node)">
+          :style="getCardStyle(node)" :class="getCardClasses(node)"
+          @click="onCardClicked(node)"
+          @mouseenter.stop="onCardMouseEnter(node)"
+          @mouseleave.stop="onCardMouseLeave(node)">
           <div :style="getCardSideStyle(node.inGraphReferences.length)"></div>
           <div class="py-1 px-2" :style="cardRowsContainerStyle">
             <div class="text-xs-center font-weight-bold card-row">
@@ -72,35 +75,44 @@ export default {
     return {
       drawerWidth: '450',
       drawerState: 'empty',
-      cardBorderRadius: 0.65,
-      cardHeight: 5.2,
-      cardHorizontalSpacing: 4,
-      cardOpacity: 0.8,
-      cardSideDarkness: 0.2,
-      cardSideWidth: 0.5,
-      cardVerticalSpacing: 0.8,
-      cardWidth: 15,
-      canvasPadding: { left: 2, top: 2, right: 2, bottom: 2 },
-      fontSize: 12,
-      pathWidth: 0.175,
-      pathOpacity: 0.8,
-      pathDarkness: 0.35,
-      pathEndMinX: 0.5,
-      verticalGapLaneSpacing: 0.4,
-      verticalGapOrthogonalPathRadius: 0.5
+      hoveringVisNode: null,
+      selectedVisNodes: [],
+      visConfig: {
+        card: {
+          borderRadius: 0.65,
+          height: 5.2,
+          opacity: 0.8,
+          sideDarkness: 0.2,
+          sideWidth: 0.5,
+          width: 15
+        },
+        cardHorizontalSpacing: 4,
+        cardVerticalSpacing: 0.8,
+        canvasPadding: { left: 2, top: 2, right: 2, bottom: 2 },
+        fontSize: 12,
+        hoveringCardElevation: 2,
+        path: {
+          width: 0.175,
+          opacity: 0.8,
+          darkness: 0.35,
+          endMinX: 0.5
+        },
+        verticalGapLaneSpacing: 0.4,
+        verticalGapOrthogonalPathRadius: 0.5
+      }
     }
   },
   computed: {
     canvasHeight () {
       const nRows = this.gridConfig.nRow
-      const paddings = this.canvasPadding.top + this.canvasPadding.bottom
-      const spacing = (nRows - 1) * this.cardVerticalSpacing
-      const prevHeight = nRows * this.cardHeight
+      const paddings = this.visConfig.canvasPadding.top + this.visConfig.canvasPadding.bottom
+      const spacing = (nRows - 1) * this.visConfig.cardVerticalSpacing
+      const prevHeight = nRows * this.visConfig.card.height
       return paddings + spacing + prevHeight
     },
     canvasWidth () {
       const nColumns = this.maxReferenceLevel + 1
-      return this.canvasPadding.left + nColumns * this.cardWidth + (nColumns - 1) * this.cardHorizontalSpacing + this.canvasPadding.right
+      return this.visConfig.canvasPadding.left + nColumns * this.visConfig.card.width + (nColumns - 1) * this.visConfig.cardHorizontalSpacing + this.visConfig.canvasPadding.right
     },
     cardRowsContainerStyle () {
       return {
@@ -110,12 +122,12 @@ export default {
         flexDirection: 'column',
         justifyContent: 'space-around',
         padding: '10px',
-        background: `rgba(255, 255, 255, ${this.cardOpacity})`
+        background: `rgba(255, 255, 255, ${this.visConfig.card.opacity})`
       }
     },
     cardsContainerStyle () {
       return {
-        fontSize: this.fontSize + 'px',
+        fontSize: this.visConfig.fontSize + 'px',
         width: this.canvasWidth + 'em',
         height: this.canvasHeight + 'em'
       }
@@ -128,15 +140,15 @@ export default {
           link => link.citedBy.col - link.reference.col > 1)
       return _.map(crossColumnLinks, link => {
         const beg = this.getPathRefPt(link)
-        const begProtrude = new Vec(beg.x + this.pathEndMinX, beg.y)
+        const begProtrude = new Vec(beg.x + this.visConfig.path.endMinX, beg.y)
         const end = this.getPathCitedByPt(link)
-        const endProtrude = new Vec(end.x - this.pathEndMinX, end.y)
+        const endProtrude = new Vec(end.x - this.visConfig.path.endMinX, end.y)
         return {
-          d: `M ${beg.x} ${beg.y} L ${begProtrude.x} ${begProtrude.y} C ${begProtrude.x + 4 * this.pathEndMinX} ${begProtrude.y} ${endProtrude.x - 4 * this.pathEndMinX} ${endProtrude.y} ${endProtrude.x} ${endProtrude.y} L ${end.x} ${end.y}`,
+          d: `M ${beg.x} ${beg.y} L ${begProtrude.x} ${begProtrude.y} C ${begProtrude.x + 4 * this.visConfig.path.endMinX} ${begProtrude.y} ${endProtrude.x - 4 * this.visConfig.path.endMinX} ${endProtrude.y} ${endProtrude.x} ${endProtrude.y} L ${end.x} ${end.y}`,
           fill: 'none',
-          'stroke-width': this.pathWidth,
+          'stroke-width': this.visConfig.path.width,
           stroke: this.getPathColor(link.weight),
-          'stroke-opacity': this.pathOpacity
+          'stroke-opacity': this.visConfig.path.opacity
         }
       })
     },
@@ -158,7 +170,7 @@ export default {
     maxReferenceLevel () { return _.max(this.referenceLevels) },
     overlayContainerStyle () {
       return {
-        fontSize: this.fontSize + 'px',
+        fontSize: this.visConfig.fontSize + 'px',
         width: this.canvasWidth + 'em',
         height: this.canvasHeight + 'em'
       }
@@ -211,16 +223,16 @@ export default {
           link => link.citedBy.row === link.reference.row)
       return _.map(verticalGapHorizontalLinks, link => {
         const beg = this.getPathRefPt(link)
-        const begProtrude = new Vec(beg.x + this.pathEndMinX, beg.y)
+        const begProtrude = new Vec(beg.x + this.visConfig.path.endMinX, beg.y)
         const end = this.getPathCitedByPt(link)
-        const endProtrude = new Vec(end.x - this.pathEndMinX, end.y)
+        const endProtrude = new Vec(end.x - this.visConfig.path.endMinX, end.y)
         const mid = Vec.mid(begProtrude, endProtrude)
         return {
           d: `M ${beg.x} ${beg.y} L ${begProtrude.x} ${begProtrude.y} C ${mid.x} ${begProtrude.y} ${mid.x} ${endProtrude.y} ${endProtrude.x} ${endProtrude.y} L ${end.x} ${end.y}`,
           fill: 'none',
-          'stroke-width': this.pathWidth,
+          'stroke-width': this.visConfig.path.width,
           stroke: this.getPathColor(link.weight),
-          'stroke-opacity': this.pathOpacity
+          'stroke-opacity': this.visConfig.path.opacity
         }
       })
     },
@@ -294,21 +306,21 @@ export default {
         })
         const firstSegX = _.first(segXs)
         const lastSegX = _.last(segXs)
-        const firstSegEndY = this.getCardTop(refRow + ySign) - this.cardHeight * Math.min(0, ySign) + this.cardBorderRadius * ySign
-        const lastSegBegY = this.getCardTop(citedByRow - ySign) + this.cardHeight * Math.max(0, ySign) - this.cardBorderRadius * ySign
-        const refProtrude = new Vec(refPt.x + this.pathEndMinX, refPt.y)
+        const firstSegEndY = this.getCardTop(refRow + ySign) - this.visConfig.card.height * Math.min(0, ySign) + this.visConfig.card.borderRadius * ySign
+        const lastSegBegY = this.getCardTop(citedByRow - ySign) + this.visConfig.card.height * Math.max(0, ySign) - this.visConfig.card.borderRadius * ySign
+        const refProtrude = new Vec(refPt.x + this.visConfig.path.endMinX, refPt.y)
         const citedByProtrude =
-          new Vec(citedByPt.x - this.pathEndMinX, citedByPt.y)
+          new Vec(citedByPt.x - this.visConfig.path.endMinX, citedByPt.y)
         let pathD = ''
         // first arc
         pathD += `M ${refPt.x} ${refPt.y} L ${refProtrude.x} ${refProtrude.y}`
         const refRect = this.getCardRect(link.reference.colRow)
         const firstConnWidth =
-          link.reference.inGraphVisCitedBys.length * this.pathWidth
+          link.reference.inGraphVisCitedBys.length * this.visConfig.path.width
         const firstMinSegBegY = refRect.center.y + 0.5 * firstConnWidth * ySign
         const firstMinRadius =
           Math.min(
-            this.verticalGapOrthogonalPathRadius,
+            this.visConfig.verticalGapOrthogonalPathRadius,
             Math.abs(firstSegEndY - firstMinSegBegY))
         const firstSegBegY = firstMinSegBegY + ySign * firstMinRadius
         const firstRadius = Math.abs(firstSegBegY - refProtrude.y)
@@ -321,9 +333,9 @@ export default {
           const nextRow = iSegs[i + 1] - Math.min(0, ySign)
           const prevSegX = segXs[i - 1]
           const currSegX = segXs[i]
-          const prevSegMaxY = this.getCardTop(currRow) - this.cardHeight * Math.min(0, ySign) + this.cardBorderRadius * ySign
-          const currSegMinY = this.getCardTop(currRow) + this.cardHeight * Math.max(0, ySign) - this.cardBorderRadius * ySign
-          const currSegMaxY = this.getCardTop(nextRow) - this.cardHeight * Math.min(0, ySign) + this.cardBorderRadius * ySign
+          const prevSegMaxY = this.getCardTop(currRow) - this.visConfig.card.height * Math.min(0, ySign) + this.visConfig.card.borderRadius * ySign
+          const currSegMinY = this.getCardTop(currRow) + this.visConfig.card.height * Math.max(0, ySign) - this.visConfig.card.borderRadius * ySign
+          const currSegMaxY = this.getCardTop(nextRow) - this.visConfig.card.height * Math.min(0, ySign) + this.visConfig.card.borderRadius * ySign
           pathD += ` C ${prevSegX} ${0.5 * (prevSegMaxY + currSegMinY)} ${currSegX} ${0.5 * (prevSegMaxY + currSegMinY)} ${currSegX} ${currSegMinY}`
           if (i === nSeg - 1) {
             pathD += ` L ${lastSegX} ${lastSegBegY}`
@@ -334,12 +346,12 @@ export default {
         // last arc
         const citedByRect = this.getCardRect(link.citedBy.colRow)
         const lastConnWidth =
-          link.citedBy.inGraphVisReferences.length * this.pathWidth
+          link.citedBy.inGraphVisReferences.length * this.visConfig.path.width
         const lastMinSegEndY =
           citedByRect.center.y - 0.5 * lastConnWidth * ySign
         const lastMinRadius =
           Math.min(
-            this.verticalGapOrthogonalPathRadius,
+            this.visConfig.verticalGapOrthogonalPathRadius,
             Math.abs(lastMinSegEndY - lastSegBegY))
         const lastSegEndY = lastMinSegEndY - ySign * lastMinRadius
         const lastRadius = Math.abs(lastSegEndY - citedByProtrude.y)
@@ -351,9 +363,9 @@ export default {
         return {
           d: pathD,
           fill: 'none',
-          'stroke-width': this.pathWidth,
+          'stroke-width': this.visConfig.path.width,
           stroke: this.getPathColor(link.weight),
-          'stroke-opacity': this.pathOpacity
+          'stroke-opacity': this.visConfig.path.opacity
         }
       })
     },
@@ -436,46 +448,53 @@ export default {
     }
   },
   methods: {
+    getCardClasses (visNode) {
+      if (visNode === this.hoveringVisNode) {
+        return [ `elevation-${this.visConfig.hoveringCardElevation}` ]
+      }
+      return []
+    },
     getCardLeft (iCol) {
-      const sumOfSpacings = iCol * this.cardHorizontalSpacing
-      const sumOfCardWidths = iCol * this.cardWidth
-      return this.canvasPadding.left + sumOfSpacings + sumOfCardWidths
+      const sumOfSpacings = iCol * this.visConfig.cardHorizontalSpacing
+      const sumOfCardWidths = iCol * this.visConfig.card.width
+      return this.visConfig.canvasPadding.left + sumOfSpacings + sumOfCardWidths
     },
     getCardRect ({ col, row }) {
       // TODO: use a Rect class
       return {
         left: this.getCardLeft(col),
         top: this.getCardTop(row),
-        right: this.getCardLeft(col) + this.cardWidth,
-        bottom: this.getCardTop(row) + this.cardHeight,
-        width: this.cardWidth,
-        height: this.cardHeight,
+        right: this.getCardLeft(col) + this.visConfig.card.width,
+        bottom: this.getCardTop(row) + this.visConfig.card.height,
+        width: this.visConfig.card.width,
+        height: this.visConfig.card.height,
         center: {
-          x: this.getCardLeft(col) + 0.5 * this.cardWidth,
-          y: this.getCardTop(row) + 0.5 * this.cardHeight
+          x: this.getCardLeft(col) + 0.5 * this.visConfig.card.width,
+          y: this.getCardTop(row) + 0.5 * this.visConfig.card.height
         }
       }
     },
     getCardSideColor (count) {
-      const scalar = 1 - Math.exp(Math.log(1) - this.cardSideDarkness * count)
+      const scalar = 1 - Math.exp(Math.log(1) - this.visConfig.card.sideDarkness * count)
       return interpolateColor(scalar)
     },
     getCardSideStyle (count) {
       return {
-        opacity: this.cardOpacity,
-        flex: `0 0 ${this.cardSideWidth}em`,
+        opacity: this.visConfig.card.opacity,
+        flex: `0 0 ${this.visConfig.card.sideWidth}em`,
         backgroundColor: this.getCardSideColor(count)
       }
     },
     getCardStyle (visNode) {
       return {
+        cursor: 'pointer',
         position: 'absolute',
         left: `${this.getCardLeft(visNode.col)}em`,
         top: `${this.getCardTop(visNode.row)}em`,
-        width: `${this.cardWidth}em`,
-        height: `${this.cardHeight}em`,
+        width: `${this.visConfig.card.width}em`,
+        height: `${this.visConfig.card.height}em`,
         background: 'rgba(255, 255, 255, 0.0)',
-        borderRadius: this.cardBorderRadius + 'em',
+        borderRadius: this.visConfig.card.borderRadius + 'em',
         borderStyle: 'solid',
         borderWidth: '1px',
         display: 'flex',
@@ -483,15 +502,16 @@ export default {
       }
     },
     getCardTop (iRow) {
-      const sumOfSpacings = iRow * this.cardVerticalSpacing
-      const sumOfCardHeights = iRow * this.cardHeight
-      return this.canvasPadding.top + sumOfSpacings + sumOfCardHeights
+      const sumOfSpacings = iRow * this.visConfig.cardVerticalSpacing
+      const sumOfCardHeights = iRow * this.visConfig.card.height
+      return this.visConfig.canvasPadding.top + sumOfSpacings + sumOfCardHeights
     },
     getLabelRowText (node) {
       return `${node.article.data.authors[0].surname} ${node.article.data.year}`
     },
     getPathColor (weight) {
-      const scalar = 1 - Math.exp(Math.log(1) - this.pathDarkness * weight)
+      const scalar =
+        1 - Math.exp(Math.log(1) - this.visConfig.path.darkness * weight)
       return interpolateColor(scalar)
     },
     getPathCitedByPt (link) {
@@ -501,10 +521,10 @@ export default {
           citedByVisNode.inGraphVisReferences,
           ({ node: visNode }) => visNode === link.reference)
       const nConns = citedByVisNode.inGraphVisReferences.length
-      const totalWidth = nConns * this.pathWidth
+      const totalWidth = nConns * this.visConfig.path.width
       const citedByRect = this.getCardRect(link.citedBy.colRow)
       const yMin = citedByRect.center.y - 0.5 * totalWidth
-      const y = yMin + index * this.pathWidth + 0.5 * this.pathWidth
+      const y = yMin + index * this.visConfig.path.width + 0.5 * this.visConfig.path.width
       const x = citedByRect.left
       return new Vec(x, y)
     },
@@ -515,10 +535,10 @@ export default {
           refVisNode.inGraphVisCitedBys,
           ({ node: visNode }) => visNode === link.citedBy)
       const nConns = refVisNode.inGraphVisCitedBys.length
-      const totalWidth = nConns * this.pathWidth
+      const totalWidth = nConns * this.visConfig.path.width
       const refRect = this.getCardRect(link.reference.colRow)
       const yMin = refRect.center.y - 0.5 * totalWidth
-      const y = yMin + index * this.pathWidth + 0.5 * this.pathWidth
+      const y = yMin + index * this.visConfig.path.width + 0.5 * this.visConfig.path.width
       const x = refRect.right
       return new Vec(x, y)
     },
@@ -526,11 +546,11 @@ export default {
       const iLane = _.findIndex(lanes, lane => _.includes(lane, link))
       const iSublane = _.indexOf(lanes[iLane], link)
       const nSublanes = _.map(lanes, lane => lane.length)
-      const laneWidths = _.map(nSublanes, nSublane => nSublane * this.pathWidth)
+      const laneWidths = _.map(nSublanes, nSublane => nSublane * this.visConfig.path.width)
       const runningLaneWidths = prefixSum(laneWidths)
       const runningLaneSpacings = new Array(lanes.length)
       for (let iLane = 0; iLane < lanes.length; ++iLane) {
-        runningLaneSpacings[iLane] = iLane * this.verticalGapLaneSpacing
+        runningLaneSpacings[iLane] = iLane * this.visConfig.verticalGapLaneSpacing
       }
       const totalLaneWidth = _.last(runningLaneWidths)
       const totalLaneSpacing = _.last(runningLaneSpacings)
@@ -539,8 +559,17 @@ export default {
       const midX = 0.5 * (refRect.right + citedByRect.left)
       const minX = midX - 0.5 * (totalLaneWidth + totalLaneSpacing)
       const laneOffset = runningLaneWidths[iLane] + runningLaneSpacings[iLane]
-      const sublaneOffset = iSublane * this.pathWidth + 0.5 * this.pathWidth
+      const sublaneOffset = iSublane * this.visConfig.path.width + 0.5 * this.visConfig.path.width
       return minX + laneOffset + sublaneOffset
+    },
+    onCardClicked (visNode) {
+      console.log(visNode)
+    },
+    onCardMouseEnter (visNode) {
+      this.hoveringVisNode = visNode
+    },
+    onCardMouseLeave (visNode) {
+      this.hoveringVisNode = null
     },
     trace (value) {
       console.log(value)
