@@ -31,71 +31,19 @@
               <v-flex xs6>
                 <v-flex tag="h4" shrink class="font-weight-bold">References ({{ drawerVisNode.article.nReferences }})</v-flex>
                 <v-flex v-for="(article, index) in drawerVisNode.article.references" :key="index" shrink class="caption">
-                  <!-- TODO: REFACTOR this with the visualization cards -->
-                  <!-- TODO: render different styles depend on the article type -->
-                  <div :style="{ borderRadius: visConfig.card.borderRadius + 'em', borderStyle: 'solid', borderWidth: '1px', display: 'flex', overflow: 'hidden' }">
-                    <div :style="getCardSideStyle(article.nReferences)"></div>
-                    <div class="py-1 px-2" :style="cardRowsContainerStyle">
-                      <div class="text-xs-center font-weight-bold card-row">
-                        {{ getLabelRowText(article) }}
-                      </div>
-                      <!-- TODO: add tooltip to show entire title -->
-                      <div class="text-xs-center text-truncate card-row">
-                        {{ article.data.title }}
-                      </div>
-                      <div class="text-xs-center card-row" style="display: flex;">
-                        <span class="text-truncate" style="display: inline-flex; flex: 1; justify-content: center;">
-                          <span class="text-truncate" style="white-space: nowrap">
-                            {{ article.data.venue.name }}
-                          </span>
-                        </span>
-                        <span style="display: inline-flex; justify-content: center;">
-                          <span class="mx-2">-</span>
-                        </span>
-                        <span style="display: inline-flex; flex: 1; justify-content: center;">
-                          <span style="white-space: nowrap">
-                            Cited by {{ article.nCitedBys }}
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                    <div :style="getCardSideStyle(article.nCitedBys)"></div>
-                  </div>
+                  <pv-vis-card :article="article" :config="visConfig.card"
+                    :referenceColor="getCardSideColor(article.nReferences)"
+                    :citedByColor="getCardSideColor(article.nCitedBys)">
+                  </pv-vis-card>
                 </v-flex>
               </v-flex>
               <v-flex xs6>
                 <v-flex tag="h4" shrink class="font-weight-bold">Cited by ({{ drawerVisNode.article.nCitedBys }})</v-flex>
                 <v-flex v-for="(article, index) in drawerVisNode.article.citedBys" :key="index" shrink class="caption">
-                  <!-- TODO: REFACTOR this with the visualization cards -->
-                  <!-- TODO: render different styles depend on the article type -->
-                  <div :style="{ borderRadius: visConfig.card.borderRadius + 'em', borderStyle: 'solid', borderWidth: '1px', display: 'flex', overflow: 'hidden' }">
-                    <div :style="getCardSideStyle(article.nReferences)"></div>
-                    <div class="py-1 px-2" :style="cardRowsContainerStyle">
-                      <div class="text-xs-center font-weight-bold card-row">
-                        {{ getLabelRowText(article) }}
-                      </div>
-                      <!-- TODO: add tooltip to show entire title -->
-                      <div class="text-xs-center text-truncate card-row">
-                        {{ article.data.title }}
-                      </div>
-                      <div class="text-xs-center card-row" style="display: flex;">
-                        <span class="text-truncate" style="display: inline-flex; flex: 1; justify-content: center;">
-                          <span class="text-truncate" style="white-space: nowrap">
-                            {{ article.data.venue.name }}
-                          </span>
-                        </span>
-                        <span style="display: inline-flex; justify-content: center;">
-                          <span class="mx-2">-</span>
-                        </span>
-                        <span style="display: inline-flex; flex: 1; justify-content: center;">
-                          <span style="white-space: nowrap">
-                            Cited by {{ article.nCitedBys }}
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                    <div :style="getCardSideStyle(article.nCitedBys)"></div>
-                  </div>
+                  <pv-vis-card :article="article" :config="visConfig.card"
+                    :referenceColor="getCardSideColor(article.nReferences)"
+                    :citedByColor="getCardSideColor(article.nCitedBys)">
+                  </pv-vis-card>
                 </v-flex>
               </v-flex>
             </v-layout>
@@ -109,39 +57,15 @@
       </svg>
       <div class="cards-container" :style="cardsContainerStyle"
         @click="onCanvasClicked">
-        <!-- TODO: render different styles depend on the article type -->
-        <div v-for="(node, index) in visGraph.nodes" :key="index"
-          :style="getCardStyle(node)" :class="getCardClasses(node)"
-          @click.stop="onCardClicked($event, node)"
-          @mouseenter.stop="onCardMouseEnter(node)"
-          @mouseleave.stop="onCardMouseLeave(node)">
-          <div :style="getCardSideStyle(node.inGraphReferences.length)"></div>
-          <div class="py-1 px-2" :style="cardRowsContainerStyle">
-            <div class="text-xs-center font-weight-bold card-row">
-              {{ getLabelRowText(node.article) }}
-            </div>
-            <!-- TODO: add tooltip to show entire title -->
-            <div class="text-xs-center text-truncate card-row">
-              {{ node.article.data.title }}
-            </div>
-            <div class="text-xs-center card-row" style="display: flex;">
-              <span class="text-truncate" style="display: inline-flex; flex: 1; justify-content: center;">
-                <span class="text-truncate" style="white-space: nowrap">
-                  {{ node.article.data.venue.name }}
-                </span>
-              </span>
-              <span style="display: inline-flex; justify-content: center;">
-                <span class="mx-2">-</span>
-              </span>
-              <span style="display: inline-flex; flex: 1; justify-content: center;">
-                <span style="white-space: nowrap">
-                  Cited by {{ node.article.nCitedBys }}
-                </span>
-              </span>
-            </div>
-          </div>
-          <div :style="getCardSideStyle(node.inGraphCitedBys.length)"></div>
-        </div>
+        <pv-vis-card v-for="(node, index) in visGraph.nodes" :key="index"
+          :article="node.article" :config="visConfig.card"
+          :class="getCardClasses(node)" :style="getCardStyle(node)"
+          :citedByColor="getCardSideColor(node.inGraphCitedBys.length)"
+          :referenceColor="getCardSideColor(node.inGraphReferences.length)"
+          @click.native.stop="onCardClicked($event, node)"
+          @mouseenter.native.stop="onCardMouseEnter(node)"
+          @mouseleave.native.stop="onCardMouseLeave(node)">
+        </pv-vis-card>
       </div>
     </div>
     <v-layout v-if="isEmptyViewVisible" fill-height justify-center align-center>
@@ -158,13 +82,14 @@
 <script>
 import _ from 'lodash'
 import PvArticleForm from './PvArticleForm.vue'
+import PvVisCard from './PvVisCard.vue'
 import Vec from './vec.js'
 import { Graph } from './pvmodels.js'
 import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 
 export default {
   name: 'PvVisView',
-  components: { PvArticleForm },
+  components: { PvArticleForm, PvVisCard },
   props: {
     graph: new Graph(),
     isDrawerOpen: false
@@ -181,6 +106,7 @@ export default {
           opacity: 0.8,
           sideDarkness: 0.2,
           sideWidth: 0.5,
+          unit: 'em',
           width: 15
         },
         cardHorizontalSpacing: 4,
@@ -210,17 +136,6 @@ export default {
     canvasWidth () {
       const nColumns = this.maxReferenceLevel + 1
       return this.visConfig.canvasPadding.left + nColumns * this.visConfig.card.width + (nColumns - 1) * this.visConfig.cardHorizontalSpacing + this.visConfig.canvasPadding.right
-    },
-    cardRowsContainerStyle () {
-      return {
-        flexGrow: 1,
-        minWidth: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        padding: '10px',
-        background: `rgba(255, 255, 255, ${this.visConfig.card.opacity})`
-      }
     },
     cardsContainerStyle () {
       return {
@@ -585,13 +500,6 @@ export default {
       const scalar = 1 - Math.exp(Math.log(1) - this.visConfig.card.sideDarkness * count)
       return interpolateColor(scalar)
     },
-    getCardSideStyle (count) {
-      return {
-        opacity: this.visConfig.card.opacity,
-        flex: `0 0 ${this.visConfig.card.sideWidth}em`,
-        backgroundColor: this.getCardSideColor(count)
-      }
-    },
     getCardStyle (visNode) {
       return {
         cursor: 'pointer',
@@ -599,13 +507,7 @@ export default {
         left: `${this.getCardLeft(visNode.col)}em`,
         top: `${this.getCardTop(visNode.row)}em`,
         width: `${this.visConfig.card.width}em`,
-        height: `${this.visConfig.card.height}em`,
-        background: 'rgba(255, 255, 255, 0.0)',
-        borderRadius: this.visConfig.card.borderRadius + 'em',
-        borderStyle: 'solid',
-        borderWidth: '1px',
-        display: 'flex',
-        overflow: 'hidden'
+        height: `${this.visConfig.card.height}em`
       }
     },
     getCardTop (iRow) {
