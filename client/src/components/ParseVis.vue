@@ -13,7 +13,8 @@
         <sign-in-button></sign-in-button>
       </v-toolbar-items>
     </v-toolbar>
-    <pv-vis-view v-if="isVisViewVisible" :graph="graph" :isDrawerOpen="isDrawerOpen">
+    <pv-vis-view v-if="isVisViewVisible" :graph="graph"
+      :isDrawerOpen.sync="isDrawerOpen">
     </pv-vis-view>
     <pv-list-view v-if="isListViewVisible" :isDrawerOpen="isDrawerOpen">
     </pv-list-view>
@@ -76,14 +77,20 @@ export default {
     clearGraph () {
       this.graph = new Graph()
     },
-    loadInSituGraph () {
-      this.$http.get('/api/static/insitupdf.json').then(function (res) {
-        const papers = res.body.references
-        const relations = res.body.relations
-        const unlinkedNodes = _.map(papers, createUnlinkedGraphNode)
-        const linkedNodes = linkNodes(unlinkedNodes, relations)
-        this.graph = new Graph(linkedNodes)
-      })
+    async loadInSituGraph () {
+      const data = await import('./insitupdf.json')
+      const papers = data.references
+      const relations = data.relations
+      const unlinkedNodes = _.map(papers, createUnlinkedGraphNode)
+      const linkedNodes = linkNodes(unlinkedNodes, relations)
+      this.graph = new Graph(linkedNodes)
+      // this.$http.get('/api/static/insitupdf.json').then(function (res) {
+      //   const papers = res.body.references
+      //   const relations = res.body.relations
+      //   const unlinkedNodes = _.map(papers, createUnlinkedGraphNode)
+      //   const linkedNodes = linkNodes(unlinkedNodes, relations)
+      //   this.graph = new Graph(linkedNodes)
+      // })
     },
     toggleDrawer () {
       this.isDrawerOpen = !this.isDrawerOpen

@@ -1,26 +1,124 @@
 <template>
   <v-content>
     <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
-      v-model="isDrawerOpen">
-      <v-container>
+      v-model="isDrawerOpenComputed">
+      <v-container fluid>
         <div v-show="isDrawerEmpty">Drawer Empty</div>
+        <v-container v-if="isDrawerVisNode" fluid pa-0 grid-list-md>
+          <v-layout column>
+            <v-flex>actions</v-flex>
+            <v-flex tag="h3" class="headline font-weight-light">
+              {{ drawerVisNode.article.data.title }}
+            </v-flex>
+            <!-- TODO: truncate & expand authors -->
+            <v-flex class="text-truncate font-weight-medium">
+              <template v-for="(author, index) in drawerVisNode.article.data.authors">
+                <a :key="`name-${index}`">{{ author.surname }}, {{ author.given }}</a>
+                <span :key="`and-${index}`" v-if="index < drawerVisNode.article.data.authors.length - 1"> and </span>
+              </template>
+            </v-flex>
+            <v-flex tag=a class="text-truncate font-weight-medium">
+              {{ drawerVisNode.article.data.year }}, {{ drawerVisNode.article.data.venue.name }}
+            </v-flex>
+            <v-flex class="text-truncate font-weight-medium">
+              <a>References {{ drawerVisNode.article.nReferences }}</a> - <a>Cited by {{ drawerVisNode.article.nCitedBys }}</a>
+            </v-flex>
+            <v-flex tag="h4" class="font-weight-bold">Abstract</v-flex>
+            <v-flex>
+              {{ drawerVisNode.article.data.abstract.slice(0, 200) }} ... <a>CONTINUE READING</a>
+            </v-flex>
+            <v-layout row>
+              <v-flex xs6>
+                <v-flex tag="h4" shrink class="font-weight-bold">References ({{ drawerVisNode.article.nReferences }})</v-flex>
+                <v-flex v-for="(article, index) in drawerVisNode.article.references" :key="index" shrink class="caption">
+                  <!-- TODO: REFACTOR this with the visualization cards -->
+                  <!-- TODO: render different styles depend on the article type -->
+                  <div :style="{ borderRadius: visConfig.card.borderRadius + 'em', borderStyle: 'solid', borderWidth: '1px', display: 'flex', overflow: 'hidden' }">
+                    <div :style="getCardSideStyle(article.nReferences)"></div>
+                    <div class="py-1 px-2" :style="cardRowsContainerStyle">
+                      <div class="text-xs-center font-weight-bold card-row">
+                        {{ getLabelRowText(article) }}
+                      </div>
+                      <!-- TODO: add tooltip to show entire title -->
+                      <div class="text-xs-center text-truncate card-row">
+                        {{ article.data.title }}
+                      </div>
+                      <div class="text-xs-center card-row" style="display: flex;">
+                        <span class="text-truncate" style="display: inline-flex; flex: 1; justify-content: center;">
+                          <span class="text-truncate" style="white-space: nowrap">
+                            {{ article.data.venue.name }}
+                          </span>
+                        </span>
+                        <span style="display: inline-flex; justify-content: center;">
+                          <span class="mx-2">-</span>
+                        </span>
+                        <span style="display: inline-flex; flex: 1; justify-content: center;">
+                          <span style="white-space: nowrap">
+                            Cited by {{ article.nCitedBys }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div :style="getCardSideStyle(article.nCitedBys)"></div>
+                  </div>
+                </v-flex>
+              </v-flex>
+              <v-flex xs6>
+                <v-flex tag="h4" shrink class="font-weight-bold">Cited by ({{ drawerVisNode.article.nCitedBys }})</v-flex>
+                <v-flex v-for="(article, index) in drawerVisNode.article.citedBys" :key="index" shrink class="caption">
+                  <!-- TODO: REFACTOR this with the visualization cards -->
+                  <!-- TODO: render different styles depend on the article type -->
+                  <div :style="{ borderRadius: visConfig.card.borderRadius + 'em', borderStyle: 'solid', borderWidth: '1px', display: 'flex', overflow: 'hidden' }">
+                    <div :style="getCardSideStyle(article.nReferences)"></div>
+                    <div class="py-1 px-2" :style="cardRowsContainerStyle">
+                      <div class="text-xs-center font-weight-bold card-row">
+                        {{ getLabelRowText(article) }}
+                      </div>
+                      <!-- TODO: add tooltip to show entire title -->
+                      <div class="text-xs-center text-truncate card-row">
+                        {{ article.data.title }}
+                      </div>
+                      <div class="text-xs-center card-row" style="display: flex;">
+                        <span class="text-truncate" style="display: inline-flex; flex: 1; justify-content: center;">
+                          <span class="text-truncate" style="white-space: nowrap">
+                            {{ article.data.venue.name }}
+                          </span>
+                        </span>
+                        <span style="display: inline-flex; justify-content: center;">
+                          <span class="mx-2">-</span>
+                        </span>
+                        <span style="display: inline-flex; flex: 1; justify-content: center;">
+                          <span style="white-space: nowrap">
+                            Cited by {{ article.nCitedBys }}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div :style="getCardSideStyle(article.nCitedBys)"></div>
+                  </div>
+                </v-flex>
+              </v-flex>
+            </v-layout>
+          </v-layout>
+        </v-container>
       </v-container>
     </v-navigation-drawer>
     <div v-if="isGraphViewVisible" class="vis-container">
       <svg class="overlay-container" :style="overlayContainerStyle" :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
         <path v-for="(props, key) in paths" :key="key" v-bind="props"></path>
       </svg>
-      <div class="cards-container" :style="cardsContainerStyle">
+      <div class="cards-container" :style="cardsContainerStyle"
+        @click="onCanvasClicked">
         <!-- TODO: render different styles depend on the article type -->
         <div v-for="(node, index) in visGraph.nodes" :key="index"
           :style="getCardStyle(node)" :class="getCardClasses(node)"
-          @click="onCardClicked(node)"
+          @click.stop="onCardClicked($event, node)"
           @mouseenter.stop="onCardMouseEnter(node)"
           @mouseleave.stop="onCardMouseLeave(node)">
           <div :style="getCardSideStyle(node.inGraphReferences.length)"></div>
           <div class="py-1 px-2" :style="cardRowsContainerStyle">
             <div class="text-xs-center font-weight-bold card-row">
-              {{ getLabelRowText(node) }}
+              {{ getLabelRowText(node.article) }}
             </div>
             <!-- TODO: add tooltip to show entire title -->
             <div class="text-xs-center text-truncate card-row">
@@ -74,7 +172,6 @@ export default {
   data () {
     return {
       drawerWidth: '450',
-      drawerState: 'empty',
       hoveringVisNode: null,
       selectedVisNodes: [],
       visConfig: {
@@ -152,6 +249,7 @@ export default {
         }
       })
     },
+    drawerVisNode () { return _.first(this.selectedVisNodes) },
     gridConfig () {
       const nRows = _.map(this.unsortedIndexGrid, column => column.length)
       const nRow = _.max(nRows)
@@ -164,7 +262,16 @@ export default {
         nRows: nRows
       }
     },
-    isDrawerEmpty () { return this.drawerState === 'empty' },
+    isDrawerVisNode () { return this.selectedVisNodes.length === 1 },
+    isDrawerEmpty () { return this.selectedVisNodes.length === 0 },
+    isDrawerOpenComputed: {
+      set (value) {
+        this.$emit('update:isDrawerOpen', value)
+      },
+      get () {
+        return this.isDrawerOpen
+      }
+    },
     isEmptyViewVisible () { return this.graph.isEmpty },
     isGraphViewVisible () { return !this.graph.isEmpty },
     maxReferenceLevel () { return _.max(this.referenceLevels) },
@@ -449,7 +556,7 @@ export default {
   },
   methods: {
     getCardClasses (visNode) {
-      if (visNode === this.hoveringVisNode) {
+      if (visNode === this.hoveringVisNode || this.isVisNodeSelected(visNode)) {
         return [ `elevation-${this.visConfig.hoveringCardElevation}` ]
       }
       return []
@@ -506,8 +613,8 @@ export default {
       const sumOfCardHeights = iRow * this.visConfig.card.height
       return this.visConfig.canvasPadding.top + sumOfSpacings + sumOfCardHeights
     },
-    getLabelRowText (node) {
-      return `${node.article.data.authors[0].surname} ${node.article.data.year}`
+    getLabelRowText (article) {
+      return `${article.data.authors[0].surname} ${article.data.year}`
     },
     getPathColor (weight) {
       const scalar =
@@ -562,8 +669,26 @@ export default {
       const sublaneOffset = iSublane * this.visConfig.path.width + 0.5 * this.visConfig.path.width
       return minX + laneOffset + sublaneOffset
     },
-    onCardClicked (visNode) {
-      console.log(visNode)
+    isVisNodeSelected (visNode) {
+      return _.includes(this.selectedVisNodes, visNode)
+    },
+    onCanvasClicked () {
+      this.selectedVisNodes = []
+    },
+    onCardClicked (event, visNode) {
+      if (event.metaKey || event.ctrlKey || event.shiftKey) {
+        // multiple selection
+        if (this.isVisNodeSelected(visNode)) {
+          this.selectedVisNodes = _.without(this.selectedVisNodes, visNode)
+        } else {
+          this.selectedVisNodes = _.union(this.selectedVisNodes, [ visNode ])
+        }
+        this.isDrawerOpenComputed = false
+      } else {
+        // single selection
+        this.selectedVisNodes = [ visNode ]
+        this.isDrawerOpenComputed = true
+      }
     },
     onCardMouseEnter (visNode) {
       this.hoveringVisNode = visNode

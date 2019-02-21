@@ -13,6 +13,7 @@ export class AffiliatedAuthor {
     this.affilation = new Organization(organization)
   }
   get surname () { return this.author.surname }
+  get given () { return this.author.given }
 }
 
 export class Article {
