@@ -2,53 +2,18 @@
   <v-content>
     <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
       v-model="isDrawerOpenComputed">
-      <v-container fluid>
-        <div v-show="isDrawerEmpty">Drawer Empty</div>
-        <v-container v-if="isDrawerVisNode" fluid pa-0 grid-list-md>
-          <v-layout column>
-            <v-flex>actions</v-flex>
-            <v-flex tag="h3" class="headline font-weight-light">
-              {{ drawerVisNode.article.data.title }}
-            </v-flex>
-            <!-- TODO: truncate & expand authors -->
-            <v-flex class="text-truncate font-weight-medium">
-              <template v-for="(author, index) in drawerVisNode.article.data.authors">
-                <a :key="`name-${index}`">{{ author.surname }}, {{ author.given }}</a>
-                <span :key="`and-${index}`" v-if="index < drawerVisNode.article.data.authors.length - 1"> and </span>
-              </template>
-            </v-flex>
-            <v-flex tag=a class="text-truncate font-weight-medium">
-              {{ drawerVisNode.article.data.year }}, {{ drawerVisNode.article.data.venue.name }}
-            </v-flex>
-            <v-flex class="text-truncate font-weight-medium">
-              <a>References {{ drawerVisNode.article.nReferences }}</a> - <a>Cited by {{ drawerVisNode.article.nCitedBys }}</a>
-            </v-flex>
-            <v-flex tag="h4" class="font-weight-bold">Abstract</v-flex>
-            <v-flex>
-              {{ drawerVisNode.article.data.abstract.slice(0, 200) }} ... <a>CONTINUE READING</a>
-            </v-flex>
-            <v-layout row>
-              <v-flex xs6>
-                <v-flex tag="h4" shrink class="font-weight-bold">References ({{ drawerVisNode.article.nReferences }})</v-flex>
-                <v-flex v-for="(article, index) in drawerVisNode.article.references" :key="index" shrink class="caption">
-                  <pv-vis-card :article="article" :config="visConfig.card"
-                    :referenceColor="getCardSideColor(article.nReferences)"
-                    :citedByColor="getCardSideColor(article.nCitedBys)">
-                  </pv-vis-card>
-                </v-flex>
-              </v-flex>
-              <v-flex xs6>
-                <v-flex tag="h4" shrink class="font-weight-bold">Cited by ({{ drawerVisNode.article.nCitedBys }})</v-flex>
-                <v-flex v-for="(article, index) in drawerVisNode.article.citedBys" :key="index" shrink class="caption">
-                  <pv-vis-card :article="article" :config="visConfig.card"
-                    :referenceColor="getCardSideColor(article.nReferences)"
-                    :citedByColor="getCardSideColor(article.nCitedBys)">
-                  </pv-vis-card>
-                </v-flex>
-              </v-flex>
-            </v-layout>
-          </v-layout>
-        </v-container>
+      <v-container fluid grid-list-md>
+        <div v-if="isDrawerEmpty">Drawer Empty</div>
+        <pv-vis-drawer-article-form v-if="isDrawerVisNodeEdit"
+          :article="drawerVisNode.article"
+          @submit="isDrawerVisNodeEditing = false">
+        </pv-vis-drawer-article-form>
+        <pv-vis-drawer-article-view v-if="isDrawerVisNodeView"
+          :article="drawerVisNode.article" :card-config="visConfig.card"
+          :get-card-cited-by-color="getArticleCardCitedByColor"
+          :get-card-reference-color="getArticleCardReferenceColor"
+          @edit-clicked="isDrawerVisNodeEditing = true">
+        </pv-vis-drawer-article-view>
       </v-container>
     </v-navigation-drawer>
     <div v-if="isGraphViewVisible" class="vis-container">
@@ -81,15 +46,21 @@
 
 <script>
 import _ from 'lodash'
+import ExpandableText from './ExpandableText.vue'
 import PvArticleForm from './PvArticleForm.vue'
+import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
+import PvVisDrawerArticleForm from './PvVisDrawerArticleForm'
+import PvVisDrawerArticleView from './PvVisDrawerArticleView'
 import Vec from './vec.js'
 import { Graph } from './pvmodels.js'
 import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 
 export default {
   name: 'PvVisView',
-  components: { PvArticleForm, PvVisCard },
+  components: {
+    ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerArticleForm, PvVisDrawerArticleView
+  },
   props: {
     graph: new Graph(),
     isDrawerOpen: false
@@ -98,6 +69,7 @@ export default {
     return {
       drawerWidth: '450',
       hoveringVisNode: null,
+      isDrawerVisNodeEditing: false,
       selectedVisNodes: [],
       visConfig: {
         card: {
@@ -178,6 +150,12 @@ export default {
       }
     },
     isDrawerVisNode () { return this.selectedVisNodes.length === 1 },
+    isDrawerVisNodeEdit () {
+      return this.isDrawerVisNode && this.isDrawerVisNodeEditing === true
+    },
+    isDrawerVisNodeView () {
+      return this.isDrawerVisNode && this.isDrawerVisNodeEditing === false
+    },
     isDrawerEmpty () { return this.selectedVisNodes.length === 0 },
     isDrawerOpenComputed: {
       set (value) {
@@ -470,6 +448,20 @@ export default {
     }
   },
   methods: {
+    getArticleCardReferenceColor (article) {
+      const isArticleInVisGraph =
+        article => _.find(this.visGraph.nodes, node => node.article === article)
+      const nInGraphReferences =
+        _.filter(article.references, isArticleInVisGraph).length
+      return this.getCardSideColor(nInGraphReferences)
+    },
+    getArticleCardCitedByColor (article) {
+      const isVisNodeReferenceArticle =
+        visNode => _.find(visNode.article.references, article)
+      const nInGraphCitedBys =
+        _.filter(this.visGraph.nodes, isVisNodeReferenceArticle).length
+      return this.getCardSideColor(nInGraphCitedBys)
+    },
     getCardClasses (visNode) {
       if (visNode === this.hoveringVisNode || this.isVisNodeSelected(visNode)) {
         return [ `elevation-${this.visConfig.hoveringCardElevation}` ]

@@ -39,8 +39,8 @@
       </v-layout>
     </v-container>
     <div class="text-xs-center">
-      <v-btn color="success">Add Article</v-btn>
-      <v-btn color="error">Cancel</v-btn>
+      <v-btn color="primary">Add Article</v-btn>
+      <v-btn>Cancel</v-btn>
     </div>
   </v-form>
 </template>

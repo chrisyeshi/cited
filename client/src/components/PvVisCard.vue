@@ -7,10 +7,12 @@
       <div class="text-xs-center font-weight-bold card-row">
         {{ labelRowText }}
       </div>
-      <!-- TODO: add tooltip to show entire title -->
-      <div class="text-xs-center text-truncate card-row">
-        {{ article.data.title }}
-      </div>
+      <v-tooltip top>
+        <div slot="activator" class="text-xs-center text-truncate card-row">
+          {{ article.data.title }}
+        </div>
+        <span>{{ article.data.title }}</span>
+      </v-tooltip>
       <div class="text-xs-center card-row" style="display: flex;">
         <span class="text-truncate" style="display: inline-flex; flex: 1; justify-content: center;">
           <span class="text-truncate" style="white-space: nowrap">

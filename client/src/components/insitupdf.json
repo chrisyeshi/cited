@@ -111,7 +111,7 @@
         "journal": "JPCS",
         "year": 2007,
         "citationCount": 83,
-        "authors": "Kwan-Liu Ma, Chaoli Wang, Hongfeng Yu, and Anna Tikhonova"
+        "authors": "Kwan-Liu Ma, Chaoli Wang, Hongfeng Yu, Anna Tikhonova"
     }, {
         "title": "Scalable visualization of discrete velocity decompositions using spatially organized histograms",
         "abstract": "Visualizing the velocity decomposition of a group of objects has applications to many studied data types, such as Lagrangian-based flow data or geospatial movement data. Traditional visualization techniques are often subject to a trade-off between visual clutter and loss of detail, especially in a large scale setting. The use of 2D velocity histograms can alleviate these issues. While they have been used throughout domain specific areas on a basic level, there has been very little work in the visualization community on leveraging them to perform more advanced visualization tasks. In this work, we develop an interactive system which utilizes velocity histograms to visualize the velocity decomposition of a group of objects. In addition, we extend our tool to utilize two schemes for histogram generation: an on-the-fly sampling scheme as well as an in situ scheme to maintain interactivity in extreme scale applications.",
