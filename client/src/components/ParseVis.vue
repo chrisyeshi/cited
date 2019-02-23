@@ -14,7 +14,7 @@
       </v-toolbar-items>
     </v-toolbar>
     <pv-vis-view v-if="isVisViewVisible" :graph="graph"
-      :isDrawerOpen.sync="isDrawerOpen">
+      :isDrawerOpen.sync="isDrawerOpen" @article-edited="articleEdited">
     </pv-vis-view>
     <pv-list-view v-if="isListViewVisible" :isDrawerOpen="isDrawerOpen">
     </pv-list-view>
@@ -59,6 +59,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('parseVis', [ 'articles' ]),
     isVisViewVisible () {
       return this.contentState === 'vis-view'
     },
@@ -74,6 +75,15 @@ export default {
     ...mapState('parseVis', [ 'contentState' ])
   },
   methods: {
+    articleEdited (curr, prev) {
+      const pulledArticles = _.without(this.articles, prev)
+      const updatedArticles = [ ...pulledArticles, curr ]
+      this.$store.commit('set', { articles: updatedArticles })
+      const graphArticles = _.map(this.graph.nodes, node => node.article)
+      const pulledGraphArticles = _.without(graphArticles, prev)
+      const updatedGraphArticles = [ ...pulledGraphArticles, curr ]
+      this.graph = Graph.fromArticles(updatedGraphArticles)
+    },
     clearGraph () {
       this.graph = new Graph()
     },

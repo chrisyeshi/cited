@@ -47,10 +47,7 @@ export default {
     },
     onSubmit (newArticle) {
       if (!this.isArticleEqual(this.article, newArticle)) {
-        console.log('new article')
-        this.$emit('articleChanged', newArticle)
-      } else {
-        console.log('nothing changed')
+        this.$emit('article-edited', newArticle, this.article)
       }
       this.isEditing = false
     }

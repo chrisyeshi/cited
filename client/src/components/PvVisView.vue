@@ -2,14 +2,13 @@
   <v-content>
     <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
       v-model="isDrawerOpenComputed">
-      <!-- <v-container fluid grid-list-md> -->
       <v-container v-if="isDrawerEmpty">Drawer Empty</v-container>
       <pv-vis-drawer-editable-article v-if="isDrawerVisNode"
         :article="drawerVisNode.article" :card-config="visConfig.card"
         :get-card-cited-by-color="getArticleCardCitedByColor"
-        :get-card-reference-color="getArticleCardReferenceColor">
+        :get-card-reference-color="getArticleCardReferenceColor"
+        @article-edited="articleEdited">
       </pv-vis-drawer-editable-article>
-      <!-- </v-container> -->
     </v-navigation-drawer>
     <div v-if="isGraphViewVisible" class="vis-container">
       <svg class="overlay-container" :style="overlayContainerStyle" :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
@@ -435,6 +434,9 @@ export default {
     }
   },
   methods: {
+    articleEdited (curr, prev) {
+      this.$emit('article-edited', curr, prev)
+    },
     getArticleCardReferenceColor (article) {
       const isArticleInVisGraph =
         article => _.find(this.visGraph.nodes, node => node.article === article)

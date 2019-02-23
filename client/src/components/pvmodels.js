@@ -32,6 +32,20 @@ export class Graph {
     this.nodes = nodes || []
   }
 
+  static fromArticles (articles) {
+    const nodes = _.map(articles, article => new Node(article, [], []))
+    _.forEach(nodes, citedByNode => {
+      _.forEach(citedByNode.article.references, reference => {
+        const refNode = _.find(nodes, refNode => refNode.article === reference)
+        if (refNode) {
+          refNode.inGraphCitedBys.push(citedByNode)
+          citedByNode.inGraphReferences.push(refNode)
+        }
+      })
+    })
+    return new Graph(nodes)
+  }
+
   getAllPathsBetween (reference, citedBy) {
     return this.getAllPathsBetweenRecursive(reference, citedBy, [])
   }
