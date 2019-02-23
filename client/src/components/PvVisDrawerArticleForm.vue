@@ -54,8 +54,8 @@
     </div>
     <div style="flex-shrink: 1;">
       <v-container fluid grid-list-md text-xs-center py-2>
-        <v-btn color="primary" @click="$emit('submit', $event)">save</v-btn>
-        <v-btn @click="$emit('submit', $event)">cancel</v-btn>
+        <v-btn color="primary" @click="$emit('submit', newArticle)">save</v-btn>
+        <v-btn @click="$emit('cancel', oldArticle)">cancel</v-btn>
       </v-container>
     </div>
   </v-form>

@@ -1,7 +1,8 @@
 export default {
   namespaced: true,
   state: {
-    contentState: 'vis-view'
+    contentState: 'vis-view',
+    articles: []
   },
   mutations: {
     set (state, newState) {

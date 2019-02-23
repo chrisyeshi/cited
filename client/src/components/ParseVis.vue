@@ -84,13 +84,9 @@ export default {
       const unlinkedNodes = _.map(papers, createUnlinkedGraphNode)
       const linkedNodes = linkNodes(unlinkedNodes, relations)
       this.graph = new Graph(linkedNodes)
-      // this.$http.get('/api/static/insitupdf.json').then(function (res) {
-      //   const papers = res.body.references
-      //   const relations = res.body.relations
-      //   const unlinkedNodes = _.map(papers, createUnlinkedGraphNode)
-      //   const linkedNodes = linkNodes(unlinkedNodes, relations)
-      //   this.graph = new Graph(linkedNodes)
-      // })
+      this.$store.commit(
+        'parseVis/set',
+        { articles: _.map(this.graph.nodes, node => node.article) })
     },
     toggleDrawer () {
       this.isDrawerOpen = !this.isDrawerOpen

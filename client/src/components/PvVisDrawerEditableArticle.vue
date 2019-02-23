@@ -1,7 +1,8 @@
 <template>
   <pv-vis-drawer-article-form v-if="isEditing"
     :article="article"
-    @submit="isEditing = false">
+    @submit="onSubmit"
+    @cancel="onCancel">
   </pv-vis-drawer-article-form>
   <pv-vis-drawer-article-view v-else
     :article="article" :card-config="cardConfig"
@@ -12,6 +13,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import PvVisDrawerArticleForm from './PvVisDrawerArticleForm.vue'
 import PvVisDrawerArticleView from './PvVisDrawerArticleView.vue'
 
@@ -27,6 +29,30 @@ export default {
   data () {
     return {
       isEditing: false
+    }
+  },
+  methods: {
+    isArticleEqual (a, b) {
+      return a.type === b.type && this.isArticleDataEqual(a.data, b.data) &&
+        a.nReferences === b.nReferences &&
+        _.isEqual(a.references, b.references) &&
+        a.nCitedBys === b.nCitedBys && _.isEqual(a.citedBys, b.citedBys)
+    },
+    isArticleDataEqual (a, b) {
+      return a.title === b.title && a.abstract === b.abstract &&
+        a.year === b.year && a.venue === b.venue
+    },
+    onCancel () {
+      this.isEditing = false
+    },
+    onSubmit (newArticle) {
+      if (!this.isArticleEqual(this.article, newArticle)) {
+        console.log('new article')
+        this.$emit('articleChanged', newArticle)
+      } else {
+        console.log('nothing changed')
+      }
+      this.isEditing = false
     }
   },
   watch: {
