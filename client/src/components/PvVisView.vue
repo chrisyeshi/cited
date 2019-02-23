@@ -2,19 +2,14 @@
   <v-content>
     <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
       v-model="isDrawerOpenComputed">
-      <v-container fluid grid-list-md>
-        <div v-if="isDrawerEmpty">Drawer Empty</div>
-        <pv-vis-drawer-article-form v-if="isDrawerVisNodeEdit"
-          :article="drawerVisNode.article"
-          @submit="isDrawerVisNodeEditing = false">
-        </pv-vis-drawer-article-form>
-        <pv-vis-drawer-article-view v-if="isDrawerVisNodeView"
-          :article="drawerVisNode.article" :card-config="visConfig.card"
-          :get-card-cited-by-color="getArticleCardCitedByColor"
-          :get-card-reference-color="getArticleCardReferenceColor"
-          @edit-clicked="isDrawerVisNodeEditing = true">
-        </pv-vis-drawer-article-view>
-      </v-container>
+      <!-- <v-container fluid grid-list-md> -->
+      <v-container v-if="isDrawerEmpty">Drawer Empty</v-container>
+      <pv-vis-drawer-editable-article v-if="isDrawerVisNode"
+        :article="drawerVisNode.article" :card-config="visConfig.card"
+        :get-card-cited-by-color="getArticleCardCitedByColor"
+        :get-card-reference-color="getArticleCardReferenceColor">
+      </pv-vis-drawer-editable-article>
+      <!-- </v-container> -->
     </v-navigation-drawer>
     <div v-if="isGraphViewVisible" class="vis-container">
       <svg class="overlay-container" :style="overlayContainerStyle" :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
@@ -50,8 +45,7 @@ import ExpandableText from './ExpandableText.vue'
 import PvArticleForm from './PvArticleForm.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
-import PvVisDrawerArticleForm from './PvVisDrawerArticleForm'
-import PvVisDrawerArticleView from './PvVisDrawerArticleView'
+import PvVisDrawerEditableArticle from './PvVisDrawerEditableArticle.vue'
 import Vec from './vec.js'
 import { Graph } from './pvmodels.js'
 import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
@@ -59,7 +53,7 @@ import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 export default {
   name: 'PvVisView',
   components: {
-    ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerArticleForm, PvVisDrawerArticleView
+    ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerEditableArticle
   },
   props: {
     graph: new Graph(),
@@ -69,7 +63,6 @@ export default {
     return {
       drawerWidth: '450',
       hoveringVisNode: null,
-      isDrawerVisNodeEditing: false,
       selectedVisNodes: [],
       visConfig: {
         card: {
@@ -150,12 +143,6 @@ export default {
       }
     },
     isDrawerVisNode () { return this.selectedVisNodes.length === 1 },
-    isDrawerVisNodeEdit () {
-      return this.isDrawerVisNode && this.isDrawerVisNodeEditing === true
-    },
-    isDrawerVisNodeView () {
-      return this.isDrawerVisNode && this.isDrawerVisNodeEditing === false
-    },
     isDrawerEmpty () { return this.selectedVisNodes.length === 0 },
     isDrawerOpenComputed: {
       set (value) {
