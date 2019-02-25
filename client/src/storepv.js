@@ -1,8 +1,10 @@
+import { ArticlePool } from './components/pvmodels.js'
+
 export default {
   namespaced: true,
   state: {
     contentState: 'vis-view',
-    articles: []
+    articlePool: new ArticlePool()
   },
   mutations: {
     set (state, newState) {

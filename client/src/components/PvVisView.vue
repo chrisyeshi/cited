@@ -438,15 +438,15 @@ export default {
       this.$emit('article-edited', curr, prev)
     },
     getArticleCardReferenceColor (article) {
-      const isArticleInVisGraph =
-        article => _.find(this.visGraph.nodes, node => node.article === article)
+      const isArticleIdInVisGraph =
+        id => _.find(this.visGraph.nodes, node => node.article.id === id)
       const nInGraphReferences =
-        _.filter(article.references, isArticleInVisGraph).length
+        _.filter(article.references, isArticleIdInVisGraph).length
       return this.getCardSideColor(nInGraphReferences)
     },
     getArticleCardCitedByColor (article) {
       const isVisNodeReferenceArticle =
-        visNode => _.find(visNode.article.references, article)
+        visNode => _.includes(visNode.article.references, article.id)
       const nInGraphCitedBys =
         _.filter(this.visGraph.nodes, isVisNodeReferenceArticle).length
       return this.getCardSideColor(nInGraphCitedBys)

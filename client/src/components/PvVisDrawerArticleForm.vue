@@ -95,6 +95,7 @@ export default {
       handler (curr) {
         this.newArticle =
           new Article(
+            curr.id,
             curr.type,
             new Paper(
               curr.data.title,
@@ -104,8 +105,7 @@ export default {
               curr.data.venue),
             curr.nReferences,
             [ ...curr.references ],
-            curr.nCitedBys,
-            [ ...curr.citedBys ])
+            curr.nCitedBys)
       }
     }
   }

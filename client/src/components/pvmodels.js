@@ -17,13 +17,50 @@ export class AffiliatedAuthor {
 }
 
 export class Article {
-  constructor (type, data, nReferences, references, nCitedBys, citedBys) {
+  constructor (id, type, data, nReferences, references, nCitedBys) {
+    this.id = id
     this.type = type
     this.data = data
     this.nReferences = nReferences
     this.references = references
     this.nCitedBys = nCitedBys
-    this.citedBys = citedBys
+  }
+}
+
+export class ArticlePool {
+  constructor (articles = []) {
+    this.articles = articles
+  }
+
+  getArticle (articleId) {
+    return _.find(this.articles, article => article.id === articleId)
+  }
+
+  getCitedBys (refArticleId) {
+    return _.filter(this.articles, citedByArticle => {
+      return _.includes(citedByArticle.references, refArticleId)
+    })
+  }
+
+  includes (articleId) {
+    return !_.isNil(this.getArticle(articleId))
+  }
+
+  setArticle (newArticle) {
+    if (_.isNil(newArticle.id)) {
+      throw new Error('TODO: assign new article id')
+    }
+    console.log(this.articles)
+    const index =
+      _.findIndex(this.articles, article => article.id === newArticle.id)
+    console.log(index, newArticle)
+    if (index === -1) {
+      return new ArticlePool([ ...this.articles, newArticle ])
+    } else {
+      const oldArticle = this.articles[index]
+      return new ArticlePool(
+        [ ..._.without(this.articles, oldArticle), newArticle ])
+    }
   }
 }
 
@@ -35,8 +72,8 @@ export class Graph {
   static fromArticles (articles) {
     const nodes = _.map(articles, article => new Node(article, [], []))
     _.forEach(nodes, citedByNode => {
-      _.forEach(citedByNode.article.references, reference => {
-        const refNode = _.find(nodes, refNode => refNode.article === reference)
+      _.forEach(citedByNode.article.references, refId => {
+        const refNode = _.find(nodes, refNode => refNode.article.id === refId)
         if (refNode) {
           refNode.inGraphCitedBys.push(citedByNode)
           citedByNode.inGraphReferences.push(refNode)

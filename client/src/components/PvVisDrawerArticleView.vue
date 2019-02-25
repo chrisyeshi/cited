@@ -32,7 +32,7 @@
           <v-flex tag="h4" shrink class="font-weight-bold">
             References ({{ article.nReferences }})
           </v-flex>
-          <v-flex v-for="(referenceArticle, index) in article.references"
+          <v-flex v-for="(referenceArticle, index) in references"
             :key="index" shrink class="caption">
             <pv-vis-card :article="referenceArticle" :config="cardConfig"
               :referenceColor="getCardReferenceColor(referenceArticle)"
@@ -44,7 +44,7 @@
           <v-flex tag="h4" shrink class="font-weight-bold">
             Cited by ({{ article.nCitedBys }})
           </v-flex>
-          <v-flex v-for="(citedByArticle, index) in article.citedBys"
+          <v-flex v-for="(citedByArticle, index) in citedBys"
             :key="index" shrink class="caption">
             <pv-vis-card :article="citedByArticle" :config="cardConfig"
               :referenceColor="getCardReferenceColor(citedByArticle)"
@@ -58,9 +58,11 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import ExpandableText from './ExpandableText.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PvVisDrawerArticleView',
@@ -76,6 +78,16 @@ export default {
   data () {
     return {
       abstractTextLimit: 200
+    }
+  },
+  computed: {
+    ...mapState('parseVis', [ 'articlePool' ]),
+    references () {
+      return _.map(
+        this.article.references, refId => this.articlePool.getArticle(refId))
+    },
+    citedBys () {
+      return this.articlePool.getCitedBys(this.article.id)
     }
   }
 }

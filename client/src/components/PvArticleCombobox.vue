@@ -1,6 +1,6 @@
 <template>
   <v-combobox v-bind="$attrs" persistent-hint :hint="hint"
-    v-model="select" :items="articles" item-text="data.title" return-object
+    v-model="select" :items="this.articlePool.articles" item-text="data.title" return-object
     :label="label" @change="onChanged">
   </v-combobox>
 </template>
@@ -13,22 +13,28 @@ import { mapState } from 'vuex'
 export default {
   name: 'PvArticleSelect',
   props: {
-    value: Object
+    value: [ String, Object ]
   },
   data () {
     return {
-      select: this.value
+      select: this.article
     }
   },
   computed: {
-    ...mapState('parseVis', [ 'articles' ]),
+    ...mapState('parseVis', [ 'articlePool' ]),
+    article () {
+      if (_.isString(this.value)) {
+        return this.articlePool.getArticle(this.value)
+      }
+      return this.value
+    },
     hint () {
       return this.isArticleExist
         ? `${this.select.data.venue.name} - Cited by ${this.select.nCitedBys}`
         : 'New article'
     },
     isArticleExist () {
-      return _.includes(this.articles, this.select)
+      return this.articlePool.includes(this.select.id)
     },
     label () {
       return this.isArticleExist
@@ -39,9 +45,10 @@ export default {
   methods: {
     onChanged (input) {
       if (_.isString(input)) {
-        this.$emit('input', new Article('paper', new Paper(input /* title */)))
+        this.$emit(
+          'input', new Article('', 'paper', new Paper(input /* title */)))
       } else {
-        this.$emit('input', input /* article */)
+        this.$emit('input', input.id /* article */)
       }
     }
   },
@@ -49,7 +56,7 @@ export default {
     value: {
       immediate: true,
       handler (curr) {
-        this.select = curr
+        this.select = this.article
       }
     }
   }

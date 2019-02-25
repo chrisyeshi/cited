@@ -41,7 +41,7 @@ import _ from 'lodash'
 import PvListView from './PvListView.vue'
 import PvVisView from './PvVisView.vue'
 import SignInButton from './SignInButton.vue'
-import { Article, AffiliatedAuthor, Graph, Node, Paper, Venue } from './pvmodels.js'
+import { AffiliatedAuthor, Article, ArticlePool, Graph, Paper, Venue } from './pvmodels.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -59,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('parseVis', [ 'articles' ]),
+    ...mapState('parseVis', [ 'articlePool' ]),
     isVisViewVisible () {
       return this.contentState === 'vis-view'
     },
@@ -76,13 +76,21 @@ export default {
   },
   methods: {
     articleEdited (curr, prev) {
-      const pulledArticles = _.without(this.articles, prev)
-      const updatedArticles = [ ...pulledArticles, curr ]
-      this.$store.commit('set', { articles: updatedArticles })
-      const graphArticles = _.map(this.graph.nodes, node => node.article)
-      const pulledGraphArticles = _.without(graphArticles, prev)
-      const updatedGraphArticles = [ ...pulledGraphArticles, curr ]
-      this.graph = Graph.fromArticles(updatedGraphArticles)
+      // TODO: create new article object if there is new ones
+      _.forEach(curr.references, reference => {
+        if (!_.isString(reference)) {
+          throw new Error(
+            'TODO: create new article object if there is new ones')
+        }
+      })
+      // update the article pool
+      this.$store.commit(
+        'parseVis/set', { articlePool: this.articlePool.setArticle(curr) })
+      // update graph
+      const graphArticleIds = _.map(this.graph.nodes, node => node.article.id)
+      const newArticles =
+        _.map(graphArticleIds, id => this.articlePool.getArticle(id))
+      this.graph = Graph.fromArticles(newArticles)
     },
     clearGraph () {
       this.graph = new Graph()
@@ -91,12 +99,11 @@ export default {
       const data = await import('./insitupdf.json')
       const papers = data.references
       const relations = data.relations
-      const unlinkedNodes = _.map(papers, createUnlinkedGraphNode)
-      const linkedNodes = linkNodes(unlinkedNodes, relations)
-      this.graph = new Graph(linkedNodes)
+      const articleIds = _.map(papers, createArticleId)
+      const articles = createArticles(articleIds, papers, relations)
       this.$store.commit(
-        'parseVis/set',
-        { articles: _.map(this.graph.nodes, node => node.article) })
+        'parseVis/set', { articlePool: new ArticlePool(articles) })
+      this.graph = Graph.fromArticles(articles)
     },
     toggleDrawer () {
       this.isDrawerOpen = !this.isDrawerOpen
@@ -110,58 +117,43 @@ export default {
   }
 }
 
+function createArticles (ids, papers, relations) {
+  const articles = new Array(ids.length)
+  for (let iArticle = 0; iArticle < ids.length; ++iArticle) {
+    const refRelations =
+      _.filter(relations, relation => relation.citedBy === iArticle)
+    const refIndexes = _.map(refRelations, relation => relation.citing)
+    const refIds = _.map(refIndexes, index => ids[index])
+    const jsonPaper = papers[iArticle]
+    const jsonAuthors = _.split(jsonPaper.authors, ', ')
+    const authors = _.map(jsonAuthors, createAuthor)
+    articles[iArticle] = new Article(
+      ids[iArticle] /* id */,
+      'paper' /* type */,
+      new Paper(
+        jsonPaper.title /* title */,
+        jsonPaper.abstract /* abstract */,
+        jsonPaper.year /* year */,
+        authors /* authors */,
+        new Venue(jsonPaper.journal) /* venue */),
+      refIds.length /* nReferences */,
+      refIds /* references */,
+      jsonPaper.citationCount /* nCitedBys */)
+  }
+  return articles
+}
+
+function createArticleId (jsonPaper) {
+  const jsonAuthors = _.split(jsonPaper.authors, ', ')
+  const firstAuthor = createAuthor(jsonAuthors[0])
+  return `paper-${firstAuthor.surname}${jsonPaper.year}-hash0008`
+}
+
 function createAuthor (text) {
   const tokens = _.split(text, ' ')
   const given = _.first(tokens)
   const surname = _.last(tokens)
   return new AffiliatedAuthor(surname, given, '')
-}
-
-function createUnlinkedGraphNode (jsonPaper) {
-  const jsonAuthors = _.split(jsonPaper.authors, ', ')
-  const authors = _.map(jsonAuthors, createAuthor)
-  const article = new Article(
-    'paper' /* type */,
-    new Paper(
-      jsonPaper.title /* title */,
-      jsonPaper.abstract /* abstract */,
-      jsonPaper.year /* year */,
-      authors /* authors */,
-      new Venue(jsonPaper.journal) /* venue */),
-    0 /* nReferences */,
-    [] /* references */,
-    jsonPaper.citationCount /* nCitedBys */,
-    [] /* citedBys */)
-  const node = new Node(article, [], [])
-  return node
-}
-
-function linkNodes (unlinkedNodes, relatedIndexes) {
-  const articles = _.map(unlinkedNodes, node => new Article(
-    'paper' /* type */,
-    node.article.data /* data */,
-    0 /* nReferences */,
-    [] /* references */,
-    node.article.nCitedBys /* nCitedBys */,
-    [] /* citedBys */))
-  const nodes = _.map(articles, article => new Node(
-    article /* article */,
-    [] /* inGraphReferences */,
-    [] /* inGraphCitedBys */))
-  _.forEach(relatedIndexes, related => {
-    const referenceNode = nodes[related.citing]
-    const referenceArticle = articles[related.citing]
-    const citedByNode = nodes[related.citedBy]
-    const citedByArticle = articles[related.citedBy]
-    nodes[related.citing].inGraphCitedBys.push(citedByNode)
-    articles[related.citing].citedBys.push(citedByArticle)
-    nodes[related.citedBy].inGraphReferences.push(referenceNode)
-    articles[related.citedBy].references.push(referenceArticle)
-  })
-  _.forEach(articles, article => {
-    article.nReferences = article.references.length
-  })
-  return nodes
 }
 </script>
 
