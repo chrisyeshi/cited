@@ -74,6 +74,7 @@ export default {
           width: 15
         },
         cardHorizontalSpacing: 4,
+        cardTransitionDuration: '0.25s',
         cardVerticalSpacing: 0.8,
         canvasPadding: { left: 2, top: 2, right: 2, bottom: 2 },
         fontSize: 12,
@@ -488,7 +489,8 @@ export default {
         left: `${this.getCardLeft(visNode.col)}em`,
         top: `${this.getCardTop(visNode.row)}em`,
         width: `${this.visConfig.card.width}em`,
-        height: `${this.visConfig.card.height}em`
+        height: `${this.visConfig.card.height}em`,
+        transitionDuration: this.visConfig.cardTransitionDuration
       }
     },
     getCardTop (iRow) {
@@ -583,6 +585,14 @@ export default {
       console.log(value)
       return value
     }
+  },
+  watch: {
+    visGraph (curr, prev) {
+      const articleIds =
+        _.map(this.selectedVisNodes, visNode => visNode.article.id)
+      this.selectedVisNodes =
+        _.filter(_.map(articleIds, id => curr.getVisNode(id)))
+    }
   }
 }
 
@@ -590,6 +600,10 @@ export default {
 class VisGraph {
   constructor (visNodes) {
     this.nodes = visNodes
+  }
+
+  getVisNode (articleId) {
+    return _.find(this.nodes, visNode => visNode.article.id === articleId)
   }
 
   get links () {

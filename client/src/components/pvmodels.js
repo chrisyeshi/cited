@@ -50,10 +50,8 @@ export class ArticlePool {
     if (_.isNil(newArticle.id)) {
       throw new Error('TODO: assign new article id')
     }
-    console.log(this.articles)
     const index =
       _.findIndex(this.articles, article => article.id === newArticle.id)
-    console.log(index, newArticle)
     if (index === -1) {
       return new ArticlePool([ ...this.articles, newArticle ])
     } else {
