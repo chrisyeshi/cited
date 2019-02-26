@@ -10,14 +10,14 @@
         @article-edited="articleEdited">
       </pv-vis-drawer-editable-article>
     </v-navigation-drawer>
-    <div v-if="isGraphViewVisible" class="vis-container">
+    <div v-if="isGraphViewVisible" ref="visContainer" class="vis-container">
       <svg class="overlay-container" :style="overlayContainerStyle" :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
         <path v-for="(props, key) in paths" :key="key" v-bind="props"></path>
       </svg>
       <div class="cards-container" :style="cardsContainerStyle"
         @click="onCanvasClicked">
         <pv-vis-card v-for="(node, index) in visGraph.nodes" :key="index"
-          :article="node.article" :config="visConfig.card"
+          ref="cards" :article="node.article" :config="visConfig.card"
           :class="getCardClasses(node)" :style="getCardStyle(node)"
           :citedByColor="getCardSideColor(node.inGraphCitedBys.length)"
           :referenceColor="getCardSideColor(node.inGraphReferences.length)"
@@ -60,7 +60,7 @@ export default {
   },
   data () {
     return {
-      drawerWidth: '450',
+      drawerWidth: 450,
       hoveringVisNode: null,
       selectedVisNodes: [],
       visConfig: {
@@ -572,7 +572,18 @@ export default {
       } else {
         // single selection
         this.selectedVisNodes = [ visNode ]
+        const isDrawerOpening = !this.isDrawerOpenComputed
         this.isDrawerOpenComputed = true
+        if (isDrawerOpening) {
+          // TODO: animate according to the drawer openning animation
+          setTimeout(() => {
+            const component =
+              _.find(
+                this.$refs.cards,
+                card => card.article.id === visNode.article.id)
+            component.$el.scrollIntoView({ behavior: 'smooth' })
+          }, 150)
+        }
       }
     },
     onCardMouseEnter (visNode) {

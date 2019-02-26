@@ -7,7 +7,7 @@
       <div class="text-xs-center font-weight-bold card-row">
         {{ labelRowText }}
       </div>
-      <v-tooltip top>
+      <v-tooltip top close-delay=0>
         <div slot="activator" class="text-xs-center text-truncate card-row">
           {{ article.data.title }}
         </div>
