@@ -67,25 +67,11 @@ export class Graph {
     this.nodes = nodes || []
   }
 
-  static fromArticles (articles) {
-    const nodes = _.map(articles, article => new Node(article, [], []))
-    _.forEach(nodes, citedByNode => {
-      _.forEach(citedByNode.article.references, refId => {
-        const refNode = _.find(nodes, refNode => refNode.article.id === refId)
-        if (refNode) {
-          refNode.inGraphCitedBys.push(citedByNode)
-          citedByNode.inGraphReferences.push(refNode)
-        }
-      })
-    })
-    return new Graph(nodes)
+  static getAllPathsBetween (reference, citedBy) {
+    return Graph.getAllPathsBetweenRecursive(reference, citedBy, [])
   }
 
-  getAllPathsBetween (reference, citedBy) {
-    return this.getAllPathsBetweenRecursive(reference, citedBy, [])
-  }
-
-  getAllPathsBetweenRecursive (reference, citedBy, path) {
+  static getAllPathsBetweenRecursive (reference, citedBy, path) {
     if (reference === citedBy) {
       return [ path ]
     }
@@ -103,14 +89,34 @@ export class Graph {
     return _.filter(paths)
   }
 
-  get isEmpty () { return this.nodes.length === 0 }
+  static fromArticles (articles) {
+    const nodes = _.map(articles, article => new Node(article, [], []))
+    _.forEach(nodes, citedByNode => {
+      _.forEach(citedByNode.article.references, refId => {
+        const refNode = _.find(nodes, refNode => refNode.article.id === refId)
+        if (refNode) {
+          refNode.inGraphCitedBys.push(citedByNode)
+          citedByNode.inGraphReferences.push(refNode)
+        }
+      })
+    })
+    return new Graph(nodes)
+  }
 
-  get links () {
-    return _.flatten(_.map(this.nodes, (node, index) => {
+  static getLinks (nodes) {
+    return _.flatten(_.map(nodes, (node, index) => {
       const citedBys = node.inGraphCitedBys
       return _.map(citedBys, citedBy => new Link(node, citedBy))
     }))
   }
+
+  getAllPathsBetween (reference, citedBy) {
+    return Graph.getAllPathsBetween(reference, citedBy)
+  }
+
+  get isEmpty () { return this.nodes.length === 0 }
+
+  get links () { return Graph.getLinks(this.nodes) }
 }
 
 export class Node {
