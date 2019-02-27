@@ -38,6 +38,10 @@ export default {
   name: 'PvVisCard',
   props: {
     article: null,
+    backgroundColor: {
+      type: Object,
+      default: () => ({ r: 255, g: 255, b: 255 })
+    },
     citedByColor: null,
     config: {
       borderRadius: 0.65,
@@ -76,7 +80,7 @@ export default {
         flexDirection: 'column',
         justifyContent: 'space-around',
         padding: '10px',
-        background: `rgba(255, 255, 255, ${this.config.opacity})`
+        background: `rgba(${this.backgroundColor.r}, ${this.backgroundColor.g}, ${this.backgroundColor.b}, ${this.config.opacity})`
       }
     }
   }
