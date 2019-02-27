@@ -83,6 +83,7 @@ export default {
         canvasPadding: { left: 2, top: 2, right: 2, bottom: 2 },
         fontSize: 12,
         hoveringCardElevation: 2,
+        hoverLinger: 100,
         path: {
           darkness: 0.35,
           endMinX: 0.5,
@@ -554,10 +555,13 @@ export default {
       }
     },
     onCardMouseEnter (visNode) {
+      clearTimeout(this.hoverLingerTimer)
       this.hoveringVisNode = visNode
     },
     onCardMouseLeave (visNode) {
-      this.hoveringVisNode = null
+      this.hoverLingerTimer =
+        setTimeout(
+          () => { this.hoveringVisNode = null }, this.visConfig.hoverLinger)
     },
     trace (value) {
       console.log(value)
