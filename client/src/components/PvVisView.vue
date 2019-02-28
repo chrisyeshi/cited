@@ -68,10 +68,12 @@ export default {
       visConfig: {
         card: {
           borderRadius: 0.65,
-          height: 5.2,
+          height: 6.8,
+          lineClamp: 2,
           opacity: 0.8,
           sideDarkness: 0.2,
           sideWidth: 0.5,
+          titleLineHeight: 1.3,
           unit: 'em',
           width: 15
         },

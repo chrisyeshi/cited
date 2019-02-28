@@ -8,7 +8,9 @@
         {{ labelRowText }}
       </div>
       <v-tooltip top close-delay=0>
-        <div slot="activator" class="text-xs-center text-truncate card-row">
+        <div slot="activator" v-line-clamp="config.lineClamp"
+          class="text-xs-center card-row font-italic"
+          :style="{ lineHeight: config.titleLineHeight }">
           {{ article.data.title }}
         </div>
         <span>{{ article.data.title }}</span>
@@ -46,9 +48,11 @@ export default {
     config: {
       borderRadius: 0.65,
       height: 5.2,
+      lineClamp: 2,
       opacity: 0.8,
       sideDarkness: 0.2,
       sideWidth: 0.5,
+      titleLineHeight: 1.4,
       unit: 'em',
       width: 15
     },

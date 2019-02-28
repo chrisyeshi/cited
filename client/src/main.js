@@ -2,9 +2,12 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueAnalytics from 'vue-analytics'
+import VueLineClamp from 'vue-line-clamp'
 import App from './App'
 import router from './router'
 import store from './store'
+
+Vue.use(VueLineClamp, { importCss: true })
 
 Vue.use(VueAnalytics, {
   id: 'UA-131008086-1',
