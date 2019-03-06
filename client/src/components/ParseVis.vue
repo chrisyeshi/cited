@@ -41,7 +41,8 @@ import _ from 'lodash'
 import PvListView from './PvListView.vue'
 import PvVisView from './PvVisView.vue'
 import SignInButton from './SignInButton.vue'
-import { AffiliatedAuthor, Article, ArticlePool, Graph, Paper, Venue } from './pvmodels.js'
+import theArticlePool from './pvarticlepool.js'
+import { AffiliatedAuthor, Article, Graph, Paper, Venue, SourceArticle } from './pvmodels.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -59,7 +60,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('parseVis', [ 'articlePool' ]),
     isVisViewVisible () {
       return this.contentState === 'vis-view'
     },
@@ -84,12 +84,11 @@ export default {
         }
       })
       // update the article pool
-      this.$store.commit(
-        'parseVis/set', { articlePool: this.articlePool.setArticle(curr) })
+      theArticlePool.setArticle(curr)
       // update graph
       const graphArticleIds = _.map(this.graph.nodes, node => node.article.id)
       const newArticles =
-        _.map(graphArticleIds, id => this.articlePool.getArticle(id))
+        _.map(graphArticleIds, id => theArticlePool.getArticle(id))
       this.graph = Graph.fromArticles(newArticles)
     },
     clearGraph () {
@@ -101,8 +100,10 @@ export default {
       const relations = data.relations
       const articleIds = _.map(papers, createArticleId)
       const articles = createArticles(articleIds, papers, relations)
-      this.$store.commit(
-        'parseVis/set', { articlePool: new ArticlePool(articles) })
+      const srcArts =
+        _.map(
+          articles, art => new SourceArticle(art, { userEdited: Date.now() }))
+      theArticlePool.setSourceArticles(srcArts)
       this.graph = Graph.fromArticles(articles)
     },
     toggleDrawer () {

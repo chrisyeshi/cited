@@ -27,41 +27,6 @@ export class Article {
   }
 }
 
-export class ArticlePool {
-  constructor (articles = []) {
-    this.articles = articles
-  }
-
-  getArticle (articleId) {
-    return _.find(this.articles, article => article.id === articleId)
-  }
-
-  getCitedBys (refArticleId) {
-    return _.filter(this.articles, citedByArticle => {
-      return _.includes(citedByArticle.references, refArticleId)
-    })
-  }
-
-  includes (articleId) {
-    return !_.isNil(this.getArticle(articleId))
-  }
-
-  setArticle (newArticle) {
-    if (_.isNil(newArticle.id)) {
-      throw new Error('TODO: assign new article id')
-    }
-    const index =
-      _.findIndex(this.articles, article => article.id === newArticle.id)
-    if (index === -1) {
-      return new ArticlePool([ ...this.articles, newArticle ])
-    } else {
-      const oldArticle = this.articles[index]
-      return new ArticlePool(
-        [ ..._.without(this.articles, oldArticle), newArticle ])
-    }
-  }
-}
-
 export class Graph {
   constructor (nodes) {
     this.nodes = nodes || []
@@ -147,6 +112,17 @@ export class Link {
   constructor (reference, citedBy) {
     this.reference = reference
     this.citedBy = citedBy
+  }
+}
+
+export class SourceArticle {
+  constructor (article, sources = {}) {
+    this.article = article
+    this.sources = sources
+  }
+
+  get id () {
+    return this.article.id
   }
 }
 

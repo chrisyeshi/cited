@@ -1,14 +1,14 @@
 <template>
   <v-combobox v-bind="$attrs" persistent-hint :hint="hint"
-    v-model="select" :items="this.articlePool.articles" item-text="data.title" return-object
-    :label="label" @change="onChanged">
+    v-model="select" :items="autocompleteArticles" item-text="data.title"
+    return-object :label="label" @change="onChanged">
   </v-combobox>
 </template>
 
 <script>
 import _ from 'lodash'
+import theArticlePool from './pvarticlepool.js'
 import { Article, Paper } from './pvmodels.js'
-import { mapState } from 'vuex'
 
 export default {
   name: 'PvArticleSelect',
@@ -21,12 +21,14 @@ export default {
     }
   },
   computed: {
-    ...mapState('parseVis', [ 'articlePool' ]),
     article () {
       if (_.isString(this.value)) {
-        return this.articlePool.getArticle(this.value)
+        return theArticlePool.getArticle(this.value)
       }
       return this.value
+    },
+    autocompleteArticles () {
+      return theArticlePool.metas
     },
     hint () {
       return this.isArticleExist
@@ -34,7 +36,7 @@ export default {
         : 'New article'
     },
     isArticleExist () {
-      return this.articlePool.includes(this.select.id)
+      return theArticlePool.includes(this.select.id)
     },
     label () {
       return this.isArticleExist

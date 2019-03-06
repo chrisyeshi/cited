@@ -62,7 +62,7 @@ import _ from 'lodash'
 import ExpandableText from './ExpandableText.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
-import { mapState } from 'vuex'
+import theArticlePool from './pvarticlepool.js'
 
 export default {
   name: 'PvVisDrawerArticleView',
@@ -80,14 +80,22 @@ export default {
       abstractTextLimit: 200
     }
   },
-  computed: {
-    ...mapState('parseVis', [ 'articlePool' ]),
-    references () {
-      return _.map(
-        this.article.references, refId => this.articlePool.getArticle(refId))
+  asyncComputed: {
+    references: {
+      default: [],
+      async get () {
+        const refArtIds = await theArticlePool.getReferenceIds(this.article.id)
+        return Promise.all(
+          _.map(refArtIds, artId => theArticlePool.getMeta(artId)))
+      }
     },
-    citedBys () {
-      return this.articlePool.getCitedBys(this.article.id)
+    citedBys: {
+      default: [],
+      async get () {
+        const citedByArtIds = await theArticlePool.getCitedByIds(this.article.id)
+        return Promise.all(
+          _.map(citedByArtIds, artId => theArticlePool.getMeta(artId)))
+      }
     }
   }
 }
