@@ -8,7 +8,10 @@
     :article-id="articleId" :card-config="cardConfig"
     :get-card-cited-by-color="getCardCitedByColor"
     :get-card-reference-color="getCardReferenceColor"
-    @edit-clicked="isEditing = true">
+    @add-to-vis="$emit('add-to-vis', $event)"
+    @back-clicked="$emit('unselect-article', $event)"
+    @edit-clicked="isEditing = true"
+    @select-article="$emit('select-article', $event)">
   </pv-vis-drawer-article-view>
 </template>
 
@@ -50,6 +53,10 @@ export default {
       //   this.$emit('article-edited', newArticle, this.article)
       // }
       this.isEditing = false
+    },
+    trace (value) {
+      console.log(value)
+      return value
     }
   },
   watch: {

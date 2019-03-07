@@ -7,7 +7,10 @@
         :article-id="drawerArticleId" :card-config="visConfig.card"
         :get-card-cited-by-color="getArticleCardCitedByColor"
         :get-card-reference-color="getArticleCardReferenceColor"
-        @article-edited="articleEdited">
+        @add-to-vis="onAddDrawerArticleToVis"
+        @article-edited="articleEdited"
+        @select-article="onDrawerArticleSelected"
+        @unselect-article="onDrawerArticleUnselected">
       </pv-vis-drawer-editable-article>
       <v-container v-if="isDrawerList">
         <v-layout column>
@@ -89,7 +92,7 @@ export default {
     return {
       drawerWidth: 450,
       hoveringVisNode: null,
-      selectedDrawerListArticleId: null,
+      selectedDrawerArticleId: null,
       selectedVisNodes: [],
       visConfig: {
         card: {
@@ -147,7 +150,7 @@ export default {
     drawerArticleId () {
       return this.isDrawerVisNode
         ? _.first(this.selectedVisNodes).article.id
-        : this.selectedDrawerListArticleId
+        : this.selectedDrawerArticleId
     },
     focusedVisNodes () {
       const visNodes =
@@ -171,7 +174,7 @@ export default {
       }
     },
     isDrawerArticle () {
-      return this.isDrawerVisNode || this.selectedDrawerListArticleId
+      return this.isDrawerVisNode || this.selectedDrawerArticleId
     },
     isDrawerEmpty () { return !this.isDrawerArticle && !this.isDrawerList },
     isDrawerList () {
@@ -588,6 +591,17 @@ export default {
         ? true
         : _.includes(this.focusedVisNodes, visNode)
     },
+    onAddDrawerArticleToVis (artId) {
+      this.$emit('add-to-vis', artId)
+    },
+    onDrawerArticleSelected (artId) {
+      this.selectedVisNodes = []
+      this.selectedDrawerArticleId = artId
+    },
+    onDrawerArticleUnselected () {
+      this.selectedVisNodes = []
+      this.selectedDrawerArticleId = null
+    },
     onCanvasClicked () {
       this.selectedVisNodes = []
     },
@@ -627,7 +641,7 @@ export default {
           () => { this.hoveringVisNode = null }, this.visConfig.hoverLinger)
     },
     onDrawerListItemTitleClicked (artId) {
-      this.selectedDrawerListArticleId = artId
+      this.selectedDrawerArticleId = artId
     },
     trace (value) {
       console.log(value)
@@ -639,7 +653,7 @@ export default {
       if (curr) {
         this.isDrawerOpenComputed = true
         this.selectedVisNodes = []
-        this.selectedDrawerListArticleId = null
+        this.selectedDrawerArticleId = null
       }
     },
     visGraph (curr, prev) {

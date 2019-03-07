@@ -2,11 +2,17 @@
   <v-container fluid grid-list-md>
     <v-layout column>
       <v-layout row ma-0 justify-start>
+        <v-flex tag="a" shrink @click="$emit('back-clicked', $event)">
+          BACK
+        </v-flex>
+        <v-flex shrink>-</v-flex>
         <v-flex tag="a" shrink @click="$emit('edit-clicked', $event)">
           EDIT
         </v-flex>
         <v-flex shrink>-</v-flex>
-        <v-flex tag="a" shrink>ADD TO</v-flex>
+        <v-flex tag="a" shrink @click="$emit('add-to-vis', articleId)">
+          ADD TO VISUALIZATION
+        </v-flex>
       </v-layout>
       <v-flex tag="h3" class="headline font-weight-light">
         {{ meta.data.title }}
@@ -23,7 +29,7 @@
       </v-flex>
       <v-flex tag="h4" class="font-weight-bold">Abstract</v-flex>
       <v-flex>
-        <expandable-text :text="meta.data.abstract"
+        <expandable-text :text="meta.data.abstract || ''"
           :text-limit="abstractTextLimit">
         </expandable-text>
       </v-flex>
@@ -37,7 +43,8 @@
             <pv-vis-card :article="referenceArticle" :config="cardConfig"
               :style="cardStyle"
               :referenceColor="getCardReferenceColor(referenceArticle)"
-              :citedByColor="getCardCitedByColor(referenceArticle)">
+              :citedByColor="getCardCitedByColor(referenceArticle)"
+              @click.native="onCardClicked(referenceArticle.id)">
             </pv-vis-card>
           </v-flex>
         </v-flex>
@@ -50,7 +57,8 @@
             <pv-vis-card :article="citedByArticle" :config="cardConfig"
               :style="cardStyle"
               :referenceColor="getCardReferenceColor(citedByArticle)"
-              :citedByColor="getCardCitedByColor(citedByArticle)">
+              :citedByColor="getCardCitedByColor(citedByArticle)"
+              @click.native="onCardClicked(citedByArticle.id)">
             </pv-vis-card>
           </v-flex>
         </v-flex>
@@ -86,6 +94,7 @@ export default {
   computed: {
     cardStyle () {
       return {
+        cursor: 'pointer',
         height: `${this.cardConfig.height}${this.cardConfig.unit}`
       }
     }
@@ -100,7 +109,10 @@ export default {
     references: {
       default: [],
       async get () {
-        const refArtIds = await theArticlePool.getReferenceIds(this.articleId)
+        const allRefArtIds =
+          await theArticlePool.getReferenceIds(this.articleId)
+        // TODO: pagination of reference articles
+        const refArtIds = _.slice(allRefArtIds, 0, 5)
         return Promise.all(
           _.map(refArtIds, artId => theArticlePool.getMeta(artId)))
       }
@@ -108,13 +120,19 @@ export default {
     citedBys: {
       default: [],
       async get () {
-        const citedByArtIds = await theArticlePool.getCitedByIds(this.articleId)
+        const allCitedByArtIds =
+          await theArticlePool.getCitedByIds(this.articleId)
+        // TODO: pagination of cited by articles
+        const citedByArtIds = _.slice(allCitedByArtIds, 0, 5)
         return Promise.all(
           _.map(citedByArtIds, artId => theArticlePool.getMeta(artId)))
       }
     }
   },
   methods: {
+    onCardClicked (artId) {
+      this.$emit('select-article', artId)
+    },
     trace (value) {
       console.log(value)
       return value

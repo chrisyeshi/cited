@@ -17,6 +17,7 @@
     <pv-vis-view v-if="isVisViewVisible" :graph="graph"
       :isDrawerOpen.sync="isDrawerOpen"
       :drawerArticleIdsPromise="searchArticleIdsPromise"
+      @add-to-vis="onAddArticleToGraph"
       @article-edited="articleEdited">
     </pv-vis-view>
     <pv-list-view v-if="isListViewVisible" :isDrawerOpen="isDrawerOpen">
@@ -110,6 +111,16 @@ export default {
           articles, art => new SourceArticle(art, { userEdited: Date.now() }))
       theArticlePool.setSourceArticles(srcArts)
       this.graph = Graph.fromArticles(articles)
+    },
+    onAddArticleToGraph (artId) {
+      if (_.find(this.graph.nodes, node => node.article.id === artId)) {
+        console.log('article already in graph')
+        return
+      }
+      const oldArts = _.map(this.graph.nodes, node => node.article)
+      const newArt = theArticlePool.getArticle(artId)
+      const arts = [ ...oldArts, newArt ]
+      this.graph = Graph.fromArticles(arts)
     },
     search (text) {
       this.searchArticleIdsPromise = theArticlePool.query(text)
