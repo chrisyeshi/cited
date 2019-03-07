@@ -15,16 +15,20 @@
         </div>
         <span>{{ article.data.title }}</span>
       </v-tooltip>
-      <div class="text-xs-center card-row" style="display: flex;">
-        <span class="text-truncate" style="display: inline-flex; flex: 1; justify-content: center;">
+      <div v-if="isStatsRowVisible" class="text-xs-center card-row"
+        style="display: flex;">
+        <span v-if="isVenueVisible" class="text-truncate"
+          style="display: inline-flex; flex: 1; justify-content: center;">
           <span class="text-truncate" style="white-space: nowrap">
-            {{ article.data.venue.name }}
+            {{ article.data.venue ? article.data.venue.name : '' }}
           </span>
         </span>
-        <span style="display: inline-flex; justify-content: center;">
+        <span v-if="!isSingleStatVisible"
+          style="display: inline-flex; justify-content: center;">
           <span class="mx-2">-</span>
         </span>
-        <span style="display: inline-flex; flex: 1; justify-content: center;">
+        <span v-if="isCitedByVisible"
+          style="display: inline-flex; flex: 1; justify-content: center;">
           <span style="white-space: nowrap">
             Cited by {{ article.nCitedBys }}
           </span>
@@ -36,6 +40,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
   name: 'PvVisCard',
   props: {
@@ -65,6 +71,19 @@ export default {
         flex: `0 0 ${this.config.sideWidth}${this.config.unit}`,
         backgroundColor: this.citedByColor
       }
+    },
+    isCitedByVisible () {
+      return !_.isNil(this.article.nCitedBys)
+    },
+    isSingleStatVisible () {
+      return (this.isVenueVisible && !this.isCitedByVisible) ||
+        (!this.isVenueVisible && this.isCitedByVisible)
+    },
+    isStatsRowVisible () {
+      return this.isVenueVisible || this.isCitedByVisible
+    },
+    isVenueVisible () {
+      return this.article.data.venue && this.article.data.venue.name
     },
     labelRowText () {
       return `${this.article.data.authors[0].surname} ${this.article.data.year}`

@@ -3,12 +3,34 @@
     <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
       v-model="isDrawerOpenComputed">
       <v-container v-if="isDrawerEmpty">Drawer Empty</v-container>
-      <pv-vis-drawer-editable-article v-if="isDrawerVisNode"
-        :article="drawerVisNode.article" :card-config="visConfig.card"
+      <pv-vis-drawer-editable-article v-if="isDrawerArticle"
+        :article-id="drawerArticleId" :card-config="visConfig.card"
         :get-card-cited-by-color="getArticleCardCitedByColor"
         :get-card-reference-color="getArticleCardReferenceColor"
         @article-edited="articleEdited">
       </pv-vis-drawer-editable-article>
+      <v-container v-if="isDrawerList">
+        <v-layout column>
+          <v-flex v-for="article in drawerArticles" :key="article.id">
+            <div class="caption font-weight-bold">
+              {{ article.data.authors[0].surname }} {{ article.data.year }}
+            </div>
+            <a class="body-1" v-line-clamp="2"
+              @click="onDrawerListItemTitleClicked(article.id)">
+              {{ article.data.title }}
+            </a>
+            <div v-if="isDrawerListItemStatsVisible(article)"
+              class="caption text-truncate" style="display: flex;">
+              <span class="text-truncate" style="margin-right: auto;">
+                {{ article.data.venue ? article.data.venue.name : '' }}
+              </span>
+              <span class="mx-3">References {{ article.nReferences }}</span>
+              <span class="ml-3">Cited by {{ article.nCitedBys }}</span>
+            </div>
+            <v-divider class="my-2"></v-divider>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-navigation-drawer>
     <div v-if="isGraphViewVisible" ref="visContainer" class="vis-container">
       <svg class="overlay-container" :style="overlayContainerStyle" :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
@@ -46,6 +68,7 @@ import PvArticleForm from './PvArticleForm.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
 import PvVisDrawerEditableArticle from './PvVisDrawerEditableArticle.vue'
+import theArticlePool from './pvarticlepool.js'
 import Vec from './vec.js'
 import { Graph } from './pvmodels.js'
 import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
@@ -57,6 +80,8 @@ export default {
     ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerEditableArticle
   },
   props: {
+    // TODO: accept array or promise
+    drawerArticleIdsPromise: Promise,
     graph: new Graph(),
     isDrawerOpen: false
   },
@@ -64,6 +89,7 @@ export default {
     return {
       drawerWidth: 450,
       hoveringVisNode: null,
+      selectedDrawerListArticleId: null,
       selectedVisNodes: [],
       visConfig: {
         card: {
@@ -118,7 +144,11 @@ export default {
         height: this.canvasHeight + 'em'
       }
     },
-    drawerVisNode () { return _.first(this.selectedVisNodes) },
+    drawerArticleId () {
+      return this.isDrawerVisNode
+        ? _.first(this.selectedVisNodes).article.id
+        : this.selectedDrawerListArticleId
+    },
     focusedVisNodes () {
       const visNodes =
         _.uniq(_.filter([ this.hoveringVisNode, ...this.selectedVisNodes ]))
@@ -140,8 +170,13 @@ export default {
         nRows: nRows
       }
     },
-    isDrawerVisNode () { return this.selectedVisNodes.length === 1 },
-    isDrawerEmpty () { return this.selectedVisNodes.length === 0 },
+    isDrawerArticle () {
+      return this.isDrawerVisNode || this.selectedDrawerListArticleId
+    },
+    isDrawerEmpty () { return !this.isDrawerArticle && !this.isDrawerList },
+    isDrawerList () {
+      return !this.isDrawerArticle && this.drawerArticleIdsPromise
+    },
     isDrawerOpenComputed: {
       set (value) {
         this.$emit('update:isDrawerOpen', value)
@@ -150,6 +185,7 @@ export default {
         return this.isDrawerOpen
       }
     },
+    isDrawerVisNode () { return this.selectedVisNodes.length === 1 },
     isEmptyViewVisible () { return this.graph.isEmpty },
     isGraphViewVisible () { return !this.graph.isEmpty },
     maxReferenceLevel () { return this.visGraph.grid.length - 1 },
@@ -202,6 +238,25 @@ export default {
       })
       const visLinks = [ ...greyedOutVisLinks, ...focusedVisLinks ]
       return visLinks
+    }
+  },
+  asyncComputed: {
+    drawerArticleIds: {
+      default: [],
+      async get () {
+        if (!this.drawerArticleIdsPromise) {
+          return []
+        }
+        return this.drawerArticleIdsPromise
+      }
+    },
+    drawerArticles: {
+      default: [],
+      async get () {
+        return Promise.all(_.map(this.drawerArticleIds, artId => {
+          return theArticlePool.getMeta(artId)
+        }))
+      }
     }
   },
   methods: {
@@ -519,6 +574,12 @@ export default {
         }
       })
     },
+    isDrawerListItemStatsVisible (article) {
+      const isVenue = article.data.venue ? article.data.venue.name : false
+      return isVenue ||
+        !_.isNil(article.nReferences) ||
+        !_.isNil(article.nCitedBys)
+    },
     isVisNodeSelected (visNode) {
       return _.includes(this.selectedVisNodes, visNode)
     },
@@ -565,12 +626,22 @@ export default {
         setTimeout(
           () => { this.hoveringVisNode = null }, this.visConfig.hoverLinger)
     },
+    onDrawerListItemTitleClicked (artId) {
+      this.selectedDrawerListArticleId = artId
+    },
     trace (value) {
       console.log(value)
       return value
     }
   },
   watch: {
+    drawerArticleIdsPromise (curr) {
+      if (curr) {
+        this.isDrawerOpenComputed = true
+        this.selectedVisNodes = []
+        this.selectedDrawerListArticleId = null
+      }
+    },
     visGraph (curr, prev) {
       const articleIds =
         _.map(this.selectedVisNodes, visNode => visNode.article.id)

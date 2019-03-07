@@ -5,25 +5,66 @@ export class Author {
     this.surname = surname
     this.given = given
   }
+
+  static fromString (text) {
+    const tokens = _.split(text, ' ')
+    const surname = _.last(tokens)
+    const given = _.first(tokens)
+    return new Author(surname, given)
+  }
 }
 
 export class AffiliatedAuthor {
-  constructor (surname, given, organization) {
-    this.author = new Author(surname, given)
-    this.affilation = new Organization(organization)
+  constructor (author, organization) {
+    this.author = author
+    this.affilation = organization
   }
-  get surname () { return this.author.surname }
+
+  static fromName (surname, given, orgName) {
+    const author = new Author(surname, given)
+    const organization = new Organization(orgName)
+    return new AffiliatedAuthor(author, organization)
+  }
+
+  static fromString (text) {
+    const author = Author.fromString(text)
+    const organization = new Organization('')
+    return new AffiliatedAuthor(author, organization)
+  }
+
   get given () { return this.author.given }
+
+  get surname () { return this.author.surname }
 }
 
 export class Article {
-  constructor (id, type, data, nReferences, references, nCitedBys) {
+  constructor (
+    id, type, data, nReferences, references, nCitedBys, citedBys, externs) {
     this.id = id
     this.type = type
     this.data = data
     this.nReferences = nReferences
     this.references = references
     this.nCitedBys = nCitedBys
+    this.citedBys = citedBys
+    this.externs = externs || {}
+  }
+
+  static merge (a, b) {
+    return new Article(
+      a.id || b.id /* id */,
+      a.type || b.type /* type */,
+      new Paper(
+        a.data.title || b.data.title /* title */,
+        a.data.abstract || b.data.abstract /* abstract */,
+        a.data.year || b.data.year /* year */,
+        a.data.authors || b.data.authors /* authors */,
+        a.data.venue || b.data.venue /* venue */) /* data */,
+      _.isNil(a.nReferences) ? b.nReferences : a.nReferences /* nReferences */,
+      a.references || b.references /* references */,
+      _.isNil(a.nCitedBys) ? b.nCitedBys : a.nCitedBys /* nCitedBys */,
+      a.citedBys || b.citedBys /* citedBys */,
+      _.merge(a.externs, b.externs) /* externs */)
   }
 }
 
@@ -119,6 +160,18 @@ export class SourceArticle {
   constructor (article, sources = {}) {
     this.article = article
     this.sources = sources
+  }
+
+  static merge (a, b) {
+    if (_.isNil(a) || _.isNil(b)) {
+      return a || b
+    }
+    return new SourceArticle(
+      Article.merge(a.article, b.article) /* article */,
+      _.mergeWith(
+        a.sources,
+        b.sources,
+        (x, y) => Math.max(x || 0, y || 0)) /* sources */)
   }
 
   get id () {

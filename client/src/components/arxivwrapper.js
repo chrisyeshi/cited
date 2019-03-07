@@ -23,7 +23,6 @@ export default async function query (
   { searchQuery, idList, start, maxResults, sortBy }) {
   const queryParaStr =
     buildQueryParaStr({ searchQuery, idList, start, maxResults, sortBy })
-  console.log(queryParaStr)
   const res = await fetch(`${queryUrl}?${queryParaStr}`)
   if (!res.ok) {
     throw new Error({ code: res.status, text: res.statusText })

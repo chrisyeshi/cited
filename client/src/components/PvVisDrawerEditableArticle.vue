@@ -1,11 +1,11 @@
 <template>
   <pv-vis-drawer-article-form v-if="isEditing"
-    :article="article"
+    :article-id="articleId"
     @submit="onSubmit"
     @cancel="onCancel">
   </pv-vis-drawer-article-form>
   <pv-vis-drawer-article-view v-else
-    :article="article" :card-config="cardConfig"
+    :article-id="articleId" :card-config="cardConfig"
     :get-card-cited-by-color="getCardCitedByColor"
     :get-card-reference-color="getCardReferenceColor"
     @edit-clicked="isEditing = true">
@@ -21,7 +21,7 @@ export default {
   name: 'PvVisDrawerEditableArticle',
   components: { PvVisDrawerArticleForm, PvVisDrawerArticleView },
   props: {
-    article: Object,
+    articleId: String,
     cardConfig: Object,
     getCardCitedByColor: Function,
     getCardReferenceColor: Function
@@ -46,9 +46,9 @@ export default {
       this.isEditing = false
     },
     onSubmit (newArticle) {
-      if (!this.isArticleEqual(this.article, newArticle)) {
-        this.$emit('article-edited', newArticle, this.article)
-      }
+      // if (!this.isArticleEqual(this.article, newArticle)) {
+      //   this.$emit('article-edited', newArticle, this.article)
+      // }
       this.isEditing = false
     }
   },

@@ -7,14 +7,17 @@
       <v-toolbar-title>Discovery Engine</v-toolbar-title>
       <v-text-field flat solo hide-details single-line append-icon="search"
         append-outer-icon="library_add" class="mx-3"
-        placeholder="search or add local papers">
+        placeholder="search or add local papers" v-model="searchText"
+        @click:append="search(searchText)">
       </v-text-field>
       <v-toolbar-items>
         <sign-in-button></sign-in-button>
       </v-toolbar-items>
     </v-toolbar>
     <pv-vis-view v-if="isVisViewVisible" :graph="graph"
-      :isDrawerOpen.sync="isDrawerOpen" @article-edited="articleEdited">
+      :isDrawerOpen.sync="isDrawerOpen"
+      :drawerArticleIdsPromise="searchArticleIdsPromise"
+      @article-edited="articleEdited">
     </pv-vis-view>
     <pv-list-view v-if="isListViewVisible" :isDrawerOpen="isDrawerOpen">
     </pv-list-view>
@@ -56,7 +59,9 @@ export default {
     return {
       enableToolbarDrawerIcon: false,
       graph: new Graph(),
-      isDrawerOpen: false
+      isDrawerOpen: false,
+      searchArticleIdsPromise: null,
+      searchText: ''
     }
   },
   computed: {
@@ -106,6 +111,13 @@ export default {
       theArticlePool.setSourceArticles(srcArts)
       this.graph = Graph.fromArticles(articles)
     },
+    search (text) {
+      this.searchArticleIdsPromise = theArticlePool.query(text)
+    },
+    trace (value) {
+      console.log(value)
+      return value
+    },
     toggleDrawer () {
       this.isDrawerOpen = !this.isDrawerOpen
     },
@@ -154,7 +166,7 @@ function createAuthor (text) {
   const tokens = _.split(text, ' ')
   const given = _.first(tokens)
   const surname = _.last(tokens)
-  return new AffiliatedAuthor(surname, given, '')
+  return AffiliatedAuthor.fromName(surname, given, '')
 }
 </script>
 
