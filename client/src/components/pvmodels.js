@@ -39,14 +39,13 @@ export class AffiliatedAuthor {
 
 export class Article {
   constructor (
-    id, type, data, nReferences, references, nCitedBys, citedBys, externs) {
+    id, type, data, nReferences, references, nCitedBys, externs) {
     this.id = id
     this.type = type
     this.data = data
     this.nReferences = nReferences
     this.references = references
     this.nCitedBys = nCitedBys
-    this.citedBys = citedBys
     this.externs = externs || {}
   }
 
@@ -63,7 +62,6 @@ export class Article {
       _.isNil(a.nReferences) ? b.nReferences : a.nReferences /* nReferences */,
       a.references || b.references /* references */,
       _.isNil(a.nCitedBys) ? b.nCitedBys : a.nCitedBys /* nCitedBys */,
-      a.citedBys || b.citedBys /* citedBys */,
       _.merge(a.externs, b.externs) /* externs */)
   }
 }

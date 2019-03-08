@@ -46,7 +46,7 @@ class ArticlePool {
       return
     }
     const createSourceArticle =
-      ({ articleId, entry, refIds, citedByIds, sources }) => {
+      ({ articleId, entry, refIds, sources }) => {
         const authors =
           _.map(
             entry.authors,
@@ -76,12 +76,9 @@ class ArticlePool {
               entry.year /* year */,
               authors /* authors */,
               entry.venue ? new Venue(entry.venue) : null /* venue */),
-            entry.references
-              ? entry.references.length
-              : null /* nReferences */,
-            entry.references ? refIds : null /* references */,
+            refIds ? refIds.length : null /* nReferences */,
+            refIds || null /* references */,
             entry.citations ? entry.citations.length : null /* nCitedBys */,
-            entry.citations ? citedByIds : null /* citedBys */,
             externs /* externs */) /* article */,
           sources || {} /* sources */)
       }
@@ -90,12 +87,14 @@ class ArticlePool {
       _.map(entry.references, ref => createSourceArticle({ entry: ref }))
     const citedBySrcArts =
       _.map(
-        entry.citations, citedBy => createSourceArticle({ entry: citedBy }))
+        entry.citations, citedBy => createSourceArticle({
+          entry: citedBy,
+          refIds: [ artId ]
+        }))
     const newSrcArt = createSourceArticle({
       articleId: artId,
       entry: entry,
       refIds: _.map(refSrcArts, srcArt => srcArt.id),
-      citedByIds: _.map(citedBySrcArts, srcArt => srcArt.id),
       sources: { semanticScholar: Date.now() }
     })
     this.sourceArticles =
@@ -115,7 +114,11 @@ class ArticlePool {
 
   async getCitedByIds (artId) {
     await this.updateSourceArticleWithSemanticScholar(artId)
-    return this.getArticle(artId).citedBys || []
+    const srcArts =
+      _.filter(
+        this.sourceArticles,
+        srcArt => _.includes(srcArt.article.references, artId))
+    return _.map(srcArts, srcArt => srcArt.id)
   }
 
   includes (artId) {
@@ -155,7 +158,6 @@ class ArticlePool {
             null /* nReferences */,
             null /* references */,
             null /* nCitedBys */,
-            null /* citedBys */,
             { arxiv: arxivId } /* externs */) /* article */,
           { arxiv: Date.now() } /* sources */)
       }))
