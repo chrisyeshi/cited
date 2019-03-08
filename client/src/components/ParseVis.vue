@@ -81,14 +81,7 @@ export default {
     ...mapState('parseVis', [ 'contentState' ])
   },
   methods: {
-    articleEdited (curr, prev) {
-      // TODO: create new article object if there is new ones
-      _.forEach(curr.references, reference => {
-        if (!_.isString(reference)) {
-          throw new Error(
-            'TODO: create new article object if there is new ones')
-        }
-      })
+    articleEdited (curr) {
       // update the article pool
       theArticlePool.setArticle(curr)
       // update graph

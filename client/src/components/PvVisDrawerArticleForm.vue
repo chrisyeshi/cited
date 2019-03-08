@@ -66,12 +66,13 @@
 <script>
 import { Article, Paper } from './pvmodels.js'
 import PvArticleCombobox from './PvArticleCombobox.vue'
+import theArticlePool from './pvarticlepool.js'
 
 export default {
   name: 'PvVisDrawerArticleForm',
   components: { PvArticleCombobox },
   props: {
-    article: Object
+    articleId: String
   },
   data () {
     return {
@@ -80,7 +81,7 @@ export default {
   },
   computed: {
     oldArticle () {
-      return this.article
+      return theArticlePool.getArticle(this.articleId)
     }
   },
   methods: {
@@ -90,7 +91,7 @@ export default {
     }
   },
   watch: {
-    article: {
+    oldArticle: {
       immediate: true,
       handler (curr) {
         this.newArticle =

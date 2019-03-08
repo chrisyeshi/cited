@@ -263,8 +263,8 @@ export default {
     }
   },
   methods: {
-    articleEdited (curr, prev) {
-      this.$emit('article-edited', curr, prev)
+    articleEdited (curr) {
+      this.$emit('article-edited', curr)
     },
     getArticleCardReferenceColor (article) {
       const isArticleIdInVisGraph =

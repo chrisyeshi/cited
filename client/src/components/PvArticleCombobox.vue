@@ -32,7 +32,7 @@ export default {
     },
     hint () {
       return this.isArticleExist
-        ? `${this.select.data.venue.name} - Cited by ${this.select.nCitedBys}`
+        ? `${this.select.data.venue ? this.select.data.venue.name : ''} - Cited by ${this.select.nCitedBys}`
         : 'New article'
     },
     isArticleExist () {

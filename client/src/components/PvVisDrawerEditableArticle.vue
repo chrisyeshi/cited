@@ -49,9 +49,7 @@ export default {
       this.isEditing = false
     },
     onSubmit (newArticle) {
-      // if (!this.isArticleEqual(this.article, newArticle)) {
-      //   this.$emit('article-edited', newArticle, this.article)
-      // }
+      this.$emit('article-edited', newArticle)
       this.isEditing = false
     },
     trace (value) {
