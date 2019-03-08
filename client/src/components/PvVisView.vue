@@ -54,8 +54,8 @@
       </div>
     </div>
     <v-layout v-if="isEmptyViewVisible" fill-height justify-center align-center>
-      <v-dialog max-width="680" scrollable>
-        <v-btn flat slot="activator">Add paper to see visualization</v-btn>
+      <v-dialog max-width="680" scrollable :disabled="!articleEditable">
+        <v-btn flat slot="activator">{{ emptyViewMessage }}</v-btn>
         <v-container style="background: white;">
           <pv-article-form></pv-article-form>
         </v-container>
@@ -66,6 +66,7 @@
 
 <script>
 import _ from 'lodash'
+import * as d3Color from 'd3-color'
 import ExpandableText from './ExpandableText.vue'
 import PvArticleForm from './PvArticleForm.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
@@ -75,7 +76,7 @@ import theArticlePool from './pvarticlepool.js'
 import Vec from './vec.js'
 import { Graph } from './pvmodels.js'
 import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
-import * as d3Color from 'd3-color'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PvVisView',
@@ -129,6 +130,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('parseVis', [ 'articleEditable' ]),
     canvasHeight () {
       const nRows = this.gridConfig.nRow
       const paddings = this.visConfig.canvasPadding.top + this.visConfig.canvasPadding.bottom
@@ -151,6 +153,11 @@ export default {
       return this.isDrawerVisNode
         ? _.first(this.selectedVisNodes).article.id
         : this.selectedDrawerArticleId
+    },
+    emptyViewMessage () {
+      return this.articleEditable
+        ? 'Add articles to visualization'
+        : 'Search articles to visualize'
     },
     focusedVisNodes () {
       const visNodes =

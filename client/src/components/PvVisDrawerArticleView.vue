@@ -1,15 +1,19 @@
 <template>
   <v-container fluid grid-list-md>
     <v-layout column>
-      <v-layout row ma-0 justify-start>
+      <v-layout row ma-0 justify-end>
+        <v-flex class="font-weight-bold" style="margin-right: auto;">
+          {{firstAuthorSurname}} {{meta.data.year}}
+        </v-flex>
         <v-flex tag="a" shrink @click="$emit('back-clicked', $event)">
           BACK
         </v-flex>
         <v-flex shrink>-</v-flex>
-        <v-flex tag="a" shrink @click="$emit('edit-clicked', $event)">
+        <v-flex v-if="articleEditable" tag="a" shrink
+          @click="$emit('edit-clicked', $event)">
           EDIT
         </v-flex>
-        <v-flex shrink>-</v-flex>
+        <v-flex v-if="articleEditable" shrink>-</v-flex>
         <v-flex tag="a" shrink @click="$emit('add-to-vis', articleId)">
           ADD TO VISUALIZATION
         </v-flex>
@@ -74,6 +78,7 @@ import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
 import theArticlePool from './pvarticlepool.js'
 import { Article, Paper, Venue } from './pvmodels.js'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PvVisDrawerArticleView',
@@ -92,11 +97,16 @@ export default {
     }
   },
   computed: {
+    ...mapState('parseVis', [ 'articleEditable' ]),
     cardStyle () {
       return {
         cursor: 'pointer',
         height: `${this.cardConfig.height}${this.cardConfig.unit}`
       }
+    },
+    firstAuthorSurname () {
+      const firstAuthor = _.first(this.meta.data.authors)
+      return firstAuthor ? firstAuthor.surname : ''
     }
   },
   asyncComputed: {

@@ -6,9 +6,9 @@
       </v-toolbar-side-icon>
       <v-toolbar-title>Discovery Engine</v-toolbar-title>
       <v-text-field flat solo hide-details single-line append-icon="search"
-        append-outer-icon="library_add" class="mx-3"
+        :append-outer-icon="searchTextFieldOuterIcon" class="mx-3"
         placeholder="search or add local papers" v-model="searchText"
-        @click:append="search(searchText)">
+        @click:append="search(searchText)" @keyup.enter="search(searchText)">
       </v-text-field>
       <v-toolbar-items>
         <sign-in-button></sign-in-button>
@@ -66,6 +66,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('parseVis', [ 'articleEditable', 'contentState' ]),
     isVisViewVisible () {
       return this.contentState === 'vis-view'
     },
@@ -78,7 +79,9 @@ export default {
     isSearchListVisible () {
       return this.drawerState === 'search-list'
     },
-    ...mapState('parseVis', [ 'contentState' ])
+    searchTextFieldOuterIcon () {
+      return this.articleEditable ? 'library_add' : ''
+    }
   },
   methods: {
     articleEdited (curr) {
