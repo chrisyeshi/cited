@@ -40,10 +40,10 @@ class ArticlePool {
     return this.getSourceArticle(artId).article
   }
 
-  async getMeta (artId) {
+  async updateSourceArticleWithSemanticScholar (artId) {
     const srcArt = this.getSourceArticle(artId)
     if (srcArt.sources.semanticScholar) {
-      return srcArt.article
+      return
     }
     const createSourceArticle =
       ({ articleId, entry, refIds, citedByIds, sources }) => {
@@ -101,17 +101,21 @@ class ArticlePool {
     this.sourceArticles =
       ArticlePool.unionSourceArticles(
         this.sourceArticles, [ newSrcArt, ...refSrcArts, ...citedBySrcArts ])
+  }
+
+  async getMeta (artId) {
+    await this.updateSourceArticleWithSemanticScholar(artId)
     return this.getArticle(artId)
   }
 
   async getReferenceIds (artId) {
-    const article = await this.getMeta(artId)
-    return article.references || []
+    await this.updateSourceArticleWithSemanticScholar(artId)
+    return this.getArticle(artId).references || []
   }
 
   async getCitedByIds (artId) {
-    const article = await this.getMeta(artId)
-    return article.citedBys || []
+    await this.updateSourceArticleWithSemanticScholar(artId)
+    return this.getArticle(artId).citedBys || []
   }
 
   includes (artId) {
