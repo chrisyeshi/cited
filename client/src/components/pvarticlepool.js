@@ -76,7 +76,9 @@ class ArticlePool {
               entry.year /* year */,
               authors /* authors */,
               entry.venue ? new Venue(entry.venue) : null /* venue */),
-            refIds ? refIds.length : null /* nReferences */,
+            entry.references
+              ? entry.references.length
+              : null /* nReferences */,
             refIds || null /* references */,
             entry.citations ? entry.citations.length : null /* nCitedBys */,
             externs /* externs */) /* article */,

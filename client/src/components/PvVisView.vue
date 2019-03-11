@@ -35,7 +35,8 @@
         </v-layout>
       </v-container>
     </v-navigation-drawer>
-    <div v-if="isGraphViewVisible" ref="visContainer" class="vis-container">
+    <div v-if="isGraphViewVisible" ref="visContainer" class="vis-container"
+      @click="onCanvasClicked">
       <svg class="overlay-container" :style="overlayContainerStyle" :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
         <path v-for="(props, key) in paths" :key="key" v-bind="props"></path>
       </svg>
