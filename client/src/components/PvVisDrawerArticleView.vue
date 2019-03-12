@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid grid-list-md>
-    <v-layout column>
+  <v-container fluid grid-list-md style="position: relative; height: 100%; overflow: auto;">
+    <v-layout column style="position: relative; overflow: auto;">
       <v-layout row ma-0 justify-end>
         <v-flex class="font-weight-bold" style="margin-right: auto;">
           {{firstAuthorSurname}} {{meta.data.year}}
@@ -37,11 +37,13 @@
           :text-limit="abstractTextLimit">
         </expandable-text>
       </v-flex>
-      <v-layout row>
-        <v-flex xs6>
-          <v-flex tag="h4" shrink class="font-weight-bold">
-            References ({{ meta.nReferences }})
-          </v-flex>
+    </v-layout>
+    <v-layout row style="max-height: 100%;">
+      <v-flex xs6 pa-0 style="max-height: 100%;">
+        <v-flex tag="h4" shrink class="font-weight-bold">
+          References ({{ meta.nReferences }})
+        </v-flex>
+        <v-flex pa-0 style="max-height: calc(100% - 29px); overflow: auto;">
           <v-flex v-for="(referenceArticle, index) in references"
             :key="index" shrink class="caption">
             <pv-vis-card :article="referenceArticle" :config="cardConfig"
@@ -52,10 +54,12 @@
             </pv-vis-card>
           </v-flex>
         </v-flex>
-        <v-flex xs6>
-          <v-flex tag="h4" shrink class="font-weight-bold">
-            Cited by ({{ meta.nCitedBys }})
-          </v-flex>
+      </v-flex>
+      <v-flex xs6 pa-0>
+        <v-flex tag="h4" shrink class="font-weight-bold">
+          Cited by ({{ meta.nCitedBys }})
+        </v-flex>
+        <v-flex pa-0 style="max-height: calc(100% - 29px); overflow: auto;">
           <v-flex v-for="(citedByArticle, index) in citedBys"
             :key="index" shrink class="caption">
             <pv-vis-card :article="citedByArticle" :config="cardConfig"
@@ -66,7 +70,7 @@
             </pv-vis-card>
           </v-flex>
         </v-flex>
-      </v-layout>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>

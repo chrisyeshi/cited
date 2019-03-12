@@ -4,7 +4,8 @@
     :style="{ borderRadius: config.borderRadius + config.unit }">
     <div :style="referenceSideStyle"></div>
     <div class="py-1 px-2" :style="rowsContainerStyle">
-      <div class="text-xs-center font-weight-bold card-row">
+      <!-- TODO: truncate only the author name and leave the year alone -->
+      <div class="text-xs-center font-weight-bold card-row text-truncate">
         {{ labelRowText }}
       </div>
       <v-tooltip top close-delay=0>
