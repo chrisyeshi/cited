@@ -14,6 +14,10 @@
       </pv-vis-drawer-editable-article>
       <v-container v-if="isDrawerList">
         <v-layout column v-scroll:#drawer="onDrawerListScroll">
+          <v-flex v-if="drawerPageQueryStatus.isTotalCountVisible" shrink
+            class="mb-3 caption grey--text text--darken-1">
+            Found {{ drawerPageQuery.getTotalArticleCount() }} articles from arXiv
+          </v-flex>
           <v-flex v-for="article in drawerArticles" :key="article.id">
             <div class="caption font-weight-bold">
               {{ article.data.authors[0].surname }} {{ article.data.year }}
@@ -107,7 +111,8 @@ export default {
       drawerPageQueryStatus: {
         isDone: false,
         isEmpty: false,
-        isLoadingMore: false
+        isLoadingMore: false,
+        isTotalCountVisible: false
       },
       drawerWidth: 450,
       hoveringVisNode: null,
@@ -674,15 +679,18 @@ export default {
           () => { this.hoveringVisNode = null }, this.visConfig.hoverLinger)
     },
     async onDrawerListLoadMore () {
-      this.drawerPageQueryStatus =
-        { ...this.drawerPageQueryStatus, isLoadingMore: true }
-      const queryNext = await this.drawerPageQuery.next()
-      this.drawerArticleIds =
-        [ ...this.drawerArticleIds, ...queryNext.articleIds ]
       this.drawerPageQueryStatus = {
-        isDone: queryNext.isDone,
-        isEmpty: queryNext.isEmpty,
-        isLoadingMore: false
+        ...this.drawerPageQueryStatus,
+        isLoadingMore: true,
+        isTotalCountVisible: true
+      }
+      this.drawerArticleIds =
+        [ ...this.drawerArticleIds, ...await this.drawerPageQuery.next() ]
+      this.drawerPageQueryStatus = {
+        isDone: this.drawerPageQuery.isDone(),
+        isEmpty: this.drawerPageQuery.isEmpty(),
+        isLoadingMore: false,
+        isTotalCountVisible: true
       }
     },
     onDrawerListItemTitleClicked (artId) {
@@ -691,7 +699,7 @@ export default {
     onDrawerListScroll ({ target }) {
       const isAtBottom =
         target.scrollHeight - target.scrollTop === target.offsetHeight
-      if (isAtBottom && !this.drawerPageQuery.isDone) {
+      if (isAtBottom && !this.drawerPageQuery.isDone()) {
         this.onDrawerListLoadMore()
       }
     },
@@ -706,14 +714,19 @@ export default {
         this.isDrawerOpenComputed = true
         this.selectedVisNodes = []
         this.selectedDrawerArticleId = null
-        this.drawerPageQueryStatus =
-          { isDone: false, isEmpty: false, isLoadingMore: true }
-        const queryNext = await curr.next()
-        this.drawerArticleIds = queryNext.articleIds
+        this.drawerArticleIds = []
         this.drawerPageQueryStatus = {
-          isDone: queryNext.isDone,
-          isEmpty: queryNext.isEmpty,
-          isLoadingMore: false
+          isDone: false,
+          isEmpty: false,
+          isLoadingMore: true,
+          isTotalCountVisible: false
+        }
+        this.drawerArticleIds = await curr.next()
+        this.drawerPageQueryStatus = {
+          isDone: this.drawerPageQuery.isDone(),
+          isEmpty: this.drawerPageQuery.isEmpty(),
+          isLoadingMore: false,
+          isTotalCountVisible: true
         }
       }
     },

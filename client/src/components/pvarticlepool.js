@@ -154,14 +154,7 @@ class ArticlePool {
     const thePool = this
     let iPage = 0
     let totalArticleCount = Math.Infinity
-    return {
-      get isDone () {
-        return totalArticleCount !== 0 &&
-          iPage * nArticlesPerPage >= totalArticleCount
-      },
-      get isEmpty () {
-        return totalArticleCount === 0
-      },
+    return new PageQuery({
       async next () {
         const start = iPage * nArticlesPerPage
         const maxResults = nArticlesPerPage
@@ -178,14 +171,15 @@ class ArticlePool {
         thePool.sourceArticles =
           ArticlePool.unionSourceArticles(thePool.sourceArticles, srcArts)
         ++iPage
-        return {
-          articleIds: _.map(srcArts, srcArt => srcArt.id),
-          isDone: totalArticleCount !== 0 &&
-            iPage * nArticlesPerPage >= totalArticleCount,
-          isEmpty: totalArticleCount === 0
-        }
-      }
-    }
+        return _.map(srcArts, srcArt => srcArt.id)
+      },
+      isDone () {
+        return totalArticleCount !== 0 &&
+          iPage * nArticlesPerPage >= totalArticleCount
+      },
+      isEmpty () { return totalArticleCount === 0 },
+      getTotalArticleCount () { return totalArticleCount }
+    })
   }
 
   includes (artId) {
@@ -238,6 +232,15 @@ class ArticlePool {
     const bObj = _.keyBy(b, 'id')
     const union = _.mergeWith(aObj, bObj, (x, y) => SourceArticle.merge(x, y))
     return _.values(union)
+  }
+}
+
+class PageQuery {
+  constructor ({ next, isDone, isEmpty, getTotalArticleCount }) {
+    this.next = next
+    this.isDone = isDone
+    this.isEmpty = isEmpty
+    this.getTotalArticleCount = getTotalArticleCount
   }
 }
 
