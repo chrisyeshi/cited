@@ -16,7 +16,7 @@
     </v-toolbar>
     <pv-vis-view v-if="isVisViewVisible" :graph="graph"
       :isDrawerOpen.sync="isDrawerOpen"
-      :drawerArticleIdsPromise="searchArticleIdsPromise"
+      :drawerPageQuery="pageQuery"
       @add-to-vis="onAddArticleToGraph"
       @article-edited="articleEdited">
     </pv-vis-view>
@@ -61,7 +61,7 @@ export default {
       enableToolbarDrawerIcon: false,
       graph: new Graph(),
       isDrawerOpen: false,
-      searchArticleIdsPromise: null,
+      pageQuery: null,
       searchText: ''
     }
   },
@@ -119,7 +119,7 @@ export default {
       this.graph = Graph.fromArticles(arts)
     },
     search (text) {
-      this.searchArticleIdsPromise = theArticlePool.query(text)
+      this.pageQuery = theArticlePool.getPageQuery(text)
     },
     trace (value) {
       console.log(value)

@@ -11,6 +11,33 @@ class ArticlePool {
     return _.map(this.sourceArticles, srcArt => srcArt.article)
   }
 
+  createSourceArticleFromArxivEntry (arxivEntry) {
+    const arxivId = _.split(arxivEntry.id[0], /abs\/|v\d/)[1]
+    const authors =
+      _.map(
+        arxivEntry.author,
+        author => AffiliatedAuthor.fromString(author.name[0]))
+    const year = (new Date(arxivEntry.published[0])).getFullYear()
+    const articleId =
+      _.property('id')(this.findSourceArticle({ arxiv: arxivId })) ||
+      ArticlePool.createArticleId('paper', authors[0].surname, year)
+    return new SourceArticle(
+      new Article(
+        articleId /* id */,
+        'paper' /* type */,
+        new Paper(
+          arxivEntry.title[0] /* title */,
+          arxivEntry.summary[0] /* abstract */,
+          year /* year */,
+          authors /* authors */,
+          null /* venue */),
+        null /* nReferences */,
+        null /* references */,
+        null /* nCitedBys */,
+        { arxiv: arxivId } /* externs */) /* article */,
+      { arxiv: Date.now() } /* sources */)
+  }
+
   static createArticleId (type, firstAuthorSurname, year) {
     return `${type}-${_.toLower(firstAuthorSurname)}${year}-${Math.random().toString(36).replace('0.', '').slice(0, 8)}`
   }
@@ -123,6 +150,44 @@ class ArticlePool {
     return _.map(srcArts, srcArt => srcArt.id)
   }
 
+  getPageQuery (text, nArticlesPerPage = 10) {
+    const thePool = this
+    let iPage = 0
+    let totalArticleCount = Math.Infinity
+    return {
+      get isDone () {
+        return totalArticleCount !== 0 &&
+          iPage * nArticlesPerPage >= totalArticleCount
+      },
+      get isEmpty () {
+        return totalArticleCount === 0
+      },
+      async next () {
+        const start = iPage * nArticlesPerPage
+        const maxResults = nArticlesPerPage
+        const arxivRes = await queryArxiv({
+          searchQuery: text,
+          start: start,
+          maxResults: maxResults
+        })
+        totalArticleCount = _.toNumber(arxivRes.feed['opensearch:totalResults'][0]._)
+        const srcArts =
+          _.map(
+            arxivRes.feed.entry,
+            entry => thePool.createSourceArticleFromArxivEntry(entry))
+        thePool.sourceArticles =
+          ArticlePool.unionSourceArticles(thePool.sourceArticles, srcArts)
+        ++iPage
+        return {
+          articleIds: _.map(srcArts, srcArt => srcArt.id),
+          isDone: totalArticleCount !== 0 &&
+            iPage * nArticlesPerPage >= totalArticleCount,
+          isEmpty: totalArticleCount === 0
+        }
+      }
+    }
+  }
+
   includes (artId) {
     return !_.isNil(this.getSourceArticle(artId))
   }
@@ -137,32 +202,9 @@ class ArticlePool {
   async query (text) {
     const arxivRes = await queryArxiv({ searchQuery: text })
     const srcArts =
-      await Promise.all(_.map(arxivRes.feed.entry, async arxivEntry => {
-        const arxivId = _.split(arxivEntry.id[0], /abs\/|v\d/)[1]
-        const authors =
-          _.map(
-            arxivEntry.author,
-            author => AffiliatedAuthor.fromString(author.name[0]))
-        const year = (new Date(arxivEntry.published[0])).getFullYear()
-        const articleId =
-          _.property('id')(this.findSourceArticle({ arxiv: arxivId })) ||
-          ArticlePool.createArticleId('paper', authors[0].surname, year)
-        return new SourceArticle(
-          new Article(
-            articleId /* id */,
-            'paper' /* type */,
-            new Paper(
-              arxivEntry.title[0] /* title */,
-              arxivEntry.summary[0] /* abstract */,
-              year /* year */,
-              authors /* authors */,
-              null /* venue */),
-            null /* nReferences */,
-            null /* references */,
-            null /* nCitedBys */,
-            { arxiv: arxivId } /* externs */) /* article */,
-          { arxiv: Date.now() } /* sources */)
-      }))
+      _.map(
+        arxivRes.feed.entry,
+        entry => this.createSourceArticleFromArxivEntry(entry))
     this.sourceArticles =
       ArticlePool.unionSourceArticles(this.sourceArticles, srcArts)
     return _.map(srcArts, srcArt => srcArt.id)

@@ -1,7 +1,7 @@
 <template>
   <v-content>
     <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
-      v-model="isDrawerOpenComputed">
+      id="drawer" v-model="isDrawerOpenComputed">
       <v-container v-if="isDrawerEmpty">Drawer Empty</v-container>
       <pv-vis-drawer-editable-article v-if="isDrawerArticle"
         :article-id="drawerArticleId" :card-config="visConfig.card"
@@ -13,7 +13,7 @@
         @unselect-article="onDrawerArticleUnselected">
       </pv-vis-drawer-editable-article>
       <v-container v-if="isDrawerList">
-        <v-layout column>
+        <v-layout column v-scroll:#drawer="onDrawerListScroll">
           <v-flex v-for="article in drawerArticles" :key="article.id">
             <div class="caption font-weight-bold">
               {{ article.data.authors[0].surname }} {{ article.data.year }}
@@ -31,6 +31,18 @@
               <span class="ml-3">Cited by {{ article.nCitedBys }}</span>
             </div>
             <v-divider class="my-2"></v-divider>
+          </v-flex>
+          <v-flex shrink align-self-center
+            style="height: 64px; display: flex; align-items: center;">
+            <v-btn v-if="isDrawerListLoadMoreVisible" depressed
+              @click="onDrawerListLoadMore">
+              LOAD MORE
+            </v-btn>
+            <v-progress-circular v-if="isDrawerListLoadingMoreVisible"
+              indeterminate>
+            </v-progress-circular>
+            <div v-if="isDrawerListLoadedAllVisible">All Results Loaded</div>
+            <div v-if="isDrawerListEmptyVisible">Empty Results</div>
           </v-flex>
         </v-layout>
       </v-container>
@@ -85,13 +97,18 @@ export default {
     ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerEditableArticle
   },
   props: {
-    // TODO: accept array or promise
-    drawerArticleIdsPromise: Promise,
+    drawerPageQuery: Object,
     graph: new Graph(),
     isDrawerOpen: false
   },
   data () {
     return {
+      drawerArticleIds: null,
+      drawerPageQueryStatus: {
+        isDone: false,
+        isEmpty: false,
+        isLoadingMore: false
+      },
       drawerWidth: 450,
       hoveringVisNode: null,
       selectedDrawerArticleId: null,
@@ -186,7 +203,21 @@ export default {
     },
     isDrawerEmpty () { return !this.isDrawerArticle && !this.isDrawerList },
     isDrawerList () {
-      return !this.isDrawerArticle && this.drawerArticleIdsPromise
+      return !this.isDrawerArticle && this.drawerPageQuery
+    },
+    isDrawerListEmptyVisible () {
+      return this.drawerPageQueryStatus.isEmpty
+    },
+    isDrawerListLoadMoreVisible () {
+      return !this.drawerPageQueryStatus.isLoadingMore &&
+        !this.drawerPageQueryStatus.isEmpty &&
+        !this.drawerPageQueryStatus.isDone
+    },
+    isDrawerListLoadingMoreVisible () {
+      return this.drawerPageQueryStatus.isLoadingMore
+    },
+    isDrawerListLoadedAllVisible () {
+      return this.drawerPageQueryStatus.isDone
     },
     isDrawerOpenComputed: {
       set (value) {
@@ -252,15 +283,6 @@ export default {
     }
   },
   asyncComputed: {
-    drawerArticleIds: {
-      default: [],
-      async get () {
-        if (!this.drawerArticleIdsPromise) {
-          return []
-        }
-        return this.drawerArticleIdsPromise
-      }
-    },
     drawerArticles: {
       default: [],
       async get () {
@@ -473,11 +495,13 @@ export default {
       const iLane = _.findIndex(lanes, lane => _.includes(lane, link))
       const iSublane = _.indexOf(lanes[iLane], link)
       const nSublanes = _.map(lanes, lane => lane.length)
-      const laneWidths = _.map(nSublanes, nSublane => nSublane * this.visConfig.path.width)
+      const laneWidths =
+        _.map(nSublanes, nSublane => nSublane * this.visConfig.path.width)
       const runningLaneWidths = prefixSum(laneWidths)
       const runningLaneSpacings = new Array(lanes.length)
       for (let iLane = 0; iLane < lanes.length; ++iLane) {
-        runningLaneSpacings[iLane] = iLane * this.visConfig.verticalGapLaneSpacing
+        runningLaneSpacings[iLane] =
+          iLane * this.visConfig.verticalGapLaneSpacing
       }
       const totalLaneWidth = _.last(runningLaneWidths)
       const totalLaneSpacing = _.last(runningLaneSpacings)
@@ -486,7 +510,8 @@ export default {
       const midX = 0.5 * (refRect.right + citedByRect.left)
       const minX = midX - 0.5 * (totalLaneWidth + totalLaneSpacing)
       const laneOffset = runningLaneWidths[iLane] + runningLaneSpacings[iLane]
-      const sublaneOffset = iSublane * this.visConfig.path.width + 0.5 * this.visConfig.path.width
+      const sublaneOffset =
+        iSublane * this.visConfig.path.width + 0.5 * this.visConfig.path.width
       return minX + laneOffset + sublaneOffset
     },
     getVerticalGapOrthogonalLinks (links) {
@@ -648,8 +673,27 @@ export default {
         setTimeout(
           () => { this.hoveringVisNode = null }, this.visConfig.hoverLinger)
     },
+    async onDrawerListLoadMore () {
+      this.drawerPageQueryStatus =
+        { ...this.drawerPageQueryStatus, isLoadingMore: true }
+      const queryNext = await this.drawerPageQuery.next()
+      this.drawerArticleIds =
+        [ ...this.drawerArticleIds, ...queryNext.articleIds ]
+      this.drawerPageQueryStatus = {
+        isDone: queryNext.isDone,
+        isEmpty: queryNext.isEmpty,
+        isLoadingMore: false
+      }
+    },
     onDrawerListItemTitleClicked (artId) {
       this.selectedDrawerArticleId = artId
+    },
+    onDrawerListScroll ({ target }) {
+      const isAtBottom =
+        target.scrollHeight - target.scrollTop === target.offsetHeight
+      if (isAtBottom && !this.drawerPageQuery.isDone) {
+        this.onDrawerListLoadMore()
+      }
     },
     trace (value) {
       console.log(value)
@@ -657,11 +701,20 @@ export default {
     }
   },
   watch: {
-    drawerArticleIdsPromise (curr) {
+    async drawerPageQuery (curr) {
       if (curr) {
         this.isDrawerOpenComputed = true
         this.selectedVisNodes = []
         this.selectedDrawerArticleId = null
+        this.drawerPageQueryStatus =
+          { isDone: false, isEmpty: false, isLoadingMore: true }
+        const queryNext = await curr.next()
+        this.drawerArticleIds = queryNext.articleIds
+        this.drawerPageQueryStatus = {
+          isDone: queryNext.isDone,
+          isEmpty: queryNext.isEmpty,
+          isLoadingMore: false
+        }
       }
     },
     visGraph (curr, prev) {
