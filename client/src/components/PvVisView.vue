@@ -36,8 +36,7 @@
             </div>
             <v-divider class="my-2"></v-divider>
           </v-flex>
-          <v-flex shrink align-self-center
-            style="height: 64px; display: flex; align-items: center;">
+          <v-flex shrink align-self-center>
             <pv-infinite-scroll-load-more v-bind="drawerPageQueryStatus"
               @load-more="onDrawerListLoadMore">
             </pv-infinite-scroll-load-more>

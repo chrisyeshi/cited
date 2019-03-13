@@ -1,9 +1,13 @@
 import Vue from 'vue'
+import createWithOnScroll from './PvWithOnScroll.js'
 
 export default function (scrollTarget) {
+  const WithOnScroll = createWithOnScroll(scrollTarget)
   return Vue.component('pv-infinite-scroll-load-more', {
+    components: { 'on-scroll': WithOnScroll },
     template: `
-      <div v-scroll:${scrollTarget}="onScroll">
+      <on-scroll :style="styleObject"
+        :bottomOffset="bottomOffset" @scroll-at-bottom="onScrollAtBottom">
         <v-btn v-if="!isDone && !isEmpty && !isLoadingMore" depressed
           @click="onLoadMore">
           LOAD MORE
@@ -12,21 +16,36 @@ export default function (scrollTarget) {
         </v-progress-circular>
         <div v-if="isDone">All Results Loaded</div>
         <div v-if="isEmpty">Empty Results</div>
-      </div>
+      </on-scroll>
     `,
     props: {
+      bottomOffset: {
+        type: Number,
+        default: 0
+      },
+      height: {
+        type: Number,
+        default: 64
+      },
       isDone: false,
       isEmpty: false,
       isLoadingMore: false
+    },
+    computed: {
+      styleObject () {
+        return {
+          height: this.height ? this.height + 'px' : undefined,
+          display: 'flex',
+          'align-items': 'center'
+        }
+      }
     },
     methods: {
       onLoadMore () {
         this.$emit('load-more')
       },
-      onScroll ({ target }) {
-        const isAtBottom =
-          target.scrollHeight - target.scrollTop === target.offsetHeight
-        if (isAtBottom && !this.isDone) {
+      onScrollAtBottom () {
+        if (!this.isDone) {
           this.onLoadMore()
         }
       }
