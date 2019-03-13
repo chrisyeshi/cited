@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid grid-list-md style="position: relative; height: 100%; overflow: auto;">
+  <v-container fluid grid-list-md id="pv-vis-drawer-article-view-container"
+    style="position: relative; height: 100%; overflow: auto;">
     <v-layout column style="position: relative; overflow: auto;">
       <v-layout row ma-0 justify-end>
         <v-flex class="font-weight-bold" style="margin-right: auto;">
@@ -38,12 +39,12 @@
         </expandable-text>
       </v-flex>
     </v-layout>
-    <v-layout row style="max-height: 100%;">
-      <v-flex xs6 pa-0 style="max-height: 100%;">
+    <v-layout row style="height: 100%;">
+      <v-flex xs6 pa-0 style="height: 100%;">
         <v-flex tag="h4" shrink class="font-weight-bold">
           References ({{ meta.nReferences }})
         </v-flex>
-        <v-flex pa-0 style="max-height: calc(100% - 29px); overflow: auto;">
+        <v-flex pa-0 :style="relationCardsContainerStyle">
           <v-flex v-for="(referenceArticle, index) in references"
             :key="index" shrink class="caption">
             <pv-vis-card :article="referenceArticle" :config="cardConfig"
@@ -59,7 +60,7 @@
         <v-flex tag="h4" shrink class="font-weight-bold">
           Cited by ({{ meta.nCitedBys }})
         </v-flex>
-        <v-flex pa-0 style="max-height: calc(100% - 29px); overflow: auto;">
+        <v-flex pa-0 :style="relationCardsContainerStyle">
           <v-flex v-for="(citedByArticle, index) in citedBys"
             :key="index" shrink class="caption">
             <pv-vis-card :article="citedByArticle" :config="cardConfig"
@@ -72,11 +73,14 @@
         </v-flex>
       </v-flex>
     </v-layout>
+    <container-with-on-scroll :is-at-bottom.sync="isAtContainerBottom">
+    </container-with-on-scroll>
   </v-container>
 </template>
 
 <script>
 import _ from 'lodash'
+import createWithOnScroll from './PvWithOnScroll.js'
 import ExpandableText from './ExpandableText.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
@@ -84,10 +88,13 @@ import theArticlePool from './pvarticlepool.js'
 import { Article, Paper, Venue } from './pvmodels.js'
 import { mapState } from 'vuex'
 
+const ContainerWithOnScroll =
+  createWithOnScroll('#pv-vis-drawer-article-view-container')
+
 export default {
   name: 'PvVisDrawerArticleView',
   components: {
-    ExpandableText, PvExpandableAuthorsLinks, PvVisCard
+    ContainerWithOnScroll, ExpandableText, PvExpandableAuthorsLinks, PvVisCard
   },
   props: {
     articleId: String,
@@ -97,7 +104,8 @@ export default {
   },
   data () {
     return {
-      abstractTextLimit: 200
+      abstractTextLimit: 200,
+      isAtContainerBottom: false
     }
   },
   computed: {
@@ -111,6 +119,12 @@ export default {
     firstAuthorSurname () {
       const firstAuthor = _.first(this.meta.data.authors)
       return firstAuthor ? firstAuthor.surname : ''
+    },
+    relationCardsContainerStyle () {
+      return {
+        'max-height': 'calc(100% - 29px)',
+        overflow: this.isAtContainerBottom ? 'auto' : 'hidden'
+      }
     }
   },
   asyncComputed: {
@@ -126,7 +140,7 @@ export default {
         const allRefArtIds =
           await theArticlePool.getReferenceIds(this.articleId)
         // TODO: pagination of reference articles
-        const refArtIds = _.slice(allRefArtIds, 0, 5)
+        const refArtIds = _.slice(allRefArtIds, 0, 10)
         return Promise.all(
           _.map(refArtIds, artId => theArticlePool.getMeta(artId)))
       }
@@ -137,7 +151,7 @@ export default {
         const allCitedByArtIds =
           await theArticlePool.getCitedByIds(this.articleId)
         // TODO: pagination of cited by articles
-        const citedByArtIds = _.slice(allCitedByArtIds, 0, 5)
+        const citedByArtIds = _.slice(allCitedByArtIds, 0, 10)
         return Promise.all(
           _.map(citedByArtIds, artId => theArticlePool.getMeta(artId)))
       }
