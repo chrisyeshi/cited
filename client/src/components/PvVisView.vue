@@ -13,7 +13,7 @@
         @unselect-article="onDrawerArticleUnselected">
       </pv-vis-drawer-editable-article>
       <v-container v-if="isDrawerList">
-        <v-layout column v-scroll:#drawer="onDrawerListScroll">
+        <v-layout column>
           <v-flex v-if="drawerPageQueryStatus.isTotalCountVisible" shrink
             class="mb-3 caption grey--text text--darken-1">
             Found {{ drawerPageQuery.getTotalArticleCount() }} articles from arXiv
@@ -37,7 +37,8 @@
             <v-divider class="my-2"></v-divider>
           </v-flex>
           <v-flex shrink align-self-center
-            style="height: 64px; display: flex; align-items: center;">
+            style="height: 64px; display: flex; align-items: center;"
+            v-scroll:#drawer="onDrawerListScroll">
             <v-btn v-if="isDrawerListLoadMoreVisible" depressed
               @click="onDrawerListLoadMore">
               LOAD MORE
