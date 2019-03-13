@@ -37,17 +37,10 @@
             <v-divider class="my-2"></v-divider>
           </v-flex>
           <v-flex shrink align-self-center
-            style="height: 64px; display: flex; align-items: center;"
-            v-scroll:#drawer="onDrawerListScroll">
-            <v-btn v-if="isDrawerListLoadMoreVisible" depressed
-              @click="onDrawerListLoadMore">
-              LOAD MORE
-            </v-btn>
-            <v-progress-circular v-if="isDrawerListLoadingMoreVisible"
-              indeterminate>
-            </v-progress-circular>
-            <div v-if="isDrawerListLoadedAllVisible">All Results Loaded</div>
-            <div v-if="isDrawerListEmptyVisible">Empty Results</div>
+            style="height: 64px; display: flex; align-items: center;">
+            <pv-infinite-scroll-load-more v-bind="drawerPageQueryStatus"
+              @load-more="onDrawerListLoadMore">
+            </pv-infinite-scroll-load-more>
           </v-flex>
         </v-layout>
       </v-container>
@@ -85,6 +78,7 @@
 <script>
 import _ from 'lodash'
 import * as d3Color from 'd3-color'
+import createInfiniteScrollLoadMore from './PvInfiniteScrollLoadMore.js'
 import ExpandableText from './ExpandableText.vue'
 import PvArticleForm from './PvArticleForm.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
@@ -96,10 +90,12 @@ import { Graph, VisGraph, VisLink } from './pvmodels.js'
 import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 import { mapState } from 'vuex'
 
+const PvInfiniteScrollLoadMore = createInfiniteScrollLoadMore('#drawer')
+
 export default {
   name: 'PvVisView',
   components: {
-    ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerEditableArticle
+    ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvInfiniteScrollLoadMore, PvVisCard, PvVisDrawerEditableArticle
   },
   props: {
     drawerPageQuery: Object,
