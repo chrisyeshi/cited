@@ -1,7 +1,7 @@
 <template>
   <v-content>
     <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
-      id="drawer" v-model="isDrawerOpenComputed">
+      v-model="isDrawerOpenComputed">
       <v-container v-if="isDrawerEmpty">Drawer Empty</v-container>
       <pv-vis-drawer-editable-article v-if="isDrawerArticle"
         :article-id="drawerArticleId" :card-config="visConfig.card"
@@ -12,7 +12,10 @@
         @select-article="onDrawerArticleSelected"
         @unselect-article="onDrawerArticleUnselected">
       </pv-vis-drawer-editable-article>
-      <v-container v-if="isDrawerList">
+      <v-container-with-scroll v-if="isDrawerList"
+        :bottom-offset="drawerListBottomOffset"
+        style="position: relative; height: 100%; overflow: auto;"
+        @scroll-at-bottom="onDrawerListLoadMore">
         <v-layout column>
           <v-flex v-if="drawerPageQueryStatus.isTotalCountVisible" shrink
             class="mb-3 caption grey--text text--darken-1">
@@ -36,13 +39,11 @@
             </div>
             <v-divider class="my-2"></v-divider>
           </v-flex>
-          <v-flex shrink align-self-center>
-            <pv-infinite-scroll-load-more v-bind="drawerPageQueryStatus"
-              @load-more="onDrawerListLoadMore">
-            </pv-infinite-scroll-load-more>
-          </v-flex>
+          <pv-load-more-combo v-bind="drawerPageQueryStatus"
+            :height="drawerListBottomOffset" @load-more="onDrawerListLoadMore">
+          </pv-load-more-combo>
         </v-layout>
-      </v-container>
+      </v-container-with-scroll>
     </v-navigation-drawer>
     <div v-if="isGraphViewVisible" ref="visContainer" class="vis-container"
       @click="onCanvasClicked">
@@ -77,25 +78,24 @@
 <script>
 import _ from 'lodash'
 import * as d3Color from 'd3-color'
-import createInfiniteScrollLoadMore from './PvInfiniteScrollLoadMore.js'
 import ExpandableText from './ExpandableText.vue'
 import PvArticleForm from './PvArticleForm.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
+import PvLoadMoreCombo from './PvLoadMoreCombo.vue'
 import PvVisCard from './PvVisCard.vue'
 import PvVisDrawerEditableArticle from './PvVisDrawerEditableArticle.vue'
 import theArticlePool from './pvarticlepool.js'
 import Vec from './vec.js'
+import withScroll from './withscroll.js'
 import { Graph, VisGraph, VisLink } from './pvmodels.js'
 import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 import { mapState } from 'vuex'
 
-const PvInfiniteScrollLoadMore = createInfiniteScrollLoadMore('#drawer')
+const VContainerWithScroll = withScroll('v-container')
 
 export default {
   name: 'PvVisView',
-  components: {
-    ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvInfiniteScrollLoadMore, PvVisCard, PvVisDrawerEditableArticle
-  },
+  components: { ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvLoadMoreCombo, PvVisCard, PvVisDrawerEditableArticle, VContainerWithScroll },
   props: {
     drawerPageQuery: Object,
     graph: new Graph(),
@@ -104,6 +104,7 @@ export default {
   data () {
     return {
       drawerArticleIds: null,
+      drawerListBottomOffset: 64,
       drawerPageQueryStatus: {
         isDone: false,
         isEmpty: false,
