@@ -1,5 +1,5 @@
 <template>
-  <v-flex @scroll="onScroll">
+  <v-flex-with-scroll @scroll-at-bottom="onLoadMore">
     <v-flex v-for="article in currArticles" :key="article.id" shrink
       class="caption">
       <pv-vis-card :article="article" :config="cardConfig" :style="cardStyle"
@@ -10,7 +10,7 @@
     </v-flex>
     <pv-load-more-combo v-bind="loadStatus" @load-more="onLoadMore">
     </pv-load-more-combo>
-  </v-flex>
+  </v-flex-with-scroll>
 </template>
 
 <script>
@@ -18,10 +18,13 @@ import _ from 'lodash'
 import PvLoadMoreCombo from './PvLoadMoreCombo.vue'
 import PvVisCard from './PvVisCard.vue'
 import theArticlePool from './pvarticlepool.js'
+import withScroll from './withscroll.js'
+
+const VFlexWithScroll = withScroll('v-flex')
 
 export default {
   name: 'PvVisDrawerArticleCardsInfiniteScroll',
-  components: { PvLoadMoreCombo, PvVisCard },
+  components: { PvLoadMoreCombo, PvVisCard, VFlexWithScroll },
   props: {
     articleIds: Array,
     articleCountPerLoad: {
@@ -70,13 +73,6 @@ export default {
     onLoadMore () {
       this.articleSliceCount += this.articleCountPerLoad
       this.fetchArticles()
-    },
-    onScroll ({ target }) {
-      const scrollPos = target.scrollHeight - target.scrollTop
-      const isAtBottom = scrollPos <= target.offsetHeight
-      if (isAtBottom) {
-        this.onLoadMore()
-      }
     }
   },
   watch: {
