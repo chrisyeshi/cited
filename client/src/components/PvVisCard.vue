@@ -51,7 +51,10 @@ export default {
       type: Object,
       default: () => ({ r: 255, g: 255, b: 255 })
     },
-    citedByColor: null,
+    citedByColor: {
+      type: [ String, Object, Promise ],
+      default: null
+    },
     config: {
       borderRadius: 0.65,
       height: 5.2,
@@ -63,16 +66,12 @@ export default {
       unit: 'em',
       width: 15
     },
-    referenceColor: null
+    referenceColor: {
+      type: [ String, Object, Promise ],
+      default: null
+    }
   },
   computed: {
-    citedBySideStyle () {
-      return {
-        opacity: this.opacity,
-        flex: `0 0 ${this.config.sideWidth}${this.config.unit}`,
-        backgroundColor: this.citedByColor
-      }
-    },
     isCitedByVisible () {
       return !_.isNil(this.article.nCitedBys)
     },
@@ -89,13 +88,6 @@ export default {
     labelRowText () {
       return `${this.article.data.authors[0].surname} ${this.article.data.year}`
     },
-    referenceSideStyle () {
-      return {
-        opacity: this.config.opacity,
-        flex: `0 0 ${this.config.sideWidth}${this.config.unit}`,
-        backgroundColor: this.referenceColor
-      }
-    },
     rowsContainerStyle () {
       return {
         flexGrow: 1,
@@ -105,6 +97,32 @@ export default {
         justifyContent: 'space-around',
         padding: '10px',
         background: `rgba(${this.backgroundColor.r}, ${this.backgroundColor.g}, ${this.backgroundColor.b}, ${this.config.opacity})`
+      }
+    },
+    sideStyle () {
+      return {
+        opacity: this.config.opacity,
+        flex: `0 0 ${this.config.sideWidth}${this.config.unit}`
+      }
+    }
+  },
+  asyncComputed: {
+    citedBySideStyle: {
+      default () { return this.sideStyle },
+      async get () {
+        return {
+          ...this.sideStyle,
+          backgroundColor: await Promise.resolve(this.citedByColor)
+        }
+      }
+    },
+    referenceSideStyle: {
+      default () { return this.sideStyle },
+      async get () {
+        return {
+          ...this.sideStyle,
+          backgroundColor: await Promise.resolve(this.referenceColor)
+        }
       }
     }
   }

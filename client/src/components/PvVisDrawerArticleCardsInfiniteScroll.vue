@@ -4,8 +4,8 @@
     <v-flex v-for="article in currArticles" :key="article.id" shrink
       class="caption">
       <pv-vis-card :article="article" :config="cardConfig" :style="cardStyle"
-        :referenceColor="getCardReferenceColor(article)"
-        :citedByColor="getCardCitedByColor(article)"
+        :referenceColor="getCardReferenceColor(article.id)"
+        :citedByColor="getCardCitedByColor(article.id)"
         @click.native="$emit('click-card', article.id)">
       </pv-vis-card>
     </v-flex>
