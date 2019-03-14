@@ -1,5 +1,6 @@
 <template>
-  <v-flex-with-scroll @scroll-at-bottom="onLoadMore">
+  <v-flex-with-scroll :bottom-offset="bottomOffset"
+    @scroll-at-bottom="onLoadMore">
     <v-flex v-for="article in currArticles" :key="article.id" shrink
       class="caption">
       <pv-vis-card :article="article" :config="cardConfig" :style="cardStyle"
@@ -8,7 +9,8 @@
         @click.native="$emit('click-card', article.id)">
       </pv-vis-card>
     </v-flex>
-    <pv-load-more-combo v-bind="loadStatus" @load-more="onLoadMore">
+    <pv-load-more-combo v-bind="loadStatus" :height="bottomOffset"
+      @load-more="onLoadMore">
     </pv-load-more-combo>
   </v-flex-with-scroll>
 </template>
@@ -38,6 +40,7 @@ export default {
   data () {
     return {
       articleSliceCount: this.articleCountPerLoad,
+      bottomOffset: 64,
       currArticles: [],
       loadStatus: {
         isDone: false,

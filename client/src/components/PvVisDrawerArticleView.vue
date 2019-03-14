@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid grid-list-md id="pv-vis-drawer-article-view-container"
+  <v-container-with-scroll fluid grid-list-md
+    :is-at-bottom.sync="isAtContainerBottom"
     style="position: relative; height: 100%; overflow: auto;">
     <v-layout column style="position: relative; overflow: auto;">
       <v-layout row ma-0 justify-end>
@@ -65,28 +66,25 @@
         </pv-vis-drawer-article-cards-infinite-scroll>
       </v-flex>
     </v-layout>
-    <container-with-on-scroll :is-at-bottom.sync="isAtContainerBottom">
-    </container-with-on-scroll>
-  </v-container>
+  </v-container-with-scroll>
 </template>
 
 <script>
 import _ from 'lodash'
-import createWithOnScroll from './PvWithOnScroll.js'
 import ExpandableText from './ExpandableText.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
 import PvVisDrawerArticleCardsInfiniteScroll from './PvVisDrawerArticleCardsInfiniteScroll.vue'
 import theArticlePool from './pvarticlepool.js'
+import withScroll from './withscroll.js'
 import { Article, Paper, Venue } from './pvmodels.js'
 import { mapState } from 'vuex'
 
-const ContainerWithOnScroll =
-  createWithOnScroll('#pv-vis-drawer-article-view-container')
+const VContainerWithScroll = withScroll('v-container')
 
 export default {
   name: 'PvVisDrawerArticleView',
-  components: { ContainerWithOnScroll, ExpandableText, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerArticleCardsInfiniteScroll },
+  components: { ExpandableText, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerArticleCardsInfiniteScroll, VContainerWithScroll },
   props: {
     articleId: String,
     cardConfig: Object,

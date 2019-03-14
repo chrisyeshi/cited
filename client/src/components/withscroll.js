@@ -2,13 +2,15 @@ import Vue from 'vue'
 
 export default function (tag) {
   return Vue.extend({
-    template: `<${tag} @scroll="onScroll"><slot></slot></${tag}>`,
+    template: `
+      <${tag} v-bind="$attrs" @scroll="onScroll"><slot></slot></${tag}>
+    `,
     props: {
       bottomOffset: {
         type: Number,
         default: 0
       },
-      isAtBottom: Number
+      isAtBottom: Boolean
     },
     methods: {
       onScroll (event) {
