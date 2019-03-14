@@ -103,7 +103,7 @@ export default {
   },
   data () {
     return {
-      drawerArticleIds: null,
+      drawerArticles: [],
       drawerListBottomOffset: 64,
       drawerPageQueryStatus: {
         isDone: false,
@@ -282,16 +282,6 @@ export default {
       })
       const visLinks = [ ...greyedOutVisLinks, ...focusedVisLinks ]
       return visLinks
-    }
-  },
-  asyncComputed: {
-    drawerArticles: {
-      default: [],
-      async get () {
-        return Promise.all(_.map(this.drawerArticleIds, artId => {
-          return theArticlePool.getMeta(artId)
-        }))
-      }
     }
   },
   methods: {
@@ -681,8 +671,11 @@ export default {
         isLoadingMore: true,
         isTotalCountVisible: true
       }
-      this.drawerArticleIds =
-        [ ...this.drawerArticleIds, ...await this.drawerPageQuery.next() ]
+      const currArtIds = _.map(this.drawerArticles, art => art.id)
+      const nextArtIds = [ ...currArtIds, ...await this.drawerPageQuery.next() ]
+      this.drawerArticles =
+        await Promise.all(
+          _.map(nextArtIds, artId => theArticlePool.getMeta(artId)))
       this.drawerPageQueryStatus = {
         isDone: this.drawerPageQuery.isDone(),
         isEmpty: this.drawerPageQuery.isEmpty(),
@@ -711,14 +704,17 @@ export default {
         this.isDrawerOpenComputed = true
         this.selectedVisNodes = []
         this.selectedDrawerArticleId = null
-        this.drawerArticleIds = []
+        this.drawerArticles = []
         this.drawerPageQueryStatus = {
           isDone: false,
           isEmpty: false,
           isLoadingMore: true,
           isTotalCountVisible: false
         }
-        this.drawerArticleIds = await curr.next()
+        const artIds = await curr.next()
+        this.drawerArticles =
+          await Promise.all(
+            _.map(artIds, artId => theArticlePool.getMeta(artId)))
         this.drawerPageQueryStatus = {
           isDone: this.drawerPageQuery.isDone(),
           isEmpty: this.drawerPageQuery.isEmpty(),

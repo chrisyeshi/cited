@@ -17,7 +17,7 @@
         <span>{{ article.data.title }}</span>
       </v-tooltip>
       <div v-if="isStatsRowVisible" class="text-xs-center card-row"
-        style="display: flex;">
+        style="display: flex; align-items: center;">
         <span v-if="isVenueVisible" class="text-truncate"
           style="display: inline-flex; flex: 1; justify-content: center;">
           <span class="text-truncate" style="white-space: nowrap">
