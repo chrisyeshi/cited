@@ -44,33 +44,25 @@
         <v-flex tag="h4" shrink class="font-weight-bold">
           References ({{ meta.nReferences }})
         </v-flex>
-        <v-flex pa-0 :style="relationCardsContainerStyle">
-          <v-flex v-for="(referenceArticle, index) in references"
-            :key="index" shrink class="caption">
-            <pv-vis-card :article="referenceArticle" :config="cardConfig"
-              :style="cardStyle"
-              :referenceColor="getCardReferenceColor(referenceArticle)"
-              :citedByColor="getCardCitedByColor(referenceArticle)"
-              @click.native="onCardClicked(referenceArticle.id)">
-            </pv-vis-card>
-          </v-flex>
-        </v-flex>
+        <pv-vis-drawer-article-cards-infinite-scroll class="pa-0"
+          :style="relationCardsContainerStyle" :articleIds="referenceIds"
+          :card-config="cardConfig"
+          :get-card-cited-by-color="getCardCitedByColor"
+          :get-card-reference-color="getCardReferenceColor"
+          @click-card="onCardClicked">
+        </pv-vis-drawer-article-cards-infinite-scroll>
       </v-flex>
       <v-flex xs6 pa-0>
         <v-flex tag="h4" shrink class="font-weight-bold">
           Cited by ({{ meta.nCitedBys }})
         </v-flex>
-        <v-flex pa-0 :style="relationCardsContainerStyle">
-          <v-flex v-for="(citedByArticle, index) in citedBys"
-            :key="index" shrink class="caption">
-            <pv-vis-card :article="citedByArticle" :config="cardConfig"
-              :style="cardStyle"
-              :referenceColor="getCardReferenceColor(citedByArticle)"
-              :citedByColor="getCardCitedByColor(citedByArticle)"
-              @click.native="onCardClicked(citedByArticle.id)">
-            </pv-vis-card>
-          </v-flex>
-        </v-flex>
+        <pv-vis-drawer-article-cards-infinite-scroll class="pa-0"
+          :style="relationCardsContainerStyle" :articleIds="citedByIds"
+          :card-config="cardConfig"
+          :get-card-cited-by-color="getCardCitedByColor"
+          :get-card-reference-color="getCardReferenceColor"
+          @click-card="onCardClicked">
+        </pv-vis-drawer-article-cards-infinite-scroll>
       </v-flex>
     </v-layout>
     <container-with-on-scroll :is-at-bottom.sync="isAtContainerBottom">
@@ -84,6 +76,7 @@ import createWithOnScroll from './PvWithOnScroll.js'
 import ExpandableText from './ExpandableText.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
+import PvVisDrawerArticleCardsInfiniteScroll from './PvVisDrawerArticleCardsInfiniteScroll.vue'
 import theArticlePool from './pvarticlepool.js'
 import { Article, Paper, Venue } from './pvmodels.js'
 import { mapState } from 'vuex'
@@ -93,9 +86,7 @@ const ContainerWithOnScroll =
 
 export default {
   name: 'PvVisDrawerArticleView',
-  components: {
-    ContainerWithOnScroll, ExpandableText, PvExpandableAuthorsLinks, PvVisCard
-  },
+  components: { ContainerWithOnScroll, ExpandableText, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerArticleCardsInfiniteScroll },
   props: {
     articleId: String,
     cardConfig: Object,
@@ -110,12 +101,6 @@ export default {
   },
   computed: {
     ...mapState('parseVis', [ 'articleEditable' ]),
-    cardStyle () {
-      return {
-        cursor: 'pointer',
-        height: `${this.cardConfig.height}${this.cardConfig.unit}`
-      }
-    },
     firstAuthorSurname () {
       const firstAuthor = _.first(this.meta.data.authors)
       return firstAuthor ? firstAuthor.surname : ''
@@ -134,26 +119,16 @@ export default {
         return theArticlePool.getMeta(this.articleId)
       }
     },
-    references: {
+    citedByIds: {
       default: [],
       async get () {
-        const allRefArtIds =
-          await theArticlePool.getReferenceIds(this.articleId)
-        // TODO: pagination of reference articles
-        const refArtIds = _.slice(allRefArtIds, 0, 10)
-        return Promise.all(
-          _.map(refArtIds, artId => theArticlePool.getMeta(artId)))
+        return theArticlePool.getCitedByIds(this.articleId)
       }
     },
-    citedBys: {
+    referenceIds: {
       default: [],
       async get () {
-        const allCitedByArtIds =
-          await theArticlePool.getCitedByIds(this.articleId)
-        // TODO: pagination of cited by articles
-        const citedByArtIds = _.slice(allCitedByArtIds, 0, 10)
-        return Promise.all(
-          _.map(citedByArtIds, artId => theArticlePool.getMeta(artId)))
+        return theArticlePool.getReferenceIds(this.articleId)
       }
     }
   },

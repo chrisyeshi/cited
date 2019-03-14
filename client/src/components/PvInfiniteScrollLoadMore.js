@@ -36,7 +36,8 @@ export default function (scrollTarget) {
         return {
           height: this.height ? this.height + 'px' : undefined,
           display: 'flex',
-          'align-items': 'center'
+          'align-items': 'center',
+          'justify-content': 'center'
         }
       }
     },
