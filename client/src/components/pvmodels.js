@@ -366,7 +366,6 @@ export class VisNode {
     this.inGraphVisCitedBys = inGraphVisCitedBys
   }
   get article () { return this.node.article }
-  get articleId () { return this.node.article.id }
   get col () { return this.colRow.col }
   get row () { return this.colRow.row }
 }
