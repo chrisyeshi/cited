@@ -52,8 +52,8 @@
       </svg>
       <div class="cards-container" :style="cardsContainerStyle"
         @click="onCanvasClicked">
-        <pv-vis-card v-for="(node, index) in visGraph.visNodes" :key="index"
-          ref="cards" :article="node.article" :config="visConfig.card"
+        <pv-vis-card v-for="node in visGraph.visNodes" :key="node.articleId"
+          ref="cards" :article="node.articleId" :config="visConfig.card"
           :class="getCardClasses(node)" :style="getCardStyle(node)"
           :backgroundColor="getCardBackgroundColor(node)"
           :citedByColor="getCardSideColor(node.inGraphCitedBys.length)"
@@ -78,6 +78,9 @@
 <script>
 import _ from 'lodash'
 import * as d3Color from 'd3-color'
+import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
+import { mapState } from 'vuex'
+import { VisGraph, VisLink } from './pvvismodels.js'
 import ExpandableText from './ExpandableText.vue'
 import PvArticleForm from './PvArticleForm.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
@@ -87,9 +90,6 @@ import PvVisDrawerEditableArticle from './PvVisDrawerEditableArticle.vue'
 import theArticlePool from './pvarticlepool.js'
 import Vec from './vec.js'
 import withScroll from './withscroll.js'
-import { Graph, VisGraph, VisLink } from './pvmodels.js'
-import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
-import { mapState } from 'vuex'
 
 const VContainerWithScroll = withScroll('v-container')
 
@@ -97,8 +97,9 @@ export default {
   name: 'PvVisView',
   components: { ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvLoadMoreCombo, PvVisCard, PvVisDrawerEditableArticle, VContainerWithScroll },
   props: {
+    collectionArticleIds: Array,
     drawerPageQuery: Object,
-    graph: new Graph(),
+    // graph: new Graph(),
     isDrawerOpen: false
   },
   data () {
@@ -154,7 +155,8 @@ export default {
     canvasHeight () {
       const nRows = this.gridConfig.nRow
       const paddings = this.visConfig.canvasPadding.top + this.visConfig.canvasPadding.bottom
-      const spacing = (nRows - 1) * this.visConfig.cardVerticalSpacing
+      const spacing =
+        Math.max(0, nRows - 1) * this.visConfig.cardVerticalSpacing
       const prevHeight = nRows * this.visConfig.card.height
       return paddings + spacing + prevHeight
     },
@@ -171,7 +173,7 @@ export default {
     },
     drawerArticleId () {
       return this.isDrawerVisNode
-        ? _.first(this.selectedVisNodes).article.id
+        ? _.first(this.selectedVisNodes).articleId
         : this.selectedDrawerArticleId
     },
     emptyViewMessage () {
@@ -190,12 +192,12 @@ export default {
     gridConfig () {
       const grid = this.visGraph.grid
       const nRows = _.map(grid, column => column.length)
-      const nRow = _.max(nRows)
+      const nRow = _.max(nRows) || 0
       const nCol = grid.length
       return {
         nCol: nCol,
-        nHorizontalGap: nRow - 1,
-        nVerticalGap: nCol - 1,
+        nHorizontalGap: Math.max(0, nRow - 1),
+        nVerticalGap: Math.max(0, nCol - 1),
         nRow: nRow,
         nRows: nRows
       }
@@ -230,9 +232,9 @@ export default {
       }
     },
     isDrawerVisNode () { return this.selectedVisNodes.length === 1 },
-    isEmptyViewVisible () { return this.graph.isEmpty },
-    isGraphViewVisible () { return !this.graph.isEmpty },
-    maxReferenceLevel () { return this.visGraph.grid.length - 1 },
+    isEmptyViewVisible () { return this.collectionArticleIds.length === 0 },
+    isGraphViewVisible () { return this.collectionArticleIds.length !== 0 },
+    maxReferenceLevel () { return Math.max(0, this.visGraph.grid.length - 1) },
     overlayContainerStyle () {
       return {
         fontSize: this.visConfig.fontSize + 'px',
@@ -246,42 +248,53 @@ export default {
         ...this.getVerticalGapHorizontalPaths(this.visLinks),
         ...this.getCrossColumnPaths(this.visLinks)
       ]
-    },
-    visGraph () {
-      return VisGraph.fromNodes(this.graph.nodes)
-    },
-    visLinks () {
-      if (this.focusedVisNodes.length === 0) {
-        return this.visGraph.visLinks
+    }
+  },
+  asyncComputed: {
+    visGraph: {
+      default: new VisGraph([]),
+      async get () {
+        return VisGraph.fromArticleIds(
+          theArticlePool, this.collectionArticleIds)
       }
-      const focusedVisGraph =
-        VisGraph.fromNodes(_.map(this.focusedVisNodes, visNode => visNode.node))
-      const focusedVisLinks = _.map(focusedVisGraph.visLinks, visLink => {
-        const reference = this.visGraph.getVisNode(visLink.reference.article.id)
-        const citedBy = this.visGraph.getVisNode(visLink.citedBy.article.id)
-        return new VisLink(
-          reference,
-          citedBy,
-          visLink.weight,
-          this.getPathColorByWeight(visLink.weight),
-          this.visConfig.path.opacity)
-      })
-      const otherVisLinks =
-        _.differenceWith(
-          this.visGraph.visLinks, focusedVisLinks, (aLink, bLink) => {
-            return aLink.reference === bLink.reference &&
-              aLink.citedBy === bLink.citedBy
-          })
-      const greyedOutVisLinks = _.map(otherVisLinks, visLink => {
-        return new VisLink(
-          visLink.reference,
-          visLink.citedBy,
-          visLink.weight,
-          this.visConfig.path.greyedOutColor,
-          this.visConfig.path.greyedOutOpacity)
-      })
-      const visLinks = [ ...greyedOutVisLinks, ...focusedVisLinks ]
-      return visLinks
+    },
+    visLinks: {
+      default: [],
+      async get () {
+        if (this.focusedVisNodes.length === 0) {
+          return this.visGraph.visLinks
+        }
+        const focusedVisGraph =
+          await VisGraph.fromArticleIds(
+            theArticlePool,
+            _.map(this.focusedVisNodes, visNode => visNode.articleId))
+        const focusedVisLinks = _.map(focusedVisGraph.visLinks, visLink => {
+          const reference = this.visGraph.getVisNode(visLink.reference.articleId)
+          const citedBy = this.visGraph.getVisNode(visLink.citedBy.articleId)
+          return new VisLink(
+            reference,
+            citedBy,
+            visLink.weight,
+            this.getPathColorByWeight(visLink.weight),
+            this.visConfig.path.opacity)
+        })
+        const otherVisLinks =
+          _.differenceWith(
+            this.visGraph.visLinks, focusedVisLinks, (aLink, bLink) => {
+              return aLink.reference === bLink.reference &&
+                aLink.citedBy === bLink.citedBy
+            })
+        const greyedOutVisLinks = _.map(otherVisLinks, visLink => {
+          return new VisLink(
+            visLink.reference,
+            visLink.citedBy,
+            visLink.weight,
+            this.visConfig.path.greyedOutColor,
+            this.visConfig.path.greyedOutOpacity)
+        })
+        const visLinks = [ ...greyedOutVisLinks, ...focusedVisLinks ]
+        return visLinks
+      }
     }
   },
   methods: {
@@ -642,18 +655,7 @@ export default {
       } else {
         // single selection
         this.selectedVisNodes = [ visNode ]
-        const isDrawerOpening = !this.isDrawerOpenComputed
         this.isDrawerOpenComputed = true
-        if (isDrawerOpening) {
-          // TODO: animate according to the drawer openning animation
-          setTimeout(() => {
-            const component =
-              _.find(
-                this.$refs.cards,
-                card => card.article.id === visNode.article.id)
-            component.$el.scrollIntoView({ behavior: 'smooth' })
-          }, 150)
-        }
       }
     },
     onCardMouseEnter (visNode) {
@@ -725,7 +727,7 @@ export default {
     },
     visGraph (curr, prev) {
       const articleIds =
-        _.map(this.selectedVisNodes, visNode => visNode.article.id)
+        _.map(this.selectedVisNodes, visNode => visNode.articleId)
       this.selectedVisNodes =
         _.filter(_.map(articleIds, id => curr.getVisNode(id)))
     }

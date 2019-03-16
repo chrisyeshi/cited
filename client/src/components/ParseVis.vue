@@ -14,7 +14,8 @@
         <sign-in-button></sign-in-button>
       </v-toolbar-items>
     </v-toolbar>
-    <pv-vis-view v-if="isVisViewVisible" :graph="graph"
+    <pv-vis-view v-if="isVisViewVisible"
+      :collection-article-ids="collectionArticleIds"
       :isDrawerOpen.sync="isDrawerOpen"
       :drawerPageQuery="pageQuery"
       @add-to-vis="onAddArticleToGraph"
@@ -46,7 +47,7 @@ import PvListView from './PvListView.vue'
 import PvVisView from './PvVisView.vue'
 import SignInButton from './SignInButton.vue'
 import theArticlePool from './pvarticlepool.js'
-import { AffiliatedAuthor, Article, Graph, Paper, Venue, SourceArticle } from './pvmodels.js'
+import { AffiliatedAuthor, Article, Paper, Venue, SourceArticle } from './pvmodels.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -58,8 +59,8 @@ export default {
   },
   data () {
     return {
+      collectionArticleIds: [],
       enableToolbarDrawerIcon: false,
-      graph: new Graph(),
       isDrawerOpen: false,
       pageQuery: null,
       searchText: ''
@@ -85,16 +86,10 @@ export default {
   },
   methods: {
     articleEdited (curr) {
-      // update the article pool
       theArticlePool.setArticle(curr)
-      // update graph
-      const graphArticleIds = _.map(this.graph.nodes, node => node.article.id)
-      const newArticles =
-        _.map(graphArticleIds, id => theArticlePool.getArticle(id))
-      this.graph = Graph.fromArticles(newArticles)
     },
     clearGraph () {
-      this.graph = new Graph()
+      this.collectionArticleIds = []
     },
     async loadInSituGraph () {
       const data = await import('./insitupdf.json')
@@ -106,17 +101,10 @@ export default {
         _.map(
           articles, art => new SourceArticle(art, { userEdited: Date.now() }))
       theArticlePool.setSourceArticles(srcArts)
-      this.graph = Graph.fromArticles(articles)
+      this.collectionArticleIds = articleIds
     },
     onAddArticleToGraph (artId) {
-      if (_.find(this.graph.nodes, node => node.article.id === artId)) {
-        console.log('article already in graph')
-        return
-      }
-      const oldArts = _.map(this.graph.nodes, node => node.article)
-      const newArt = theArticlePool.getArticle(artId)
-      const arts = [ ...oldArts, newArt ]
-      this.graph = Graph.fromArticles(arts)
+      this.collectionArticleIds = _.union(this.collectionArticleIds, [ artId ])
     },
     search (text) {
       this.pageQuery = theArticlePool.getPageQuery(text)

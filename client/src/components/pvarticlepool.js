@@ -126,9 +126,9 @@ class ArticlePool {
       refIds: _.map(refSrcArts, srcArt => srcArt.id),
       sources: { semanticScholar: Date.now() }
     })
-    this.sourceArticles =
+    this.setSourceArticles(
       ArticlePool.unionSourceArticles(
-        this.sourceArticles, [ newSrcArt, ...refSrcArts, ...citedBySrcArts ])
+        this.sourceArticles, [ newSrcArt, ...refSrcArts, ...citedBySrcArts ]))
   }
 
   async getMeta (artId) {
@@ -199,8 +199,8 @@ class ArticlePool {
       _.map(
         arxivRes.feed.entry,
         entry => this.createSourceArticleFromArxivEntry(entry))
-    this.sourceArticles =
-      ArticlePool.unionSourceArticles(this.sourceArticles, srcArts)
+    this.setSourceArticles(
+      ArticlePool.unionSourceArticles(this.sourceArticles, srcArts))
     return _.map(srcArts, srcArt => srcArt.id)
   }
 
@@ -212,14 +212,14 @@ class ArticlePool {
       _.findIndex(this.sourceArticles, srcArt => srcArt.id === newArt.id)
     if (index === -1) {
       const newSrcArt = new SourceArticle(newArt, { userEdited: Date.now() })
-      this.sourceArticles = [ ...this.sourceArticles, newSrcArt ]
+      this.setSourceArticles([ ...this.sourceArticles, newSrcArt ])
     } else {
       const oldSrcArt = this.sourceArticles[index]
       const newSrcArt =
         new SourceArticle(
           newArt, { ...oldSrcArt.sources, userEdited: Date.now() })
-      this.sourceArticles =
-        [ ..._.without(this.sourceArticles, oldSrcArt), newSrcArt ]
+      this.setSourceArticles(
+        [ ..._.without(this.sourceArticles, oldSrcArt), newSrcArt ])
     }
   }
 
