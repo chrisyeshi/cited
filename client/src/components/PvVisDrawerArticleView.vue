@@ -138,6 +138,11 @@ export default {
       console.log(value)
       return value
     }
+  },
+  watch: {
+    articleId () {
+      this.$el.scrollTop = 0
+    }
   }
 }
 </script>

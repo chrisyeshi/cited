@@ -12,11 +12,17 @@ export default function (tag) {
       },
       isAtBottom: Boolean
     },
+    data () {
+      return {
+        bottomEpsilon: 2
+      }
+    },
     methods: {
       onScroll (event) {
         const target = event.target
         const scrollPos = target.scrollHeight - target.scrollTop
-        const isAtBottom = scrollPos <= target.offsetHeight + this.bottomOffset
+        const bottomLimit = this.bottomOffset + this.bottomEpsilon
+        const isAtBottom = scrollPos <= target.offsetHeight + bottomLimit
         this.$emit('update:isAtBottom', isAtBottom)
         if (isAtBottom) {
           this.$emit('scroll-at-bottom', event)

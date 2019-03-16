@@ -79,8 +79,14 @@ export default {
     }
   },
   watch: {
-    articleIds () {
+    articleIds (curr) {
       this.articleSliceCount = this.articleCountPerLoad
+      this.currArticles = []
+      this.loadStatus = {
+        isDone: false,
+        isEmpty: false,
+        isLoadingMore: false
+      }
       this.fetchArticles()
     }
   }
