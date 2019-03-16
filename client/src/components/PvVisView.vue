@@ -215,9 +215,7 @@ export default {
           return this.visGraph.visLinks
         }
         const focusedVisGraph =
-          await VisGraph.fromArticleIds(
-            theArticlePool,
-            _.map(this.focusedVisNodes, visNode => visNode.articleId))
+          this.visGraph.getSubVisGraph(this.focusedVisNodes)
         const focusedVisLinks = _.map(focusedVisGraph.visLinks, visLink => {
           const reference = this.visGraph.getVisNode(visLink.reference.articleId)
           const citedBy = this.visGraph.getVisNode(visLink.citedBy.articleId)

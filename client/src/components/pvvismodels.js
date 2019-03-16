@@ -33,12 +33,19 @@ export class VisGraph {
         }
       })
     }))
-    // fill in colRows
+    VisGraph.mixinColRows(visNodes)
+    VisGraph.mixinVisRelations(visNodes)
+    return new VisGraph(visNodes)
+  }
+
+  static mixinColRows (visNodes) {
     const colRows = VisGrid.getColRows(visNodes)
     _.forEach(_.zip(visNodes, colRows), ([ visNode, colRow ]) => {
       visNode.colRow = colRow
     })
-    // fill in inGraphVisReferences and inGraphVisCitedBys
+  }
+
+  static mixinVisRelations (visNodes) {
     _.forEach(
       Graph.getLinks(visNodes),
       ({ reference: refNode, citedBy: citedByNode }) => {
@@ -87,6 +94,39 @@ export class VisGraph {
           return y / x
         })
     })
+  }
+
+  getSubVisGraph (subVisNodes) {
+    // construct visNode holders
+    const visNodesMap = Object.assign({}, ..._.map(subVisNodes, visNode => ({
+      [visNode.articleId]: new VisNode(
+        visNode.articleId /* articleId */,
+        { col: visNode.col, row: visNode.row } /* colRow */,
+        [] /* inGraphReferences */,
+        [] /* inGraphCitedBys */,
+        [] /* inGraphVisReferences */,
+        [] /* inGraphVisCitedBys */)
+    })))
+    const visNodes = _.values(visNodesMap)
+    // fill in inGraphReferences and inGraphCitedBys
+    _.forEach(visNodes, visNode => {
+      const currArtId = visNode.articleId
+      const currSubVisNode =
+        _.find(subVisNodes, ({ articleId }) => articleId === currArtId)
+      const refArtIds =
+        _.map(currSubVisNode.inGraphReferences, ({ articleId }) => articleId)
+      _.forEach(refArtIds, refArtId => {
+        const refVisNode = visNodesMap[refArtId]
+        const currVisNode = visNodesMap[currArtId]
+        if (refVisNode && currVisNode) {
+          refVisNode.inGraphCitedBys =
+            _.union(refVisNode.inGraphCitedBys, [ currVisNode ])
+          currVisNode.inGraphReferences =
+            _.union(currVisNode.inGraphReferences, [ refVisNode ])
+        }
+      })
+    })
+    VisGraph.mixinVisRelations(visNodes)
     return new VisGraph(visNodes)
   }
 
