@@ -1,7 +1,7 @@
 <template>
   <div :style="styleObject">
     <v-btn v-if="!isDone && !isEmpty && !isLoadingMore" depressed
-      @click="$emit('loadMore')">
+      @click="$emit('load-more')">
       LOAD MORE
     </v-btn>
     <v-progress-circular v-if="isLoadingMore" indeterminate>
