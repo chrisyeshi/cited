@@ -12,38 +12,11 @@
         @select-article="onDrawerArticleSelected"
         @unselect-article="onDrawerArticleUnselected">
       </pv-vis-drawer-editable-article>
-      <v-container-with-scroll v-if="isDrawerList"
-        :bottom-offset="drawerListBottomOffset"
+      <pv-vis-drawer-query-list v-if="isDrawerList"
         style="position: relative; height: 100%; overflow: auto;"
-        @scroll-at-bottom="onDrawerListLoadMore">
-        <v-layout column>
-          <v-flex v-if="drawerPageQueryStatus.isTotalCountVisible" shrink
-            class="mb-3 caption grey--text text--darken-1">
-            Found {{ drawerPageQuery.getTotalArticleCount() }} articles from arXiv
-          </v-flex>
-          <v-flex v-for="article in drawerArticles" :key="article.id">
-            <div class="caption font-weight-bold">
-              {{ article.data.authors[0].surname }} {{ article.data.year }}
-            </div>
-            <a class="body-1" v-line-clamp="2"
-              @click="onDrawerListItemTitleClicked(article.id)">
-              {{ article.data.title }}
-            </a>
-            <div v-if="isDrawerListItemStatsVisible(article)"
-              class="caption text-truncate" style="display: flex;">
-              <span class="text-truncate" style="margin-right: auto;">
-                {{ article.data.venue ? article.data.venue.name : '' }}
-              </span>
-              <span class="mx-3">References {{ article.nReferences }}</span>
-              <span class="ml-3">Cited by {{ article.nCitedBys }}</span>
-            </div>
-            <v-divider class="my-2"></v-divider>
-          </v-flex>
-          <pv-load-more-combo v-bind="drawerPageQueryStatus"
-            :height="drawerListBottomOffset" @load-more="onDrawerListLoadMore">
-          </pv-load-more-combo>
-        </v-layout>
-      </v-container-with-scroll>
+        :page-query="drawerPageQuery"
+        @click-item-title="onDrawerListItemTitleClicked">
+      </pv-vis-drawer-query-list>
     </v-navigation-drawer>
     <div v-if="isGraphViewVisible" ref="visContainer" class="vis-container"
       @click="onCanvasClicked">
@@ -84,34 +57,22 @@ import { VisGraph, VisLink } from './pvvismodels.js'
 import ExpandableText from './ExpandableText.vue'
 import PvArticleForm from './PvArticleForm.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
-import PvLoadMoreCombo from './PvLoadMoreCombo.vue'
 import PvVisCard from './PvVisCard.vue'
 import PvVisDrawerEditableArticle from './PvVisDrawerEditableArticle.vue'
+import PvVisDrawerQueryList from './PvVisDrawerQueryList.vue'
 import theArticlePool from './pvarticlepool.js'
 import Vec from './vec.js'
-import withScroll from './withscroll.js'
-
-const VContainerWithScroll = withScroll('v-container')
 
 export default {
   name: 'PvVisView',
-  components: { ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvLoadMoreCombo, PvVisCard, PvVisDrawerEditableArticle, VContainerWithScroll },
+  components: { ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerEditableArticle, PvVisDrawerQueryList },
   props: {
     collectionArticleIds: Array,
     drawerPageQuery: Object,
-    // graph: new Graph(),
     isDrawerOpen: false
   },
   data () {
     return {
-      drawerArticles: [],
-      drawerListBottomOffset: 64,
-      drawerPageQueryStatus: {
-        isDone: false,
-        isEmpty: false,
-        isLoadingMore: false,
-        isTotalCountVisible: false
-      },
       drawerWidth: 450,
       hoveringVisNode: null,
       selectedDrawerArticleId: null,
@@ -211,17 +172,6 @@ export default {
     },
     isDrawerListEmptyVisible () {
       return this.drawerPageQueryStatus.isEmpty
-    },
-    isDrawerListLoadMoreVisible () {
-      return !this.drawerPageQueryStatus.isLoadingMore &&
-        !this.drawerPageQueryStatus.isEmpty &&
-        !this.drawerPageQueryStatus.isDone
-    },
-    isDrawerListLoadingMoreVisible () {
-      return this.drawerPageQueryStatus.isLoadingMore
-    },
-    isDrawerListLoadedAllVisible () {
-      return this.drawerPageQueryStatus.isDone
     },
     isDrawerOpenComputed: {
       set (value) {
@@ -615,12 +565,6 @@ export default {
         }
       })
     },
-    isDrawerListItemStatsVisible (article) {
-      const isVenue = article.data.venue ? article.data.venue.name : false
-      return isVenue ||
-        !_.isNil(article.nReferences) ||
-        !_.isNil(article.nCitedBys)
-    },
     isVisNodeSelected (visNode) {
       return _.includes(this.selectedVisNodes, visNode)
     },
@@ -667,33 +611,8 @@ export default {
         setTimeout(
           () => { this.hoveringVisNode = null }, this.visConfig.hoverLinger)
     },
-    async onDrawerListLoadMore () {
-      this.drawerPageQueryStatus = {
-        ...this.drawerPageQueryStatus,
-        isLoadingMore: true,
-        isTotalCountVisible: true
-      }
-      const currArtIds = _.map(this.drawerArticles, art => art.id)
-      const nextArtIds = [ ...currArtIds, ...await this.drawerPageQuery.next() ]
-      this.drawerArticles =
-        await Promise.all(
-          _.map(nextArtIds, artId => theArticlePool.getMeta(artId)))
-      this.drawerPageQueryStatus = {
-        isDone: this.drawerPageQuery.isDone(),
-        isEmpty: this.drawerPageQuery.isEmpty(),
-        isLoadingMore: false,
-        isTotalCountVisible: true
-      }
-    },
     onDrawerListItemTitleClicked (artId) {
       this.selectedDrawerArticleId = artId
-    },
-    onDrawerListScroll ({ target }) {
-      const isAtBottom =
-        target.scrollHeight - target.scrollTop === target.offsetHeight
-      if (isAtBottom && !this.drawerPageQuery.isDone()) {
-        this.onDrawerListLoadMore()
-      }
     },
     trace (value) {
       console.log(value)
@@ -701,28 +620,11 @@ export default {
     }
   },
   watch: {
-    async drawerPageQuery (curr) {
+    drawerPageQuery (curr) {
       if (curr) {
         this.isDrawerOpenComputed = true
         this.selectedVisNodes = []
         this.selectedDrawerArticleId = null
-        this.drawerArticles = []
-        this.drawerPageQueryStatus = {
-          isDone: false,
-          isEmpty: false,
-          isLoadingMore: true,
-          isTotalCountVisible: false
-        }
-        const artIds = await curr.next()
-        this.drawerArticles =
-          await Promise.all(
-            _.map(artIds, artId => theArticlePool.getMeta(artId)))
-        this.drawerPageQueryStatus = {
-          isDone: this.drawerPageQuery.isDone(),
-          isEmpty: this.drawerPageQuery.isEmpty(),
-          isLoadingMore: false,
-          isTotalCountVisible: true
-        }
       }
     },
     visGraph (curr, prev) {

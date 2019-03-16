@@ -178,7 +178,11 @@ class ArticlePool {
           iPage * nArticlesPerPage >= totalArticleCount
       },
       isEmpty () { return totalArticleCount === 0 },
-      getTotalArticleCount () { return totalArticleCount }
+      getTotalArticleCount () { return totalArticleCount },
+      async start () {
+        iPage = 0
+        return this.next()
+      }
     })
   }
 
@@ -236,11 +240,12 @@ class ArticlePool {
 }
 
 class PageQuery {
-  constructor ({ next, isDone, isEmpty, getTotalArticleCount }) {
+  constructor ({ next, isDone, isEmpty, getTotalArticleCount, start }) {
     this.next = next
     this.isDone = isDone
     this.isEmpty = isEmpty
     this.getTotalArticleCount = getTotalArticleCount
+    this.start = start
   }
 }
 
