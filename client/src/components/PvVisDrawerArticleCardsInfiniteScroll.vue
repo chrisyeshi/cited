@@ -38,6 +38,7 @@ export default {
     getCardReferenceColor: Function
   },
   data () {
+    this.currArticlesPromise = null
     return {
       articleSliceCount: this.articleCountPerLoad,
       bottomOffset: 64,
@@ -63,9 +64,16 @@ export default {
   methods: {
     async fetchArticles () {
       this.loadStatus = { ...this.loadStatus, isLoadingMore: true }
-      this.currArticles =
-        await Promise.all(
+      const currArticlesPromise =
+        Promise.all(
           _.map(this.currArtIds, artId => theArticlePool.getMeta(artId)))
+      this.currArticlesPromise = currArticlesPromise
+      const currArticles = await currArticlesPromise
+      if (currArticlesPromise !== this.currArticlesPromise) {
+        // if another async operation has started
+        return
+      }
+      this.currArticles = currArticles
       this.loadStatus = {
         isDone: this.articleIds.length !== 0 &&
           this.articleIds.length === this.currArticles.length,
