@@ -160,16 +160,38 @@ export class SourceArticle {
     this.sources = sources
   }
 
-  static merge (a, b) {
-    if (_.isNil(a) || _.isNil(b)) {
-      return a || b
-    }
+  static fromExtern (artId, externSrcArt, refArtIds) {
     return new SourceArticle(
-      Article.merge(a.article, b.article) /* article */,
-      _.mergeWith(
-        a.sources,
-        b.sources,
-        (x, y) => Math.max(x || 0, y || 0)) /* sources */)
+      new Article(
+        artId /* id */,
+        'paper' /* type */,
+        new Paper(
+          externSrcArt.data.title /* title */,
+          externSrcArt.data.abstract /* abstract */,
+          externSrcArt.data.year /* year */,
+          externSrcArt.data.authors /* authors */,
+          externSrcArt.data.venue /* venue */),
+        externSrcArt.nReferences /* nReferences */,
+        refArtIds /* references */,
+        externSrcArt.nCitedBys /* nCitedBys */,
+        externSrcArt.externs /* externs */) /* article */,
+      externSrcArt.sources /* sources */)
+  }
+
+  static merge (a, b) {
+    return _.isNil(a) || _.isNil(b)
+      ? a || b
+      : new SourceArticle(
+        Article.merge(a.article, b.article) /* article */,
+        _.mergeWith(
+          a.sources,
+          b.sources,
+          (x, y) => Math.max(x || 0, y || 0)) /* sources */)
+  }
+
+  static mergeExtern (srcArt, externSrcArt, refArtIds) {
+    return SourceArticle.merge(
+      srcArt, SourceArticle.fromExtern(srcArt.id, externSrcArt, refArtIds))
   }
 
   get id () {

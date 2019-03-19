@@ -1,62 +1,22 @@
 import _ from 'lodash'
 import queryArxiv from './arxivwrapper.js'
-import { AffiliatedAuthor, Article, Paper, SourceArticle, Venue } from './pvmodels.js'
+import { AffiliatedAuthor, Paper, SourceArticle, Venue } from './pvmodels.js'
 
 class ArticlePool {
   constructor (sourceArticles = []) {
     this.sourceArticles = sourceArticles
   }
 
-  get articles () {
-    return _.map(this.sourceArticles, srcArt => srcArt.article)
-  }
-
-  createSourceArticleFromArxivEntry (arxivEntry) {
-    const arxivId = _.split(arxivEntry.id[0], /abs\/|v\d/)[1]
-    const authors =
-      _.map(
-        arxivEntry.author,
-        author => AffiliatedAuthor.fromString(author.name[0]))
-    const year = (new Date(arxivEntry.published[0])).getFullYear()
-    const articleId =
-      _.property('id')(this.findSourceArticle({ arxiv: arxivId })) ||
-      ArticlePool.createArticleId('paper', authors[0].surname, year)
-    return new SourceArticle(
-      new Article(
-        articleId /* id */,
-        'paper' /* type */,
-        new Paper(
-          arxivEntry.title[0] /* title */,
-          arxivEntry.summary[0] /* abstract */,
-          year /* year */,
-          authors /* authors */,
-          null /* venue */),
-        null /* nReferences */,
-        null /* references */,
-        null /* nCitedBys */,
-        { arxiv: arxivId } /* externs */) /* article */,
-      { arxiv: Date.now() } /* sources */)
-  }
-
   static createArticleId (type, firstAuthorSurname, year) {
     return `${type}-${_.toLower(firstAuthorSurname)}${year}-${Math.random().toString(36).replace('0.', '').slice(0, 8)}`
   }
 
+  get articles () {
+    return _.map(this.sourceArticles, srcArt => srcArt.article)
+  }
+
   findSourceArticle (externs) {
-    for (let provider in externs) {
-      const id = externs[provider]
-      const srcArt =
-        _.find(
-          this.sourceArticles,
-          srcArt => {
-            const providerId = srcArt.article.externs[provider]
-            return providerId && id && providerId === id
-          })
-      if (srcArt) {
-        return srcArt
-      }
-    }
-    return null
+    return findSourceArticle(this.sourceArticles, externs)
   }
 
   getSourceArticle (artId) {
@@ -67,82 +27,80 @@ class ArticlePool {
     return this.getSourceArticle(artId).article
   }
 
-  async updateSourceArticleWithSemanticScholar (artId) {
+  insertExternSourceArticle (externSrcArt) {
+    const refArtIds =
+      externSrcArt.references
+        ? _.map(
+          externSrcArt.references,
+          subExternSrcArt => this.insertExternSourceArticle(subExternSrcArt))
+        : null
+    const citedByArtIds =
+      externSrcArt.citedBys
+        ? _.map(
+          externSrcArt.citedBys,
+          subExternSrcArt => this.insertExternSourceArticle(subExternSrcArt))
+        : null
+    const existingSrcArt = this.findSourceArticle(externSrcArt.externs)
+    let resArtId = null
+    if (existingSrcArt) {
+      // merge with existing source article
+      const srcArt =
+        SourceArticle.mergeExtern(
+          existingSrcArt, externSrcArt, refArtIds)
+      const srcArtIndex = _.indexOf(this.sourceArticles, existingSrcArt)
+      this.sourceArticles =
+        Object.assign([], this.sourceArticles, { [srcArtIndex]: srcArt })
+      resArtId = srcArt.id
+    } else {
+      // create new source article
+      const firstAuthor = _.first(externSrcArt.data.authors)
+      const firstAuthorSurname = firstAuthor ? firstAuthor.surname : 'unknown'
+      // TODO: create article id in SourceArticle static function
+      const artId =
+        ArticlePool.createArticleId(
+          'paper', firstAuthorSurname, externSrcArt.data.year)
+      const srcArt =
+        SourceArticle.fromExtern(artId, externSrcArt, refArtIds, citedByArtIds)
+      this.sourceArticles = [ ...this.sourceArticles, srcArt ]
+      resArtId = srcArt.id
+    }
+    // add this article as a reference to the citedBy articles
+    _.forEach(citedByArtIds, artId => {
+      const citedBySrcArt = this.getSourceArticle(artId)
+      citedBySrcArt.article.references =
+        _.union(citedBySrcArt.article.references, [ resArtId ])
+    })
+    return resArtId
+  }
+
+  insertExternSourceArticles (externSrcArts) {
+    return _.map(
+      externSrcArts,
+      externSrcArt => this.insertExternSourceArticle(externSrcArt))
+  }
+
+  async updateSourceArticleWithExterns (artId) {
     const srcArt = this.getSourceArticle(artId)
-    if (srcArt.sources.semanticScholar) {
+    const externSrcArt =
+      await getExternSourceArticle(srcArt.article.externs, srcArt.sources)
+    if (_.isNil(externSrcArt)) {
       return
     }
-    const createSourceArticle =
-      ({ articleId, entry, refIds, sources }) => {
-        const authors =
-          _.map(
-            entry.authors,
-            author => AffiliatedAuthor.fromString(author.name))
-        const externs = _.pickBy({
-          arxiv: entry.arxivId,
-          doi: entry.doi,
-          semanticScholar: entry.paperId
-        })
-        const srcArt = this.findSourceArticle(externs)
-        const artId =
-          articleId ||
-          (srcArt ? srcArt.id : null) ||
-          (entry.error
-            ? null
-            : ArticlePool.createArticleId(
-              'paper',
-              _.first(authors) ? _.first(authors).surname : 'noauthor',
-              entry.year))
-        return new SourceArticle(
-          new Article(
-            artId /* id */,
-            'paper' /* type */,
-            new Paper(
-              entry.title /* title */,
-              null /* abstract */,
-              entry.year /* year */,
-              authors /* authors */,
-              entry.venue ? new Venue(entry.venue) : null /* venue */),
-            entry.references
-              ? entry.references.length
-              : null /* nReferences */,
-            refIds || null /* references */,
-            entry.citations ? entry.citations.length : null /* nCitedBys */,
-            externs /* externs */) /* article */,
-          sources || {} /* sources */)
-      }
-    const entry = await querySemanticScholar(srcArt.article.externs)
-    const refSrcArts =
-      _.map(entry.references, ref => createSourceArticle({ entry: ref }))
-    const citedBySrcArts =
-      _.map(
-        entry.citations, citedBy => createSourceArticle({
-          entry: citedBy,
-          refIds: [ artId ]
-        }))
-    const newSrcArt = createSourceArticle({
-      articleId: artId,
-      entry: entry,
-      refIds: _.map(refSrcArts, srcArt => srcArt.id),
-      sources: { semanticScholar: Date.now() }
-    })
-    this.setSourceArticles(
-      ArticlePool.unionSourceArticles(
-        this.sourceArticles, [ newSrcArt, ...refSrcArts, ...citedBySrcArts ]))
+    this.insertExternSourceArticle(externSrcArt)
   }
 
   async getMeta (artId) {
-    await this.updateSourceArticleWithSemanticScholar(artId)
+    await this.updateSourceArticleWithExterns(artId)
     return this.getArticle(artId)
   }
 
   async getReferenceIds (artId) {
-    await this.updateSourceArticleWithSemanticScholar(artId)
+    await this.updateSourceArticleWithExterns(artId)
     return this.getArticle(artId).references || []
   }
 
   async getCitedByIds (artId) {
-    await this.updateSourceArticleWithSemanticScholar(artId)
+    await this.updateSourceArticleWithExterns(artId)
     const srcArts =
       _.filter(
         this.sourceArticles,
@@ -163,15 +121,13 @@ class ArticlePool {
           start: start,
           maxResults: maxResults
         })
-        totalArticleCount = _.toNumber(arxivRes.feed['opensearch:totalResults'][0]._)
-        const srcArts =
-          _.map(
-            arxivRes.feed.entry,
-            entry => thePool.createSourceArticleFromArxivEntry(entry))
-        thePool.sourceArticles =
-          ArticlePool.unionSourceArticles(thePool.sourceArticles, srcArts)
+        totalArticleCount =
+          _.toNumber(arxivRes.feed['opensearch:totalResults'][0]._)
+        const externSrcArts =
+          _.map(arxivRes.feed.entry, createExternSourceArticleFromArxivEntry)
+        const artIds = thePool.insertExternSourceArticles(externSrcArts)
         ++iPage
-        return _.map(srcArts, srcArt => srcArt.id)
+        return artIds
       },
       isDone () {
         return totalArticleCount !== 0 &&
@@ -190,52 +146,75 @@ class ArticlePool {
     return !_.isNil(this.getSourceArticle(artId))
   }
 
+  // TODO: need to change this to the new design of article pool, currenly only used in PvArticleCombo.vue for autocompletion
   get metas () {
-    return _.map(this.articles, art => {
-      const { references, ...meta } = art
-      return meta
-    })
+    throw new Error(
+      'TODO: need to change this to the new design of article pool, currenly only used in PvArticleCombo.vue for autocompletion')
   }
 
-  async query (text) {
-    const arxivRes = await queryArxiv({ searchQuery: text })
-    const srcArts =
-      _.map(
-        arxivRes.feed.entry,
-        entry => this.createSourceArticleFromArxivEntry(entry))
-    this.setSourceArticles(
-      ArticlePool.unionSourceArticles(this.sourceArticles, srcArts))
-    return _.map(srcArts, srcArt => srcArt.id)
-  }
-
+  // TODO: need to change this to the new design of article pool, currenly only used in ParseVis.vue after an article is edited
   setArticle (newArt) {
-    if (_.isNil(newArt.id)) {
-      throw new Error('TODO: assign new article id')
-    }
-    const index =
-      _.findIndex(this.sourceArticles, srcArt => srcArt.id === newArt.id)
-    if (index === -1) {
-      const newSrcArt = new SourceArticle(newArt, { userEdited: Date.now() })
-      this.setSourceArticles([ ...this.sourceArticles, newSrcArt ])
-    } else {
-      const oldSrcArt = this.sourceArticles[index]
-      const newSrcArt =
-        new SourceArticle(
-          newArt, { ...oldSrcArt.sources, userEdited: Date.now() })
-      this.setSourceArticles(
-        [ ..._.without(this.sourceArticles, oldSrcArt), newSrcArt ])
-    }
+    throw new Error(
+      'TODO: need to change this to the new design of article pool, currenly only used in ParseVis.vue after an article is edited')
   }
 
   setSourceArticles (srcArts) {
     this.sourceArticles = srcArts
   }
+}
 
-  static unionSourceArticles (a, b) {
-    const aObj = _.keyBy(a, 'id')
-    const bObj = _.keyBy(b, 'id')
-    const union = _.mergeWith(aObj, bObj, (x, y) => SourceArticle.merge(x, y))
-    return _.values(union)
+class ExternSourceArticle {
+  constructor (
+    sources, type, data, nReferences, references, nCitedBys, citedBys,
+    externs) {
+    this.sources = sources
+    this.type = type
+    this.data = data
+    this.nReferences = nReferences
+    this.references = references
+    this.nCitedBys = nCitedBys
+    this.citedBys = citedBys
+    this.externs = externs
+  }
+
+  static merge (...externSrcArts) {
+    if (externSrcArts.length === 0) {
+      throw new Error('there is not enough source articles to merge')
+    }
+    if (externSrcArts.length === 1) {
+      return _.first(externSrcArts)
+    }
+    const merged =
+      ExternSourceArticle.mergePair(externSrcArts[0], externSrcArts[1])
+    return ExternSourceArticle.merge(merged, ..._.slice(externSrcArts, 2))
+  }
+
+  static mergePair (a, b) {
+    return new ExternSourceArticle(
+      _.mergeWith(
+        a.sources,
+        b.sources,
+        (x, y) => Math.max(x || 0, y || 0)) /* sources */,
+      a.type || b.type /* type */,
+      new Paper(
+        a.data.title || b.data.title /* title */,
+        a.data.abstract || b.data.abstract /* abstract */,
+        a.data.year || b.data.year /* year */,
+        a.data.authors || b.data.authors /* authors */,
+        a.data.venue || b.data.venue /* venue */) /* data */,
+      _.isNil(a.nReferences) && _.isNil(b.nReferences)
+        ? null
+        : Math.max(a.nReferences, b.nReferences) /* nReferences */,
+      _.size(a.references) > _.size(b.references)
+        ? a.references
+        : b.references /* references */,
+      _.isNil(a.nCitedBys) && _.isNil(b.nCitedBys)
+        ? null
+        : Math.max(a.nCitedBys, b.nCitedBys) /* nCitedBys */,
+      _.size(a.citedBys) > _.size(b.citedBys)
+        ? a.citedBys
+        : b.citedBys /* citedBys */,
+      _.merge(a.externs, b.externs) /* externs */)
   }
 }
 
@@ -247,6 +226,114 @@ class PageQuery {
     this.getTotalArticleCount = getTotalArticleCount
     this.start = start
   }
+}
+
+function createExternSourceArticleFromArxivEntry (entry) {
+  const arxivId = _.split(entry.id[0], /abs\/|v\d/)[1]
+  const authors =
+    _.map(
+      entry.author,
+      author => AffiliatedAuthor.fromString(author.name[0]))
+  const year = (new Date(entry.published[0])).getFullYear()
+  return new ExternSourceArticle(
+    { arxiv: Date.now() } /* sources */,
+    'paper' /* type */,
+    new Paper(
+      entry.title[0] /* title */,
+      entry.summary[0] /* abstract */,
+      year /* year */,
+      authors /* authors */,
+      null /* venue */),
+    null /* nReferences */,
+    null /* references */,
+    null /* nCitedBys */,
+    null /* citedBys */,
+    { arxiv: arxivId } /* externs */)
+}
+
+function createExternSourceArticleFromSemanticScholarEntry (entry) {
+  const authors =
+    _.map(
+      entry.authors,
+      author => AffiliatedAuthor.fromString(author.name))
+  const externs = _.pickBy({
+    arxiv: entry.arxivId,
+    doi: entry.doi,
+    semanticScholar: entry.paperId
+  })
+  return new ExternSourceArticle(
+    { semanticScholar: Date.now() } /* sources */,
+    'paper' /* type */,
+    new Paper(
+      entry.title /* title */,
+      null /* abstract */,
+      entry.year /* year */,
+      authors /* authors */,
+      entry.venue ? new Venue(entry.venue) : null /* venue */),
+    entry.references
+      ? entry.references.length
+      : null /* nReferences */,
+    entry.references
+      ? _.map(
+        entry.references, createExternSourceArticleFromSemanticScholarEntry)
+      : null /* references */,
+    entry.citations ? entry.citations.length : null /* nCitedBys */,
+    entry.citations
+      ? _.map(
+        entry.citations, createExternSourceArticleFromSemanticScholarEntry)
+      : null /* citedBys */,
+    externs /* externs */)
+}
+
+function findSourceArticle (srcArts, externs) {
+  for (let provider in externs) {
+    const id = externs[provider]
+    const srcArt = _.find(srcArts, srcArt => {
+      const providerId = srcArt.article.externs[provider]
+      return providerId && id && providerId === id
+    })
+    if (srcArt) {
+      return srcArt
+    }
+  }
+  return null
+}
+
+async function getExternSourceArticle (externs, sources) {
+  const externSrcArtsPromises =
+    _.filter([
+      sources.arxiv ? null : getExternSourceArticleFromArxiv(externs),
+      sources.semanticScholar
+        ? null
+        : getExternSourceArticleFromSemanticScholar(externs)
+    ])
+  const externSrcArtsPromise = Promise.all(externSrcArtsPromises)
+  const externSrcArts = _.filter(await externSrcArtsPromise)
+  if (_.isEmpty(externSrcArts)) {
+    return null
+  }
+  const merged = ExternSourceArticle.merge(...externSrcArts)
+  return merged
+}
+
+async function getExternSourceArticleFromArxiv (externs) {
+  if (!externs.arxiv) {
+    return null
+  }
+  const res = await queryArxiv({ idList: [ externs.arxiv ] })
+  return createExternSourceArticleFromArxivEntry(res.feed.entry[0])
+}
+
+async function getExternSourceArticleFromSemanticScholar (externs) {
+  if (!externs.arxiv && !externs.semanticScholar && !externs.doi) {
+    return null
+  }
+  const entry = await querySemanticScholar(externs)
+  if (entry.error) {
+    return null
+  }
+  const externSrcArt = createExternSourceArticleFromSemanticScholarEntry(entry)
+  return externSrcArt
 }
 
 async function querySemanticScholar ({ arxiv, doi, semanticScholar }) {
