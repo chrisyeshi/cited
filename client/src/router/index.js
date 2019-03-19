@@ -47,7 +47,7 @@ export default new Router({
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
     { path: '/papersight', component: PaperSight },
-    { path: '/parsevis', component: ParseVis },
+    { path: '/parsevis/:input?', component: ParseVis, props: true },
     { path: '*', component: NotFound }
   ]
 })

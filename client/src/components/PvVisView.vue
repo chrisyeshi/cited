@@ -68,6 +68,7 @@ export default {
   components: { ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerEditableArticle, PvVisDrawerQueryList },
   props: {
     collectionArticleIds: Array,
+    currentDrawerArticleId: String,
     drawerPageQuery: Object,
     isDrawerOpen: false
   },
@@ -75,7 +76,6 @@ export default {
     return {
       drawerWidth: 450,
       hoveringVisNode: null,
-      selectedDrawerArticleId: null,
       selectedVisNodes: [],
       visConfig: {
         card: {
@@ -133,9 +133,7 @@ export default {
       }
     },
     drawerArticleId () {
-      return this.isDrawerVisNode
-        ? _.first(this.selectedVisNodes).articleId
-        : this.selectedDrawerArticleId
+      return this.currentDrawerArticleId
     },
     emptyViewMessage () {
       return this.articleEditable
@@ -164,7 +162,7 @@ export default {
       }
     },
     isDrawerArticle () {
-      return this.isDrawerVisNode || this.selectedDrawerArticleId
+      return this.isDrawerVisNode || this.currentDrawerArticleId
     },
     isDrawerEmpty () { return !this.isDrawerArticle && !this.isDrawerList },
     isDrawerList () {
@@ -576,11 +574,10 @@ export default {
     },
     onDrawerArticleSelected (artId) {
       this.selectedVisNodes = []
-      this.selectedDrawerArticleId = artId
+      this.$router.push(`/parsevis/${artId}`)
     },
     onDrawerArticleUnselected () {
-      this.selectedVisNodes = []
-      this.selectedDrawerArticleId = null
+      this.$router.go(-1)
     },
     onCanvasClicked () {
       this.selectedVisNodes = []
@@ -597,6 +594,7 @@ export default {
       } else {
         // single selection
         this.selectedVisNodes = [ visNode ]
+        this.$router.push(`/parsevis/${visNode.articleId}`)
         this.isDrawerOpenComputed = true
       }
     },
@@ -610,7 +608,7 @@ export default {
           () => { this.hoveringVisNode = null }, this.visConfig.hoverLinger)
     },
     onDrawerListItemTitleClicked (artId) {
-      this.selectedDrawerArticleId = artId
+      this.$router.push(`/parsevis/${artId}`)
     },
     trace (value) {
       console.log(value)
@@ -618,11 +616,14 @@ export default {
     }
   },
   watch: {
-    drawerPageQuery (curr) {
-      if (curr) {
-        this.isDrawerOpenComputed = true
-        this.selectedVisNodes = []
-        this.selectedDrawerArticleId = null
+    drawerPageQuery: {
+      immediate: true,
+      handler (curr) {
+        if (curr) {
+          this.isDrawerOpenComputed = true
+          this.selectedVisNodes = []
+          this.selectedDrawerArticleId = null
+        }
       }
     },
     visGraph (curr, prev) {

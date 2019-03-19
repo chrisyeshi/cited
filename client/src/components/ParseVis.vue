@@ -16,6 +16,7 @@
     </v-toolbar>
     <pv-vis-view v-if="isVisViewVisible"
       :collection-article-ids="collectionArticleIds"
+      :current-drawer-article-id="currArticleId"
       :isDrawerOpen.sync="isDrawerOpen"
       :drawerPageQuery="pageQuery"
       @add-to-vis="onAddArticleToGraph"
@@ -57,9 +58,13 @@ export default {
     PvVisView,
     SignInButton
   },
+  props: {
+    input: String
+  },
   data () {
     return {
       collectionArticleIds: [],
+      currArticleId: null,
       enableToolbarDrawerIcon: false,
       isDrawerOpen: false,
       pageQuery: null,
@@ -107,7 +112,7 @@ export default {
       this.collectionArticleIds = _.union(this.collectionArticleIds, [ artId ])
     },
     search (text) {
-      this.pageQuery = theArticlePool.getPageQuery(text)
+      this.$router.push(`/parsevis/${text}`)
     },
     trace (value) {
       console.log(value)
@@ -121,6 +126,26 @@ export default {
     },
     toListView () {
       this.$store.commit('parseVis/set', { contentState: 'list-view' })
+    }
+  },
+  watch: {
+    input: {
+      immediate: true,
+      handler (curr) {
+        if (!curr) {
+          this.searchText = ''
+          this.currArticleId = null
+          return
+        }
+        const isArtId = theArticlePool.includes(curr)
+        if (isArtId) {
+          this.currArticleId = curr
+        } else {
+          this.searchText = curr
+          this.pageQuery = theArticlePool.getPageQuery(curr)
+          this.currArticleId = null
+        }
+      }
     }
   }
 }
