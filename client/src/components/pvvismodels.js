@@ -162,6 +162,29 @@ export class VisGraph {
     })
   }
 
+  static setStatus (visGraph, statusesMap) {
+    const unchangingVisNodesMap =
+      _.omitBy(
+        visGraph.internalVisNodesMap,
+        (visNode, artId) => _.has(statusesMap, artId))
+    const changingVisNodes = _.mapValues(statusesMap, (status, artId) => {
+      const visNode = visGraph.internalVisNodesMap[artId]
+      return new InternalVisNode(
+        artId /* articleId */,
+        visNode.colRow /* colRow */,
+        visNode.inGraphReferenceIds /* inGraphReferenceIds */,
+        visNode.inGraphCitedByIds /* inGraphCitedByIds */,
+        visNode.inGraphVisReferenceIds /* inGraphVisReferenceIds */,
+        visNode.inGraphVisCitedByIds /* inGraphVisCitedByIds */,
+        status /* visStatus */)
+    })
+    return new VisGraph({ ...unchangingVisNodesMap, ...changingVisNodes })
+  }
+
+  get articleIds () {
+    return _.keys(this.internalVisNodesMap)
+  }
+
   getSubVisGraph (subArtIds) {
     const subArtIdsMap = _.keyBy(subArtIds)
     const subInternalVisNodesMap =

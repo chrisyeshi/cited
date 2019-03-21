@@ -144,7 +144,8 @@ export default {
       const hoveringArtId = this.hoveringVisNodeId
       const selectedArtIds = this.selectedVisNodeIds
       const artIds = _.uniq(_.filter([ hoveringArtId, ...selectedArtIds ]))
-      const visNodes = _.map(artIds, artId => this.visGraph.getVisNode(artId))
+      const visNodes =
+        _.map(artIds, artId => this.baseVisGraph.getVisNode(artId))
       const focusedVisNodes = _.flatten(_.map(visNodes, visNode => ([
         visNode, ...visNode.inGraphReferences, ...visNode.inGraphCitedBys
       ])))
@@ -198,10 +199,30 @@ export default {
         ...this.getVerticalGapHorizontalPaths(this.visLinks),
         ...this.getCrossColumnPaths(this.visLinks)
       ]
+    },
+    visGraph () {
+      const hoveringStatus =
+        this.hoveringVisNodeId &&
+        { [this.hoveringVisNodeId]: { hovering: true } }
+      const selectedStatuses =
+        _.mapValues(
+          _.keyBy(this.selectedVisNodeIds),
+          (value, artId) => ({ selected: true }))
+      const greyedOutVisNodeIds =
+        _.isEmpty(this.focusedVisNodeIds)
+          ? []
+          : _.without(this.baseVisGraph.articleIds, ...this.focusedVisNodeIds)
+      const greyedOutStatuses =
+        _.mapValues(
+          _.keyBy(greyedOutVisNodeIds),
+          (value, artId) => ({ greyedOut: true }))
+      const statusesMap =
+        _.merge(hoveringStatus, selectedStatuses, greyedOutStatuses)
+      return VisGraph.setStatus(this.baseVisGraph, statusesMap)
     }
   },
   asyncComputed: {
-    visGraph: {
+    baseVisGraph: {
       default: new VisGraph([]),
       async get () {
         return VisGraph.fromArticleIds(
@@ -262,15 +283,14 @@ export default {
       return this.getCardSideColor(nInGraphCitedBys)
     },
     getCardBackgroundColor (visNode) {
-      return this.isVisNodeSelected(visNode)
+      return visNode.visStatus.selected
         ? this.visConfig.cardSelectedBackgroundColor
         : undefined
     },
     getCardClasses (visNode) {
-      if (this.isHoveringVisNode(visNode) || this.isVisNodeSelected(visNode)) {
-        return [ `elevation-${this.visConfig.hoveringCardElevation}` ]
-      }
-      return []
+      return visNode.visStatus.hovering
+        ? [ `elevation-${this.visConfig.hoveringCardElevation}` ]
+        : []
     },
     getCardLeft (iCol) {
       const sumOfSpacings = iCol * this.visConfig.cardHorizontalSpacing
@@ -299,10 +319,9 @@ export default {
     getCardStyle (visNode) {
       return {
         cursor: 'pointer',
-        opacity:
-          this.isVisNodeFocused(visNode)
-            ? 1.0
-            : this.visConfig.cardGreyedOutOpacity,
+        opacity: visNode.visStatus.greyedOut
+          ? this.visConfig.cardGreyedOutOpacity
+          : 1.0,
         position: 'absolute',
         left: `${this.getCardLeft(visNode.col)}em`,
         top: `${this.getCardTop(visNode.row)}em`,
@@ -562,17 +581,6 @@ export default {
         }
       })
     },
-    isHoveringVisNode (visNode) {
-      return this.hoveringVisNodeId === visNode.articleId
-    },
-    isVisNodeSelected (visNode) {
-      return _.includes(this.selectedVisNodeIds, visNode.articleId)
-    },
-    isVisNodeFocused (visNode) {
-      return this.focusedVisNodeIds.length === 0
-        ? true
-        : _.includes(this.focusedVisNodeIds, visNode.articleId)
-    },
     onAddDrawerArticleToVis (artId) {
       this.$emit('add-to-vis', artId)
     },
@@ -582,7 +590,7 @@ export default {
     onCardClicked (event, visNode) {
       if (event.metaKey || event.ctrlKey || event.shiftKey) {
         // multiple selection
-        if (this.isVisNodeSelected(visNode)) {
+        if (visNode.visStatus.selected) {
           this.selectedVisNodeIds =
             _.without(this.selectedVisNodeIds, visNode.articleId)
         } else {
