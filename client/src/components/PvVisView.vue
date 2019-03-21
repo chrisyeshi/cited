@@ -75,8 +75,8 @@ export default {
   data () {
     return {
       drawerWidth: 450,
-      hoveringVisNode: null,
-      selectedVisNodes: [],
+      hoveringVisNodeId: null,
+      selectedVisNodeIds: [],
       visConfig: {
         card: {
           borderRadius: 0.65,
@@ -140,13 +140,15 @@ export default {
         ? 'Add articles to visualization'
         : 'Search articles to visualize'
     },
-    focusedVisNodes () {
-      const visNodes =
-        _.uniq(_.filter([ this.hoveringVisNode, ...this.selectedVisNodes ]))
-      const focusedVisNodes = _.uniq(_.flatten(_.map(visNodes, visNode => ([
+    focusedVisNodeIds () {
+      const hoveringArtId = this.hoveringVisNodeId
+      const selectedArtIds = this.selectedVisNodeIds
+      const artIds = _.uniq(_.filter([ hoveringArtId, ...selectedArtIds ]))
+      const visNodes = _.map(artIds, artId => this.visGraph.getVisNode(artId))
+      const focusedVisNodes = _.flatten(_.map(visNodes, visNode => ([
         visNode, ...visNode.inGraphReferences, ...visNode.inGraphCitedBys
-      ]))))
-      return focusedVisNodes
+      ])))
+      return _.uniq(_.map(focusedVisNodes, visNode => visNode.articleId))
     },
     gridConfig () {
       const grid = this.visGraph.grid
@@ -179,7 +181,7 @@ export default {
         return this.isDrawerOpen
       }
     },
-    isDrawerVisNode () { return this.selectedVisNodes.length === 1 },
+    isDrawerVisNode () { return this.selectedVisNodeIds.length === 1 },
     isEmptyViewVisible () { return this.collectionArticleIds.length === 0 },
     isGraphViewVisible () { return this.collectionArticleIds.length !== 0 },
     maxReferenceLevel () { return Math.max(0, this.visGraph.grid.length - 1) },
@@ -209,32 +211,30 @@ export default {
     visLinks: {
       default: [],
       async get () {
-        if (this.focusedVisNodes.length === 0) {
+        if (this.focusedVisNodeIds.length === 0) {
           return this.visGraph.visLinks
         }
         const focusedVisGraph =
-          this.visGraph.getSubVisGraph(this.focusedVisNodes)
+          this.visGraph.getSubVisGraph(this.focusedVisNodeIds)
         const focusedVisLinks = _.map(focusedVisGraph.visLinks, visLink => {
-          const reference = this.visGraph.getVisNode(visLink.reference.articleId)
-          const citedBy = this.visGraph.getVisNode(visLink.citedBy.articleId)
           return new VisLink(
-            reference,
-            citedBy,
             visLink.weight,
+            () => this.visGraph.getVisNode(visLink.referenceId),
+            () => this.visGraph.getVisNode(visLink.citedById),
             this.getPathColorByWeight(visLink.weight),
             this.visConfig.path.opacity)
         })
         const otherVisLinks =
           _.differenceWith(
             this.visGraph.visLinks, focusedVisLinks, (aLink, bLink) => {
-              return aLink.reference === bLink.reference &&
-                aLink.citedBy === bLink.citedBy
+              return aLink.referenceId === bLink.referenceId &&
+                aLink.citedById === bLink.citedById
             })
         const greyedOutVisLinks = _.map(otherVisLinks, visLink => {
           return new VisLink(
-            visLink.reference,
-            visLink.citedBy,
             visLink.weight,
+            visLink.getReference,
+            visLink.getCitedBy,
             this.visConfig.path.greyedOutColor,
             this.visConfig.path.greyedOutOpacity)
         })
@@ -262,12 +262,12 @@ export default {
       return this.getCardSideColor(nInGraphCitedBys)
     },
     getCardBackgroundColor (visNode) {
-      return _.includes(this.selectedVisNodes, visNode)
+      return this.isVisNodeSelected(visNode)
         ? this.visConfig.cardSelectedBackgroundColor
         : undefined
     },
     getCardClasses (visNode) {
-      if (visNode === this.hoveringVisNode || this.isVisNodeSelected(visNode)) {
+      if (this.isHoveringVisNode(visNode) || this.isVisNodeSelected(visNode)) {
         return [ `elevation-${this.visConfig.hoveringCardElevation}` ]
       }
       return []
@@ -353,7 +353,7 @@ export default {
       const index =
         _.findIndex(
           citedByVisNode.inGraphVisReferences,
-          ({ node: visNode }) => visNode === link.reference)
+          ({ visNode }) => visNode.articleId === link.referenceId)
       const nConns = citedByVisNode.inGraphVisReferences.length
       const totalWidth = nConns * this.visConfig.path.width
       const citedByRect = this.getCardRect(link.citedBy.colRow)
@@ -367,7 +367,7 @@ export default {
       const index =
         _.findIndex(
           refVisNode.inGraphVisCitedBys,
-          ({ node: visNode }) => visNode === link.citedBy)
+          ({ visNode }) => visNode.articleId === link.citedById)
       const nConns = refVisNode.inGraphVisCitedBys.length
       const totalWidth = nConns * this.visConfig.path.width
       const refRect = this.getCardRect(link.reference.colRow)
@@ -423,15 +423,16 @@ export default {
             verticalGaps[iGap] = verticalGaps[iGap] || []
             verticalGaps[iGap][iRow] = verticalGaps[iGap][iRow] || []
             const prevLane = _.last(verticalGaps[iGap][iRow])
-            const prevLaneRefs = _.uniq(_.map(prevLane, link => link.reference))
+            const prevLaneRefs =
+              _.uniq(_.map(prevLane, link => link.referenceId))
             const prevLaneRef =
               prevLaneRefs.length === 1 ? prevLaneRefs[0] : null
             const prevLaneCitedBys =
-              _.uniq(_.map(prevLane, link => link.citedBy))
+              _.uniq(_.map(prevLane, link => link.citedById))
             const prevLaneCitedBy =
               prevLaneCitedBys.length === 1 ? prevLaneCitedBys[0] : null
-            const currRef = link.reference
-            const currCitedBy = link.citedBy
+            const currRef = link.referenceId
+            const currCitedBy = link.citedById
             if (prevLaneRef === currRef || prevLaneCitedBy === currCitedBy) {
               _.last(verticalGaps[iGap][iRow]).push(link)
             } else {
@@ -561,53 +562,59 @@ export default {
         }
       })
     },
+    isHoveringVisNode (visNode) {
+      return this.hoveringVisNodeId === visNode.articleId
+    },
     isVisNodeSelected (visNode) {
-      return _.includes(this.selectedVisNodes, visNode)
+      return _.includes(this.selectedVisNodeIds, visNode.articleId)
     },
     isVisNodeFocused (visNode) {
-      return this.focusedVisNodes.length === 0
+      return this.focusedVisNodeIds.length === 0
         ? true
-        : _.includes(this.focusedVisNodes, visNode)
+        : _.includes(this.focusedVisNodeIds, visNode.articleId)
     },
     onAddDrawerArticleToVis (artId) {
       this.$emit('add-to-vis', artId)
     },
-    onDrawerArticleSelected (artId) {
-      this.selectedVisNodes = []
-      this.$router.push(`/parsevis/${artId}`)
-    },
-    onDrawerArticleUnselected () {
-      this.$router.go(-1)
-    },
     onCanvasClicked () {
-      this.selectedVisNodes = []
+      this.selectedVisNodeIds = []
     },
     onCardClicked (event, visNode) {
       if (event.metaKey || event.ctrlKey || event.shiftKey) {
         // multiple selection
         if (this.isVisNodeSelected(visNode)) {
-          this.selectedVisNodes = _.without(this.selectedVisNodes, visNode)
+          this.selectedVisNodeIds =
+            _.without(this.selectedVisNodeIds, visNode.articleId)
         } else {
-          this.selectedVisNodes = _.union(this.selectedVisNodes, [ visNode ])
+          this.selectedVisNodeIds =
+            _.union(this.selectedVisNodeIds, [ visNode.articleId ])
         }
         this.isDrawerOpenComputed = false
       } else {
         // single selection
-        this.selectedVisNodes = [ visNode ]
+        this.selectedVisNodeIds = [ visNode.articleId ]
         this.$router.push(`/parsevis/${visNode.articleId}`)
         this.isDrawerOpenComputed = true
       }
     },
     onCardMouseEnter (visNode) {
       clearTimeout(this.hoverLingerTimer)
-      this.hoveringVisNode = visNode
+      this.hoveringVisNodeId = visNode.articleId
     },
     onCardMouseLeave (visNode) {
       this.hoverLingerTimer =
         setTimeout(
-          () => { this.hoveringVisNode = null }, this.visConfig.hoverLinger)
+          () => { this.hoveringVisNodeId = null }, this.visConfig.hoverLinger)
+    },
+    onDrawerArticleSelected (artId) {
+      this.$emit('add-to-vis', artId)
+      this.$router.push(`/parsevis/${artId}`)
+    },
+    onDrawerArticleUnselected () {
+      this.$router.go(-1)
     },
     onDrawerListItemTitleClicked (artId) {
+      this.$emit('add-to-vis', artId)
       this.$router.push(`/parsevis/${artId}`)
     },
     trace (value) {
@@ -621,16 +628,10 @@ export default {
       handler (curr) {
         if (curr) {
           this.isDrawerOpenComputed = true
-          this.selectedVisNodes = []
+          this.selectedVisNodeIds = []
           this.selectedDrawerArticleId = null
         }
       }
-    },
-    visGraph (curr, prev) {
-      const articleIds =
-        _.map(this.selectedVisNodes, visNode => visNode.articleId)
-      this.selectedVisNodes =
-        _.filter(_.map(articleIds, id => curr.getVisNode(id)))
     }
   }
 }

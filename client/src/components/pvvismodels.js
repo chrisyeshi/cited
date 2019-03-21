@@ -1,235 +1,355 @@
 import _ from 'lodash'
-import { Graph } from './pvmodels.js'
+
+class InternalVisNode {
+  constructor (
+    articleId, colRow, inGraphReferenceIds, inGraphCitedByIds,
+    inGraphVisReferenceIds, inGraphVisCitedByIds, visStatus) {
+    this.articleId = articleId
+    this.colRow = colRow
+    this.inGraphReferenceIds = inGraphReferenceIds
+    this.inGraphCitedByIds = inGraphCitedByIds
+    this.inGraphVisReferenceIds = inGraphVisReferenceIds
+    this.inGraphVisCitedByIds = inGraphVisCitedByIds
+    this.visStatus = visStatus
+  }
+
+  get col () { return this.colRow.col }
+  get row () { return this.colRow.row }
+}
+
+class Link {
+  constructor (getReference, getCitedBy) {
+    this.getReference = getReference
+    this.getCitedBy = getCitedBy
+  }
+
+  get reference () { return this.getReference() }
+
+  get citedBy () { return this.getCitedBy() }
+}
 
 export class VisGraph {
-  constructor (visNodes) {
-    this.visNodes = visNodes
+  constructor (internalVisNodesMap) {
+    this.internalVisNodesMap = internalVisNodesMap
   }
 
   static async fromArticleIds (artPool, artIds) {
     // construct visNode holders
     const visNodesMap = Object.assign({}, ..._.map(artIds, artId => ({
-      [artId]: new VisNode(
+      [artId]: new InternalVisNode(
         artId /* articleId */,
         { col: null, row: null } /* colRow */,
-        [] /* inGraphReferences */,
-        [] /* inGraphCitedBys */,
-        [] /* inGraphVisReferences */,
-        [] /* inGraphVisCitedBys */)
+        [] /* inGraphReferenceIds */,
+        [] /* inGraphCitedByIds */,
+        [] /* inGraphVisReferenceIds */,
+        [] /* inGraphVisCitedByIds */,
+        {} /* visStatus */)
     })))
-    const visNodes = _.values(visNodesMap)
-    // fill in inGraphReferences and inGraphCitedBys
-    await Promise.all(_.map(visNodes, async visNode => {
-      const currArtId = visNode.articleId
-      const refArtIds = await artPool.getReferenceIds(currArtId)
+    // fill in inGraphReferenceIds and inGraphCitedByIds
+    await Promise.all(_.map(visNodesMap, async (visNode, currArtId) => {
+      const poolRefArtIds = await artPool.getReferenceIds(currArtId)
+      const refArtIds =
+        _.filter(poolRefArtIds, refArtId => _.has(visNodesMap, refArtId))
+      visNode.inGraphReferenceIds = refArtIds
       _.forEach(refArtIds, refArtId => {
-        const refVisNode = visNodesMap[refArtId]
-        const currVisNode = visNodesMap[currArtId]
-        if (refVisNode && currVisNode) {
-          refVisNode.inGraphCitedBys =
-            _.union(refVisNode.inGraphCitedBys, [ currVisNode ])
-          currVisNode.inGraphReferences =
-            _.union(currVisNode.inGraphReferences, [ refVisNode ])
-        }
+        visNodesMap[refArtId].inGraphCitedByIds =
+          _.union(visNodesMap[refArtId].inGraphCitedByIds, [ currArtId ])
       })
     }))
-    VisGraph.mixinColRows(visNodes)
-    VisGraph.mixinVisRelations(visNodes)
-    return new VisGraph(visNodes)
+    VisGraph.mixinColRows(visNodesMap)
+    VisGraph.mixinVisRelations(visNodesMap)
+    return new VisGraph(visNodesMap)
   }
 
-  static mixinColRows (visNodes) {
-    const colRows = VisGrid.getColRows(visNodes)
-    _.forEach(_.zip(visNodes, colRows), ([ visNode, colRow ]) => {
-      visNode.colRow = colRow
+  static getAllPathsBetween (
+    internalVisNodesMap, refArtId, citedByArtId, path = []) {
+    if (refArtId === citedByArtId) {
+      return [ path ]
+    }
+    const refVisNode = internalVisNodesMap[refArtId]
+    if (_.isEmpty(refVisNode.inGraphCitedByIds)) {
+      return false
+    }
+    const paths =
+      _.concat(
+        ..._.map(refVisNode.inGraphCitedByIds, currCitedByArtId => {
+          const paths = VisGraph.getAllPathsBetween(
+            internalVisNodesMap, currCitedByArtId, citedByArtId,
+            [ ...path, { reference: refArtId, citedBy: currCitedByArtId } ])
+          return paths
+        }))
+    return _.filter(paths)
+  }
+
+  static getInternalLinks (internalVisNodesMap) {
+    return _.flatten(
+      _.map(
+        internalVisNodesMap,
+        (visNode, currArtId) => _.map(
+          visNode.inGraphReferenceIds,
+          refArtId => ({ reference: refArtId, citedBy: currArtId }))))
+  }
+
+  static getInternalVisLinks (internalVisNodesMap) {
+    return _.flatten(
+      _.map(
+        internalVisNodesMap,
+        (visNode, currArtId) => _.map(
+          visNode.inGraphVisReferenceIds,
+          ({ articleId: refArtId, weight }) => ({
+            reference: refArtId, citedBy: currArtId, weight
+          }))))
+  }
+
+  static mixinColRows (internalVisNodesMap) {
+    const colRowsMap = VisGrid.getColRows(internalVisNodesMap)
+    _.forEach(colRowsMap, (colRow, artId) => {
+      internalVisNodesMap[artId].colRow = colRow
     })
   }
 
-  static mixinVisRelations (visNodes) {
-    _.forEach(
-      Graph.getLinks(visNodes),
-      ({ reference: refNode, citedBy: citedByNode }) => {
-        const allPaths = Graph.getAllPathsBetween(refNode, citedByNode)
-        const maxLength = _.max(_.map(allPaths, path => path.length))
-        const paths = _.filter(allPaths, path => path.length === maxLength)
-        _.forEach(paths, path => {
-          _.forEach(path, link => {
-            const refVisNode =
-              _.find(visNodes, visNode => visNode === link.reference)
-            const citedByVisNode =
-              _.find(visNodes, visNode => visNode === link.citedBy)
-            // the citedBys array of the referenced node
-            const refConn =
-              _.find(
-                refVisNode.inGraphVisCitedBys,
-                conn => conn.node === citedByVisNode) ||
-              { node: citedByVisNode, weight: 0 }
-            ++refConn.weight
-            refVisNode.inGraphVisCitedBys =
-              _.union(refVisNode.inGraphVisCitedBys, [ refConn ])
-            // the references array of the cited by node
-            const citedByConn =
-              _.find(
-                citedByVisNode.inGraphVisReferences,
-                conn => conn.node === refVisNode) ||
-              { node: refVisNode, weight: 0 }
-            ++citedByConn.weight
-            citedByVisNode.inGraphVisReferences =
-              _.union(citedByVisNode.inGraphVisReferences, [ citedByConn ])
-          })
+  static mixinVisRelations (internalVisNodesMap) {
+    const visConnsMap =
+      _.mapValues(
+        internalVisNodesMap,
+        visNode => ({
+          inGraphVisReferencesMap: {}, inGraphVisCitedBysMap: {}
+        }))
+    const artIdLinks = VisGraph.getInternalLinks(internalVisNodesMap)
+    _.forEach(artIdLinks, ({ reference: refArtId, citedBy: citedByArtId }) => {
+      const allPaths =
+        VisGraph.getAllPathsBetween(
+          internalVisNodesMap, refArtId, citedByArtId)
+      const maxLength = _.max(_.map(allPaths, path => path.length))
+      const paths = _.filter(allPaths, path => path.length === maxLength)
+      _.forEach(paths, path => {
+        _.forEach(path, idLink => {
+          const refArtId = idLink.reference
+          const citedByArtId = idLink.citedBy
+          visConnsMap[refArtId].inGraphVisCitedBysMap[citedByArtId] = visConnsMap[refArtId].inGraphVisCitedBysMap[citedByArtId] ||
+            { articleId: citedByArtId, weight: 0 }
+          ++visConnsMap[refArtId].inGraphVisCitedBysMap[citedByArtId].weight
+          visConnsMap[citedByArtId].inGraphVisReferencesMap[refArtId] =
+            visConnsMap[citedByArtId].inGraphVisReferencesMap[refArtId] ||
+            { articleId: refArtId, weight: 0 }
+          ++visConnsMap[citedByArtId].inGraphVisReferencesMap[refArtId].weight
         })
       })
-    // sort in-graph connections according to columns and rows
-    _.forEach(visNodes, visNode => {
-      visNode.inGraphVisReferences =
-        _.sortBy(visNode.inGraphVisReferences, ({ node: refVisNode }) => {
+    })
+    _.forEach(visConnsMap, (visConn, artId) => {
+      internalVisNodesMap[artId].inGraphVisReferenceIds =
+        _.values(visConn.inGraphVisReferencesMap)
+      internalVisNodesMap[artId].inGraphVisCitedByIds =
+        _.values(visConn.inGraphVisCitedBysMap)
+    })
+    // sort inGraph connections according to columns and rows
+    _.forEach(internalVisNodesMap, visNode => {
+      visNode.inGraphVisReferenceIds =
+        _.sortBy(visNode.inGraphVisReferenceIds, ({ articleId: refArtId }) => {
+          const refVisNode = internalVisNodesMap[refArtId]
           const x = refVisNode.col - visNode.col
           const y = refVisNode.row - visNode.row
           return -y / x
         })
-      visNode.inGraphVisCitedBys =
-        _.sortBy(visNode.inGraphVisCitedBys, ({ node: citedByVisNode }) => {
-          const x = citedByVisNode.col - visNode.col
-          const y = citedByVisNode.row - visNode.row
-          return y / x
-        })
+      visNode.inGraphVisCitedByIds =
+        _.sortBy(
+          visNode.inGraphVisCitedByIds, ({ articleId: citedByArtId }) => {
+            const citedByVisNode = internalVisNodesMap[citedByArtId]
+            const x = citedByVisNode.col - visNode.col
+            const y = citedByVisNode.row - visNode.row
+            return y / x
+          })
     })
   }
 
-  getSubVisGraph (subVisNodes) {
-    // construct visNode holders
-    const visNodesMap = Object.assign({}, ..._.map(subVisNodes, visNode => ({
-      [visNode.articleId]: new VisNode(
-        visNode.articleId /* articleId */,
-        { col: visNode.col, row: visNode.row } /* colRow */,
-        [] /* inGraphReferences */,
-        [] /* inGraphCitedBys */,
-        [] /* inGraphVisReferences */,
-        [] /* inGraphVisCitedBys */)
-    })))
-    const visNodes = _.values(visNodesMap)
-    // fill in inGraphReferences and inGraphCitedBys
-    _.forEach(visNodes, visNode => {
-      const currArtId = visNode.articleId
-      const currSubVisNode =
-        _.find(subVisNodes, ({ articleId }) => articleId === currArtId)
-      const refArtIds =
-        _.map(currSubVisNode.inGraphReferences, ({ articleId }) => articleId)
-      _.forEach(refArtIds, refArtId => {
-        const refVisNode = visNodesMap[refArtId]
-        const currVisNode = visNodesMap[currArtId]
-        if (refVisNode && currVisNode) {
-          refVisNode.inGraphCitedBys =
-            _.union(refVisNode.inGraphCitedBys, [ currVisNode ])
-          currVisNode.inGraphReferences =
-            _.union(currVisNode.inGraphReferences, [ refVisNode ])
+  getSubVisGraph (subArtIds) {
+    const subArtIdsMap = _.keyBy(subArtIds)
+    const subInternalVisNodesMap =
+      _.mapValues(subArtIdsMap, subArtId => {
+        const visNode = this.internalVisNodesMap[subArtId]
+        if (!visNode) {
+          throw new Error(`article ${subArtId} is not in the graph`)
         }
+        const subRefIds =
+          _.filter(
+            visNode.inGraphReferenceIds, artId => _.has(subArtIdsMap, artId))
+        const subCitedByIds =
+          _.filter(
+            visNode.inGraphCitedByIds, artId => _.has(subArtIdsMap, artId))
+        return new InternalVisNode(
+          subArtId /* articleId */,
+          visNode.colRow /* colRow */,
+          subRefIds /* inGraphReferenceIds */,
+          subCitedByIds /* inGraphCitedByIds */,
+          [] /* inGraphVisReferenceIds */,
+          [] /* inGraphVisCitedByIds */,
+          {} /* visStatus */)
       })
-    })
-    VisGraph.mixinVisRelations(visNodes)
-    return new VisGraph(visNodes)
+    VisGraph.mixinVisRelations(subInternalVisNodesMap)
+    return new VisGraph(subInternalVisNodesMap)
   }
 
   getVisNode (artId) {
-    return _.find(this.visNodes, visNode => visNode.articleId === artId)
+    const internalVisNode = this.internalVisNodesMap[artId]
+    if (!internalVisNode) {
+      throw new Error(`article ${artId} is not in the graph`)
+    }
+    return new VisNode(
+      internalVisNode.articleId /* articleId */,
+      internalVisNode.colRow /* colRow */,
+      () => _.map(
+        internalVisNode.inGraphReferenceIds,
+        artId => this.getVisNode(artId)) /* getInGraphReferences */,
+      () => _.map(
+        internalVisNode.inGraphCitedByIds,
+        artId => this.getVisNode(artId)) /* getInGraphCitedBys */,
+      () => _.map(
+        internalVisNode.inGraphVisReferenceIds,
+        ({ articleId, weight }) => ({
+          visNode: this.getVisNode(articleId), weight
+        })) /* getInGraphVisReferences */,
+      () => _.map(
+        internalVisNode.inGraphVisCitedByIds,
+        ({ articleId, weight }) => ({
+          visNode: this.getVisNode(articleId), weight
+        })) /* getInGraphVisCitedBys */,
+      internalVisNode.visStatus /* visStatus */)
   }
 
   get grid () {
     const columns = []
-    _.forEach(this.visNodes, visNode => {
+    _.forEach(this.internalVisNodesMap, visNode => {
       columns[visNode.col] = columns[visNode.col] || []
-      columns[visNode.col][visNode.row] = visNode
+      columns[visNode.col][visNode.row] = visNode.articleId
     })
     return columns
   }
 
   get links () {
-    return Graph.getLinks(this.visNodes)
+    const artIdLinks = VisGraph.getInternalLinks(this.internalVisNodesMap)
+    return _.map(
+      artIdLinks, ({ reference: refArtId, citedBy: citedByArtId }) => {
+        return new Link(
+          () => this.getVisNode(refArtId), () => this.getVisNode(citedByArtId))
+      })
   }
 
   get visLinks () {
-    return _.flatten(_.map(this.visNodes, (node, index) => {
-      const citedBys = node.inGraphVisCitedBys
-      return _.map(
-        citedBys, citedBy => new VisLink(node, citedBy.node, citedBy.weight))
-    }))
+    const artIdVisLinks =
+      VisGraph.getInternalVisLinks(this.internalVisNodesMap)
+    return _.map(artIdVisLinks, artIdVisLink => {
+      return new VisLink(
+        artIdVisLink.weight /* weight */,
+        () => this.getVisNode(artIdVisLink.reference) /* getReference */,
+        () => this.getVisNode(artIdVisLink.citedBy) /* getCitedBy */)
+    })
+  }
+
+  get visNodes () {
+    return _.map(
+      this.internalVisNodesMap, visNode => this.getVisNode(visNode.articleId))
   }
 }
 
-export class VisGrid {
-  static getColRows (nodes) {
-    const refLevels =
-      VisGrid.getNodeLevels(nodes, 'inGraphReferences', 'inGraphCitedBys')
-    const sortedIndexGrid = VisGrid.getSortedIndexGrid(nodes, refLevels)
-    const colRows = []
-    _.forEach(sortedIndexGrid, (sortedIndexColumn, iCol) => {
-      _.forEach(sortedIndexColumn, (index, iRow) => {
-        colRows[index] = { col: iCol, row: iRow }
+class VisGrid {
+  static getColRows (visNodesMap) {
+    const refLevelsMap =
+      VisGrid.getNodeLevels(
+        visNodesMap, 'inGraphReferenceIds', 'inGraphCitedByIds')
+    const sortedArtIdGrid =
+      VisGrid.getSortedArticleIdGrid(visNodesMap, refLevelsMap)
+    const colRowsMap = {}
+    _.forEach(sortedArtIdGrid, (sortedArtIdColumn, iCol) => {
+      _.forEach(sortedArtIdColumn, (artId, iRow) => {
+        colRowsMap[artId] = { col: iCol, row: iRow }
       })
     })
-    return colRows
+    return colRowsMap
   }
 
-  static getNodeLevels (nodes, rootProp, connProp) {
-    let levels = _.times(nodes.length, _.constant(0))
-    const rootIndexes = nodes.reduce((paperIndexes, node, paperIndex) => {
-      if (node[rootProp].length === 0) {
-        paperIndexes.push(paperIndex)
-      }
-      return paperIndexes
-    }, [])
-    rootIndexes.forEach(paperIndex => { levels[paperIndex] = 0 })
-    let bfsQueue = [].concat(rootIndexes)
+  static getNodeLevels (visNodesMap, rootProp, connProp) {
+    const levelsMap = _.mapValues(visNodesMap, _.constant(0))
+    const rootVisNodes =
+      _.filter(visNodesMap, visNode => {
+        return _.isEmpty(visNode[rootProp])
+      })
+    const rootArtIds = _.map(rootVisNodes, visNode => visNode.articleId)
+    _.forEach(rootArtIds, artId => { levelsMap[artId] = 0 })
+    let bfsQueue = [ ...rootArtIds ]
     while (bfsQueue.length > 0) {
-      const currIndex = bfsQueue.shift()
-      const connNodes = nodes[currIndex][connProp]
-      const paperIndexes = _.map(connNodes, node => _.findIndex(nodes, node))
-
-      paperIndexes.forEach(paperIndex => {
-        levels[paperIndex] = levels[paperIndex] ? Math.max(levels[currIndex] + 1, levels[paperIndex]) : levels[currIndex] + 1
-        bfsQueue.push(paperIndex)
+      const currArtId = bfsQueue.shift()
+      const connArtIds = visNodesMap[currArtId][connProp]
+      _.forEach(connArtIds, connArtId => {
+        levelsMap[connArtId] =
+          levelsMap[connArtId]
+            ? Math.max(levelsMap[currArtId] + 1, levelsMap[connArtId])
+            : levelsMap[currArtId] + 1
+        bfsQueue.push(connArtId)
       })
     }
-    return levels
+    return levelsMap
   }
 
-  static getSortedIndexGrid (nodes, refLevels) {
-    const maxRefLevel = _.max(refLevels) || 0
-    const grid = _.map(new Array(maxRefLevel + 1), () => ([]))
-    for (let index = 0; index < refLevels.length; ++index) {
-      const columnIndex = refLevels[index]
-      grid[columnIndex].push(index)
-    }
-    return _.map(grid, unsortedIndexColumn => {
-      return _.sortBy(unsortedIndexColumn, index => {
-        const node = nodes[index]
-        return -node.inGraphCitedBys.length
+  static getSortedArticleIdGrid (visNodesMap, refLevelsMap) {
+    const maxRefLevel = _.max(_.values(refLevelsMap)) || 0
+    const grid = _.map(new Array(maxRefLevel + 1), () => [])
+    _.forEach(refLevelsMap, (refLevel, artId) => {
+      grid[refLevel].push(artId)
+    })
+    return _.map(grid, unsortedArtIdColumn => {
+      return _.sortBy(unsortedArtIdColumn, artId => {
+        const visNode = visNodesMap[artId]
+        return -visNode.inGraphCitedByIds.length
       })
     })
   }
 }
 
 export class VisLink {
-  constructor (reference, citedBy, weight, color, opacity) {
-    this.reference = reference
-    this.citedBy = citedBy
+  constructor (weight, getReference, getCitedBy, color, opacity) {
     this.weight = weight
+    this.getReference = getReference
+    this.getCitedBy = getCitedBy
     this.color = color
     this.opacity = opacity
   }
+
+  get reference () { return this.getReference() }
+  get referenceId () { return this.reference.articleId }
+
+  get citedBy () { return this.getCitedBy() }
+  get citedById () { return this.citedBy.articleId }
 }
 
 export class VisNode {
   constructor (
-    articleId, colRow, inGraphReferences, inGraphCitedBys,
-    inGraphVisReferences, inGraphVisCitedBys) {
+    articleId, colRow, getInGraphReferences, getInGraphCitedBys,
+    getInGraphVisReferences, getInGraphVisCitedBys, visStatus) {
     this.articleId = articleId
     this.colRow = colRow
-    this.inGraphReferences = inGraphReferences
-    this.inGraphCitedBys = inGraphCitedBys
-    this.inGraphVisReferences = inGraphVisReferences
-    this.inGraphVisCitedBys = inGraphVisCitedBys
+    this.getInGraphReferences = getInGraphReferences
+    this.getInGraphCitedBys = getInGraphCitedBys
+    this.getInGraphVisReferences = getInGraphVisReferences
+    this.getInGraphVisCitedBys = getInGraphVisCitedBys
+    this.visStatus = visStatus
   }
+
   get col () { return this.colRow.col }
   get row () { return this.colRow.row }
+
+  get inGraphReferences () {
+    return this.getInGraphReferences()
+  }
+
+  get inGraphCitedBys () {
+    return this.getInGraphCitedBys()
+  }
+
+  get inGraphVisReferences () {
+    return this.getInGraphVisReferences()
+  }
+
+  get inGraphVisCitedBys () {
+    return this.getInGraphVisCitedBys()
+  }
 }
