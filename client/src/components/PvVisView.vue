@@ -101,7 +101,7 @@ export default {
         cardVerticalSpacing: 0.8,
         canvasPadding: { left: 2, top: 2, right: 2, bottom: 2 },
         fontSize: 12,
-        hoveringCardElevation: 2,
+        hoveringCardElevation: 4,
         hoverLinger: 100,
         path: {
           darkness: 0.35,
@@ -157,17 +157,7 @@ export default {
       return _.uniq(_.map(focusedVisNodes, visNode => visNode.articleId))
     },
     gridConfig () {
-      const grid = this.visGraph.grid
-      const nRows = _.map(grid, column => column.length)
-      const nRow = _.max(nRows) || 0
-      const nCol = grid.length
-      return {
-        nCol: nCol,
-        nHorizontalGap: Math.max(0, nRow - 1),
-        nVerticalGap: Math.max(0, nCol - 1),
-        nRow: nRow,
-        nRows: nRows
-      }
+      return this.getGridConfig()
     },
     isDrawerArticle () {
       return this.isDrawerVisNode || this.currentDrawerArticleId
@@ -211,6 +201,37 @@ export default {
         : this.isDrawerArticle
           ? this.drawerArticleHoveringArticleId
           : null
+    },
+    visLinks () {
+      if (this.focusedVisNodeIds.length === 0) {
+        return this.visGraph.visLinks
+      }
+      const focusedVisGraph =
+        this.visGraph.getSubVisGraph(this.focusedVisNodeIds)
+      const focusedVisLinks = _.map(focusedVisGraph.visLinks, visLink => {
+        return new VisLink(
+          visLink.weight,
+          () => this.visGraph.getVisNode(visLink.referenceId),
+          () => this.visGraph.getVisNode(visLink.citedById),
+          this.getPathColorByWeight(visLink.weight),
+          this.visConfig.path.opacity)
+      })
+      const otherVisLinks =
+        _.differenceWith(
+          this.visGraph.visLinks, focusedVisLinks, (aLink, bLink) => {
+            return aLink.referenceId === bLink.referenceId &&
+              aLink.citedById === bLink.citedById
+          })
+      const greyedOutVisLinks = _.map(otherVisLinks, visLink => {
+        return new VisLink(
+          visLink.weight,
+          visLink.getReference,
+          visLink.getCitedBy,
+          this.visConfig.path.greyedOutColor,
+          this.visConfig.path.greyedOutOpacity)
+      })
+      const visLinks = [ ...greyedOutVisLinks, ...focusedVisLinks ]
+      return visLinks
     }
   },
   asyncComputed: {
@@ -230,7 +251,11 @@ export default {
               this.baseVisGraph, theArticlePool, this.tempVisNodeId)
             : this.baseVisGraph
         const tempStatus =
-          this.tempVisNodeId && { [this.tempVisNodeId]: { temporary: true } }
+          this.tempVisNodeId
+            ? this.baseVisGraph.has(this.tempVisNodeId)
+              ? { [this.tempVisNodeId]: { hovering: true } }
+              : { [this.tempVisNodeId]: { temporary: true, hovering: true } }
+            : null
         const hoveringStatus =
           this.hoveringVisNodeId &&
           { [this.hoveringVisNodeId]: { hovering: true } }
@@ -250,40 +275,6 @@ export default {
           _.merge(
             tempStatus, hoveringStatus, selectedStatuses, greyedOutStatuses)
         return VisGraph.setStatus(tempVisGraph, statusesMap)
-      }
-    },
-    visLinks: {
-      default: [],
-      async get () {
-        if (this.focusedVisNodeIds.length === 0) {
-          return this.visGraph.visLinks
-        }
-        const focusedVisGraph =
-          this.visGraph.getSubVisGraph(this.focusedVisNodeIds)
-        const focusedVisLinks = _.map(focusedVisGraph.visLinks, visLink => {
-          return new VisLink(
-            visLink.weight,
-            () => this.visGraph.getVisNode(visLink.referenceId),
-            () => this.visGraph.getVisNode(visLink.citedById),
-            this.getPathColorByWeight(visLink.weight),
-            this.visConfig.path.opacity)
-        })
-        const otherVisLinks =
-          _.differenceWith(
-            this.visGraph.visLinks, focusedVisLinks, (aLink, bLink) => {
-              return aLink.referenceId === bLink.referenceId &&
-                aLink.citedById === bLink.citedById
-            })
-        const greyedOutVisLinks = _.map(otherVisLinks, visLink => {
-          return new VisLink(
-            visLink.weight,
-            visLink.getReference,
-            visLink.getCitedBy,
-            this.visConfig.path.greyedOutColor,
-            this.visConfig.path.greyedOutOpacity)
-        })
-        const visLinks = [ ...greyedOutVisLinks, ...focusedVisLinks ]
-        return visLinks
       }
     }
   },
@@ -377,6 +368,19 @@ export default {
         }
       })
     },
+    getGridConfig () {
+      const grid = this.visGraph.grid
+      const nRows = _.map(grid, column => column.length)
+      const nRow = _.max(nRows) || 0
+      const nCol = grid.length
+      return {
+        nCol: nCol,
+        nHorizontalGap: Math.max(0, nRow - 1),
+        nVerticalGap: Math.max(0, nCol - 1),
+        nRow: nRow,
+        nRows: nRows
+      }
+    },
     getLabelRowText (article) {
       return `${article.data.authors[0].surname} ${article.data.year}`
     },
@@ -442,8 +446,9 @@ export default {
       })
     },
     getVerticalGapLanes (verticalGapLinks) {
-      const verticalGaps = new Array(this.gridConfig.nVerticalGap)
-      for (let iGap = 0; iGap < this.gridConfig.nVerticalGap; ++iGap) {
+      const gridConfig = this.getGridConfig()
+      const verticalGaps = new Array(gridConfig.nVerticalGap)
+      for (let iGap = 0; iGap < gridConfig.nVerticalGap; ++iGap) {
         const gapLinks =
           _.filter(
             verticalGapLinks,
@@ -451,12 +456,12 @@ export default {
         const downLinks =
           _.filter(gapLinks, link => link.reference.row < link.citedBy.row)
         const sortedDownLinks = _.sortBy(downLinks, link => {
-          return -(link.reference.row * this.gridConfig.nRow + link.citedBy.row)
+          return -(link.reference.row * gridConfig.nRow + link.citedBy.row)
         })
         const upLinks =
           _.filter(gapLinks, link => link.reference.row >= link.citedBy.row)
         const sortedUpLinks = _.sortBy(upLinks, link => {
-          return (link.reference.row * this.gridConfig.nRow + link.citedBy.row)
+          return (link.reference.row * gridConfig.nRow + link.citedBy.row)
         })
         const sortedGapLinks = [ ...sortedDownLinks, ...sortedUpLinks ]
         _.forEach(sortedGapLinks, link => {
@@ -673,10 +678,7 @@ export default {
       } else {
         this.debouncedTempVisNodeId =
           _.debounce(
-            () => {
-              console.log('lsdjf')
-              this.tempVisNodeId = null
-            }, this.visConfig.hoverLinger)
+            () => { this.tempVisNodeId = null }, this.visConfig.hoverLinger)
         this.debouncedTempVisNodeId()
       }
     }

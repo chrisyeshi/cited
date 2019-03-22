@@ -151,6 +151,8 @@ export default {
   watch: {
     articleId () {
       this.$el.scrollTop = 0
+      this.referenceListHoveringArticleId = null
+      this.citedByListHoveringArticleId = null
     },
     internalHoveringArticleId (curr) {
       this.$emit('update:hoveringArticleId', curr)
