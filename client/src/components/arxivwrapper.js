@@ -1,7 +1,7 @@
 import { parseString } from 'xml2js'
 import _ from 'lodash'
 
-const baseUrl = 'http://export.arxiv.org/api'
+const baseUrl = 'https://export.arxiv.org/api'
 const queryUrl = `${baseUrl}/query`
 
 function buildQueryParaStr (
