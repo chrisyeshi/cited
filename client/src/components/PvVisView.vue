@@ -21,7 +21,7 @@
       </pv-vis-drawer-query-list>
     </v-navigation-drawer>
     <div v-if="isGraphViewVisible" ref="visContainer" class="vis-container"
-      @click="onCanvasClicked">
+      @click="onCanvasClicked" v-resize="onVisContainerResize">
       <svg class="overlay-container" :style="overlayContainerStyle" :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
         <path v-for="(props, key) in paths" :key="key" v-bind="props"></path>
       </svg>
@@ -62,11 +62,13 @@ import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisCard from './PvVisCard.vue'
 import PvVisDrawerEditableArticle from './PvVisDrawerEditableArticle.vue'
 import PvVisDrawerQueryList from './PvVisDrawerQueryList.vue'
+import resize from 'vue-resize-directive'
 import theArticlePool from './pvarticlepool.js'
 import Vec from './vec.js'
 
 export default {
   name: 'PvVisView',
+  directives: { resize },
   components: { ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerEditableArticle, PvVisDrawerQueryList },
   props: {
     collectionArticleIds: Array,
@@ -101,7 +103,7 @@ export default {
         cardVerticalSpacing: 0.8,
         canvasPadding: { left: 2, top: 2, right: 2, bottom: 2 },
         fontSize: 12,
-        hoveringCardElevation: 4,
+        hoveringCardElevation: 6,
         hoverLinger: 100,
         path: {
           darkness: 0.35,
@@ -113,7 +115,9 @@ export default {
         },
         verticalGapLaneSpacing: 0.4,
         verticalGapOrthogonalPathRadius: 0.75
-      }
+      },
+      visContainerWidth: 0,
+      visContainerHeight: 0
     }
   },
   computed: {
@@ -124,11 +128,13 @@ export default {
       const spacing =
         Math.max(0, nRows - 1) * this.visConfig.cardVerticalSpacing
       const prevHeight = nRows * this.visConfig.card.height
-      return paddings + spacing + prevHeight
+      const height = paddings + spacing + prevHeight
+      return Math.max(height, this.visContainerHeight)
     },
     canvasWidth () {
       const nColumns = this.maxReferenceLevel + 1
-      return this.visConfig.canvasPadding.left + nColumns * this.visConfig.card.width + (nColumns - 1) * this.visConfig.cardHorizontalSpacing + this.visConfig.canvasPadding.right
+      const width = this.visConfig.canvasPadding.left + nColumns * this.visConfig.card.width + (nColumns - 1) * this.visConfig.cardHorizontalSpacing + this.visConfig.canvasPadding.right
+      return Math.max(width, this.visContainerWidth)
     },
     cardsContainerStyle () {
       return {
@@ -271,9 +277,13 @@ export default {
           _.mapValues(
             _.keyBy(greyedOutVisNodeIds),
             (value, artId) => ({ greyedOut: true }))
+        const displayedStatus =
+          this.drawerArticleId &&
+          { [this.drawerArticleId]: { displayed: true } }
         const statusesMap =
           _.merge(
-            tempStatus, hoveringStatus, selectedStatuses, greyedOutStatuses)
+            tempStatus, hoveringStatus, selectedStatuses, greyedOutStatuses,
+            displayedStatus)
         return VisGraph.setStatus(tempVisGraph, statusesMap)
       }
     }
@@ -297,12 +307,12 @@ export default {
       return this.getCardSideColor(nInGraphCitedBys)
     },
     getCardBackgroundColor (visNode) {
-      return visNode.visStatus.selected
+      return visNode.visStatus.displayed
         ? this.visConfig.cardSelectedBackgroundColor
         : undefined
     },
     getCardClasses (visNode) {
-      return visNode.visStatus.hovering
+      return visNode.visStatus.hovering || visNode.visStatus.selected
         ? [ `elevation-${this.visConfig.hoveringCardElevation}` ]
         : []
     },
@@ -653,6 +663,10 @@ export default {
     onDrawerListItemTitleClicked (artId) {
       this.$emit('add-to-vis', artId)
       this.$router.push(`/parsevis/${artId}`)
+    },
+    onVisContainerResize (el) {
+      this.visContainerWidth = el.offsetWidth / this.visConfig.fontSize
+      this.visContainerHeight = el.offsetHeight / this.visConfig.fontSize
     },
     trace (value) {
       console.log(value)
