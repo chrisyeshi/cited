@@ -7,6 +7,7 @@
         :article-id="drawerArticleId" :card-config="visConfig.card"
         :get-card-cited-by-color="getArticleCardCitedByColor"
         :get-card-reference-color="getArticleCardReferenceColor"
+        :hovering-article-id.sync="drawerArticleHoveringArticleId"
         @add-to-vis="onAddDrawerArticleToVis"
         @article-edited="articleEdited"
         @select-article="onDrawerArticleSelected"
@@ -14,6 +15,7 @@
       </pv-vis-drawer-editable-article>
       <pv-vis-drawer-query-list v-if="isDrawerList"
         style="position: relative; height: 100%; overflow: auto;"
+        :hovering-article-id.sync="drawerListHoveringArticleId"
         :page-query="drawerPageQuery"
         @click-item-title="onDrawerListItemTitleClicked">
       </pv-vis-drawer-query-list>
@@ -75,8 +77,11 @@ export default {
   data () {
     return {
       drawerWidth: 450,
+      drawerArticleHoveringArticleId: null,
+      drawerListHoveringArticleId: null,
       hoveringVisNodeId: null,
       selectedVisNodeIds: [],
+      tempVisNodeId: null,
       visConfig: {
         card: {
           borderRadius: 0.65,
@@ -200,33 +205,51 @@ export default {
         ...this.getCrossColumnPaths(this.visLinks)
       ]
     },
-    visGraph () {
-      const hoveringStatus =
-        this.hoveringVisNodeId &&
-        { [this.hoveringVisNodeId]: { hovering: true } }
-      const selectedStatuses =
-        _.mapValues(
-          _.keyBy(this.selectedVisNodeIds),
-          (value, artId) => ({ selected: true }))
-      const greyedOutVisNodeIds =
-        _.isEmpty(this.focusedVisNodeIds)
-          ? []
-          : _.without(this.baseVisGraph.articleIds, ...this.focusedVisNodeIds)
-      const greyedOutStatuses =
-        _.mapValues(
-          _.keyBy(greyedOutVisNodeIds),
-          (value, artId) => ({ greyedOut: true }))
-      const statusesMap =
-        _.merge(hoveringStatus, selectedStatuses, greyedOutStatuses)
-      return VisGraph.setStatus(this.baseVisGraph, statusesMap)
+    tempVisNodeIdComputed () {
+      return this.isDrawerList
+        ? this.drawerListHoveringArticleId
+        : this.isDrawerArticle
+          ? this.drawerArticleHoveringArticleId
+          : null
     }
   },
   asyncComputed: {
     baseVisGraph: {
-      default: new VisGraph([]),
+      default: new VisGraph({}),
       async get () {
         return VisGraph.fromArticleIds(
           theArticlePool, this.collectionArticleIds)
+      }
+    },
+    visGraph: {
+      default: new VisGraph({}),
+      async get () {
+        const tempVisGraph =
+          this.tempVisNodeId
+            ? await VisGraph.insertArticleId(
+              this.baseVisGraph, theArticlePool, this.tempVisNodeId)
+            : this.baseVisGraph
+        const tempStatus =
+          this.tempVisNodeId && { [this.tempVisNodeId]: { temporary: true } }
+        const hoveringStatus =
+          this.hoveringVisNodeId &&
+          { [this.hoveringVisNodeId]: { hovering: true } }
+        const selectedStatuses =
+          _.mapValues(
+            _.keyBy(this.selectedVisNodeIds),
+            (value, artId) => ({ selected: true }))
+        const greyedOutVisNodeIds =
+          _.isEmpty(this.focusedVisNodeIds)
+            ? []
+            : _.without(tempVisGraph.articleIds, ...this.focusedVisNodeIds)
+        const greyedOutStatuses =
+          _.mapValues(
+            _.keyBy(greyedOutVisNodeIds),
+            (value, artId) => ({ greyedOut: true }))
+        const statusesMap =
+          _.merge(
+            tempStatus, hoveringStatus, selectedStatuses, greyedOutStatuses)
+        return VisGraph.setStatus(tempVisGraph, statusesMap)
       }
     },
     visLinks: {
@@ -269,14 +292,14 @@ export default {
       this.$emit('article-edited', curr)
     },
     async getArticleCardReferenceColor (articleId) {
-      const isArticleIdInVisGraph = id => this.visGraph.getVisNode(id)
+      const isArticleIdInVisGraph = id => this.visGraph.has(id)
       const referenceIds = await theArticlePool.getReferenceIds(articleId)
       const nInGraphReferences =
         _.filter(referenceIds, isArticleIdInVisGraph).length
       return this.getCardSideColor(nInGraphReferences)
     },
     async getArticleCardCitedByColor (articleId) {
-      const isArticleIdInVisGraph = id => this.visGraph.getVisNode(id)
+      const isArticleIdInVisGraph = id => this.visGraph.has(id)
       const citedByIds = await theArticlePool.getCitedByIds(articleId)
       const nInGraphCitedBys =
         _.filter(citedByIds, isArticleIdInVisGraph).length
@@ -318,6 +341,7 @@ export default {
     },
     getCardStyle (visNode) {
       return {
+        borderStyle: visNode.visStatus.temporary ? 'dashed' : undefined,
         cursor: 'pointer',
         opacity: visNode.visStatus.greyedOut
           ? this.visConfig.cardGreyedOutOpacity
@@ -639,6 +663,21 @@ export default {
           this.selectedVisNodeIds = []
           this.selectedDrawerArticleId = null
         }
+      }
+    },
+    tempVisNodeIdComputed (curr) {
+      if (curr) {
+        this.debouncedTempVisNodeId && this.debouncedTempVisNodeId.cancel()
+        this.debouncedTempVisNodeId = null
+        this.tempVisNodeId = curr
+      } else {
+        this.debouncedTempVisNodeId =
+          _.debounce(
+            () => {
+              console.log('lsdjf')
+              this.tempVisNodeId = null
+            }, this.visConfig.hoverLinger)
+        this.debouncedTempVisNodeId()
       }
     }
   }

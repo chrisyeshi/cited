@@ -6,7 +6,9 @@
         class="mb-3 caption grey--text text--darken-1">
         Found {{ pageQuery.getTotalArticleCount() }} articles from arXiv
       </v-flex>
-      <v-flex v-for="article in articles" :key="article.id">
+      <v-flex v-for="article in articles" :key="article.id"
+        @mouseenter.stop="onItemMouseEnter(article.id)"
+        @mouseleave.stop="onItemMouseLeave(article.id)">
         <div class="caption font-weight-bold">
           {{ article.data.authors[0].surname }} {{ article.data.year }}
         </div>
@@ -43,12 +45,14 @@ export default {
   name: 'PvVisDrawerQueryList',
   components: { PvLoadMoreCombo, VContainerWithScroll },
   props: {
+    hoveringArticleId: String,
     pageQuery: Object
   },
   data () {
     return {
       articles: [],
       bottomOffset: 64,
+      internalHoveringArticleId: null,
       loadStatus: {
         isDone: false,
         isEmpty: false,
@@ -63,6 +67,12 @@ export default {
       return isVenue ||
         !_.isNil(article.nReferences) ||
         !_.isNil(article.nCitedBys)
+    },
+    onItemMouseEnter (artId) {
+      this.internalHoveringArticleId = artId
+    },
+    onItemMouseLeave () {
+      this.internalHoveringArticleId = null
     },
     async onLoadMore () {
       this.loadStatus = {
@@ -84,6 +94,9 @@ export default {
     }
   },
   watch: {
+    internalHoveringArticleId (curr) {
+      this.$emit('update:hoveringArticleId', curr)
+    },
     pageQuery: {
       immediate: true,
       async handler (curr) {

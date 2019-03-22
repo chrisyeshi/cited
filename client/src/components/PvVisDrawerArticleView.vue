@@ -50,6 +50,7 @@
           :card-config="cardConfig"
           :get-card-cited-by-color="getCardCitedByColor"
           :get-card-reference-color="getCardReferenceColor"
+          :hovering-article-id.sync="referenceListHoveringArticleId"
           @click-card="onCardClicked">
         </pv-vis-drawer-article-cards-infinite-scroll>
       </v-flex>
@@ -62,6 +63,7 @@
           :card-config="cardConfig"
           :get-card-cited-by-color="getCardCitedByColor"
           :get-card-reference-color="getCardReferenceColor"
+          :hovering-article-id.sync="citedByListHoveringArticleId"
           @click-card="onCardClicked">
         </pv-vis-drawer-article-cards-infinite-scroll>
       </v-flex>
@@ -89,12 +91,15 @@ export default {
     articleId: String,
     cardConfig: Object,
     getCardCitedByColor: Function,
-    getCardReferenceColor: Function
+    getCardReferenceColor: Function,
+    hoveringArticleId: String
   },
   data () {
     return {
       abstractTextLimit: 200,
-      isAtContainerBottom: false
+      citedByListHoveringArticleId: null,
+      isAtContainerBottom: false,
+      referenceListHoveringArticleId: null
     }
   },
   computed: {
@@ -102,6 +107,10 @@ export default {
     firstAuthorSurname () {
       const firstAuthor = _.first(this.meta.data.authors)
       return firstAuthor ? firstAuthor.surname : ''
+    },
+    internalHoveringArticleId () {
+      return this.referenceListHoveringArticleId ||
+        this.citedByListHoveringArticleId
     },
     relationCardsContainerStyle () {
       return {
@@ -142,6 +151,9 @@ export default {
   watch: {
     articleId () {
       this.$el.scrollTop = 0
+    },
+    internalHoveringArticleId (curr) {
+      this.$emit('update:hoveringArticleId', curr)
     }
   }
 }

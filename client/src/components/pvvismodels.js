@@ -101,6 +101,51 @@ export class VisGraph {
           }))))
   }
 
+  static async insertArticleId (visGraph, artPool, currArtId) {
+    if (_.has(visGraph.internalVisNodesMap, currArtId)) {
+      return visGraph
+    }
+    const visNodesMap = _.mapValues(visGraph.internalVisNodesMap, visNode => {
+      return new InternalVisNode(
+        visNode.articleId /* articleId */,
+        { col: null, row: null } /* colRow */,
+        visNode.inGraphReferenceIds /* inGraphReferenceIds */,
+        visNode.inGraphCitedByIds /* inGraphCitedByIds */,
+        [] /* inGraphVisReferenceIds */,
+        [] /* inGraphVisCitedByIds */,
+        visNode.visStatus /* visStatus */)
+    })
+    const poolRefArtIds = await artPool.getReferenceIds(currArtId)
+    const refArtIds =
+      _.filter(
+        poolRefArtIds, artId => _.has(visNodesMap, artId))
+    const poolCitedByArtIds = await artPool.getCitedByIds(currArtId)
+    const citedByArtIds =
+      _.filter(
+        poolCitedByArtIds, artId => _.has(visNodesMap, artId))
+    visNodesMap[currArtId] = new InternalVisNode(
+      currArtId /* articleId */,
+      { col: null, row: null } /* colRow */,
+      refArtIds /* inGraphReferenceIds */,
+      citedByArtIds /* inGraphCitedByIds */,
+      [] /* inGraphVisReferenceIds */,
+      [] /* inGraphVisCitedByIds */,
+      {} /* visStatus */)
+    _.forEach(refArtIds, refArtId => {
+      const visNode = visNodesMap[refArtId]
+      visNode.inGraphCitedByIds =
+        _.union(visNode.inGraphCitedByIds, [ currArtId ])
+    })
+    _.forEach(citedByArtIds, citedByArtId => {
+      const visNode = visNodesMap[citedByArtId]
+      visNode.inGraphReferenceIds =
+        _.union(visNode.inGraphReferenceIds, [ currArtId ])
+    })
+    VisGraph.mixinColRows(visNodesMap)
+    VisGraph.mixinVisRelations(visNodesMap)
+    return new VisGraph(visNodesMap)
+  }
+
   static mixinColRows (internalVisNodesMap) {
     const colRowsMap = VisGrid.getColRows(internalVisNodesMap)
     _.forEach(colRowsMap, (colRow, artId) => {
@@ -247,6 +292,8 @@ export class VisGraph {
     })
     return columns
   }
+
+  has (artId) { return _.has(this.internalVisNodesMap, artId) }
 
   get links () {
     const artIdLinks = VisGraph.getInternalLinks(this.internalVisNodesMap)

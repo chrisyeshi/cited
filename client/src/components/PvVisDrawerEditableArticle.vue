@@ -8,6 +8,7 @@
     :article-id="articleId" :card-config="cardConfig"
     :get-card-cited-by-color="getCardCitedByColor"
     :get-card-reference-color="getCardReferenceColor"
+    :hovering-article-id.sync="hoveringArticleIdComputed"
     @add-to-vis="$emit('add-to-vis', $event)"
     @back-clicked="$emit('unselect-article', $event)"
     @edit-clicked="isEditing = true"
@@ -27,11 +28,18 @@ export default {
     articleId: String,
     cardConfig: Object,
     getCardCitedByColor: Function,
-    getCardReferenceColor: Function
+    getCardReferenceColor: Function,
+    hoveringArticleId: String
   },
   data () {
     return {
       isEditing: false
+    }
+  },
+  computed: {
+    hoveringArticleIdComputed: {
+      get () { return this.hoveringArticleId },
+      set (artId) { this.$emit('update:hoveringArticleId', artId) }
     }
   },
   methods: {

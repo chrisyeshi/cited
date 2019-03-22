@@ -6,7 +6,9 @@
       <pv-vis-card :article="article" :config="cardConfig" :style="cardStyle"
         :referenceColor="getCardReferenceColor(article.id)"
         :citedByColor="getCardCitedByColor(article.id)"
-        @click.native="$emit('click-card', article.id)">
+        @click.native="$emit('click-card', article.id)"
+        @mouseenter.native.stop="onCardMouseEnter(article.id)"
+        @mouseleave.native.stop="onCardMouseLeave(article.id)">
       </pv-vis-card>
     </v-flex>
     <pv-load-more-combo v-bind="loadStatus" :height="bottomOffset"
@@ -35,7 +37,8 @@ export default {
     },
     cardConfig: Object,
     getCardCitedByColor: Function,
-    getCardReferenceColor: Function
+    getCardReferenceColor: Function,
+    hoveringArticleId: String
   },
   data () {
     this.currArticlesPromise = null
@@ -43,6 +46,7 @@ export default {
       articleSliceCount: this.articleCountPerLoad,
       bottomOffset: 64,
       currArticles: [],
+      internalHoveringArticleId: null,
       loadStatus: {
         isDone: false,
         isEmpty: false,
@@ -81,6 +85,12 @@ export default {
         isLoadingMore: false
       }
     },
+    onCardMouseEnter (articleId) {
+      this.internalHoveringArticleId = articleId
+    },
+    onCardMouseLeave () {
+      this.internalHoveringArticleId = null
+    },
     onLoadMore () {
       this.articleSliceCount += this.articleCountPerLoad
       this.fetchArticles()
@@ -96,6 +106,9 @@ export default {
         isLoadingMore: false
       }
       this.fetchArticles()
+    },
+    internalHoveringArticleId (curr) {
+      this.$emit('update:hoveringArticleId', curr)
     }
   }
 }
