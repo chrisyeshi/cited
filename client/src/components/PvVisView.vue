@@ -21,7 +21,7 @@
       </pv-vis-drawer-query-list>
     </v-navigation-drawer>
     <div v-if="isGraphViewVisible" ref="visContainer" class="vis-container"
-      @click="onCanvasClicked" v-resize="onVisContainerResize">
+      @click="onCanvasClicked" v-resize.initial="onVisContainerResize">
       <svg class="overlay-container" :style="overlayContainerStyle" :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
         <path v-for="(props, key) in paths" :key="key" v-bind="props"></path>
       </svg>
@@ -184,8 +184,12 @@ export default {
       }
     },
     isDrawerVisNode () { return this.selectedVisNodeIds.length === 1 },
-    isEmptyViewVisible () { return this.collectionArticleIds.length === 0 },
-    isGraphViewVisible () { return this.collectionArticleIds.length !== 0 },
+    isEmptyViewVisible () {
+      return this.collectionArticleIds.length === 0 && !this.tempVisNodeId
+    },
+    isGraphViewVisible () {
+      return this.collectionArticleIds.length !== 0 || this.tempVisNodeId
+    },
     maxReferenceLevel () { return Math.max(0, this.visGraph.grid.length - 1) },
     overlayContainerStyle () {
       return {
@@ -640,7 +644,7 @@ export default {
       } else {
         // single selection
         this.selectedVisNodeIds = [ visNode.articleId ]
-        this.$router.push(`/parsevis/${visNode.articleId}`)
+        this.$router.push(`${visNode.articleId}`)
         this.isDrawerOpenComputed = true
       }
     },
@@ -655,14 +659,14 @@ export default {
     },
     onDrawerArticleSelected (artId) {
       this.$emit('add-to-vis', artId)
-      this.$router.push(`/parsevis/${artId}`)
+      this.$router.push(`${artId}`)
     },
     onDrawerArticleUnselected () {
       this.$router.go(-1)
     },
     onDrawerListItemTitleClicked (artId) {
       this.$emit('add-to-vis', artId)
-      this.$router.push(`/parsevis/${artId}`)
+      this.$router.push(`${artId}`)
     },
     onVisContainerResize (el) {
       this.visContainerWidth = el.offsetWidth / this.visConfig.fontSize

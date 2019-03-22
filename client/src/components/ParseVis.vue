@@ -112,7 +112,7 @@ export default {
       this.collectionArticleIds = _.union(this.collectionArticleIds, [ artId ])
     },
     search (text) {
-      this.$router.push(`/parsevis/${text}`)
+      this.$router.push(`/demo/${text}`)
     },
     trace (value) {
       console.log(value)

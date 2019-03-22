@@ -3,7 +3,7 @@
     <v-toolbar app flat scroll-off-screen inverted-scroll>
       <responsive-text-logo full @click="$vuetify.goTo(0)"></responsive-text-logo>
       <v-toolbar-items>
-        <v-btn flat to="/tour/0"
+        <v-btn flat to="/demo"
           v-ga="$ga.event.bind(this, 'buttons', 'click', 'toolbar demo')">
           Alpha Demo
         </v-btn>
@@ -37,7 +37,7 @@
               </v-layout>
             </v-flex>
             <v-flex class="mt-4 text-xs-center action-buttons-container">
-              <v-btn large dark color="cyan darken-4" to="/tour/0"
+              <v-btn large dark color="cyan darken-4" to="/demo"
                 v-ga="$ga.event.bind(this, 'buttons', 'click', 'center demo')">
                 Alpha Demo
               </v-btn>

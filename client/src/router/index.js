@@ -22,17 +22,17 @@ export default new Router({
   base: process.env.BASE_URL || '/',
   routes: [
     { path: '/', component: LandingPage },
-    { path: '/demo', component: Smooth },
-    { path: '/demo/search/:routeSearchText', component: Smooth, props: true },
-    { path: '/demo/refobj/:refObjId', component: Smooth, props: true },
-    { path: '/demo/collection/:collId', component: Smooth, props: true },
+    { path: '/alpha', component: Smooth },
+    { path: '/alpha/search/:routeSearchText', component: Smooth, props: true },
+    { path: '/alpha/refobj/:refObjId', component: Smooth, props: true },
+    { path: '/alpha/collection/:collId', component: Smooth, props: true },
     {
-      path: '/demo/search/:routeSearchText/collection/:collId',
+      path: '/alpha/search/:routeSearchText/collection/:collId',
       component: Smooth,
       props: true
     },
     {
-      path: '/demo/refobj/:refObjId/collection/:collId',
+      path: '/alpha/refobj/:refObjId/collection/:collId',
       component: Smooth,
       props: true
     },
@@ -47,7 +47,7 @@ export default new Router({
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
     { path: '/papersight', component: PaperSight },
-    { path: '/parsevis/:input?', component: ParseVis, props: true },
+    { path: '/parsevis/:input?', alias: '/demo/:input?', component: ParseVis, props: true },
     { path: '*', component: NotFound }
   ]
 })
