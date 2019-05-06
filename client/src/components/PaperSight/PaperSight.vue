@@ -20,7 +20,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-toolbar app fixed clipped-left flat dark color="blue darken-4">
+    <v-toolbar app fixed clipped-left flat dark class="app-header">
       <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
       <v-toolbar-title>PaperSight</v-toolbar-title>
       <v-layout justify-space-around class="ma-4 appbar-icons">
@@ -84,8 +84,8 @@ import PdfViewer from './PdfViewer'
 import PaperList from './PaperList'
 import PaperInforEditor from './PaperInfoEditor'
 import RefList from './RefList'
-import {PaperGraph} from '../../../../model/PaperGraph'
-// import Dexie from 'dexie'
+import {PaperGraph} from './PaperGraph'
+import LocalStore from './LocalStore'
 
 export default {
   name: 'PaperSight',
@@ -106,22 +106,13 @@ export default {
       viewerModes: ['embed', 'pdfjs'],
       viewer: 'pdfjs',
       selectedPaper: null,
-      localDb: null,
+      localStore: null,
       isEditingPaperInfo: false
     }
   },
   created: function () {
     this.graph = new PaperGraph({})
-    // this.localDb = new Dexie('PaperDb')
-    // this.localDb.version(1).stores({
-    //   collections: '++id, name, paperIds',
-    //   papers: 'id, year, authors, venue, citedByCount, references, abstract, keywords',
-    //   authors: 'id, name',
-    //   venues: 'id, name, type'
-    // })
-    // this.localDb.papers.toArray().then(papers => {
-    //   console.log(papers)
-    // })
+    this.localStore = new LocalStore()
   },
   methods: {
     hover: function (index) {
@@ -196,15 +187,17 @@ export default {
               .map((authorName) => {
                 let author = {name: authorName}
                 this.graph.insertAuthor(author)
+                this.localStore.insertAuthor(author)
                 return author
               })
-            if (refs && refs.data) {
-              let paperRefs = JSON.parse(refs.data)
-              let references = paperRefs.map((ref) => {
+            if (refs.parsed.length > 0) {
+              let paperRefs = refs.parsed
+              let references = paperRefs.map((ref, refId) => {
                 let refPaper = {}
                 if (Array.isArray(ref.author)) {
                   refPaper.authors = ref.author.map((author) => {
                     let authorName = [author.given, author.family].join(' ')
+                    this.localStore.insertAuthor({name: authorName})
                     return this.graph.insertAuthor({name: authorName})
                   }).filter((id) => Number.isInteger(id))
                 }
@@ -216,8 +209,17 @@ export default {
                     refPaper.authorNames.push(authorName)
                     return this.graph.insertAuthor(authorName)
                   })
-                  refPaper.venue = (ref['container-title']) ? ref['container-title'][0].replace(/-/g, '') : ''
+                  if (Array.isArray(ref['container-title']) && ref['container-title'].length) {
+                    refPaper.venue = (ref['container-title']) ? ref['container-title'][0].replace(/-/g, '') : ''
+                  }
+
                   refPaper.year = Array.isArray(ref.date) ? ref.date[0] : 'unknown'
+                  if (Array.isArray(ref.date)) refPaper.date = ref.date[0]
+                  if (ref.pages) refPaper.pages = (Array.isArray(ref.pages)) ? ref.pages[0] : ref.pages
+                  if (ref.publisher) refPaper.publisher = (Array.isArray(ref.publisher)) ? ref.publisher[0] : ref.publisher
+                  if (ref.volume) refPaper.volume = (Array.isArray(ref.volume)) ? ref.volume[0] : ref.volume
+                  if (ref.issue) refPaper.issue = (Array.isArray(ref.issue)) ? ref.issue[0] : ref.issue
+                  refPaper.origin = refs.raw[refId]
                   refPaper.id = this.graph.insertPaper(refPaper)
                   return refPaper
                 }
@@ -229,13 +231,18 @@ export default {
                 this.graph.getPaperById(rid).citedBysCount = this.graph.getCitedBys(rid).length
               })
               newPaper.citedBysCount = this.graph.getCitedBys(newPaper.id).length
-              // this.localDb.papers.bulkAdd(references)
-              // this.localDb.papers.add(newPaper)
+
+              references.map(ref => {
+                this.localStore.insertPaper(ref)
+                this.$refs.PaperRefList.append(ref)
+              })
+              this.localStore.insertPaper(newPaper)
             }
             // this.papers.push(newPaper)
             this.$refs.PaperList.addPaper(newPaper)
           }
-          this.$refs.PaperRefList.update(this.graph.getPapers().sort((a, b) => b.citedBysCount - a.citedBysCount))
+          // this.localStore.db.authors.bulkAdd(this.graph.authors)
+          // this.$refs.PaperRefList.update(this.graph.getPapers().sort((a, b) => b.citedBysCount - a.citedBysCount))
           this.dialog = false
         })
       })
@@ -258,7 +265,11 @@ export default {
 }
 
 .appbar-icons i:hover {
-  color: #eeeeee;
-  background-color: steelblue;
+  color: steelblue;
+  background-color: #fff;
+}
+
+.app-header {
+    background-color: rgb(21, 146, 196);
 }
 </style>

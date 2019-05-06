@@ -96,6 +96,9 @@
   },
   "dependencies": {
     "pdfjs": "^2.1.0",
-    "pdfjs-dist": "^2.0.943"
+    "pdfjs-dist": "^2.0.943",
+    "vue-async-computed": "^3.6.1",
+    "vue-line-clamp": "^1.3.2",
+    "vue-resize-directive": "^1.2.0"
   }
 }
