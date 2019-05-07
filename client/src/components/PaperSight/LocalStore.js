@@ -3,13 +3,29 @@ import Dexie from 'dexie'
 export default class LocalDb {
   constructor () {
     this.db = new Dexie('PaperDb')
-    this.db.version(2).stores({
+    this.db.version(4).stores({
       collections: '++id, name, paperIds',
       papers: '++id, title, year, authors, venue, citedByCount, references, abstract, keywords',
       authors: '++id, name',
-      citations: '++id, from, to',
+      citations: '[from+to]',
       venues: '++id, name, type'
     })
+  }
+
+  getCollections () {
+    return this.db.collections.toArray()
+  }
+
+  getPapers (paperIds) {
+    if (Array.isArray(paperIds)) {
+      return this.db.papers.where('id').anyOf(paperIds).toArray()
+    } else {
+      return this.db.papers.toArray()
+    }
+  }
+
+  getPaperById (paperId) {
+    return this.db.papers.where('id').equals(paperId).first()
   }
 
   checkIfPaperExist (paper) {
@@ -17,26 +33,21 @@ export default class LocalDb {
   }
 
   insertPaper (paper) {
-    return new Promise((resolve, reject) => {
-      return this.db.papers
-        .where('title').equalsIgnoreCase(paper.title)
-        .toArray()
-        .then(matches => {
-          if (matches.length === 0) {
-            if (Array.isArray(paper.references) && paper.references.length) {
-              paper.references.map(ref => {
-                return this.addCitation({from: paper.id, to: ref})
-              })
-            }
-            return this.db.papers.add(paper)
-          } else {
+    return this.db.papers
+      .where('title').equalsIgnoreCase(paper.title)
+      .toArray()
+      .then(matches => {
+        if (matches.length === 0) {
+          paper.citedByCount = 1
+          return this.db.papers.add(paper)
+        } else {
+          paper.citedByCount = matches[0].citedByCount + 1
+          this.db.papers.update(matches[0].id, paper)
+          return new Promise((resolve, reject) => {
             resolve(matches[0].id)
-          }
-        })
-        .catch(err => {
-          reject(err)
-        })
-    })
+          })
+        }
+      })
   }
 
   isAuthorExist (author) {
@@ -44,39 +55,33 @@ export default class LocalDb {
   }
 
   insertAuthor (author) {
-    return new Promise((resolve, reject) => {
-      return this.db.authors
-        .where('name').equalsIgnoreCase(author.name)
-        .toArray()
-        .then(matches => {
-          if (matches.length === 0) {
-            return this.db.authors.add(author)
-          } else {
-            resolve(matches[0].id)
-          }
-        })
-        .catch(err => {
-          reject(err)
-        })
-    })
+    return this.db.authors
+      .where('name').equalsIgnoreCase(author.name)
+      .toArray()
+      .then(matches => {
+        if (matches.length === 0) {
+          return this.db.authors.add(author)
+        } else {
+          return new Promise((resolve, reject) => {
+            resolve(matches[0])
+          })
+        }
+      })
   }
 
   addCitation (citation) {
-    return new Promise((resolve, reject) => {
-      return this.db.citations
-        .where({from: citation.from, to: citation.to})
-        .toArray()
-        .then(matches => {
-          if (matches.length === 0) {
-            return this.db.citations.add(citation)
-          } else {
+    return this.db.citations
+      .where('[from+to]').equals([citation.from, citation.to])
+      .toArray()
+      .then(matches => {
+        if (matches.length === 0) {
+          return this.db.citations.add(citation)
+        } else {
+          return new Promise((resolve, reject) => {
             resolve(matches[0].id)
-          }
-        })
-        .catch(err => {
-          reject(err)
-        })
-    })
+          })
+        }
+      })
   }
 
   getCitations (paperId) {
@@ -97,13 +102,5 @@ export default class LocalDb {
           paper.citedBysCount = count
         })
       })
-  }
-
-  getPapers () {
-    return this.db.papers.toArray()
-  }
-
-  getPaperById (paperId) {
-    return this.db.papers.where('id').equal(paperId).first()
   }
 }

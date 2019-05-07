@@ -35,7 +35,7 @@
             required
           ></v-text-field>
           <v-text-field
-            v-model="paper.authorNames"
+            v-model="authorNames"
             :rules="authorRules"
             label="Authors"
             required
@@ -73,18 +73,19 @@ export default {
       authors: [],
       keywords: '',
       abstract: ''
-    }
+    },
+    authorNames: ''
   }),
 
   methods: {
     setValues (paper) {
       Object.assign(this.paper, paper)
-      this.paper.authorNames = this.showAuthorNames(paper.authors)
+      this.authorNames = this.paper.authorNames.join(', ')
     },
     validate () {
       if (this.$refs.form.validate()) {
         this.snackbar = true
-        this.paper.authors = this.paper.authorNames.split(',').map(name => { return {name} })
+        this.paper.authorNames = this.authorNames.split(',').map(name => name.trim())
         this.$emit('editPaperInfoDone', this.paper)
       }
     },
@@ -93,11 +94,6 @@ export default {
     },
     resetValidation () {
       this.$refs.form.resetValidation()
-    },
-    showAuthorNames (authors) {
-      if (Array.isArray(authors)) {
-        return authors.map((author) => author.name).join(',')
-      }
     }
   }
 }

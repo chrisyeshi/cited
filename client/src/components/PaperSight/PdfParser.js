@@ -145,7 +145,7 @@ export default class PdfLoader {
   }
 
   extract (refTexts) {
-    console.log(refTexts)
+    // console.log(refTexts)
     let refItems = []
     let refLabelPatterns = [
       new RegExp(/^\[(.+)\]/),
@@ -172,16 +172,20 @@ export default class PdfLoader {
               currentRefItem = refText.replace(labelPattern, '')
             }
           } else {
-            refItems.push(currentRefItem)
+            refItems.push(currentRefItem.trim())
             currentRefItem = ''
           }
         } else {
-          currentRefItem += ' ' + refText
+          if ([',', '”', ';', '.', ' ', '"'].indexOf(currentRefItem.slice(-1)) !== -1) {
+            currentRefItem += ' ' + refText
+          } else {
+            currentRefItem += refText
+          }
         }
       }
     })
     // refItems.shift()
-    console.log(refItems)
+    // console.log(refItems)
     if (refItems[refItems.length - 1].length > 500) {
       refItems[refItems.length - 1] = refItems[refItems.length - 1].slice(0, 500)
     }
