@@ -1,0 +1,846 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: discovery-engine # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-2
+  profile: discovery-engine
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+plugins:
+  - serverless-appsync-plugin
+
+custom:
+  apiName: disco
+  policyVersion: "2012-10-17"
+  tables:
+    articles: ${self:custom.apiName}-articles
+    articleRelations: ${self:custom.apiName}-article-relations
+    authors: ${self:custom.apiName}-authors
+    authorArticles: ${self:custom.apiName}-author-articles
+    collections: ${self:custom.apiName}-collections
+    collectionArticles: ${self:custom.apiName}-collection-articles
+    organizations: ${self:custom.apiName}-organizations
+    ownership: ${self:custom.apiName}-ownership
+    publishers: ${self:custom.apiName}-publishers
+    venues: ${self:custom.apiName}-venues
+  dataSources:
+    articles: ${self:custom.apiName}_articles
+    articleRelations: ${self:custom.apiName}_article_relations
+    authors: ${self:custom.apiName}_authors
+    authorArticles: ${self:custom.apiName}_author_articles
+    collections: ${self:custom.apiName}_collections
+    collectionArticles: ${self:custom.apiName}_collection_articles
+    organizations: ${self:custom.apiName}_organizations
+    ownership: ${self:custom.apiName}_ownership
+    publishers: ${self:custom.apiName}_publishers
+    venues: ${self:custom.apiName}_venues
+    batch: ${self:custom.apiName}_batch
+
+  appSync:
+    name: ${self:custom.apiName}-appsync-graphql-api
+    authenticationType: AMAZON_COGNITO_USER_POOLS
+    userPoolConfig:
+      awsRegion: ${self:provider.region}
+      defaultAction: ALLOW
+      userPoolId: !Ref UserPool
+
+    functionConfigurations:
+      - name: ${self:custom.apiName}-getUserItemIds
+        dataSource: ${self:custom.dataSources.ownership}
+        request: Function.getUserItemIds.request.vtl
+        response: Function.getUserItemIds.response.vtl
+
+      - name: ${self:custom.apiName}-batchGetArticles
+        dataSource: ${self:custom.dataSources.batch}
+        request: Function.batchGetArticles.request.vtl
+        response: Function.batchGetArticles.response.vtl
+
+      - name: ${self:custom.apiName}-batchGetAuthors
+        dataSource: ${self:custom.dataSources.batch}
+        request: Function.batchGetAuthors.request.vtl
+        response: Function.batchGetAuthors.response.vtl
+
+      - name: ${self:custom.apiName}-batchGetCollections
+        dataSource: ${self:custom.dataSources.collections}
+        request: Function.batchGetCollections.request.vtl
+        response: Function.batchGetCollections.response.vtl
+
+      - name: ${self:custom.apiName}-updateArticle
+        dataSource: ${self:custom.dataSources.articles}
+        request: Function.updateItemById.request.vtl
+        response: Generic.response.vtl
+
+      - name: ${self:custom.apiName}-updateCollection
+        dataSource: ${self:custom.dataSources.collections}
+        request: Function.updateItemById.request.vtl
+        response: Generic.response.vtl
+
+      # - name: ${self:custom.apiName}-setArticle
+      #   dataSource: ${self:custom.dataSources.articles}
+      #   request: Function.setArticle.request.vtl
+      #   response: Function.setArticle.response.vtl
+
+      # - name: ${self:custom.apiName}-setArticleRelatives
+      #   dataSource: ${self:custom.dataSources.batch}
+      #   request: Function.setArticleRelatives.request.vtl
+      #   response: Function.setArticleRelatives.response.vtl
+
+      # - name: ${self:custom.apiName}-setCollection
+      #   dataSource: ${self:custom.dataSources.collections}
+      #   request: Function.setCollection.request.vtl
+      #   response: Function.setCollection.response.vtl
+
+      # - name: ${self:custom.apiName}-setCollectionArticles
+      #   dataSource: ${self:custom.dataSources.batch}
+      #   request: Function.setCollectionArticles.request.vtl
+      #   response: Function.setCollectionArticles.response.vtl
+
+      # - name: ${self:custom.apiName}-getArticleReferenceIds
+      #   dataSource: ${self:custom.dataSources.articleRelations}
+      #   request: Function.getArticleReferenceIds.request.vtl
+      #   response: Function.getArticleReferenceIds.response.vtl
+
+      # - name: ${self:custom.apiName}-getArticleCitedByIds
+      #   dataSource: ${self:custom.dataSources.articleRelations}
+      #   request: Function.getArticleCitedByIds.request.vtl
+      #   response: Function.getArticleCitedByIds.response.vtl
+
+      - name: ${self:custom.apiName}-getCollectionArticleIds
+        dataSource: ${self:custom.dataSources.collectionArticles}
+        request: Function.getCollectionArticleIds.request.vtl
+        response: Function.getCollectionArticleIds.response.vtl
+
+    mappingTemplates:
+      - type: Query
+        field: getMyArticles
+        request: Query.getMyArticles.request.vtl
+        response: Generic.items.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-getUserItemIds
+          - ${self:custom.apiName}-batchGetArticles
+
+      - type: Query
+        field: getUserArticles
+        request: Query.getUserArticles.request.vtl
+        response: Generic.items.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-getUserItemIds
+          - ${self:custom.apiName}-batchGetArticles
+
+      - type: Query
+        field: getMyAuthors
+        request: Query.getMyAuthors.request.vtl
+        response: Generic.items.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-getUserItemIds
+          - ${self:custom.apiName}-batchGetAuthors
+
+      - type: Query
+        field: getUserAuthors
+        request: Query.getUserAuthors.request.vtl
+        response: Generic.items.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-getUserItemIds
+          - ${self:custom.apiName}-batchGetAuthors
+
+      - type: Query
+        field: getMyCollections
+        request: Query.getMyCollections.request.vtl
+        response: Generic.items.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-getUserItemIds
+          - ${self:custom.apiName}-batchGetCollections
+
+      - type: Query
+        field: getUserCollections
+        request: Query.getUserCollections.request.vtl
+        response: Generic.items.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-getUserItemIds
+          - ${self:custom.apiName}-batchGetCollections
+
+      - type: Query
+        field: getAllArticles
+        dataSource: ${self:custom.dataSources.articles}
+        request: Generic.scan.request.vtl
+        response: Query.getAllArticles.response.vtl
+
+      - type: Query
+        field: getAllAuthors
+        dataSource: ${self:custom.dataSources.authors}
+        request: Generic.scan.request.vtl
+        response: Query.getAllAuthors.response.vtl
+
+      - type: Query
+        field: getAllCollections
+        dataSource: ${self:custom.dataSources.collections}
+        request: Generic.scan.request.vtl
+        response: Query.getAllCollections.response.vtl
+
+      - type: Query
+        field: getArticle
+        dataSource: ${self:custom.dataSources.articles}
+        request: Query.getArticle.request.vtl
+        response: Generic.response.vtl
+
+      - type: Query
+        field: getCollection
+        dataSource: ${self:custom.dataSources.collections}
+        request: Query.getCollection.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: createArticle
+        dataSource: ${self:custom.dataSources.articles}
+        request: Mutation.createArticle.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: createArticles
+        dataSource: ${self:custom.dataSources.batch}
+        request: Mutation.createArticles.request.vtl
+        response: Mutation.createArticles.response.vtl
+
+      - type: Mutation
+        field: updateArticle
+        request: Generic.getUpdateItemJson.request.vtl
+        response: Generic.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-updateArticle
+
+      - type: Mutation
+        field: deleteArticle
+        dataSource: ${self:custom.dataSources.articles}
+        request: Generic.deleteItemById.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: deleteArticles
+        dataSource: ${self:custom.dataSources.batch}
+        request: Mutation.deleteArticles.request.vtl
+        response: Mutation.deleteArticles.response.vtl
+
+      - type: Mutation
+        field: createArticleRelation
+        dataSource: ${self:custom.dataSources.articleRelations}
+        request: Mutation.createArticleRelation.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: createArticleRelations
+        dataSource: ${self:custom.dataSources.batch}
+        request: Mutation.createArticleRelations.request.vtl
+        response: Mutation.createArticleRelations.response.vtl
+
+      - type: Mutation
+        field: deleteArticleRelation
+        dataSource: ${self:custom.dataSources.articleRelations}
+        request: Mutation.deleteArticleRelation.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: deleteArticleRelations
+        dataSource: ${self:custom.dataSources.batch}
+        request: Mutation.deleteArticleRelations.request.vtl
+        response: Mutation.deleteArticleRelations.response.vtl
+
+      - type: Mutation
+        field: createCollection
+        dataSource: ${self:custom.dataSources.collections}
+        request: Mutation.createCollection.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: updateCollection
+        request: Generic.getUpdateItemJson.request.vtl
+        response: Generic.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-updateCollection
+
+      - type: Mutation
+        field: deleteCollection
+        dataSource: ${self:custom.dataSources.collections}
+        request: Generic.deleteItemById.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: createCollectionArticle
+        dataSource: ${self:custom.dataSources.collectionArticles}
+        request: Mutation.createCollectionArticle.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: createCollectionArticles
+        dataSource: ${self:custom.dataSources.batch}
+        request: Mutation.createCollectionArticles.request.vtl
+        response: Mutation.createCollectionArticles.response.vtl
+
+      - type: Mutation
+        field: deleteCollectionArticle
+        dataSource: ${self:custom.dataSources.collectionArticles}
+        request: Mutation.deleteCollectionArticle.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: deleteCollectionArticles
+        dataSource: ${self:custom.dataSources.batch}
+        request: Mutation.deleteCollectionArticles.request.vtl
+        response: Mutation.deleteCollectionArticles.response.vtl
+
+      # - type: Mutation
+      #   field: setMyArticle
+      #   request: Mutation.setMyArticle.request.vtl
+      #   response: Mutation.setMyArticle.response.vtl
+      #   kind: PIPELINE
+      #   functions:
+      #     - ${self:custom.apiName}-setArticleRelatives
+
+      # - type: Mutation
+      #   field: setAuthor
+      #   request: Mutation.setAuthor.request.vtl
+      #   response: Mutation.setAuthor.response.vtl
+      #   kind: PIPELINE
+      #   functions:
+      #     - ${self:custom.apiName}-setAuthorArticles
+
+      # - type: Mutation
+      #   field: setCollection
+      #   kind: PIPELINE
+      #   request: Mutation.setCollection.request.vtl
+      #   response: Mutation.setCollection.response.vtl
+      #   functions:
+      #     - ${self:custom.apiName}-setCollectionArticles
+
+      - type: Article
+        field: references
+        dataSource: ${self:custom.dataSources.articleRelations}
+        request: Article.references.request.vtl
+        response: Article.references.response.vtl
+
+      - type: Article
+        field: citedBys
+        dataSource: ${self:custom.dataSources.articleRelations}
+        request: Article.citedBys.request.vtl
+        response: Article.citedBys.response.vtl
+
+      - type: ArticleRelatives
+        field: articles
+        request: ArticleRelatives.articles.request.vtl
+        response: Generic.items.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-batchGetArticles
+
+      - type: Author
+        field: articles
+        dataSource: ${self:custom.dataSources.authorArticles}
+        request: Author.articles.request.vtl
+        response: Author.articles.response.vtl
+
+      - type: AuthorArticles
+        field: articles
+        request: AuthorArticles.articles.request.vtl
+        response: Generic.items.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-batchGetArticles
+
+      - type: Collection
+        field: articles
+        request: Collection.articles.request.vtl
+        response: Generic.items.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-getCollectionArticleIds
+          - ${self:custom.apiName}-batchGetArticles
+
+    # dataSources
+    dataSources:
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.articles}
+        description: AppSync Datasource using the DynamoDB table articles
+        config:
+          tableName: !Ref DynamoDBTableArticles
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.articleRelations}
+        description: AppSync Datasource using the DynamoDB table articleRelations
+        config:
+          tableName: !Ref DynamoDBTableArticleRelations
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.authors}
+        description: AppSync Datasource using the DynamoDB table authors
+        config:
+          tableName: !Ref DynamoDBTableAuthors
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.authorArticles}
+        description: AppSync Datasource using the DynamoDB table authorArticles
+        config:
+          tableName: !Ref DynamoDBTableAuthorArticles
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.collections}
+        description: AppSync Datasource using the DynamoDB table collections
+        config:
+          tableName: !Ref DynamoDBTableCollections
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.collectionArticles}
+        description: AppSync Datasource using the DynamoDB table collectionArticles
+        config:
+          tableName: !Ref DynamoDBTableCollectionArticles
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.organizations}
+        description: AppSync Datasource using the DynamoDB table organizations
+        config:
+          tableName: !Ref DynamoDBTableOrganizations
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.ownership}
+        description: AppSync Datasource using the DynamoDB table ownership
+        config:
+          tableName: !Ref DynamoDBTableOwnership
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.publishers}
+        description: AppSync Datasource using the DynamoDB table publishers
+        config:
+          tableName: !Ref DynamoDBTablePublishers
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.venues}
+        description: AppSync Datasource using the DynamoDB table venues
+        config:
+          tableName: !Ref DynamoDBTableVenues
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.batch}
+        description: AppSync Datasource for DynamoDB batch operations
+        config:
+          tableName: empty
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+    substitutions:
+      tableArticles: ${self:custom.tables.articles}
+      tableArticleRelations: ${self:custom.tables.articleRelations}
+      tableAuthors: ${self:custom.tables.authors}
+      tableAuthorArticles: ${self:custom.tables.authorArticles}
+      tableCollections: ${self:custom.tables.collections}
+      tableCollectionArticles: ${self:custom.tables.collectionArticles}
+      tableOrganizations: ${self:custom.tables.organizations}
+      tableOwnership: ${self:custom.tables.ownership}
+      tablePublishers: ${self:custom.tables.publishers}
+      tableVenues: ${self:custom.tables.venues}
+
+# you can add packaging information here
+#package:
+#  include:
+#    - include-me.js
+#    - include-me-dir/**
+#  exclude:
+#    - exclude-me.js
+#    - exclude-me-dir/**
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+
+#    The following are a few example events you can configure
+#    NOTE: Please make sure to change your handler code to work with those events
+#    Check the event documentation for details
+#    events:
+#      - http:
+#          path: users/create
+#          method: get
+#      - websocket: $connect
+#      - s3: ${env:BUCKET}
+#      - schedule: rate(10 minutes)
+#      - sns: greeter-topic
+#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
+#      - alexaSkill: amzn1.ask.skill.xx-xx-xx-xx
+#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
+#      - iot:
+#          sql: "SELECT * FROM 'some_topic'"
+#      - cloudwatchEvent:
+#          event:
+#            source:
+#              - "aws.ec2"
+#            detail-type:
+#              - "EC2 Instance State-change Notification"
+#            detail:
+#              state:
+#                - pending
+#      - cloudwatchLog: '/aws/lambda/hello'
+#      - cognitoUserPool:
+#          pool: MyUserPool
+#          trigger: PreSignUp
+
+#    Define function environment variables here
+#    environment:
+#      variable2: value2
+
+resources:
+  Resources:
+    UserPool:
+      Type: AWS::Cognito::UserPool
+      Description: A Cognito user pool for authenticating users
+      Properties:
+        UserPoolName: ${self:custom.apiName}-user-pool
+
+    UserPoolGroupAdmins:
+      Type: AWS::Cognito::UserPoolGroup
+      Properties:
+        Description: The admins user pool group
+        GroupName: admins
+        Precedence: 2000
+        UserPoolId: !Ref UserPool
+
+    UserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Description: App Client used by AWS AppSync
+      Properties:
+        ClientName: ${self:custom.apiName}-appsync-client
+        GenerateSecret: false
+        UserPoolId: !Ref UserPool
+
+    DynamoDBTableArticles:
+      Type: AWS::DynamoDB::Table
+      Description: Table for Articles
+      Properties:
+        TableName: ${self:custom.tables.articles}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    DynamoDBTableArticleRelations:
+      Type: AWS::DynamoDB::Table
+      Description: Table for Article References
+      Properties:
+        TableName: ${self:custom.tables.articleRelations}
+        AttributeDefinitions:
+          - AttributeName: referenceId
+            AttributeType: S
+          - AttributeName: citedById
+            AttributeType: S
+        KeySchema:
+          - AttributeName: referenceId
+            KeyType: HASH
+          - AttributeName: citedById
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: reverseIndex
+            KeySchema:
+              - AttributeName: citedById
+                KeyType: HASH
+              - AttributeName: referenceId
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    DynamoDBTableAuthors:
+      Type: AWS::DynamoDB::Table
+      Description: Table for Authors
+      Properties:
+        TableName: ${self:custom.tables.authors}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    DynamoDBTableAuthorArticles:
+      Type: AWS::DynamoDB::Table
+      Description: Table for Author Articles
+      Properties:
+        TableName: ${self:custom.tables.authorArticles}
+        AttributeDefinitions:
+          - AttributeName: authorId
+            AttributeType: S
+          - AttributeName: artId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: authorId
+            KeyType: HASH
+          - AttributeName: artId
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: reverseIndex
+            KeySchema:
+              - AttributeName: artId
+                KeyType: HASH
+              - AttributeName: authorId
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    DynamoDBTableCollections:
+      Type: AWS::DynamoDB::Table
+      Description: Table for Collections
+      Properties:
+        TableName: ${self:custom.tables.collections}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    DynamoDBTableCollectionArticles:
+      Type: AWS::DynamoDB::Table
+      Description: Table connecting Collections and Articles
+      Properties:
+        TableName: ${self:custom.tables.collectionArticles}
+        AttributeDefinitions:
+          - AttributeName: collId
+            AttributeType: S
+          - AttributeName: artId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: collId
+            KeyType: HASH
+          - AttributeName: artId
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: reverseIndex
+            KeySchema:
+              - AttributeName: artId
+                KeyType: HASH
+              - AttributeName: collId
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    DynamoDBTableOrganizations:
+      Type: AWS::DynamoDB::Table
+      Description: Table for Organizations
+      Properties:
+        TableName: ${self:custom.tables.organizations}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    DynamoDBTableOwnership:
+      Type: AWS::DynamoDB::Table
+      Description: Table for Ownership information
+      Properties:
+        TableName: ${self:custom.tables.ownership}
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: itemId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: itemId
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    DynamoDBTablePublishers:
+      Type: AWS::DynamoDB::Table
+      Description: Table for Publishers
+      Properties:
+        TableName: ${self:custom.tables.publishers}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    DynamoDBTableVenues:
+      Type: AWS::DynamoDB::Table
+      Description: Table for Venues
+      Properties:
+        TableName: ${self:custom.tables.venues}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    AppSyncDynamoDBRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:custom.apiName}-appsync-dynamodb-role
+        ManagedPolicyArns:
+          - Ref: DynamoDBPolicy
+        AssumeRolePolicyDocument:
+          Version: ${self:custom.policyVersion}
+          Statement:
+            - Effect: Allow
+              Action:
+                - sts:AssumeRole
+              Principal:
+                Service:
+                  - appsync.amazonaws.com
+      DependsOn:
+        - DynamoDBPolicy
+
+    DynamoDBPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties: 
+        Description: Managed Policy to allow AWS AppSync to access the tables created by this template.
+        Path: /appsync/
+        PolicyDocument:
+          Version: ${self:custom.policyVersion}
+          Statement: 
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:DeleteItem
+                - dynamodb:UpdateItem
+                - dynamodb:Query
+                - dynamodb:Scan
+                - dynamodb:BatchGetItem
+                - dynamodb:BatchWriteItem
+              Resource:
+                - !GetAtt DynamoDBTableArticles.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableArticles.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTableArticleRelations.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableArticleRelations.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTableAuthors.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableAuthors.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTableAuthorArticles.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableAuthorArticles.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTableCollections.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableCollections.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTableCollectionArticles.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableCollectionArticles.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTableOrganizations.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableOrganizations.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTableOwnership.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableOwnership.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTablePublishers.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTablePublishers.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTableVenues.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableVenues.Arn, "/*" ] ]
+
+# you can add CloudFormation resource templates here
+#resources:
+#  Resources:
+#    NewResource:
+#      Type: AWS::S3::Bucket
+#      Properties:
+#        BucketName: my-new-bucket
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"

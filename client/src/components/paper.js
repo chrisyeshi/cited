@@ -12,7 +12,8 @@ export class Author {
     return _.trim(text, ' ,')
   }
 
-  static stringify (value, format = Author.FORMAT_FAMILY_COMMA_GIVEN, delimiter = ' and ') {
+  static stringify (
+    value, format = Author.FORMAT_FAMILY_COMMA_GIVEN, delimiter = ' and ') {
     if (_.isArray(value)) {
       const authors = value
       // TODO: validation
@@ -92,7 +93,8 @@ export class Paper {
     const id = doi
     const title = crossrefPaper.title.join()
     const authors = _.map(
-      crossrefPaper.author, author => new Author('authorId', author.family, author.given))
+      crossrefPaper.author,
+      author => new Author('authorId', author.family, author.given))
     const abstract = crossrefPaper.abstract
     const year = _.toNumber(crossrefPaper.created['date-parts'][0][0])
     const citings = _.map(

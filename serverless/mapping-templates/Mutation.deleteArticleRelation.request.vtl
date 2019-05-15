@@ -1,0 +1,8 @@
+{
+  "version": "2018-05-29",
+  "operation": "DeleteItem",
+  "key": {
+    "referenceId": $util.dynamodb.toDynamoDBJson($ctx.args.input.referenceId),
+    "citedById": $util.dynamodb.toDynamoDBJson($ctx.args.input.citedById)
+  }
+}

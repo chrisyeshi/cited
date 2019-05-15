@@ -1,0 +1,14 @@
+{
+  "name": "disco-serverless",
+  "version": "1.0.0",
+  "description": "using the serverless framework to sepecify aws backend",
+  "main": "serverless.yml",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless-appsync-plugin": "^1.1.1"
+  }
+}

@@ -1,0 +1,18 @@
+#set($type = $ctx.args.input.type)
+#set($year = $ctx.args.input.year)
+#set($authors = $ctx.args.input.authors)
+#if($authors.isEmpty())
+  #set($firstAuthorSurname = "unknown")
+#else
+  #set($firstAuthorSurname = $ctx.args.input.authors[0].surname)
+#end
+#set($artId = "art-${type}-${firstAuthorSurname}-${year.toString()}-${util.autoId()}")
+
+{
+  "version": "2018-05-29",
+  "operation": "PutItem",
+  "key": {
+    "id": $util.dynamodb.toDynamoDBJson($artId)
+  },
+  "attributeValues": $util.dynamodb.toMapValuesJson($ctx.args.input)
+}

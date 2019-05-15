@@ -1,0 +1,9 @@
+#if($ctx.result.data)
+  $util.toJson({
+    "items": $ctx.result.data["${tableArticles}"]
+  })
+#else
+  $util.toJson({
+    "items": []
+  })
+#end

@@ -1,0 +1,16 @@
+#set($keysInput = $ctx.args.input)
+#set($keys = [])
+#foreach($keyInput in $keysInput)
+  $util.qr($keys.add({
+    "referenceId": $util.dynamodb.toDynamoDB($keyInput.referenceId),
+    "citedById": $util.dynamodb.toDynamoDB($keyInput.citedById)
+  }))
+#end
+
+{
+  "version": "2018-05-29",
+  "operation": "BatchDeleteItem",
+  "tables": {
+    "${tableArticleRelations}": $util.toJson($keys)
+  }
+}

@@ -1,0 +1,15 @@
+#set($ids = $ctx.args.ids)
+#set($keys = [])
+#foreach($id in $ids)
+  $util.qr($keys.add({
+    "id": $util.dynamodb.toDynamoDB($id)
+  }))
+#end
+
+{
+  "version": "2018-05-29",
+  "operation": "BatchDeleteItem",
+  "tables": {
+    "${tableArticles}": $util.toJson($keys)
+  }
+}

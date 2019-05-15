@@ -1,0 +1,12 @@
+{
+  "version": "2017-02-28",
+  "operation": "Query",
+  "index": "reverseIndex",
+  "query": {
+    "expression": "citedById = :citedById",
+    "expressionValues": {
+      ":citedById": $util.dynamodb.toDynamoDBJson($ctx.source.id)
+    }
+  },
+  "limit": $util.defaultIfNull($ctx.args.limit, 50)
+}
