@@ -145,6 +145,7 @@ export default class PdfLoader {
   }
 
   extract (refTexts) {
+    // console.log(refTexts)
     let refItems = []
     let refLabelPatterns = [
       new RegExp(/^\[(.+)\]/),
@@ -165,26 +166,37 @@ export default class PdfLoader {
         let match = refText.match(labelPattern)
         if (match) {
           // console.log(match)
-          if (match[1].match(/^\d+$/)) {
+          if (match[1].match(/^\d+$/) && match[1] !== 'Online') {
             if (Number(match[1]) === refItems.length + 2) {
               refItems.push(currentRefItem)
-              currentRefItem = ''
+              currentRefItem = refText.replace(labelPattern, '')
             }
           } else {
-            refItems.push(currentRefItem)
+            refItems.push(currentRefItem.trim())
             currentRefItem = ''
           }
         } else {
-          currentRefItem += refText
+          if ([',', '”', ';', '.', ' ', '"'].indexOf(currentRefItem.slice(-1)) !== -1) {
+            currentRefItem += ' ' + refText
+          } else {
+            currentRefItem += refText
+          }
         }
       }
     })
     // refItems.shift()
+    // console.log(refItems)
     if (refItems[refItems.length - 1].length > 500) {
       refItems[refItems.length - 1] = refItems[refItems.length - 1].slice(0, 500)
     }
-    let refQuery = refItems.map(rt => '\'' + this.sanitizeUrl(rt) + '\'').join('+')
-    return axios('/api/anystyle?refs=' + encodeURIComponent(refQuery))
+    let refQuery = refItems.map(rt => '\'' + rt + '\'').join('+')
+    return new Promise((resolve, reject) => {
+      axios('/api/anystyle?refs=' + encodeURIComponent(refQuery)).then(res => {
+        resolve({raw: refItems, parsed: JSON.parse(res.data)})
+      }).catch(err => {
+        reject(err)
+      })
+    })
   }
 
   /**

@@ -39,7 +39,7 @@
               <v-list-tile-title><span class="dot" v-bind:style="'background-color: ' + paper.color"></span>
                 {{ paper.title }}
               </v-list-tile-title>
-              <v-list-tile-sub-title class="text--primary">{{ showAuthorNames(paper.authors) }}</v-list-tile-sub-title>
+              <v-list-tile-sub-title class="text--primary">{{ showAuthorNames(paper.authorNames) }}</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon @click="editPaperInfo(index)">edit</v-icon>
@@ -69,6 +69,10 @@ export default {
       this.papers.push(paper)
     },
 
+    clear () {
+      this.papers = []
+    },
+
     viewPaper (index) {
       this.$emit('viewPaper', index)
     },
@@ -90,7 +94,7 @@ export default {
 
     showAuthorNames (authors) {
       if (Array.isArray(authors)) {
-        return authors.map((author) => author.name).join(', ')
+        return authors.join(', ')
       }
     }
   }
