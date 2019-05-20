@@ -17,7 +17,15 @@ export class Author {
 export class AffiliatedAuthor {
   constructor (author, organization) {
     this.author = author
-    this.affilation = organization
+    this.affiliation = organization
+  }
+
+  static flatten (affiAuthor) {
+    return {
+      surname: affiAuthor.surname,
+      given: affiAuthor.given,
+      affiliation: affiAuthor.affiliation.name || undefined
+    }
   }
 
   static fromName (surname, given, orgName) {
@@ -158,6 +166,23 @@ export class SourceArticle {
   constructor (article, sources = {}) {
     this.article = article
     this.sources = sources
+  }
+
+  static flatten (srcArt) {
+    const art = srcArt.article
+    const paper = art.data
+    return {
+      artId: art.id,
+      type: art.type,
+      title: paper.title,
+      abstract: paper.abstract,
+      year: paper.year,
+      authors: _.map(paper.authors, author => AffiliatedAuthor.flatten(author)),
+      venue: paper.venue,
+      nReferences: art.nReferences,
+      nCitedBys: art.nCitedBys,
+      externs: art.externs
+    }
   }
 
   static fromExtern (artId, externSrcArt, refArtIds) {

@@ -644,7 +644,7 @@ export default {
       } else {
         // single selection
         this.selectedVisNodeIds = [ visNode.articleId ]
-        this.$router.push(`${visNode.articleId}`)
+        this.$router.push(`/demo/${visNode.articleId}`)
         this.isDrawerOpenComputed = true
       }
     },
@@ -659,14 +659,14 @@ export default {
     },
     onDrawerArticleSelected (artId) {
       this.$emit('add-to-vis', artId)
-      this.$router.push(`${artId}`)
+      this.$router.push(`/demo/${artId}`)
     },
     onDrawerArticleUnselected () {
       this.$router.go(-1)
     },
     onDrawerListItemTitleClicked (artId) {
       this.$emit('add-to-vis', artId)
-      this.$router.push(`${artId}`)
+      this.$router.push(`/demo/${artId}`)
     },
     onVisContainerResize (el) {
       this.visContainerWidth = el.offsetWidth / this.visConfig.fontSize
