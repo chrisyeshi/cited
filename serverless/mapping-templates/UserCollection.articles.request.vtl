@@ -1,0 +1,17 @@
+#set($userId = $ctx.source.userId)
+#set($collId = $ctx.source.collId)
+#set($fullCollId = "user-${userId}-coll-${collId}")
+
+{
+  "version": "2018-05-29",
+  "operation": "Query",
+  "query": {
+    "expression": "#collId = :collId",
+    "expressionNames": {
+      "#collId": "collId"
+    },
+    "expressionValues": {
+      ":collId": $util.dynamodb.toDynamoDBJson($fullCollId)
+    }
+  }
+}

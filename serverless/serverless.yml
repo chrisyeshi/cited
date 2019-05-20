@@ -55,6 +55,7 @@ custom:
     collectionArticles: ${self:custom.apiName}-collection-articles
     organizations: ${self:custom.apiName}-organizations
     ownership: ${self:custom.apiName}-ownership
+    userCollections: ${self:custom.apiName}-user-collections
     publishers: ${self:custom.apiName}-publishers
     venues: ${self:custom.apiName}-venues
   dataSources:
@@ -66,6 +67,7 @@ custom:
     collectionArticles: ${self:custom.apiName}_collection_articles
     organizations: ${self:custom.apiName}_organizations
     ownership: ${self:custom.apiName}_ownership
+    userCollections: ${self:custom.apiName}_user_collections
     publishers: ${self:custom.apiName}_publishers
     venues: ${self:custom.apiName}_venues
     batch: ${self:custom.apiName}_batch
@@ -79,322 +81,194 @@ custom:
       userPoolId: !Ref UserPool
 
     functionConfigurations:
-      - name: ${self:custom.apiName}-getUserItemIds
-        dataSource: ${self:custom.dataSources.ownership}
-        request: Function.getUserItemIds.request.vtl
-        response: Function.getUserItemIds.response.vtl
+      # - name: ${self:custom.apiName}-getUserItemIds
+      #   dataSource: ${self:custom.dataSources.ownership}
+      #   request: Function.getUserItemIds.request.vtl
+      #   response: Function.getUserItemIds.response.vtl
 
-      - name: ${self:custom.apiName}-batchGetArticles
-        dataSource: ${self:custom.dataSources.batch}
-        request: Function.batchGetArticles.request.vtl
-        response: Function.batchGetArticles.response.vtl
-
-      - name: ${self:custom.apiName}-batchGetAuthors
-        dataSource: ${self:custom.dataSources.batch}
-        request: Function.batchGetAuthors.request.vtl
-        response: Function.batchGetAuthors.response.vtl
-
-      - name: ${self:custom.apiName}-batchGetCollections
-        dataSource: ${self:custom.dataSources.collections}
-        request: Function.batchGetCollections.request.vtl
-        response: Function.batchGetCollections.response.vtl
-
-      - name: ${self:custom.apiName}-updateArticle
-        dataSource: ${self:custom.dataSources.articles}
-        request: Function.updateItemById.request.vtl
-        response: Generic.response.vtl
-
-      - name: ${self:custom.apiName}-updateCollection
-        dataSource: ${self:custom.dataSources.collections}
-        request: Function.updateItemById.request.vtl
-        response: Generic.response.vtl
-
-      # - name: ${self:custom.apiName}-setArticle
-      #   dataSource: ${self:custom.dataSources.articles}
-      #   request: Function.setArticle.request.vtl
-      #   response: Function.setArticle.response.vtl
-
-      # - name: ${self:custom.apiName}-setArticleRelatives
+      # - name: ${self:custom.apiName}-batchGetArticles
       #   dataSource: ${self:custom.dataSources.batch}
-      #   request: Function.setArticleRelatives.request.vtl
-      #   response: Function.setArticleRelatives.response.vtl
+      #   request: Function.batchGetArticles.request.vtl
+      #   response: Function.batchGetArticles.response.vtl
 
-      # - name: ${self:custom.apiName}-setCollection
+      # - name: ${self:custom.apiName}-batchGetAuthors
+      #   dataSource: ${self:custom.dataSources.batch}
+      #   request: Function.batchGetAuthors.request.vtl
+      #   response: Function.batchGetAuthors.response.vtl
+
+      # - name: ${self:custom.apiName}-batchGetCollections
       #   dataSource: ${self:custom.dataSources.collections}
-      #   request: Function.setCollection.request.vtl
-      #   response: Function.setCollection.response.vtl
+      #   request: Function.batchGetCollections.request.vtl
+      #   response: Function.batchGetCollections.response.vtl
 
-      # - name: ${self:custom.apiName}-setCollectionArticles
-      #   dataSource: ${self:custom.dataSources.batch}
-      #   request: Function.setCollectionArticles.request.vtl
-      #   response: Function.setCollectionArticles.response.vtl
+      # - name: ${self:custom.apiName}-updateArticle
+      #   dataSource: ${self:custom.dataSources.articles}
+      #   request: Function.updateItemById.request.vtl
+      #   response: Generic.response.vtl
 
-      # - name: ${self:custom.apiName}-getArticleReferenceIds
-      #   dataSource: ${self:custom.dataSources.articleRelations}
-      #   request: Function.getArticleReferenceIds.request.vtl
-      #   response: Function.getArticleReferenceIds.response.vtl
+      # - name: ${self:custom.apiName}-updateCollection
+      #   dataSource: ${self:custom.dataSources.collections}
+      #   request: Function.updateItemById.request.vtl
+      #   response: Generic.response.vtl
 
-      # - name: ${self:custom.apiName}-getArticleCitedByIds
-      #   dataSource: ${self:custom.dataSources.articleRelations}
-      #   request: Function.getArticleCitedByIds.request.vtl
-      #   response: Function.getArticleCitedByIds.response.vtl
+      # - name: ${self:custom.apiName}-getCollectionArticleIds
+      #   dataSource: ${self:custom.dataSources.collectionArticles}
+      #   request: Function.getCollectionArticleIds.request.vtl
+      #   response: Function.getCollectionArticleIds.response.vtl
 
-      - name: ${self:custom.apiName}-getCollectionArticleIds
+      - name: ${self:custom.apiName}-updateMyCollection
+        dataSource: ${self:custom.dataSources.userCollections}
+        request: Function.updateMyCollection.request.vtl
+        response: Generic.response.vtl
+
+      - name: ${self:custom.apiName}-isUserCollectionEmpty
         dataSource: ${self:custom.dataSources.collectionArticles}
-        request: Function.getCollectionArticleIds.request.vtl
-        response: Function.getCollectionArticleIds.response.vtl
+        request: Function.isUserCollectionEmpty.request.vtl
+        response: Function.isUserCollectionEmpty.response.vtl
+
+      - name: ${self:custom.apiName}-deleteUserCollection
+        dataSource: ${self:custom.dataSources.userCollections}
+        request: Function.deleteUserCollection.request.vtl
+        response: Generic.response.vtl
+
+      - name: ${self:custom.apiName}-updateMyCollectionArticle
+        dataSource: ${self:custom.dataSources.collectionArticles}
+        request: Function.updateMyCollectionArticle.request.vtl
+        response: Generic.response.vtl
 
     mappingTemplates:
       - type: Query
-        field: getMyArticles
-        request: Query.getMyArticles.request.vtl
+        field: getAllMyCollections
+        dataSource: ${self:custom.dataSources.userCollections}
+        request: Query.getAllMyCollections.request.vtl
         response: Generic.items.response.vtl
-        kind: PIPELINE
-        functions:
-          - ${self:custom.apiName}-getUserItemIds
-          - ${self:custom.apiName}-batchGetArticles
 
       - type: Query
-        field: getUserArticles
-        request: Query.getUserArticles.request.vtl
-        response: Generic.items.response.vtl
-        kind: PIPELINE
-        functions:
-          - ${self:custom.apiName}-getUserItemIds
-          - ${self:custom.apiName}-batchGetArticles
-
-      - type: Query
-        field: getMyAuthors
-        request: Query.getMyAuthors.request.vtl
-        response: Generic.items.response.vtl
-        kind: PIPELINE
-        functions:
-          - ${self:custom.apiName}-getUserItemIds
-          - ${self:custom.apiName}-batchGetAuthors
-
-      - type: Query
-        field: getUserAuthors
-        request: Query.getUserAuthors.request.vtl
-        response: Generic.items.response.vtl
-        kind: PIPELINE
-        functions:
-          - ${self:custom.apiName}-getUserItemIds
-          - ${self:custom.apiName}-batchGetAuthors
-
-      - type: Query
-        field: getMyCollections
-        request: Query.getMyCollections.request.vtl
-        response: Generic.items.response.vtl
-        kind: PIPELINE
-        functions:
-          - ${self:custom.apiName}-getUserItemIds
-          - ${self:custom.apiName}-batchGetCollections
-
-      - type: Query
-        field: getUserCollections
-        request: Query.getUserCollections.request.vtl
-        response: Generic.items.response.vtl
-        kind: PIPELINE
-        functions:
-          - ${self:custom.apiName}-getUserItemIds
-          - ${self:custom.apiName}-batchGetCollections
-
-      - type: Query
-        field: getAllArticles
-        dataSource: ${self:custom.dataSources.articles}
-        request: Generic.scan.request.vtl
-        response: Query.getAllArticles.response.vtl
-
-      - type: Query
-        field: getAllAuthors
-        dataSource: ${self:custom.dataSources.authors}
-        request: Generic.scan.request.vtl
-        response: Query.getAllAuthors.response.vtl
-
-      - type: Query
-        field: getAllCollections
-        dataSource: ${self:custom.dataSources.collections}
-        request: Generic.scan.request.vtl
-        response: Query.getAllCollections.response.vtl
-
-      - type: Query
-        field: getArticle
-        dataSource: ${self:custom.dataSources.articles}
-        request: Query.getArticle.request.vtl
+        field: getMyCollection
+        dataSource: ${self:custom.dataSources.userCollections}
+        request: Query.getMyCollection.request.vtl
         response: Generic.response.vtl
 
       - type: Query
-        field: getCollection
-        dataSource: ${self:custom.dataSources.collections}
-        request: Query.getCollection.request.vtl
+        field: getMyCollectionArticle
+        dataSource: ${self:custom.dataSources.collectionArticles}
+        request: Query.getMyCollectionArticle.request.vtl
         response: Generic.response.vtl
 
       - type: Mutation
-        field: createArticle
-        dataSource: ${self:custom.dataSources.articles}
-        request: Mutation.createArticle.request.vtl
+        field: createMyCollection
+        dataSource: ${self:custom.dataSources.userCollections}
+        request: Mutation.createMyCollection.request.vtl
         response: Generic.response.vtl
 
       - type: Mutation
-        field: createArticles
-        dataSource: ${self:custom.dataSources.batch}
-        request: Mutation.createArticles.request.vtl
-        response: Mutation.createArticles.response.vtl
-
-      - type: Mutation
-        field: updateArticle
+        field: updateMyCollection
         request: Generic.getUpdateItemJson.request.vtl
         response: Generic.response.vtl
         kind: PIPELINE
         functions:
-          - ${self:custom.apiName}-updateArticle
+          - ${self:custom.apiName}-updateMyCollection
 
       - type: Mutation
-        field: deleteArticle
-        dataSource: ${self:custom.dataSources.articles}
-        request: Generic.deleteItemById.request.vtl
-        response: Generic.response.vtl
-
-      - type: Mutation
-        field: deleteArticles
-        dataSource: ${self:custom.dataSources.batch}
-        request: Mutation.deleteArticles.request.vtl
-        response: Mutation.deleteArticles.response.vtl
-
-      - type: Mutation
-        field: createArticleRelation
-        dataSource: ${self:custom.dataSources.articleRelations}
-        request: Mutation.createArticleRelation.request.vtl
-        response: Generic.response.vtl
-
-      - type: Mutation
-        field: createArticleRelations
-        dataSource: ${self:custom.dataSources.batch}
-        request: Mutation.createArticleRelations.request.vtl
-        response: Mutation.createArticleRelations.response.vtl
-
-      - type: Mutation
-        field: deleteArticleRelation
-        dataSource: ${self:custom.dataSources.articleRelations}
-        request: Mutation.deleteArticleRelation.request.vtl
-        response: Generic.response.vtl
-
-      - type: Mutation
-        field: deleteArticleRelations
-        dataSource: ${self:custom.dataSources.batch}
-        request: Mutation.deleteArticleRelations.request.vtl
-        response: Mutation.deleteArticleRelations.response.vtl
-
-      - type: Mutation
-        field: createCollection
-        dataSource: ${self:custom.dataSources.collections}
-        request: Mutation.createCollection.request.vtl
-        response: Generic.response.vtl
-
-      - type: Mutation
-        field: updateCollection
-        request: Generic.getUpdateItemJson.request.vtl
+        field: deleteMyCollection
+        request: Mutation.deleteMyCollection.request.vtl
         response: Generic.response.vtl
         kind: PIPELINE
         functions:
-          - ${self:custom.apiName}-updateCollection
+          - ${self:custom.apiName}-isUserCollectionEmpty
+          - ${self:custom.apiName}-deleteUserCollection
 
       - type: Mutation
-        field: deleteCollection
-        dataSource: ${self:custom.dataSources.collections}
-        request: Generic.deleteItemById.request.vtl
-        response: Generic.response.vtl
-
-      - type: Mutation
-        field: createCollectionArticle
+        field: createMyCollectionArticle
         dataSource: ${self:custom.dataSources.collectionArticles}
-        request: Mutation.createCollectionArticle.request.vtl
-        response: Generic.response.vtl
+        request: Mutation.createMyCollectionArticle.request.vtl
+        response: Common.UserCollectionArticle.response.vtl
 
       - type: Mutation
-        field: createCollectionArticles
-        dataSource: ${self:custom.dataSources.batch}
-        request: Mutation.createCollectionArticles.request.vtl
-        response: Mutation.createCollectionArticles.response.vtl
+        field: updateMyCollectionArticle
+        request: Generic.getUpdateItemJson.request.vtl
+        response: Common.UserCollectionArticle.response.vtl
+        kind: PIPELINE
+        functions:
+          - ${self:custom.apiName}-updateMyCollectionArticle
 
       - type: Mutation
-        field: deleteCollectionArticle
+        field: deleteMyCollectionArticle
         dataSource: ${self:custom.dataSources.collectionArticles}
-        request: Mutation.deleteCollectionArticle.request.vtl
+        request: Mutation.deleteMyCollectionArticle.request.vtl
+        response: Common.UserCollectionArticle.response.vtl
+
+      - type: Mutation
+        field: createMyCollectionArticles
+        dataSource: ${self:custom.dataSources.batch}
+        request: Mutation.createMyCollectionArticles.request.vtl
+        response: Common.UserCollectionArticles.response.vtl
+
+      - type: Mutation
+        field: deleteMyCollectionArticles
+        dataSource: ${self:custom.dataSources.batch}
+        request: Mutation.deleteMyCollectionArticles.request.vtl
+        response: Common.UserCollectionArticles.response.vtl
+
+      - type: Mutation
+        field: createMyCollectionArticleRelation
+        dataSource: ${self:custom.dataSources.articleRelations}
+        request: Mutation.createMyCollectionArticleRelation.request.vtl
         response: Generic.response.vtl
 
       - type: Mutation
-        field: deleteCollectionArticles
+        field: deleteMyCollectionArticleRelation
+        dataSource: ${self:custom.dataSources.articleRelations}
+        request: Mutation.deleteMyCollectionArticleRelation.request.vtl
+        response: Generic.response.vtl
+
+      - type: Mutation
+        field: createMyCollectionArticleRelations
         dataSource: ${self:custom.dataSources.batch}
-        request: Mutation.deleteCollectionArticles.request.vtl
-        response: Mutation.deleteCollectionArticles.response.vtl
+        request: Mutation.createMyCollectionArticleRelations.request.vtl
+        response: Mutation.createMyCollectionArticleRelations.response.vtl
 
-      # - type: Mutation
-      #   field: setMyArticle
-      #   request: Mutation.setMyArticle.request.vtl
-      #   response: Mutation.setMyArticle.response.vtl
-      #   kind: PIPELINE
-      #   functions:
-      #     - ${self:custom.apiName}-setArticleRelatives
+      - type: Mutation
+        field: deleteMyCollectionArticleRelations
+        dataSource: ${self:custom.dataSources.batch}
+        request: Mutation.deleteMyCollectionArticleRelations.request.vtl
+        response: Mutation.deleteMyCollectionArticleRelations.response.vtl
 
-      # - type: Mutation
-      #   field: setAuthor
-      #   request: Mutation.setAuthor.request.vtl
-      #   response: Mutation.setAuthor.response.vtl
-      #   kind: PIPELINE
-      #   functions:
-      #     - ${self:custom.apiName}-setAuthorArticles
+      - type: UserCollection
+        field: articles
+        dataSource: ${self:custom.dataSources.collectionArticles}
+        request: UserCollection.articles.request.vtl
+        response: UserCollection.articles.response.vtl
 
-      # - type: Mutation
-      #   field: setCollection
-      #   kind: PIPELINE
-      #   request: Mutation.setCollection.request.vtl
-      #   response: Mutation.setCollection.response.vtl
-      #   functions:
-      #     - ${self:custom.apiName}-setCollectionArticles
+      - type: UserCollectionArticle
+        field: userId
+        dataSource: ${self:custom.dataSources.collectionArticles}
+        request: UserCollectionArticle.userId.request.vtl
+        response: Generic.response.vtl
 
-      - type: Article
+      - type: UserCollectionArticle
+        field: collId
+        dataSource: ${self:custom.dataSources.collectionArticles}
+        request: UserCollectionArticle.collId.request.vtl
+        response: Generic.response.vtl
+
+      - type: UserCollectionArticle
         field: references
         dataSource: ${self:custom.dataSources.articleRelations}
-        request: Article.references.request.vtl
-        response: Article.references.response.vtl
+        request: UserCollectionArticle.references.request.vtl
+        response: UserCollectionArticle.references.response.vtl
 
-      - type: Article
+      - type: UserCollectionArticle
         field: citedBys
         dataSource: ${self:custom.dataSources.articleRelations}
-        request: Article.citedBys.request.vtl
-        response: Article.citedBys.response.vtl
+        request: UserCollectionArticle.citedBys.request.vtl
+        response: UserCollectionArticle.citedBys.response.vtl
 
-      - type: ArticleRelatives
+      - type: UserCollectionArticleRelatives
         field: articles
-        request: ArticleRelatives.articles.request.vtl
-        response: Generic.items.response.vtl
-        kind: PIPELINE
-        functions:
-          - ${self:custom.apiName}-batchGetArticles
-
-      - type: Author
-        field: articles
-        dataSource: ${self:custom.dataSources.authorArticles}
-        request: Author.articles.request.vtl
-        response: Author.articles.response.vtl
-
-      - type: AuthorArticles
-        field: articles
-        request: AuthorArticles.articles.request.vtl
-        response: Generic.items.response.vtl
-        kind: PIPELINE
-        functions:
-          - ${self:custom.apiName}-batchGetArticles
-
-      - type: Collection
-        field: articles
-        request: Collection.articles.request.vtl
-        response: Generic.items.response.vtl
-        kind: PIPELINE
-        functions:
-          - ${self:custom.apiName}-getCollectionArticleIds
-          - ${self:custom.apiName}-batchGetArticles
+        dataSource: ${self:custom.dataSources.batch}
+        request: UserCollectionArticleRelatives.articles.request.vtl
+        response: UserCollectionArticleRelatives.articles.response.vtl
 
     # dataSources
     dataSources:
@@ -463,6 +337,14 @@ custom:
           region: ${self:provider.region}
 
       - type: AMAZON_DYNAMODB
+        name: ${self:custom.dataSources.userCollections}
+        description: AppSync Datasource using the DynamoDB table user collections
+        config:
+          tableName: !Ref DynamoDBTableUserCollections
+          serviceRoleArn: !GetAtt AppSyncDynamoDBRole.Arn
+          region: ${self:provider.region}
+
+      - type: AMAZON_DYNAMODB
         name: ${self:custom.dataSources.publishers}
         description: AppSync Datasource using the DynamoDB table publishers
         config:
@@ -495,6 +377,7 @@ custom:
       tableCollectionArticles: ${self:custom.tables.collectionArticles}
       tableOrganizations: ${self:custom.tables.organizations}
       tableOwnership: ${self:custom.tables.ownership}
+      tableUserCollections: ${self:custom.tables.userCollections}
       tablePublishers: ${self:custom.tables.publishers}
       tableVenues: ${self:custom.tables.venues}
 
@@ -745,6 +628,25 @@ resources:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
 
+    DynamoDBTableUserCollections:
+      Type: AWS::DynamoDB::Table
+      Description: Table for User Collections information
+      Properties:
+        TableName: ${self:custom.tables.userCollections}
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: collId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: collId
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
     DynamoDBTablePublishers:
       Type: AWS::DynamoDB::Table
       Description: Table for Publishers
@@ -828,6 +730,8 @@ resources:
                 - !Join [ "", [ !GetAtt DynamoDBTableOrganizations.Arn, "/*" ] ]
                 - !GetAtt DynamoDBTableOwnership.Arn
                 - !Join [ "", [ !GetAtt DynamoDBTableOwnership.Arn, "/*" ] ]
+                - !GetAtt DynamoDBTableUserCollections.Arn
+                - !Join [ "", [ !GetAtt DynamoDBTableUserCollections.Arn, "/*" ] ]
                 - !GetAtt DynamoDBTablePublishers.Arn
                 - !Join [ "", [ !GetAtt DynamoDBTablePublishers.Arn, "/*" ] ]
                 - !GetAtt DynamoDBTableVenues.Arn

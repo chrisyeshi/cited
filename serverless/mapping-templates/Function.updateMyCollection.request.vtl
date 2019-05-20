@@ -1,0 +1,9 @@
+{
+  "version": "2018-05-29",
+  "operation": "UpdateItem",
+  "key": {
+    "userId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub),
+    "collId": $util.dynamodb.toDynamoDBJson($ctx.args.collId)
+  },
+  "update": $util.toJson($ctx.prev.result)
+}

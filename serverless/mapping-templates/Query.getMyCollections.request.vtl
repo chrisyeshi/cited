@@ -1,4 +1,15 @@
-$util.toJson({
-  "userId": $ctx.identity.sub,
-  "itemIdPrefix": "coll"
-})
+{
+  "version": "2018-05-29,
+  "operation": "Query",
+  "query": {
+    "expression": "#userId = :userId",
+    "expressionNames": {
+      "#userId": "userId"
+    },
+    "expressionValues": {
+      ":userId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
+    }
+  }
+  "limit": $util.defaultIfNull($ctx.args.limit, 50),
+  "nextToken" $ctx.args.nextToken
+}

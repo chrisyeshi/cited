@@ -1,0 +1,13 @@
+#set($userId = $ctx.identity.sub)
+#set($collId = $ctx.args.collId)
+#set($artId = $ctx.args.artId)
+#set($fullCollId = "user-${userId}-coll-${collId}")
+
+{
+  "version": "2018-05-29",
+  "operation": "DeleteItem",
+  "key": {
+    "collId": $util.dynamodb.toDynamoDBJson($fullCollId),
+    "artId": $util.dynamodb.toDynamoDBJson($artId)
+  }
+}

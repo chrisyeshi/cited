@@ -1,0 +1,11 @@
+#set($artIds = [])
+#foreach($item in $ctx.result.items)
+  #set($artId = $item.referenceId)
+  $util.qr($artIds.add($artId))
+#end
+
+$util.toJson({
+  "artIds": $artIds,
+  "nextToken": $ctx.result.nextToken,
+  "totalCount": $ctx.result.scannedCount
+})

@@ -1,0 +1,13 @@
+#set($userId = $ctx.stash.userId)
+#set($collId = $ctx.stash.collId)
+#set($artId = $ctx.stash.artId)
+#set($fullCollId = "user-${userId}-coll-${collId}")
+
+{
+  "version": "2018-05-29",
+  "operation": "GetItem",
+  "key": {
+    "collId": $util.dynamodb.toDynamoDBJson($fullCollId),
+    "artId": $util.dynamodb.toDynamoDBJson($artId)
+  }
+}

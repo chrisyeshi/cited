@@ -1,0 +1,22 @@
+#set($userPrefix = "user-")
+#set($userPrefixLen = $userPrefix.length())
+#set($collPrefix = "-coll-")
+#set($collPrefixLen = $collPrefix.length())
+
+#if($ctx.source.collId.startsWith("user"))
+  #set($fullCollId = $ctx.source.collId)
+
+  #set($userPrefixPos = $fullCollId.indexOf($userPrefix))
+  #set($userOffset = $userPrefixPos + $userPrefixLen)
+  #set($collPrefixPos = $fullCollId.indexOf($collPrefix))
+  #set($collOffset = $collPrefixPos + $collPrefixLen)
+
+  #set($userId = $fullCollId.substring($userOffset, $collPrefixPos))
+  #set($collId = $fullCollId.substring($collOffset))
+
+  #return($collId)
+#else
+  #return($ctx.source.collId)
+#end
+
+$util.error("the format of the collection id from the previous resolver is incorrect")

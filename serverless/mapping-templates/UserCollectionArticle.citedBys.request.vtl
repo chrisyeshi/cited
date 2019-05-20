@@ -1,0 +1,18 @@
+#set($userId = $ctx.source.userId)
+#set($collId = $ctx.source.collId)
+#set($referenceId = $ctx.source.artId)
+#set($fullReferenceId = "user-${userId}-coll-${collId}-art-${referenceId}")
+
+{
+  "version": "2018-05-29",
+  "operation": "Query",
+  "query": {
+    "expression": "#referenceId = :referenceId",
+    "expressionNames": {
+      "#referenceId": "referenceId"
+    },
+    "expressionValues": {
+      ":referenceId": $util.dynamodb.toDynamoDBJson($fullReferenceId)
+    }
+  }
+}

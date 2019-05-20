@@ -1,0 +1,15 @@
+#set($userId = $ctx.identity.sub)
+#set($collId = $ctx.args.collId)
+#set($referenceId = $ctx.args.input.referenceId)
+#set($citedById = $ctx.args.input.citedById)
+#set($fullReferenceId = "user-${userId}-coll-${collId}-art-${referenceId}")
+#set($fullCitedById = "user-${userId}-coll-${collId}-art-${citedById}")
+
+{
+  "version": "2018-05-29",
+  "operation": "PutItem",
+  "key": {
+    "referenceId": $util.dynamodb.toDynamoDBJson($fullReferenceId),
+    "citedById": $util.dynamodb.toDynamoDBJson($fullCitedById)
+  }
+}

@@ -4,109 +4,84 @@ type Schema {
 }
 
 type Query {
-  getMyArticles: [Article!]!
-  getUserArticles(userId: ID!): [Article!]!
-  getMyAuthors: [Author!]!
-  getUserAuthors(userId: ID!): [Author!]!
-  getMyCollections: [Collection!]!
-  getUserCollections(userId: ID!): [Collection!]!
-  getAllArticles(limit: Int, nextToken: String): QueryArticles!
-  getAllAuthors(limit: Int, nextToken: String): QueryAuthors!
-  getAllCollections(limit: Int, nextToken: String): QueryCollections!
-  getArticle(id: ID!): Article
-  getCollection(id: ID!): Collection
+  getAllMyCollections: [UserCollection!]
+  getMyCollection(collId: ID!): UserCollection
+  getMyCollectionArticle(collId: ID!, artId: ID!): UserCollectionArticle
 }
 
 type Mutation {
-  createArticle(input: CreateArticleInput!): Article
-  createArticles(input: [CreateArticleInput!]!): [Article!]
-  updateArticle(input: UpdateArticleInput!): Article
-  deleteArticle(id: ID!): Article
-  deleteArticles(ids: [ID!]!): [Article]
-  createArticleRelation(input: ArticleRelationInput!): ArticleRelation
-  createArticleRelations(input: [ArticleRelationInput!]!): [ArticleRelation!]
-  deleteArticleRelation(input: ArticleRelationInput!): ArticleRelation
-  deleteArticleRelations(input: [ArticleRelationInput!]!): [ArticleRelation!]
-  createCollection(input: CreateCollectionInput!): Collection
-  updateCollection(input: UpdateCollectionInput!): Collection
-  deleteCollection(id: ID!): Collection
-  createCollectionArticle(input: CollectionArticleInput!): CollectionArticle
-  createCollectionArticles(input: [CollectionArticleInput!]!): [CollectionArticle!]
-  deleteCollectionArticle(input: CollectionArticleInput!): CollectionArticle
-  deleteCollectionArticles(input: [CollectionArticleInput!]!): [CollectionArticle!]
+  createMyCollection(input: CollectionInput!): UserCollection
+  updateMyCollection(collId: ID!, input: CollectionInput!): UserCollection
+  deleteMyCollection(collId: ID!): UserCollection
+  createMyCollectionArticle(collId: ID!, input: UserCollectionArticleInput!): UserCollectionArticle
+  updateMyCollectionArticle(collId: ID!, artId: ID!, input: UserCollectionArticleInput!): UserCollectionArticle
+  deleteMyCollectionArticle(collId: ID!, artId: ID!): UserCollectionArticle
+  createMyCollectionArticles(collId: ID!, input: [UserCollectionArticleInput!]!): [UserCollectionArticle!]
+  deleteMyCollectionArticles(collId: ID!, artIds: [ID!]!): [UserCollectionArticle!]
+  createMyCollectionArticleRelation(collId: ID!, input: ArticleRelationInput!): ArticleRelation
+  deleteMyCollectionArticleRelation(collId: ID!, input: ArticleRelationInput!):
+    ArticleRelation
+  createMyCollectionArticleRelations(collId: ID!, input: [ArticleRelationInput!]!): [ArticleRelation!]
+  deleteMyCollectionArticleRelations(collId: ID!, input: [ArticleRelationInput!]!): [ArticleRelation!]
 }
 
-input CreateArticleInput {
-  type: String!
+type UserCollection {
+  userId: ID!
+  collId: ID!
+  title: String
+  description: String
+  articles: [UserCollectionArticle!]
+}
+
+type UserCollectionArticle {
+  userId: ID!
+  collId: ID!
+  artId: ID!
+  type: String
   title: String
   abstract: String
-  year: Int!
-  authors: [CreateAuthorInput!]!
+  year: Int
+  subjects: [String!]
+  keywords: [String!]
+  authors: [ArticleAuthor!]
+  venues: [ArticleVenue!]
+  publishers: [ArticlePublisher!]
+  externs: [ArticleExtern!]
+  acknowledgements: [ArticleAcknowledgement!]
+  references(limit: Int, nextToken: String): UserCollectionArticleRelatives
+  citedBys(limit: Int, nextToken: String): UserCollectionArticleRelatives
+}
+
+type UserCollectionArticleRelatives {
+  totalCount: Int
+  nextToken: String
+  artIds: [ID!]
+  articles: [UserCollectionArticle!]
+}
+
+input CollectionInput {
+  title: String
+  description: String
+}
+
+input UserCollectionArticleInput {
+  type: String
+  title: String
+  abstract: String
+  year: Int
+  authors: [AuthorInput!]
   subjects: [String!]
   keywords: [String!]
 }
 
-input CreateAuthorInput {
-  surname: String!
+input AuthorInput {
+  surname: String
   given: String
 }
 
 input ArticleRelationInput {
   referenceId: ID!
   citedById: ID!
-}
-
-input UpdateArticleInput {  
-  id: ID!
-  type: String
-  title: String
-  abstract: String
-  year: Int
-  authors: [UpdateAuthorInput!]
-  subjects: [String!]
-  keywords: [String!]
-  referenceIds: [String!]
-  citedByIds: [String!]
-}
-
-input UpdateAuthorInput {
-  id: ID
-  surname: String
-  given: String
-}
-
-input CreateCollectionInput {
-  title: String
-  description: String
-}
-
-input UpdateCollectionInput {
-  id: ID!
-  title: String
-  description: String
-}
-
-input CollectionArticleInput {
-  collId: ID!
-  artId: ID!
-}
-
-# Article
-type Article {
-  id: ID!
-  type: String!
-  title: String
-  abstract: String
-  year: Int
-  subjects: [String!]!
-  keywords: [String!]!
-  authors: [ArticleAuthor!]!
-  venues: [ArticleVenue!]!
-  publishers: [ArticlePublisher!]!
-  externs: [ArticleExtern!]!
-  acknowledgements: [ArticleAcknowledgement!]!
-  references(limit: Int, nextToken: String): ArticleRelatives!
-  citedBys(limit: Int, nextToken: String): ArticleRelatives!
 }
 
 type ArticleAcknowledgement {
@@ -146,128 +121,7 @@ type ArticleExtern {
   data: String # eg "https://example.com/lskdjf"
 }
 
-type ArticleRelatives {
-  articles: [Article!]!
-  totalCount: Int
-  nextToken: String
-}
-
 type ArticleRelation {
   referenceId: ID!
   citedById: ID!
-}
-
-# Author
-type Author {
-  id: ID!
-  names: [AuthorName!]!
-  emails: [String!]!
-  nCitedBys: Int # probably it's also cached/estimated
-  articles: AuthorArticles!
-  affiliations: [Organization!]!
-}
-
-type AuthorArticles {
-  totalCount: Int
-  articles: [Article!]!
-  nextToken: String
-}
-
-type AuthorName {
-  surname: String
-  given: String
-}
-
-type AuthorOrganization {
-  organizationId: ID
-  name: String
-}
-
-type Collection {
-  id: ID!
-  title: String
-  description: String
-  articles: [Article!]!
-}
-
-type CollectionArticle {
-  collId: ID!
-  artId: ID!
-}
-
-# TODO: capture the fact that an organization is a part of another organization. For example, when listing articles from "UC Davis", the list should include "Computer Science, UC Davis".
-type Organization {
-  id: ID!
-  name: String!
-  abbr: String
-  otherNames: [String!]!
-  articles: PublisherArticles!
-  # TODO: need more thoughts for the following fields to describe subordinate relationship between organizations.
-  parents: [Organization!]!
-  children: [Organization!]!
-}
-
-type OrganizationArticles {
-  totalCount: Int
-  articles: [Article!]!
-  nextToken: String
-}
-
-type Publisher {
-  id: ID!
-  name: String!
-  abbr: String
-  articles: PublisherArticles!
-}
-
-type PublisherArticles {
-  totalCount: Int
-  articles: [Article!]!
-  nextToken: String
-}
-
-type QueryArticles {
-  totalCount: Int
-  articles: [Article!]!
-  nextToken: String
-}
-
-type QueryAuthors {
-  totalCount: Int
-  authors: [Author!]!
-  nextToken: String
-}
-
-type QueryCollections {
-  totalCount: Int
-  collections: [Collection!]!
-  nextToken: String
-}
-
-type Venue {
-  id: ID!
-  name: String!
-  abbr: String
-  years: [VenueYear!]!
-  articles: VenueArticles!
-}
-
-type VenueArticles {
-  totalCount: Int
-  articles: [Article!]!
-  nextToken: String
-}
-
-type VenueYear {
-  venueId: ID
-  name: String
-  abbr: String
-  year: Int
-  articles: VenueYearArticles!
-}
-
-type VenueYearArticles {
-  totalCount: Int
-  articles: [Article!]!
-  nextToken: String
 }

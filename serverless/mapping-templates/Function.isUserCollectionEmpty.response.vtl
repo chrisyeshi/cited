@@ -1,0 +1,6 @@
+#if($ctx.result.scannedCount == 0)
+  $util.qr($ctx.stash.put("isUserCollectionEmpty", "true"))
+#else
+  $util.qr($ctx.stash.put("isUserCollectionEmpty", "false"))
+#end
+$util.toJson($ctx.result)

@@ -1,0 +1,29 @@
+#set($userId = $ctx.stash.userId)
+#set($collId = $ctx.stash.collId)
+#set($artId = $ctx.stash.artId)
+#set($art = $ctx.prev.result)
+#if($art.nReferences != 0)
+  $util.error("user collection article user-${userId}-coll-${collId}-art-${artId} has references")
+#elseif($art.nCitedBys != 0)
+  $util.error("user collection article user-${userId}-coll-${collId}-art-${artId} is cited by other articles")
+#end
+#set($fullCollId = "user-${userId}-coll-${collId}")
+
+{
+  "version": "2018-05-29",
+  "operation": "DeleteItem",
+  "key": {
+    "collId": $util.dynamodb.toDynamoDBJson($fullCollId),
+    "artId": $util.dynamodb.toDynamoDBJson($artId)
+  },
+  "condition": {
+    "expression": "#nReferences == :zero AND #nCitedBys == :zero",
+    "expressionNames": {
+      "#nReferences": "nReferences",
+      "#nCitedBys": "nCitedBys"
+    },
+    "expressionValues": {
+      ":zero": $util.dynamodb.toDynamoDBJson(0)
+    }
+  }
+}
