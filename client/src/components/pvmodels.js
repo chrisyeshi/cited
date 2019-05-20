@@ -7,6 +7,12 @@ export class Author {
   }
 
   static fromString (text) {
+    if (_.includes(', ')) {
+      const tokens = _.split(text, ', ')
+      const surname = _.first(tokens)
+      const given = _.last(tokens)
+      return new Author(surname, given)
+    }
     const tokens = _.split(text, ' ')
     const surname = _.last(tokens)
     const given = _.first(tokens)
@@ -26,6 +32,15 @@ export class AffiliatedAuthor {
       given: affiAuthor.given,
       affiliation: affiAuthor.affiliation.name || undefined
     }
+  }
+
+  static fromFlat (flat) {
+    if (_.isString(flat)) {
+      return new AffiliatedAuthor(Author.fromString(flat), new Organization(''))
+    }
+    return new AffiliatedAuthor(
+      new Author(flat.surname || '', flat.given || ''),
+      new Organization(flat.affiliation || ''))
   }
 
   static fromName (surname, given, orgName) {
@@ -183,6 +198,26 @@ export class SourceArticle {
       nCitedBys: art.nCitedBys,
       externs: art.externs
     }
+  }
+
+  static fromFlat (flat) {
+    return new SourceArticle(
+      new Article(
+        flat.artId /* id */,
+        flat.type /* type */,
+        new Paper(
+          flat.title /* title */,
+          flat.abstract /* abstract */,
+          flat.year /* year */,
+          _.map(
+            flat.authors,
+            flatAuthor => AffiliatedAuthor.fromFlat(flatAuthor)) /* authors */,
+          flat.venue /* venue */),
+        flat.nReferences /* nReferences */,
+        [] /* references */,
+        flat.nCitedBys /* nCitedBys */,
+        flat.externs /* externs */) /* article */,
+      {} /* sources */)
   }
 
   static fromExtern (artId, externSrcArt, refArtIds) {

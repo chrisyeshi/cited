@@ -30,7 +30,7 @@
       <v-btn flat small @click="toVisView">vis view</v-btn>
       <v-btn flat small @click="toListView">list view</v-btn>
       <v-menu offset-y>
-        <v-btn flat slot="activator">toggle graph</v-btn>
+        <v-btn flat small slot="activator">toggle graph</v-btn>
         <v-list>
           <v-list-tile @click="loadInSituGraph">
             <v-list-tile-title>in situ</v-list-tile-title>
@@ -38,6 +38,7 @@
           <v-list-tile @click="clearGraph">clear</v-list-tile>
         </v-list>
       </v-menu>
+      <v-btn flat small @click="selectImportCollJsonFile">import</v-btn>
       <v-btn flat small @click="exportCollection">export</v-btn>
     </v-footer>
   </v-app>
@@ -50,7 +51,6 @@ import PvVisView from './PvVisView.vue'
 import SignInButton from './SignInButton.vue'
 import theArticlePool from './pvarticlepool.js'
 import { AffiliatedAuthor, Article, Paper, Venue, SourceArticle } from './pvmodels.js'
-import { VisGraph } from './pvvismodels.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -98,6 +98,55 @@ export default {
     clearGraph () {
       this.collectionArticleIds = []
     },
+    async exportCollection () {
+      const artIds = this.collectionArticleIds
+      const srcArts =
+        _.map(artIds, artId => theArticlePool.getSourceArticle(artId))
+      const relations = []
+      _.forEach(srcArts, srcArt => {
+        _.forEach(srcArt.article.references, referenceId => {
+          relations.push({
+            referenceId: referenceId,
+            citedById: srcArt.id
+          })
+        })
+      })
+      const output = {
+        collId: 'in-situ-collection',
+        title: 'Collection',
+        description: 'Collection Description',
+        articles: _.map(srcArts, srcArt => SourceArticle.flatten(srcArt)),
+        relations: relations
+      }
+      const data = JSON.stringify(output, null, 2)
+      const blob = new Blob([ data ], { type: 'text/plain' })
+      const e = document.createEvent('MouseEvents')
+      let a = document.createElement('a')
+      a.download = `${output.collId}.json`
+      a.href = window.URL.createObjectURL(blob)
+      a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
+      e.initEvent(
+        'click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false,
+        0, null)
+      a.dispatchEvent(e)
+    },
+    importCollection (flatColl) {
+      const srcArts =
+        _.map(flatColl.articles, art => SourceArticle.fromFlat(art))
+      const srcArtMap =
+        Object.assign(
+          {}, ..._.map(srcArts, srcArt => ({ [srcArt.id]: srcArt })))
+      _.forEach(flatColl.relations, ({ referenceId, citedById }) => {
+        const srcArt = srcArtMap[citedById]
+        srcArt.article.references = srcArt.article.references || []
+        srcArt.article.references.push(referenceId)
+      })
+      _.forEach(srcArts, srcArt => {
+        srcArt.sources = { userEdited: Date.now() }
+      })
+      theArticlePool.setSourceArticles(srcArts)
+      this.collectionArticleIds = _.keys(srcArtMap)
+    },
     async loadInSituGraph () {
       const data = await import('./insitupdf.json')
       const papers = data.references
@@ -110,37 +159,31 @@ export default {
       theArticlePool.setSourceArticles(srcArts)
       this.collectionArticleIds = articleIds
     },
-    async exportCollection () {
-      const artIds = this.collectionArticleIds
-      const srcArts =
-        _.map(artIds, artId => theArticlePool.getSourceArticle(artId))
-      const visGraph = await VisGraph.fromArticleIds(theArticlePool, artIds)
-      const links = visGraph.links
-      const output = {
-        collId: 'in-situ-collection',
-        title: 'Collection',
-        description: 'Collection Description',
-        articles: _.map(srcArts, srcArt => SourceArticle.flatten(srcArt)),
-        relations: _.map(links, link => ({
-          referenceId: link.reference.articleId,
-          citedById: link.citedBy.articleId
-        }))
-      }
-      const data = JSON.stringify(output, null, 2)
-      const blob = new Blob([ data ], { type: 'text/plain' })
-      const e = document.createEvent('MouseEvents')
-      let a = document.createElement('a')
-      a.download = 'test.json'
-      a.href = window.URL.createObjectURL(blob)
-      a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
-      e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
-      a.dispatchEvent(e)
-    },
     onAddArticleToGraph (artId) {
       this.collectionArticleIds = _.union(this.collectionArticleIds, [ artId ])
     },
     search (text) {
       this.$router.push(`/demo/${text}`)
+    },
+    selectImportCollJsonFile (arg) {
+      let input = document.createElement('input')
+      input.type = 'file'
+      input.accept = 'application/json'
+      input.oninput = () => {
+        const file = input.files[0]
+        const reader = new FileReader()
+        reader.onload = e => {
+          const text = e.target.result
+          const coll = JSON.parse(text)
+          this.importCollection(coll)
+        }
+        reader.readAsText(file)
+      }
+      let event = document.createEvent('MouseEvents')
+      event.initEvent(
+        'click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false,
+        0, null)
+      input.dispatchEvent(event)
     },
     trace (value) {
       console.log(value)
