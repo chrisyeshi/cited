@@ -42,10 +42,19 @@ provider:
 
 plugins:
   - serverless-appsync-plugin
+  - aws-amplify-serverless-plugin
 
 custom:
   apiName: disco
   policyVersion: "2012-10-17"
+
+  amplify:
+    - filename: ../client/aws-exports.js
+      type: javascript
+      appClient: UserPoolClient
+    - filename: ../client/operations.graphql
+      type: graphql
+
   tables:
     articles: ${self:custom.apiName}-articles
     articleRelations: ${self:custom.apiName}-article-relations
@@ -58,6 +67,7 @@ custom:
     userCollections: ${self:custom.apiName}-user-collections
     publishers: ${self:custom.apiName}-publishers
     venues: ${self:custom.apiName}-venues
+
   dataSources:
     articles: ${self:custom.apiName}_articles
     articleRelations: ${self:custom.apiName}_article_relations
@@ -439,6 +449,8 @@ resources:
       Description: A Cognito user pool for authenticating users
       Properties:
         UserPoolName: ${self:custom.apiName}-user-pool
+        UsernameAttributes:
+          - email
 
     UserPoolGroupAdmins:
       Type: AWS::Cognito::UserPoolGroup

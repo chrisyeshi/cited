@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "serverless-appsync-plugin": "^1.1.1"
+  },
+  "dependencies": {
+    "aws-amplify-serverless-plugin": "^1.4.1"
   }
 }
