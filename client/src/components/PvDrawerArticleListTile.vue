@@ -2,8 +2,12 @@
   <v-list-tile class="my-3">
     <v-list-tile-content style="justify-content: space-evenly;">
       <div class="caption text-truncate font-weight-bold">{{ label }}</div>
-      <div class="body-1 text-truncate font-weight-medium">{{ title }}</div>
-      <div class="caption text-truncate font-weight-light">{{ abstract }}</div>
+      <div class="body-1 text-truncate font-weight-medium full-width">
+        {{ title }}
+      </div>
+      <div class="caption text-truncate font-weight-light full-width">
+        {{ abstract }}
+      </div>
       <div class="caption text-truncate font-weight-thin stats-row">
         <div class="text-truncate stats-row-venue">{{ venue }}</div>
         <div class="stats-row-delimiter">-</div>
@@ -51,6 +55,10 @@ export default {
 </script>
 
 <style scoped>
+.full-width {
+  width: 100%;
+}
+
 .stats-row {
   width: 100%;
   display: flex;
