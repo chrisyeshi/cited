@@ -1,12 +1,13 @@
-#set($userId = $ctx.identity.sub)
+#set($userId = $ctx.stash.userId)
 #set($collId = $ctx.args.collId)
 #set($fullCollId = "user-${userId}-coll-${collId}")
 #set($items = [])
 #foreach($input in $ctx.args.input)
-  #set($artId = $util.autoId())
   #set($item = $util.dynamodb.toMapValues($input))
   $util.qr($item.put("collId", $util.dynamodb.toDynamoDB($fullCollId)))
-  $util.qr($item.put("artId", $util.dynamodb.toDynamoDB($artId)))
+  #if(!${item.artId})
+    $util.qr($item.put("artId", $util.dynamodb.toDynamoDB($util.autoId())))
+  #end
   $util.qr($items.add($item))
 #end
 

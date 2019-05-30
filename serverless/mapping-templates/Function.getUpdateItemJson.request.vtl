@@ -38,12 +38,15 @@
   #end
 #end
 
-$util.toJson({
+#set($update = {
   "expression": "${expression}"
-  #if(!${expNames.isEmpty()})
-    , "expressionNames" : $util.toJson($expNames)
-  #end
-  #if(!${expValues.isEmpty()})
-    , "expressionValues": $util.toJson($expValues)
-  #end
 })
+#if(!${expNames.isEmpty()})
+  $util.qr($update.put("expressionNames", $expNames))
+#end
+#if(!${expValues.isEmpty()})
+  $util.qr($update.put("expressionValues", $expValues))
+#end
+
+#return($update)
+$util.toJson($update)

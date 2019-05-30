@@ -2,7 +2,12 @@ export default {
   namespaced: true,
   state: {
     contentState: 'vis-view',
-    articleEditable: false
+    drawerState: 'collection-list',
+    articleEditable: false,
+    currUserId: null,
+    currCollId: null,
+    currArtId: null,
+    sampleCollections: []
   },
   mutations: {
     set (state, newState) {

@@ -7,7 +7,7 @@
       "#userId": "userId"
     },
     "expressionValues": {
-      ":userId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
+      ":userId": $util.dynamodb.toDynamoDBJson($ctx.stash.userId)
     }
   }
 }

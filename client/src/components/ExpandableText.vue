@@ -34,10 +34,12 @@ export default {
       return this.isExpanded || this.isTextShortEnough
     },
     isTextShortEnough () {
-      return this.text.length <= this.textLimit
+      const text = this.text || ''
+      return text.length <= this.textLimit
     },
     computedText () {
-      return this.isExpanded ? this.text : this.text.slice(0, this.textLimit)
+      const text = this.text || ''
+      return this.isExpanded ? text : text.slice(0, this.textLimit)
     }
   },
   watch: {

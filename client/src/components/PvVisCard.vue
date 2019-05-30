@@ -8,8 +8,9 @@
 <script>
 import _ from 'lodash'
 import { Article, Paper, Venue } from './pvmodels.js'
+import { mapState } from 'vuex'
+import gql from 'graphql-tag'
 import PvVisArticleCard from './PvVisArticleCard.vue'
-import theArticlePool from './pvarticlepool.js'
 
 export default {
   name: 'PvVisCard',
@@ -20,6 +21,7 @@ export default {
     referenceColor: [ String, Promise, Function ]
   },
   computed: {
+    ...mapState('parseVis', [ 'currMyCollId' ]),
     articleId () {
       return this.articleComputed ? this.articleComputed.id : null
     }
@@ -29,7 +31,7 @@ export default {
       default: new Article('', '', new Paper('', '', 0, [], new Venue(''))),
       async get () {
         return _.isString(this.article)
-          ? theArticlePool.getMeta(this.article)
+          ? this.queryCollectionArticle(this.article)
           : this.article
       }
     },
@@ -43,6 +45,52 @@ export default {
         ? this.referenceColor(this.articleId)
         : this.referenceColor
     }
+  },
+  methods: {
+    async queryCollectionArticle (artId) {
+      const collId = this.currMyCollId
+      const result = await this.$apollo.query({
+        query: gql(GetMyCollectionArticle),
+        variables: {
+          collId: collId,
+          artId: artId
+        }
+      })
+      const flatArt = result.data.getMyCollectionArticle
+      return new Article(
+        flatArt.artId /* id */,
+        flatArt.type /* type */,
+        new Paper(
+          flatArt.title /* title */,
+          flatArt.abstract /* abstract */,
+          flatArt.year /* year */,
+          flatArt.authors /* authors */,
+          flatArt.venue /* venue */)/* data */,
+        flatArt.nReferences /* nReferences */,
+        [] /* references */,
+        flatArt.nCitedBys /* nCitedBys */,
+        flatArt.externs /* externs */)
+    }
   }
 }
+
+const GetMyCollectionArticle = `
+  query getMyCollectionArticle($collId: ID!, $artId: ID!) {
+    getMyCollectionArticle(collId: $collId, artId: $artId) {
+      userId
+      collId
+      artId
+      type
+      title
+      abstract
+      year
+      authors {
+        surname
+        given
+      }
+      nReferences
+      nCitedBys
+    }
+  }
+`
 </script>

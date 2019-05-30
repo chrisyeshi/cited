@@ -14,6 +14,12 @@
         <sign-in-button></sign-in-button>
       </v-toolbar-items>
     </v-toolbar>
+    <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
+      v-model="isDrawerOpen" style="overflow: visible;">
+      <pv-drawer-toggle-button v-model="isDrawerOpen"></pv-drawer-toggle-button>
+      <component :is="drawerComponent" style="height: 100%; overflow: auto;">
+      </component>
+    </v-navigation-drawer>
     <pv-vis-view v-if="isVisViewVisible"
       :collection-article-ids="collectionArticleIds"
       :current-drawer-article-id="currArticleId"
@@ -46,6 +52,9 @@
 
 <script>
 import _ from 'lodash'
+import PvDrawerCollectionList from '@/components/PvDrawerCollectionList.vue'
+import PvDrawerCollectionView from '@/components/PvDrawerCollectionView.vue'
+import PvDrawerToggleButton from '@/components/PvDrawerToggleButton.vue'
 import PvListView from './PvListView.vue'
 import PvVisView from './PvVisView.vue'
 import SignInButton from './SignInButton.vue'
@@ -56,17 +65,24 @@ import { mapState } from 'vuex'
 export default {
   name: 'ParseVis',
   components: {
+    PvDrawerCollectionList,
+    PvDrawerCollectionView,
+    PvDrawerToggleButton,
     PvListView,
     PvVisView,
     SignInButton
   },
   props: {
-    input: String
+    input: String,
+    inputUserId: String,
+    inputCollId: String,
+    inputArtId: String
   },
   data () {
     return {
       collectionArticleIds: [],
       currArticleId: null,
+      drawerWidth: 450,
       enableToolbarDrawerIcon: false,
       isDrawerOpen: false,
       pageQuery: null,
@@ -74,18 +90,25 @@ export default {
     }
   },
   computed: {
-    ...mapState('parseVis', [ 'articleEditable', 'contentState' ]),
+    ...mapState('parseVis', [
+      'articleEditable', 'contentState', 'drawerState'
+    ]),
+    drawerComponent () {
+      switch (this.drawerState) {
+        case 'collection-list':
+          return 'pv-drawer-collection-list'
+        case 'collection-view':
+          return 'pv-drawer-collection-view'
+      }
+      return {
+        template: '<div>Unknown Drawer State</div>'
+      }
+    },
     isVisViewVisible () {
       return this.contentState === 'vis-view'
     },
     isListViewVisible () {
       return this.contentState === 'list-view'
-    },
-    isPaperViewVisible () {
-      return this.drawerState === 'paper-view'
-    },
-    isSearchListVisible () {
-      return this.drawerState === 'search-list'
     },
     searchTextFieldOuterIcon () {
       return this.articleEditable ? 'library_add' : ''
@@ -197,26 +220,23 @@ export default {
     },
     toListView () {
       this.$store.commit('parseVis/set', { contentState: 'list-view' })
+    },
+    updateInputIds () {
+      this.$store.commit('parseVis/set', {
+        currUserId: this.inputUserId,
+        currCollId: this.inputCollId,
+        currArtId: this.inputArtId
+      })
     }
   },
   watch: {
-    input: {
-      immediate: true,
-      handler (curr) {
-        if (!curr) {
-          this.searchText = ''
-          this.currArticleId = null
-          return
-        }
-        const isArtId = theArticlePool.includes(curr)
-        if (isArtId) {
-          this.currArticleId = curr
-        } else {
-          this.searchText = curr
-          this.pageQuery = theArticlePool.getPageQuery(curr)
-          this.currArticleId = null
-        }
-      }
+    inputUserId: { immediate: true, handler () { this.updateInputIds() } },
+    inputCollId: { immediate: true, handler () { this.updateInputIds() } },
+    inputArtId: { immediate: true, handler () { this.updateInputIds() } }
+  },
+  created () {
+    if (this.inputUserId && this.inputCollId && !this.inputArtId) {
+      this.$store.commit('parseVis/set', { drawerState: 'collection-view' })
     }
   }
 }
@@ -262,5 +282,14 @@ function createAuthor (text) {
 </script>
 
 <style scoped>
-
+.drawer-toggle-button {
+  position: absolute;
+  left: 100%;
+  top: 1em;
+  background: gainsboro;
+  width: 1.5em;
+  height: 3.5em;
+  line-height: 3.5em;
+  border-radius: 0em 0.5em 0.5em 0em;
+}
 </style>

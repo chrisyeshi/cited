@@ -47,7 +47,20 @@ export default new Router({
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
     { path: '/papersight', component: PaperSight },
-    { path: '/parsevis/:input?', alias: '/demo/:input?', component: ParseVis, props: true },
+    {
+      path: '/parsevis',
+      alias: '/demo',
+      component: ParseVis,
+      props: (route) => ({
+        inputUserId: route.query.user || route.query.userId,
+        inputCollId:
+          route.query.coll || route.query.collId ||
+          route.query.collection || route.query.collectionId,
+        inputArtId:
+          route.query.art || route.query.artId ||
+          route.query.article || route.query.articleId
+      })
+    },
     { path: '*', component: NotFound }
   ]
 })

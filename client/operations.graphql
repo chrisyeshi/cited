@@ -41,6 +41,8 @@ query GetAllMyCollections {
         subtarget
         text
       }
+      nReferences
+      nCitedBys
       references {
         totalCount
         nextToken
@@ -96,6 +98,8 @@ query GetMyCollection($collId: ID!) {
         subtarget
         text
       }
+      nReferences
+      nCitedBys
       references {
         totalCount
         nextToken
@@ -150,6 +154,8 @@ query GetMyCollectionArticle($collId: ID!, $artId: ID!) {
       subtarget
       text
     }
+    nReferences
+    nCitedBys
     references {
       totalCount
       nextToken
@@ -164,6 +170,8 @@ query GetMyCollectionArticle($collId: ID!, $artId: ID!) {
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
     citedBys {
@@ -180,6 +188,203 @@ query GetMyCollectionArticle($collId: ID!, $artId: ID!) {
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
+      }
+    }
+  }
+}
+query GetAllUserCollections($userId: ID!) {
+  getAllUserCollections(userId: $userId) {
+    userId
+    collId
+    title
+    description
+    articles {
+      userId
+      collId
+      artId
+      type
+      title
+      abstract
+      year
+      subjects
+      keywords
+      authors {
+        authorId
+        surname
+        given
+        email
+      }
+      venues {
+        venueId
+        name
+        year
+      }
+      publishers {
+        publisherId
+        name
+        articleUrl
+      }
+      externs {
+        name
+        type
+        data
+      }
+      acknowledgements {
+        target
+        subtarget
+        text
+      }
+      nReferences
+      nCitedBys
+      references {
+        totalCount
+        nextToken
+        artIds
+      }
+      citedBys {
+        totalCount
+        nextToken
+        artIds
+      }
+    }
+  }
+}
+query GetUserCollection($userId: ID!, $collId: ID!) {
+  getUserCollection(userId: $userId, collId: $collId) {
+    userId
+    collId
+    title
+    description
+    articles {
+      userId
+      collId
+      artId
+      type
+      title
+      abstract
+      year
+      subjects
+      keywords
+      authors {
+        authorId
+        surname
+        given
+        email
+      }
+      venues {
+        venueId
+        name
+        year
+      }
+      publishers {
+        publisherId
+        name
+        articleUrl
+      }
+      externs {
+        name
+        type
+        data
+      }
+      acknowledgements {
+        target
+        subtarget
+        text
+      }
+      nReferences
+      nCitedBys
+      references {
+        totalCount
+        nextToken
+        artIds
+      }
+      citedBys {
+        totalCount
+        nextToken
+        artIds
+      }
+    }
+  }
+}
+query GetUserCollectionArticle($userId: ID!, $collId: ID!, $artId: ID!) {
+  getUserCollectionArticle(userId: $userId, collId: $collId, artId: $artId) {
+    userId
+    collId
+    artId
+    type
+    title
+    abstract
+    year
+    subjects
+    keywords
+    authors {
+      authorId
+      surname
+      given
+      email
+      affiliation {
+        organizationId
+        name
+      }
+    }
+    venues {
+      venueId
+      name
+      year
+    }
+    publishers {
+      publisherId
+      name
+      articleUrl
+    }
+    externs {
+      name
+      type
+      data
+    }
+    acknowledgements {
+      target
+      subtarget
+      text
+    }
+    nReferences
+    nCitedBys
+    references {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+    citedBys {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
       }
     }
   }
@@ -226,6 +431,8 @@ mutation CreateMyCollection($input: CollectionInput!) {
         subtarget
         text
       }
+      nReferences
+      nCitedBys
       references {
         totalCount
         nextToken
@@ -281,6 +488,8 @@ mutation UpdateMyCollection($collId: ID!, $input: CollectionInput!) {
         subtarget
         text
       }
+      nReferences
+      nCitedBys
       references {
         totalCount
         nextToken
@@ -336,6 +545,8 @@ mutation DeleteMyCollection($collId: ID!) {
         subtarget
         text
       }
+      nReferences
+      nCitedBys
       references {
         totalCount
         nextToken
@@ -393,6 +604,8 @@ mutation CreateMyCollectionArticle(
       subtarget
       text
     }
+    nReferences
+    nCitedBys
     references {
       totalCount
       nextToken
@@ -407,6 +620,8 @@ mutation CreateMyCollectionArticle(
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
     citedBys {
@@ -423,6 +638,8 @@ mutation CreateMyCollectionArticle(
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
   }
@@ -472,6 +689,8 @@ mutation UpdateMyCollectionArticle(
       subtarget
       text
     }
+    nReferences
+    nCitedBys
     references {
       totalCount
       nextToken
@@ -486,6 +705,8 @@ mutation UpdateMyCollectionArticle(
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
     citedBys {
@@ -502,6 +723,8 @@ mutation UpdateMyCollectionArticle(
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
   }
@@ -547,6 +770,8 @@ mutation DeleteMyCollectionArticle($collId: ID!, $artId: ID!) {
       subtarget
       text
     }
+    nReferences
+    nCitedBys
     references {
       totalCount
       nextToken
@@ -561,6 +786,8 @@ mutation DeleteMyCollectionArticle($collId: ID!, $artId: ID!) {
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
     citedBys {
@@ -577,6 +804,8 @@ mutation DeleteMyCollectionArticle($collId: ID!, $artId: ID!) {
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
   }
@@ -625,6 +854,8 @@ mutation CreateMyCollectionArticles(
       subtarget
       text
     }
+    nReferences
+    nCitedBys
     references {
       totalCount
       nextToken
@@ -639,6 +870,8 @@ mutation CreateMyCollectionArticles(
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
     citedBys {
@@ -655,6 +888,8 @@ mutation CreateMyCollectionArticles(
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
   }
@@ -700,6 +935,8 @@ mutation DeleteMyCollectionArticles($collId: ID!, $artIds: [ID!]!) {
       subtarget
       text
     }
+    nReferences
+    nCitedBys
     references {
       totalCount
       nextToken
@@ -714,6 +951,8 @@ mutation DeleteMyCollectionArticles($collId: ID!, $artIds: [ID!]!) {
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
     citedBys {
@@ -730,6 +969,8 @@ mutation DeleteMyCollectionArticles($collId: ID!, $artIds: [ID!]!) {
         year
         subjects
         keywords
+        nReferences
+        nCitedBys
       }
     }
   }
@@ -766,6 +1007,672 @@ mutation DeleteMyCollectionArticleRelations(
   $input: [ArticleRelationInput!]!
 ) {
   deleteMyCollectionArticleRelations(collId: $collId, input: $input) {
+    referenceId
+    citedById
+  }
+}
+mutation CreateUserCollection($userId: ID!, $input: CollectionInput!) {
+  createUserCollection(userId: $userId, input: $input) {
+    userId
+    collId
+    title
+    description
+    articles {
+      userId
+      collId
+      artId
+      type
+      title
+      abstract
+      year
+      subjects
+      keywords
+      authors {
+        authorId
+        surname
+        given
+        email
+      }
+      venues {
+        venueId
+        name
+        year
+      }
+      publishers {
+        publisherId
+        name
+        articleUrl
+      }
+      externs {
+        name
+        type
+        data
+      }
+      acknowledgements {
+        target
+        subtarget
+        text
+      }
+      nReferences
+      nCitedBys
+      references {
+        totalCount
+        nextToken
+        artIds
+      }
+      citedBys {
+        totalCount
+        nextToken
+        artIds
+      }
+    }
+  }
+}
+mutation UpdateUserCollection(
+  $userId: ID!
+  $collId: ID!
+  $input: CollectionInput!
+) {
+  updateUserCollection(userId: $userId, collId: $collId, input: $input) {
+    userId
+    collId
+    title
+    description
+    articles {
+      userId
+      collId
+      artId
+      type
+      title
+      abstract
+      year
+      subjects
+      keywords
+      authors {
+        authorId
+        surname
+        given
+        email
+      }
+      venues {
+        venueId
+        name
+        year
+      }
+      publishers {
+        publisherId
+        name
+        articleUrl
+      }
+      externs {
+        name
+        type
+        data
+      }
+      acknowledgements {
+        target
+        subtarget
+        text
+      }
+      nReferences
+      nCitedBys
+      references {
+        totalCount
+        nextToken
+        artIds
+      }
+      citedBys {
+        totalCount
+        nextToken
+        artIds
+      }
+    }
+  }
+}
+mutation DeleteUserCollection($userId: ID!, $collId: ID!) {
+  deleteUserCollection(userId: $userId, collId: $collId) {
+    userId
+    collId
+    title
+    description
+    articles {
+      userId
+      collId
+      artId
+      type
+      title
+      abstract
+      year
+      subjects
+      keywords
+      authors {
+        authorId
+        surname
+        given
+        email
+      }
+      venues {
+        venueId
+        name
+        year
+      }
+      publishers {
+        publisherId
+        name
+        articleUrl
+      }
+      externs {
+        name
+        type
+        data
+      }
+      acknowledgements {
+        target
+        subtarget
+        text
+      }
+      nReferences
+      nCitedBys
+      references {
+        totalCount
+        nextToken
+        artIds
+      }
+      citedBys {
+        totalCount
+        nextToken
+        artIds
+      }
+    }
+  }
+}
+mutation CreateUserCollectionArticle(
+  $userId: ID!
+  $collId: ID!
+  $input: UserCollectionArticleInput!
+) {
+  createUserCollectionArticle(userId: $userId, collId: $collId, input: $input) {
+    userId
+    collId
+    artId
+    type
+    title
+    abstract
+    year
+    subjects
+    keywords
+    authors {
+      authorId
+      surname
+      given
+      email
+      affiliation {
+        organizationId
+        name
+      }
+    }
+    venues {
+      venueId
+      name
+      year
+    }
+    publishers {
+      publisherId
+      name
+      articleUrl
+    }
+    externs {
+      name
+      type
+      data
+    }
+    acknowledgements {
+      target
+      subtarget
+      text
+    }
+    nReferences
+    nCitedBys
+    references {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+    citedBys {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+  }
+}
+mutation UpdateUserCollectionArticle(
+  $userId: ID!
+  $collId: ID!
+  $artId: ID!
+  $input: UserCollectionArticleInput!
+) {
+  updateUserCollectionArticle(
+    userId: $userId
+    collId: $collId
+    artId: $artId
+    input: $input
+  ) {
+    userId
+    collId
+    artId
+    type
+    title
+    abstract
+    year
+    subjects
+    keywords
+    authors {
+      authorId
+      surname
+      given
+      email
+      affiliation {
+        organizationId
+        name
+      }
+    }
+    venues {
+      venueId
+      name
+      year
+    }
+    publishers {
+      publisherId
+      name
+      articleUrl
+    }
+    externs {
+      name
+      type
+      data
+    }
+    acknowledgements {
+      target
+      subtarget
+      text
+    }
+    nReferences
+    nCitedBys
+    references {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+    citedBys {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+  }
+}
+mutation DeleteUserCollectionArticle($userId: ID!, $collId: ID!, $artId: ID!) {
+  deleteUserCollectionArticle(userId: $userId, collId: $collId, artId: $artId) {
+    userId
+    collId
+    artId
+    type
+    title
+    abstract
+    year
+    subjects
+    keywords
+    authors {
+      authorId
+      surname
+      given
+      email
+      affiliation {
+        organizationId
+        name
+      }
+    }
+    venues {
+      venueId
+      name
+      year
+    }
+    publishers {
+      publisherId
+      name
+      articleUrl
+    }
+    externs {
+      name
+      type
+      data
+    }
+    acknowledgements {
+      target
+      subtarget
+      text
+    }
+    nReferences
+    nCitedBys
+    references {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+    citedBys {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+  }
+}
+mutation CreateUserCollectionArticles(
+  $userId: ID!
+  $collId: ID!
+  $input: [UserCollectionArticleInput!]!
+) {
+  createUserCollectionArticles(
+    userId: $userId
+    collId: $collId
+    input: $input
+  ) {
+    userId
+    collId
+    artId
+    type
+    title
+    abstract
+    year
+    subjects
+    keywords
+    authors {
+      authorId
+      surname
+      given
+      email
+      affiliation {
+        organizationId
+        name
+      }
+    }
+    venues {
+      venueId
+      name
+      year
+    }
+    publishers {
+      publisherId
+      name
+      articleUrl
+    }
+    externs {
+      name
+      type
+      data
+    }
+    acknowledgements {
+      target
+      subtarget
+      text
+    }
+    nReferences
+    nCitedBys
+    references {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+    citedBys {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+  }
+}
+mutation DeleteUserCollectionArticles(
+  $userId: ID!
+  $collId: ID!
+  $artIds: [ID!]!
+) {
+  deleteUserCollectionArticles(
+    userId: $userId
+    collId: $collId
+    artIds: $artIds
+  ) {
+    userId
+    collId
+    artId
+    type
+    title
+    abstract
+    year
+    subjects
+    keywords
+    authors {
+      authorId
+      surname
+      given
+      email
+      affiliation {
+        organizationId
+        name
+      }
+    }
+    venues {
+      venueId
+      name
+      year
+    }
+    publishers {
+      publisherId
+      name
+      articleUrl
+    }
+    externs {
+      name
+      type
+      data
+    }
+    acknowledgements {
+      target
+      subtarget
+      text
+    }
+    nReferences
+    nCitedBys
+    references {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+    citedBys {
+      totalCount
+      nextToken
+      artIds
+      articles {
+        userId
+        collId
+        artId
+        type
+        title
+        abstract
+        year
+        subjects
+        keywords
+        nReferences
+        nCitedBys
+      }
+    }
+  }
+}
+mutation CreateUserCollectionArticleRelation(
+  $userId: ID!
+  $collId: ID!
+  $input: ArticleRelationInput!
+) {
+  createUserCollectionArticleRelation(
+    userId: $userId
+    collId: $collId
+    input: $input
+  ) {
+    referenceId
+    citedById
+  }
+}
+mutation DeleteUserCollectionArticleRelation(
+  $userId: ID!
+  $collId: ID!
+  $input: ArticleRelationInput!
+) {
+  deleteUserCollectionArticleRelation(
+    userId: $userId
+    collId: $collId
+    input: $input
+  ) {
+    referenceId
+    citedById
+  }
+}
+mutation CreateUserCollectionArticleRelations(
+  $userId: ID!
+  $collId: ID!
+  $input: [ArticleRelationInput!]!
+) {
+  createUserCollectionArticleRelations(
+    userId: $userId
+    collId: $collId
+    input: $input
+  ) {
+    referenceId
+    citedById
+  }
+}
+mutation DeleteUserCollectionArticleRelations(
+  $userId: ID!
+  $collId: ID!
+  $input: [ArticleRelationInput!]!
+) {
+  deleteUserCollectionArticleRelations(
+    userId: $userId
+    collId: $collId
+    input: $input
+  ) {
     referenceId
     citedById
   }

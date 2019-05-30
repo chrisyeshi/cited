@@ -1,4 +1,4 @@
-#set($userId = $ctx.identity.sub)
+#set($userId = $ctx.stash.userId)
 #set($collId = $ctx.args.collId)
 #set($fullCollId = "user-${userId}-coll-${collId}")
 #set($keys = [])

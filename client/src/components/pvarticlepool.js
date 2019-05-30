@@ -2,7 +2,7 @@ import _ from 'lodash'
 import queryArxiv from './arxivwrapper.js'
 import { AffiliatedAuthor, Paper, SourceArticle, Venue } from './pvmodels.js'
 
-class ArticlePool {
+export class ArticlePool {
   constructor (sourceArticles = []) {
     this.sourceArticles = sourceArticles
   }

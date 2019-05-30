@@ -1,52 +1,26 @@
 <template>
   <v-content>
-    <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
-      v-model="isDrawerOpenComputed">
-      <v-container v-if="isDrawerEmpty">Drawer Empty</v-container>
-      <pv-vis-drawer-editable-article v-if="isDrawerArticle"
-        :article-id="drawerArticleId" :card-config="visConfig.card"
-        :get-card-cited-by-color="getArticleCardCitedByColor"
-        :get-card-reference-color="getArticleCardReferenceColor"
-        :hovering-article-id.sync="drawerArticleHoveringArticleId"
-        @add-to-vis="onAddDrawerArticleToVis"
-        @article-edited="articleEdited"
-        @select-article="onDrawerArticleSelected"
-        @unselect-article="onDrawerArticleUnselected">
-      </pv-vis-drawer-editable-article>
-      <pv-vis-drawer-query-list v-if="isDrawerList"
-        style="position: relative; height: 100%; overflow: auto;"
-        :hovering-article-id.sync="drawerListHoveringArticleId"
-        :page-query="drawerPageQuery"
-        @click-item-title="onDrawerListItemTitleClicked">
-      </pv-vis-drawer-query-list>
-    </v-navigation-drawer>
-    <div v-if="isGraphViewVisible" ref="visContainer" class="vis-container"
+    <div ref="visContainer" class="vis-container"
       @click="onCanvasClicked" v-resize.initial="onVisContainerResize">
-      <svg class="overlay-container" :style="overlayContainerStyle" :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
+      <svg class="overlay-container" :style="overlayContainerStyle"
+        :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
         <path v-for="(props, key) in paths" :key="key" v-bind="props"></path>
       </svg>
       <div class="cards-container" :style="cardsContainerStyle"
         @click="onCanvasClicked">
-        <pv-vis-card v-for="node in visGraph.visNodes" :key="node.articleId"
-          ref="cards" :article="node.articleId" :config="visConfig.card"
-          :class="getCardClasses(node)" :style="getCardStyle(node)"
+        <pv-vis-node-card v-for="node in visGraph.visNodes"
+          :key="node.articleId" ref="cards" :visNode="node"
+          :config="visConfig.card" :class="getCardClasses(node)"
+          :style="getCardStyle(node)"
           :backgroundColor="getCardBackgroundColor(node)"
           :citedByColor="getCardSideColor(node.inGraphCitedBys.length)"
           :referenceColor="getCardSideColor(node.inGraphReferences.length)"
           @click.native.stop="onCardClicked($event, node)"
           @mouseenter.native.stop="onCardMouseEnter(node)"
           @mouseleave.native.stop="onCardMouseLeave(node)">
-        </pv-vis-card>
+        </pv-vis-node-card>
       </div>
     </div>
-    <v-layout v-if="isEmptyViewVisible" fill-height justify-center align-center>
-      <v-dialog max-width="680" scrollable :disabled="!articleEditable">
-        <v-btn flat slot="activator">{{ emptyViewMessage }}</v-btn>
-        <v-container style="background: white;">
-          <pv-article-form></pv-article-form>
-        </v-container>
-      </v-dialog>
-    </v-layout>
   </v-content>
 </template>
 
@@ -59,28 +33,18 @@ import { VisGraph, VisLink } from './pvvismodels.js'
 import ExpandableText from './ExpandableText.vue'
 import PvArticleForm from './PvArticleForm.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
-import PvVisCard from './PvVisCard.vue'
-import PvVisDrawerEditableArticle from './PvVisDrawerEditableArticle.vue'
-import PvVisDrawerQueryList from './PvVisDrawerQueryList.vue'
+import PvVisNodeCard from './PvVisNodeCard.vue'
 import resize from 'vue-resize-directive'
-import theArticlePool from './pvarticlepool.js'
 import Vec from './vec.js'
 
 export default {
   name: 'PvVisView',
   directives: { resize },
-  components: { ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisCard, PvVisDrawerEditableArticle, PvVisDrawerQueryList },
-  props: {
-    collectionArticleIds: Array,
-    currentDrawerArticleId: String,
-    drawerPageQuery: Object,
-    isDrawerOpen: false
+  components: {
+    ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisNodeCard
   },
   data () {
     return {
-      drawerWidth: 450,
-      drawerArticleHoveringArticleId: null,
-      drawerListHoveringArticleId: null,
       hoveringVisNodeId: null,
       selectedVisNodeIds: [],
       tempVisNodeId: null,
@@ -121,7 +85,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('parseVis', [ 'articleEditable' ]),
+    ...mapState('parseVis', [ 'currUserId', 'currCollId' ]),
     canvasHeight () {
       const nRows = this.gridConfig.nRow
       const paddings = this.visConfig.canvasPadding.top + this.visConfig.canvasPadding.bottom
@@ -143,14 +107,6 @@ export default {
         height: this.canvasHeight + 'em'
       }
     },
-    drawerArticleId () {
-      return this.currentDrawerArticleId
-    },
-    emptyViewMessage () {
-      return this.articleEditable
-        ? 'Add articles to visualization'
-        : 'Search articles to visualize'
-    },
     focusedVisNodeIds () {
       const hoveringArtId = this.hoveringVisNodeId
       const selectedArtIds = this.selectedVisNodeIds
@@ -164,31 +120,6 @@ export default {
     },
     gridConfig () {
       return this.getGridConfig()
-    },
-    isDrawerArticle () {
-      return this.isDrawerVisNode || this.currentDrawerArticleId
-    },
-    isDrawerEmpty () { return !this.isDrawerArticle && !this.isDrawerList },
-    isDrawerList () {
-      return !this.isDrawerArticle && this.drawerPageQuery
-    },
-    isDrawerListEmptyVisible () {
-      return this.drawerPageQueryStatus.isEmpty
-    },
-    isDrawerOpenComputed: {
-      set (value) {
-        this.$emit('update:isDrawerOpen', value)
-      },
-      get () {
-        return this.isDrawerOpen
-      }
-    },
-    isDrawerVisNode () { return this.selectedVisNodeIds.length === 1 },
-    isEmptyViewVisible () {
-      return this.collectionArticleIds.length === 0 && !this.tempVisNodeId
-    },
-    isGraphViewVisible () {
-      return this.collectionArticleIds.length !== 0 || this.tempVisNodeId
     },
     maxReferenceLevel () { return Math.max(0, this.visGraph.grid.length - 1) },
     overlayContainerStyle () {
@@ -248,18 +179,22 @@ export default {
     baseVisGraph: {
       default: new VisGraph({}),
       async get () {
-        return VisGraph.fromArticleIds(
-          theArticlePool, this.collectionArticleIds)
+        if (!this.currCollId) {
+          return new VisGraph({})
+        }
+        if (this.currUserId === 'me') {
+          return VisGraph.fromAppsyncMyCollection(this.$apollo, this.currCollId)
+        }
+        if (this.currUserId === 'sample') {
+          return VisGraph.fromFlatColl(
+            await import(`./${this.currCollId}.json`))
+        }
       }
     },
     visGraph: {
       default: new VisGraph({}),
       async get () {
-        const tempVisGraph =
-          this.tempVisNodeId
-            ? await VisGraph.insertArticleId(
-              this.baseVisGraph, theArticlePool, this.tempVisNodeId)
-            : this.baseVisGraph
+        const tempVisGraph = this.baseVisGraph
         const tempStatus =
           this.tempVisNodeId
             ? this.baseVisGraph.has(this.tempVisNodeId)
@@ -293,23 +228,6 @@ export default {
     }
   },
   methods: {
-    articleEdited (curr) {
-      this.$emit('article-edited', curr)
-    },
-    async getArticleCardReferenceColor (articleId) {
-      const isArticleIdInVisGraph = id => this.visGraph.has(id)
-      const referenceIds = await theArticlePool.getReferenceIds(articleId)
-      const nInGraphReferences =
-        _.filter(referenceIds, isArticleIdInVisGraph).length
-      return this.getCardSideColor(nInGraphReferences)
-    },
-    async getArticleCardCitedByColor (articleId) {
-      const isArticleIdInVisGraph = id => this.visGraph.has(id)
-      const citedByIds = await theArticlePool.getCitedByIds(articleId)
-      const nInGraphCitedBys =
-        _.filter(citedByIds, isArticleIdInVisGraph).length
-      return this.getCardSideColor(nInGraphCitedBys)
-    },
     getCardBackgroundColor (visNode) {
       return visNode.visStatus.displayed
         ? this.visConfig.cardSelectedBackgroundColor
@@ -724,10 +642,6 @@ function prefixSum (values) {
   left: 0px;
   top: 0px;
   overflow: hidden;
-}
-
-.card-row {
-  min-height: 0px;
 }
 
 .overlay-container {

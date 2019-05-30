@@ -7,6 +7,8 @@ import VueLineClamp from 'vue-line-clamp'
 import App from './App'
 import router from './router'
 import store from './store'
+import VueApollo from 'vue-apollo'
+import AppsyncClient from 'aws-appsync'
 import Amplify, * as AmplifyModules from 'aws-amplify'
 import { AmplifyPlugin } from 'aws-amplify-vue'
 import awsmobile from '../aws-exports'
@@ -20,8 +22,47 @@ const oauth = {
 }
 Amplify.configure(awsmobile)
 AmplifyModules.Auth.configure({ oauth })
-
 Vue.use(AmplifyPlugin, AmplifyModules)
+
+const appsyncConfig = {
+  url: awsmobile.aws_appsync_graphqlEndpoint,
+  region: awsmobile.aws_project_region,
+  auth: {
+    type: awsmobile.aws_appsync_authenticationType,
+    jwtToken: async () => {
+      const session = await AmplifyModules.Auth.currentSession()
+      return session.getIdToken().getJwtToken()
+    }
+  },
+  disableOffline: true,
+  cacheOptions: {
+    dataIdFromObject: obj => {
+      if (obj.id) {
+        return obj.id
+      }
+      if (obj.userId && obj.collId && obj.artId) {
+        return `user-${obj.userId}-coll-${obj.collId}-art-${obj.artId}`
+      }
+      if (obj.userId && obj.collId) {
+        return `user-${obj.userId}-coll-${obj.collId}`
+      }
+      if (obj.referenceId && obj.citedById) {
+        return `reference-${obj.referenceId}-citedBy-${obj.citedById}`
+      }
+    }
+  }
+}
+const appsyncOptions = {
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network'
+    }
+  }
+}
+const appsyncClient = new AppsyncClient(appsyncConfig, appsyncOptions)
+const appsyncProvider = new VueApollo({ defaultClient: appsyncClient })
+Vue.use(VueApollo)
+
 Vue.use(VueLineClamp, { importCss: true })
 Vue.use(VueAsyncComputed)
 
@@ -48,5 +89,6 @@ new Vue({
   router,
   store,
   components: { App },
+  provide: appsyncProvider.provide(),
   template: '<App/>'
 })

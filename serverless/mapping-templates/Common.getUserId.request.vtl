@@ -1,0 +1,21 @@
+#foreach($group in $ctx.identity.claims.get("cognito:groups"))
+  #if($group == "admins")
+    #set($amIAdmin = true)
+  #end
+#end
+#set($myUserId = $ctx.identity.sub)
+#set($inputUserId = $ctx.args.userId)
+#if($inputUserId)
+  #if($inputUserId == "me" || $inputUserId == "my" || $inputUserId == "myself")
+    #set($userId = $myUserId)
+  #elseif($inputUserId == "public" || $inputUserId == "sample" || $inputUserId == $myUserId || $amIAdmin)
+    #set($userId = $inputUserId)
+  #else
+    $util.unauthorized()
+  #end
+#else
+  #set($userId = $myUserId)
+#end
+
+$util.qr($ctx.stash.put("userId", $userId))
+$util.toJson({})
