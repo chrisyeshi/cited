@@ -54,6 +54,7 @@
 import _ from 'lodash'
 import PvDrawerCollectionList from '@/components/PvDrawerCollectionList.vue'
 import PvDrawerCollectionView from '@/components/PvDrawerCollectionView.vue'
+import PvDrawerArticleView from '@/components/PvDrawerArticleView.vue'
 import PvDrawerToggleButton from '@/components/PvDrawerToggleButton.vue'
 import PvListView from './PvListView.vue'
 import PvVisView from './PvVisView.vue'
@@ -65,6 +66,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'ParseVis',
   components: {
+    PvDrawerArticleView,
     PvDrawerCollectionList,
     PvDrawerCollectionView,
     PvDrawerToggleButton,
@@ -99,6 +101,8 @@ export default {
           return 'pv-drawer-collection-list'
         case 'collection-view':
           return 'pv-drawer-collection-view'
+        case 'article-view':
+          return 'pv-drawer-article-view'
       }
       return {
         template: '<div>Unknown Drawer State</div>'
@@ -237,6 +241,8 @@ export default {
   created () {
     if (this.inputUserId && this.inputCollId && !this.inputArtId) {
       this.$store.commit('parseVis/set', { drawerState: 'collection-view' })
+    } else if (this.inputUserId && this.inputCollId && this.inputArtId) {
+      this.$store.commit('parseVis/set', { drawerState: 'article-view' })
     }
   }
 }

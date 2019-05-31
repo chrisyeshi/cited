@@ -38,18 +38,42 @@ export class VisGraph {
     this.articleSource = articleSource
   }
 
-  static async fromAppsyncMyCollection (client, collId) {
-    const GetMyCollectionArticles = `
-      query getMyCollection($collId: ID!) {
-        getMyCollection(collId: $collId) {
+  static async fromAppsyncUserCollection (client, userId, collId) {
+    const GetUserCollectionArticles = `
+      query getUserCollection($userId: ID!, $collId: ID!) {
+        getUserCollection(userId: $userId, collId: $collId) {
           userId
           collId
           title
           description
           articles {
+            userId
+            collId
             artId
+            type
+            title
+            abstract
+            year
+            authors {
+              surname
+              given
+            }
+            venues {
+              name
+            }
+            nReferences
             references {
               articles {
+                userId
+                collId
+                artId
+              }
+            }
+            nCitedBys
+            citedBys(limit: 3) {
+              articles {
+                userId
+                collId
                 artId
               }
             }
@@ -58,10 +82,10 @@ export class VisGraph {
       }
     `
     const result = await client.query({
-      query: gql(GetMyCollectionArticles),
-      variables: { collId: collId }
+      query: gql(GetUserCollectionArticles),
+      variables: { userId: userId, collId: collId }
     })
-    const coll = result.data.getMyCollection
+    const coll = result.data.getUserCollection
     const artsMap = Object.assign({}, ..._.map(coll.articles, art => ({
       [art.artId]: art
     })))

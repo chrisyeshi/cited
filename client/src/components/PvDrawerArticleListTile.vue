@@ -1,5 +1,5 @@
 <template>
-  <v-list-tile class="my-3">
+  <v-list-tile v-on="$listeners">
     <v-list-tile-content style="justify-content: space-evenly;">
       <div class="caption text-truncate font-weight-bold">{{ label }}</div>
       <div class="body-1 text-truncate font-weight-medium full-width">
@@ -8,22 +8,20 @@
       <div class="caption text-truncate font-weight-light full-width">
         {{ abstract }}
       </div>
-      <div class="caption text-truncate font-weight-thin stats-row">
-        <div class="text-truncate stats-row-venue">{{ venue }}</div>
-        <div class="stats-row-delimiter">-</div>
-        <div>{{ year }}</div>
-        <div class="stats-row-delimiter">-</div>
-        <div>Referencing {{ nReferences }}</div>
-        <div class="stats-row-delimiter">-</div>
-        <div>Cited by {{ nCitedBys }}</div>
-      </div>
+      <pv-drawer-article-stats-row class="caption font-weight-thin"
+        :venue="venue" :year="year" :nReferences="nReferences"
+        :nCitedBys="nCitedBys">
+      </pv-drawer-article-stats-row>
     </v-list-tile-content>
   </v-list-tile>
 </template>
 
 <script>
+import PvDrawerArticleStatsRow from '@/components/PvDrawerArticleStatsRow.vue'
+
 export default {
   name: 'PvDrawerArticleListTile',
+  components: { PvDrawerArticleStatsRow },
   props: {
     article: Object
   },

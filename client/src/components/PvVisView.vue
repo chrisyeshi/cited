@@ -31,6 +31,7 @@ import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 import { mapState } from 'vuex'
 import { VisGraph, VisLink } from './pvvismodels.js'
 import ExpandableText from './ExpandableText.vue'
+import getSampleCollection from './getsamplecollection.js'
 import PvArticleForm from './PvArticleForm.vue'
 import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisNodeCard from './PvVisNodeCard.vue'
@@ -183,11 +184,12 @@ export default {
           return new VisGraph({})
         }
         if (this.currUserId === 'me') {
-          return VisGraph.fromAppsyncMyCollection(this.$apollo, this.currCollId)
+          return VisGraph.fromAppsyncUserCollection(
+            this.$apollo, this.currUserId, this.currCollId)
         }
         if (this.currUserId === 'sample') {
           return VisGraph.fromFlatColl(
-            await import(`./${this.currCollId}.json`))
+            await getSampleCollection(this.currCollId))
         }
       }
     },

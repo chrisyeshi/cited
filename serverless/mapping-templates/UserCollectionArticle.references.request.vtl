@@ -15,5 +15,6 @@
     "expressionValues": {
       ":citedById": $util.dynamodb.toDynamoDBJson($fullCitedById)
     }
-  }
+  },
+  "limit": $util.defaultIfNull($ctx.args.limit, 1000)
 }

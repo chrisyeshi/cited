@@ -14,5 +14,6 @@
     "expressionValues": {
       ":referenceId": $util.dynamodb.toDynamoDBJson($fullReferenceId)
     }
-  }
+  },
+  "limit": $util.defaultIfNull($ctx.args.limit, 1000)
 }

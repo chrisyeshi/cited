@@ -6,8 +6,7 @@ export default {
     articleEditable: false,
     currUserId: null,
     currCollId: null,
-    currArtId: null,
-    sampleCollections: []
+    currArtId: null
   },
   mutations: {
     set (state, newState) {

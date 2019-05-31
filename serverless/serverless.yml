@@ -212,7 +212,7 @@ custom:
       - type: Query
         field: getMyCollectionArticle
         request: Common.getUserId.request.vtl
-        response: Generic.response.vtl
+        response: Common.UserCollectionArticle.response.vtl
         kind: PIPELINE
         functions:
           - ${self:custom.apiName}-getUserCollectionArticle}
@@ -220,7 +220,7 @@ custom:
       - type: Query
         field: getUserCollectionArticle
         request: Common.getUserId.request.vtl
-        response: Generic.response.vtl
+        response: Common.UserCollectionArticle.response.vtl
         kind: PIPELINE
         functions:
           - ${self:custom.apiName}-getUserCollectionArticle}

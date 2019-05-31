@@ -30,7 +30,7 @@
         </v-card-text>
       </v-card>
       <pv-drawer-article-list-tile v-for="art in collArts" :key="art.artId"
-        :article="art" @click="onClickArticle(art.artId)">
+        :article="art" class="my-3" @click="onClickArticle(art.artId)">
       </pv-drawer-article-list-tile>
     </v-list>
   </div>
@@ -44,6 +44,7 @@ import {
 import gql from 'graphql-tag'
 import deleteUserCollection from './deleteAppsyncUserCollection.js'
 import ExpandableText from '@/components/ExpandableText.vue'
+import getSampleCollection from './getsamplecollection.js'
 import PvDrawerArticleListTile from '@/components/PvDrawerArticleListTile.vue'
 
 export default {
@@ -70,7 +71,7 @@ export default {
         return null
       }
       if (this.currUserId === 'sample') {
-        return import(`./${this.currCollId}.json`)
+        return getSampleCollection(this.currCollId)
       }
       if (this.currUserId === 'me') {
         const GetMyCollection = `
@@ -141,7 +142,9 @@ export default {
       a.dispatchEvent(e)
     },
     onClickArticle (artId) {
-      console.log(artId)
+      this.$router.push(
+        `/demo?user=${this.currUserId}&coll=${this.currCollId}&art=${artId}`)
+      this.$store.commit('parseVis/set', { drawerState: 'article-view' })
     }
   }
 }
