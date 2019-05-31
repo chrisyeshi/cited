@@ -86,7 +86,7 @@ export default {
       currArticleId: null,
       drawerWidth: 450,
       enableToolbarDrawerIcon: false,
-      isDrawerOpen: false,
+      isDrawerOpen: true,
       pageQuery: null,
       searchText: ''
     }

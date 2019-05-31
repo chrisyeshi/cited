@@ -30,7 +30,8 @@
         </v-card-text>
       </v-card>
       <pv-drawer-article-list-tile v-for="art in collArts" :key="art.artId"
-        :article="art" class="my-3" @click="onClickArticle(art.artId)">
+        :user-id="currUserId" :coll-id="currCollId" :art-id="art.artId"
+        class="my-3" @click="onClickArticle(art.artId)">
       </pv-drawer-article-list-tile>
     </v-list>
   </div>

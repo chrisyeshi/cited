@@ -1,5 +1,6 @@
 <template>
   <v-list-tile v-on="$listeners">
+    <div :style="leftSideStyle"></div>
     <v-list-tile-content style="justify-content: space-evenly;">
       <div class="caption text-truncate font-weight-bold">{{ label }}</div>
       <div class="body-1 text-truncate font-weight-medium full-width">
@@ -13,40 +14,44 @@
         :nCitedBys="nCitedBys">
       </pv-drawer-article-stats-row>
     </v-list-tile-content>
+    <div :style="rightSideStyle"></div>
   </v-list-tile>
 </template>
 
 <script>
+import PvArticleInfoMixin from './pvarticleinfomixin.js'
 import PvDrawerArticleStatsRow from '@/components/PvDrawerArticleStatsRow.vue'
 
 export default {
   name: 'PvDrawerArticleListTile',
   components: { PvDrawerArticleStatsRow },
+  mixins: [ PvArticleInfoMixin ],
   props: {
-    article: Object
+    userId: String,
+    collId: String,
+    artId: String
   },
+  data: () => ({
+    sideWidth: '8px'
+  }),
   computed: {
-    label () {
-      return `${this.article.authors[0].surname} ${this.article.year}`
+    leftSideStyle () {
+      return {
+        position: 'absolute',
+        width: this.sideWidth,
+        height: '100%',
+        left: '0px',
+        background: this.collReferenceColor
+      }
     },
-    title () {
-      return this.article.title
-    },
-    abstract () {
-      return this.article.abstract
-    },
-    venue () {
-      return this.article.venues && this.article.venues[0] &&
-        this.article.venues[0].name
-    },
-    year () {
-      return this.article.year
-    },
-    nReferences () {
-      return this.article.nReferences
-    },
-    nCitedBys () {
-      return this.article.nCitedBys
+    rightSideStyle () {
+      return {
+        position: 'absolute',
+        width: this.sideWidth,
+        height: '100%',
+        right: '0px',
+        background: this.collCitedByColor
+      }
     }
   }
 }
