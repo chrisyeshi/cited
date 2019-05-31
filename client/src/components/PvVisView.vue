@@ -28,6 +28,7 @@
 import _ from 'lodash'
 import * as d3Color from 'd3-color'
 import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
+import getVisCardSideColor from './getviscardsidecolor.js'
 import { mapState } from 'vuex'
 import { VisGraph, VisLink } from './pvvismodels.js'
 import ExpandableText from './ExpandableText.vue'
@@ -261,8 +262,7 @@ export default {
       }
     },
     getCardSideColor (count) {
-      const scalar = 1 - Math.exp(Math.log(1) - this.visConfig.card.sideDarkness * count)
-      return interpolateColor(scalar)
+      return getVisCardSideColor(count, this.visConfig.card.sideDarkness)
     },
     getCardStyle (visNode) {
       return {

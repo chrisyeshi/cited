@@ -32,7 +32,7 @@
             </v-flex>
             <v-flex v-for="art in references" :key="art.artId"
               style="font-size: 12px;">
-              <pv-drawer-article-relative-card :article="art">
+              <pv-drawer-article-relative-card :art-id="art.artId">
               </pv-drawer-article-relative-card>
             </v-flex>
           </v-flex>
@@ -42,7 +42,7 @@
             </v-flex>
             <v-flex v-for="art in citedBys" :key="art.artId"
               style="font-size: 12px;">
-              <pv-drawer-article-relative-card :article="art">
+              <pv-drawer-article-relative-card :art-id="art.artId">
               </pv-drawer-article-relative-card>
             </v-flex>
           </v-flex>
