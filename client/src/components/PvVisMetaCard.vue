@@ -1,5 +1,5 @@
 <template>
-  <div class="vis-card" :style="cardStyle">
+  <div class="vis-card" :style="cardStyle" v-on="$listeners">
     <div :style="leftSideStyle"></div>
     <div class="py-1 px-2" :style="rowsContainerStyle">
       <!-- TODO: truncate only the author name and leave the year alone -->

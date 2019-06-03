@@ -33,8 +33,15 @@
             <v-flex v-for="art in references" :key="art.artId"
               style="font-size: 12px;">
               <pv-drawer-article-relative-card
-                :user-id="currUserId" :coll-id="currCollId" :art-id="art.artId">
+                :user-id="currUserId" :coll-id="currCollId" :art-id="art.artId"
+                @click="onClickArticle(art.artId)">
               </pv-drawer-article-relative-card>
+            </v-flex>
+            <v-flex class="text-xs-center">
+              <v-btn small flat color="primary"
+                @click="onClickMoreRelatives('references')">
+                More
+              </v-btn>
             </v-flex>
           </v-flex>
           <v-flex xs6>
@@ -44,8 +51,15 @@
             <v-flex v-for="art in citedBys" :key="art.artId"
               style="font-size: 12px;">
               <pv-drawer-article-relative-card
-                :user-id="currUserId" :coll-id="currCollId" :art-id="art.artId">
+                :user-id="currUserId" :coll-id="currCollId" :art-id="art.artId"
+                @click="onClickArticle(art.artId)">
               </pv-drawer-article-relative-card>
+            </v-flex>
+            <v-flex class="text-xs-center">
+              <v-btn small flat color="primary"
+                @click="onClickMoreRelatives('citedBys')">
+                More
+              </v-btn>
             </v-flex>
           </v-flex>
         </v-layout>
@@ -102,111 +116,138 @@ export default {
     year () { return this.art && this.art.year }
   },
   asyncComputed: {
-    async art () {
-      if (this.currUserId === 'sample') {
-        const coll = await getSampleCollection(this.currCollId)
-        const flatArtsMap =
-          Object.assign(
-            {}, ..._.map(coll.articles, art => ({ [art.artId]: art })))
-        const flatArt =
-          _.find(coll.articles, art => art.artId === this.currArtId)
-        const art = {
-          ...flatArt,
-          references: { articles: [] },
-          citedBys: { articles: [] }
+    art: {
+      async get () {
+        if (this.currUserId === 'sample') {
+          const coll = await getSampleCollection(this.currCollId)
+          const flatArtsMap =
+            Object.assign(
+              {}, ..._.map(coll.articles, art => ({ [art.artId]: art })))
+          const flatArt =
+            _.find(coll.articles, art => art.artId === this.currArtId)
+          const art = {
+            ...flatArt,
+            references: { articles: [] },
+            citedBys: { articles: [] }
+          }
+          _.forEach(coll.relations, relation => {
+            if (relation.referenceId === art.artId) {
+              art.citedBys.articles.push(flatArtsMap[relation.citedById])
+            } else if (relation.citedById === art.artId) {
+              art.references.articles.push(flatArtsMap[relation.referenceId])
+            }
+          })
+          return art
         }
-        _.forEach(coll.relations, relation => {
-          if (relation.referenceId === art.artId) {
-            art.citedBys.articles.push(flatArtsMap[relation.citedById])
-          } else if (relation.citedById === art.artId) {
-            art.references.articles.push(flatArtsMap[relation.referenceId])
+        const GetUserCollectionArticle = `
+          query getUserCollectionArticle(
+            $userId: ID!, $collId: ID!, $artId: ID!) {
+            getUserCollectionArticle(
+              userId: $userId, collId: $collId, artId: $artId) {
+              userId
+              collId
+              artId
+              type
+              title
+              abstract
+              year
+              authors {
+                surname
+                given
+              }
+              venues {
+                name
+              }
+              nReferences
+              nCitedBys
+              references(limit: 3) {
+                nextToken
+                articles {
+                  userId
+                  collId
+                  artId
+                  type
+                  title
+                  year
+                  authors {
+                    surname
+                    given
+                  }
+                  venues {
+                    name
+                  }
+                  nReferences
+                  nCitedBys
+                }
+              }
+              citedBys(limit: 3) {
+                nextToken
+                articles {
+                  userId
+                  collId
+                  artId
+                  type
+                  title
+                  year
+                  authors {
+                    surname
+                    given
+                  }
+                  venues {
+                    name
+                  }
+                  nReferences
+                  nCitedBys
+                }
+              }
+            }
+          }
+        `
+        const result = await this.$apollo.query({
+          query: gql(GetUserCollectionArticle),
+          variables: {
+            userId: this.currUserId,
+            collId: this.currCollId,
+            artId: this.currArtId
           }
         })
-        return art
-      }
-      const GetUserCollectionArticle = `
-        query getUserCollectionArticle(
-          $userId: ID!, $collId: ID!, $artId: ID!) {
-          getUserCollectionArticle(
-            userId: $userId, collId: $collId, artId: $artId) {
-            userId
-            collId
-            artId
-            type
-            title
-            abstract
-            year
-            authors {
-              surname
-              given
-            }
-            venues {
-              name
-            }
-            nReferences
-            nCitedBys
-            references(limit: 3) {
-              nextToken
-              articles {
-                userId
-                collId
-                artId
-                type
-                title
-                year
-                authors {
-                  surname
-                  given
-                }
-                venues {
-                  name
-                }
-                nReferences
-                nCitedBys
-              }
-            }
-            citedBys(limit: 3) {
-              nextToken
-              articles {
-                userId
-                collId
-                artId
-                type
-                title
-                year
-                authors {
-                  surname
-                  given
-                }
-                venues {
-                  name
-                }
-                nReferences
-                nCitedBys
-              }
-            }
-          }
-        }
-      `
-      const result = await this.$apollo.query({
-        query: gql(GetUserCollectionArticle),
-        variables: {
-          userId: this.currUserId,
-          collId: this.currCollId,
-          artId: this.currArtId
-        }
-      })
-      return result.data.getUserCollectionArticle
+        return result.data.getUserCollectionArticle
+      },
+      watch: [ 'currUserId', 'currCollId', 'currArtId' ]
     }
   },
   methods: {
     back () {
       this.$router.push(`/demo?user=${this.currUserId}&coll=${this.currCollId}`)
-      this.$store.commit('parseVis/set', { drawerState: 'collection-view' })
+      this.$store.commit('parseVis/set', {
+        drawerState: { name: 'pv-drawer-collection-view' },
+        temporaryArticleIds:
+          _.without(this.$store.state.temporaryArticleIds, this.currArtId),
+        selectedArticleIds:
+          _.without(this.$store.state.selectedArticleIds, this.currArtId)
+      })
     },
-    trace (value) {
-      console.log(value)
-      return value
+    onClickArticle (artId) {
+      this.$router.push(
+        `/demo?user=${this.currUserId}&coll=${this.currCollId}&art=${artId}`)
+      this.$store.commit('parseVis/set', {
+        currUserId: this.currUserId,
+        currCollId: this.currCollId,
+        currArtId: artId,
+        drawerState: { name: 'pv-drawer-article-view' },
+        temporaryArticleIds:
+          _.union(this.$store.state.temporaryArticleIds, [ artId ]),
+        selectedArticleIds:
+          _.union(this.$store.state.selectedArticleIds, [ artId ])
+      })
+    },
+    onClickMoreRelatives (relationProp) {
+      this.$store.commit('parseVis/set', {
+        drawerState: {
+          name: 'pv-drawer-relative-list-view',
+          props: { relationProp }
+        }
+      })
     }
   }
 }

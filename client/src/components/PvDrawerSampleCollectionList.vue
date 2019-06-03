@@ -39,7 +39,12 @@ export default {
     },
     navToCollView (collId) {
       this.$router.push(`/demo?user=sample&coll=${collId}`)
-      this.$store.commit('parseVis/set', { drawerState: 'collection-view' })
+      this.$store.commit('parseVis/set', {
+        currUserId: 'sample',
+        currCollId: collId,
+        currArtId: null,
+        drawerState: { name: 'pv-drawer-collection-view' }
+      })
     }
   }
 }

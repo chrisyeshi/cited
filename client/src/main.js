@@ -34,7 +34,7 @@ const appsyncConfig = {
       return session.getIdToken().getJwtToken()
     }
   },
-  disableOffline: true,
+  disableOffline: false,
   cacheOptions: {
     dataIdFromObject: obj => {
       if (obj.id) {

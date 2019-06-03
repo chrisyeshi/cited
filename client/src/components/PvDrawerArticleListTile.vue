@@ -1,5 +1,6 @@
 <template>
-  <v-list-tile v-on="$listeners">
+  <v-list-tile v-on="$listeners" @mouseenter.native.stop="onMouseEnter"
+    @mouseleave.native.stop="onMouseLeave">
     <div :style="leftSideStyle"></div>
     <v-list-tile-content style="justify-content: space-evenly;">
       <div class="caption text-truncate font-weight-bold">{{ label }}</div>
@@ -19,13 +20,14 @@
 </template>
 
 <script>
+import PvArticleHoverMixin from './pvarticlehovermixin.js'
 import PvArticleInfoMixin from './pvarticleinfomixin.js'
 import PvDrawerArticleStatsRow from '@/components/PvDrawerArticleStatsRow.vue'
 
 export default {
   name: 'PvDrawerArticleListTile',
   components: { PvDrawerArticleStatsRow },
-  mixins: [ PvArticleInfoMixin ],
+  mixins: [ PvArticleHoverMixin, PvArticleInfoMixin ],
   props: {
     userId: String,
     collId: String,

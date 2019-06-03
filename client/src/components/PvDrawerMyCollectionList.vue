@@ -58,7 +58,12 @@ export default {
     },
     navigateToCollectionView (collId) {
       this.$router.push(`/demo?user=me&coll=${collId}`)
-      this.$store.commit('parseVis/set', { drawerState: 'collection-view' })
+      this.$store.commit('parseVis/set', {
+        currUserId: 'me',
+        currCollId: collId,
+        currArtId: null,
+        drawerState: { name: 'pv-drawer-collection-view' }
+      })
     },
     selectImportCollJsonFile () {
       let input = document.createElement('input')

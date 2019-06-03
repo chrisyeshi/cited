@@ -47,9 +47,6 @@ export default {
   },
   data () {
     return {
-      hoveringVisNodeId: null,
-      selectedVisNodeIds: [],
-      tempVisNodeId: null,
       visConfig: {
         card: {
           borderRadius: 0.65,
@@ -87,7 +84,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('parseVis', [ 'currUserId', 'currCollId' ]),
+    ...mapState('parseVis', [
+      'currUserId', 'currCollId', 'temporaryArticleIds', 'hoveringArticleId',
+      'selectedArticleIds'
+    ]),
     canvasHeight () {
       const nRows = this.gridConfig.nRow
       const paddings = this.visConfig.canvasPadding.top + this.visConfig.canvasPadding.bottom
@@ -120,6 +120,12 @@ export default {
       ])))
       return _.uniq(_.map(focusedVisNodes, visNode => visNode.articleId))
     },
+    hoveringVisNodeId () {
+      return this.hoveringArticleId
+    },
+    selectedVisNodeIds () {
+      return this.selectedArticleIds
+    },
     gridConfig () {
       return this.getGridConfig()
     },
@@ -137,13 +143,6 @@ export default {
         ...this.getVerticalGapHorizontalPaths(this.visLinks),
         ...this.getCrossColumnPaths(this.visLinks)
       ]
-    },
-    tempVisNodeIdComputed () {
-      return this.isDrawerList
-        ? this.drawerListHoveringArticleId
-        : this.isDrawerArticle
-          ? this.drawerArticleHoveringArticleId
-          : null
     },
     visLinks () {
       if (this.focusedVisNodeIds.length === 0) {
@@ -198,12 +197,12 @@ export default {
       default: new VisGraph({}),
       async get () {
         const tempVisGraph = this.baseVisGraph
-        const tempStatus =
-          this.tempVisNodeId
-            ? this.baseVisGraph.has(this.tempVisNodeId)
-              ? { [this.tempVisNodeId]: { hovering: true } }
-              : { [this.tempVisNodeId]: { temporary: true, hovering: true } }
-            : null
+        const tempStatuses =
+          _.mapValues(
+            _.keyBy(this.temporaryArticleIds),
+            (value, artId) => this.baseVisGraph.has(artId)
+              ? { hovering: true }
+              : { temporary: true, hovering: true })
         const hoveringStatus =
           this.hoveringVisNodeId &&
           { [this.hoveringVisNodeId]: { hovering: true } }
@@ -224,7 +223,7 @@ export default {
           { [this.drawerArticleId]: { displayed: true } }
         const statusesMap =
           _.merge(
-            tempStatus, hoveringStatus, selectedStatuses, greyedOutStatuses,
+            tempStatuses, hoveringStatus, selectedStatuses, greyedOutStatuses,
             displayedStatus)
         return VisGraph.setStatus(tempVisGraph, statusesMap)
       }
@@ -548,45 +547,48 @@ export default {
       this.$emit('add-to-vis', artId)
     },
     onCanvasClicked () {
-      this.selectedVisNodeIds = []
+      this.$store.commit('parseVis/set', { selectedArticleIds: [] })
     },
     onCardClicked (event, visNode) {
       if (event.metaKey || event.ctrlKey || event.shiftKey) {
         // multiple selection
         if (visNode.visStatus.selected) {
-          this.selectedVisNodeIds =
-            _.without(this.selectedVisNodeIds, visNode.articleId)
+          this.$store.commit('parseVis/set', {
+            selectedArticleIds:
+              _.without(this.selectedVisNodeIds, visNode.articleId)
+          })
         } else {
-          this.selectedVisNodeIds =
-            _.union(this.selectedVisNodeIds, [ visNode.articleId ])
+          this.$store.commit('parseVis/set', {
+            selectedArticleIds:
+              _.union(this.selectedVisNodeIds, [ visNode.articleId ])
+          })
         }
         this.isDrawerOpenComputed = false
       } else {
         // single selection
-        this.selectedVisNodeIds = [ visNode.articleId ]
-        this.$router.push(`/demo/${visNode.articleId}`)
+        this.$router.push(`/demo?user=${this.currUserId}&coll=${this.currCollId}&art=${visNode.articleId}`)
+        this.$store.commit('parseVis/set', {
+          currUserId: this.currUserId,
+          currCollId: this.currCollId,
+          currArtId: visNode.articleId,
+          drawerState: { name: 'pv-drawer-article-view' },
+          selectedArticleIds: [ visNode.articleId ]
+        })
         this.isDrawerOpenComputed = true
       }
     },
     onCardMouseEnter (visNode) {
       clearTimeout(this.hoverLingerTimer)
-      this.hoveringVisNodeId = visNode.articleId
+      this.$store.commit('parseVis/set', {
+        hoveringArticleId: visNode.articleId
+      })
     },
     onCardMouseLeave (visNode) {
-      this.hoverLingerTimer =
-        setTimeout(
-          () => { this.hoveringVisNodeId = null }, this.visConfig.hoverLinger)
-    },
-    onDrawerArticleSelected (artId) {
-      this.$emit('add-to-vis', artId)
-      this.$router.push(`/demo/${artId}`)
-    },
-    onDrawerArticleUnselected () {
-      this.$router.go(-1)
-    },
-    onDrawerListItemTitleClicked (artId) {
-      this.$emit('add-to-vis', artId)
-      this.$router.push(`/demo/${artId}`)
+      this.hoverLingerTimer = setTimeout(() => {
+        this.$store.commit('parseVis/set', {
+          hoveringArticleId: null
+        })
+      }, this.visConfig.hoverLinger)
     },
     onVisContainerResize (el) {
       this.visContainerWidth = el.offsetWidth / this.visConfig.fontSize
@@ -595,30 +597,6 @@ export default {
     trace (value) {
       console.log(value)
       return value
-    }
-  },
-  watch: {
-    drawerPageQuery: {
-      immediate: true,
-      handler (curr) {
-        if (curr) {
-          this.isDrawerOpenComputed = true
-          this.selectedVisNodeIds = []
-          this.selectedDrawerArticleId = null
-        }
-      }
-    },
-    tempVisNodeIdComputed (curr) {
-      if (curr) {
-        this.debouncedTempVisNodeId && this.debouncedTempVisNodeId.cancel()
-        this.debouncedTempVisNodeId = null
-        this.tempVisNodeId = curr
-      } else {
-        this.debouncedTempVisNodeId =
-          _.debounce(
-            () => { this.tempVisNodeId = null }, this.visConfig.hoverLinger)
-        this.debouncedTempVisNodeId()
-      }
     }
   }
 }

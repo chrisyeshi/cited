@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import { mapState } from 'vuex'
 import {
   serializeSampleCollection, serializeAppsyncUserCollection
@@ -115,7 +116,9 @@ export default {
   },
   methods: {
     back () {
-      this.$store.commit('parseVis/set', { drawerState: 'collection-list' })
+      this.$store.commit('parseVis/set', {
+        drawerState: { name: 'pv-drawer-collection-list' }
+      })
     },
     async deleteCollection () {
       if (this.currUserId === 'sample') {
@@ -123,7 +126,12 @@ export default {
       }
       await deleteUserCollection(this.$apollo, this.currUserId, this.currCollId)
       this.$router.push(`/demo`)
-      this.$store.commit('parseVis/set', { drawerState: 'collection-list' })
+      this.$store.commit('parseVis/set', {
+        currUserId: this.currUserId,
+        currCollId: null,
+        currArtId: null,
+        drawerState: { name: 'pv-drawer-collection-list' }
+      })
     },
     async exportCollection () {
       const output = this.currUserId === 'sample'
@@ -145,7 +153,16 @@ export default {
     onClickArticle (artId) {
       this.$router.push(
         `/demo?user=${this.currUserId}&coll=${this.currCollId}&art=${artId}`)
-      this.$store.commit('parseVis/set', { drawerState: 'article-view' })
+      this.$store.commit('parseVis/set', {
+        currUserId: this.currUserId,
+        currCollId: this.currCollId,
+        currArtId: artId,
+        drawerState: { name: 'pv-drawer-article-view' },
+        temporaryArticleIds:
+          _.union(this.$store.state.temporaryArticleIds, [ artId ]),
+        selectedArticleIds:
+          _.union(this.$store.state.selectedArticleIds, [ artId ])
+      })
     }
   }
 }
