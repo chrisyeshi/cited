@@ -571,7 +571,7 @@ export default {
           currUserId: this.currUserId,
           currCollId: this.currCollId,
           currArtId: visNode.articleId,
-          drawerState: { name: 'pv-drawer-article-view' },
+          drawerState: { name: 'article-view' },
           selectedArticleIds: [ visNode.articleId ]
         })
         this.isDrawerOpenComputed = true

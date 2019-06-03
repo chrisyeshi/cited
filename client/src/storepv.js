@@ -1,5 +1,5 @@
 const defaultState = {
-  contentState: 'vis-view',
+  contentState: 'home-view',
   drawerState: {
     name: 'pv-drawer-collection-list',
     props: {}

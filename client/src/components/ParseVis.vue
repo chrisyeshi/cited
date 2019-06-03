@@ -1,7 +1,7 @@
 <template>
   <v-app overflow-hidden>
     <v-toolbar app flat clipped-left>
-      <v-toolbar-title @click="toHome" style="cursor: pointer;">
+      <v-toolbar-title @click="toHome" class="page-title">
         Cited
       </v-toolbar-title>
       <v-spacer></v-spacer>
@@ -9,13 +9,14 @@
         <sign-in-button></sign-in-button>
       </v-toolbar-items>
     </v-toolbar>
-    <v-navigation-drawer app floating stateless clipped :width="drawerWidth"
-      v-model="isDrawerOpen" style="overflow: visible;">
+    <v-navigation-drawer v-if="isDrawerVisible" app stateless clipped
+      :width="drawerWidth" v-model="isDrawerOpen" style="overflow: visible;">
       <pv-drawer-toggle-button v-model="isDrawerOpen"></pv-drawer-toggle-button>
       <component :is="drawerState.name" v-bind="drawerState.props"
         style="height: 100%; overflow: auto;">
       </component>
     </v-navigation-drawer>
+    <pv-home-collection-list v-if="isHomeViewVisible"></pv-home-collection-list>
     <pv-vis-view v-if="isVisViewVisible"
       :collection-article-ids="collectionArticleIds"
       :current-drawer-article-id="currArticleId"
@@ -36,6 +37,7 @@ import PvDrawerCollectionView from '@/components/PvDrawerCollectionView.vue'
 import PvDrawerArticleView from '@/components/PvDrawerArticleView.vue'
 import PvDrawerRelativeListView from '@/components/PvDrawerRelativeListView.vue'
 import PvDrawerToggleButton from '@/components/PvDrawerToggleButton.vue'
+import PvHomeCollectionList from '@/components/PvHomeCollectionList.vue'
 import PvListView from './PvListView.vue'
 import PvVisView from './PvVisView.vue'
 import SignInButton from './SignInButton.vue'
@@ -51,6 +53,7 @@ export default {
     PvDrawerCollectionView,
     PvDrawerRelativeListView,
     PvDrawerToggleButton,
+    PvHomeCollectionList,
     PvListView,
     PvVisView,
     SignInButton
@@ -80,6 +83,12 @@ export default {
     },
     isListViewVisible () {
       return this.contentState === 'list-view'
+    },
+    isHomeViewVisible () {
+      return this.contentState === 'home-view'
+    },
+    isDrawerVisible () {
+      return this.isListViewVisible || this.isVisViewVisible
     },
     searchTextFieldOuterIcon () {
       return this.articleEditable ? 'library_add' : ''
@@ -211,5 +220,11 @@ export default {
   height: 3.5em;
   line-height: 3.5em;
   border-radius: 0em 0.5em 0.5em 0em;
+}
+
+.page-title {
+  cursor: pointer;
+  font-family: 'Lora', serif;
+  font-size: 26px;
 }
 </style>

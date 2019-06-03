@@ -59,10 +59,11 @@ export default {
     navigateToCollectionView (collId) {
       this.$router.push(`/demo?user=me&coll=${collId}`)
       this.$store.commit('parseVis/set', {
+        contentState: 'vis-view',
+        drawerState: { name: 'pv-drawer-collection-view' },
         currUserId: 'me',
         currCollId: collId,
-        currArtId: null,
-        drawerState: { name: 'pv-drawer-collection-view' }
+        currArtId: null
       })
     },
     selectImportCollJsonFile () {
