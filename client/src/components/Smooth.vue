@@ -8,7 +8,7 @@
           @click="$store.commit('toggle', 'isDrawerVisible')">
         </v-toolbar-side-icon>
         <v-toolbar-title class="headline ml-2"
-          @click="$router.push('/demo')" style="cursor: pointer;">
+          @click="$router.push('/alpha')" style="cursor: pointer;">
           Discover
         </v-toolbar-title>
       </v-toolbar>
@@ -189,15 +189,15 @@ export default {
     },
     selectUserCollection (collId) {
       if (this.searchComponent === 'searchPage') {
-        this.$router.push(`/demo/collection/${collId}`)
+        this.$router.push(`/alpha/collection/${collId}`)
       } else if (!_.isNil(this.searchText)) {
         this.$router.push(
-          `/demo/search/${this.searchText}/collection/${collId}`)
+          `/alpha/search/${this.searchText}/collection/${collId}`)
       } else if (this.searchComponent === 'referenceObject') {
         this.$router.push(
-          `/demo/refobj/${this.refObjId}/collection/${collId}`)
+          `/alpha/refobj/${this.refObjId}/collection/${collId}`)
       } else {
-        this.$router.push(`/demo/collection/${collId}`)
+        this.$router.push(`/alpha/collection/${collId}`)
       }
     },
     toggleVisPaneSize () {
@@ -214,7 +214,7 @@ export default {
     },
     toHome () {
       window.flipping.read()
-      this.$router.push('/demo')
+      this.$router.push('/alpha')
       this.$nextTick(() => {
         window.flipping.flip()
       })

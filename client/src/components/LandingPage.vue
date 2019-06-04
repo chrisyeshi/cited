@@ -1,15 +1,16 @@
 <template>
   <v-app>
     <v-toolbar app flat scroll-off-screen inverted-scroll>
-      <responsive-text-logo full @click="$vuetify.goTo(0)"></responsive-text-logo>
+      <v-toolbar-title class="page-title">Cited</v-toolbar-title>
+      <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn flat to="/demo"
+        <v-btn flat :to="{ name: 'parsevis', query: { user: 'sample' } }"
           v-ga="$ga.event.bind(this, 'buttons', 'click', 'toolbar demo')">
-          Alpha Demo
+          Explore
         </v-btn>
-        <v-btn flat @click="$vuetify.goTo('#sign-up')" color="error"
+        <v-btn flat @click="signIn" color="error"
           v-ga="$ga.event.bind(this, 'buttons', 'click', 'toolbar sign up')">
-          Contact Us
+          Sign In
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
@@ -20,9 +21,10 @@
             <v-flex class="mt-5"
               style="display: flex; justify-content: center;">
               <div style="position: relative;">
-                <h1 class="responsive-font-size">Discovery Engine</h1>
+                <!-- <h1 class="responsive-font-size">Discovery Engine</h1> -->
+                <h1 style="font-family: 'Lora', serif; font-size: 100px;">Cited</h1>
                 <p class="title white--text px-2 py-1"
-                  style="position: absolute; top: -18px; right: -20px; border-radius: 25px; background: #FC5457;">
+                  style="position: absolute; top: -8px; right: -20px; border-radius: 25px; background: #FC5457;">
                   alpha
                 </p>
               </div>
@@ -37,13 +39,14 @@
               </v-layout>
             </v-flex>
             <v-flex class="mt-4 text-xs-center action-buttons-container">
-              <v-btn large dark color="cyan darken-4" to="/demo"
+              <v-btn large dark color="cyan darken-4"
+                :to="{ name: 'parsevis', query: { user: 'sample' } }"
                 v-ga="$ga.event.bind(this, 'buttons', 'click', 'center demo')">
-                Alpha Demo
+                Explore
               </v-btn>
-              <v-btn large color="error" @click="$vuetify.goTo('#sign-up')"
+              <v-btn large color="error" @click="signIn"
                 v-ga.click="$ga.event.bind(this, 'buttons', 'click', 'center sign up')">
-                Contact Us
+                Sign In
               </v-btn>
             </v-flex>
           </v-layout>
@@ -250,6 +253,9 @@ export default {
       }
       style[side] = '0px'
       return style
+    },
+    signIn () {
+      this.$Amplify.Auth.federatedSignIn({ provider: 'Google' })
     }
   },
   computed: {
@@ -309,6 +315,12 @@ export default {
 <style scoped>
 .responsive-font-size {
   text-align: center;
+}
+
+.page-title {
+  cursor: pointer;
+  font-family: 'Lora', serif;
+  font-size: 26px;
 }
 
 .py-6 {

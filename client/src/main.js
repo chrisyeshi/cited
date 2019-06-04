@@ -16,8 +16,8 @@ import awsmobile from '../aws-exports'
 const oauth = {
   domain: 'disco.auth.us-east-2.amazoncognito.com',
   scope: ['email', 'profile', 'openid'],
-  redirectSignIn: 'http://localhost:8080/demo/',
-  redirectSignOut: 'http://localhost:8080/demo/',
+  redirectSignIn: 'http://localhost:8080',
+  redirectSignOut: 'http://localhost:8080',
   responseType: 'code' // or token
 }
 Amplify.configure(awsmobile)

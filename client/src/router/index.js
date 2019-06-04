@@ -21,7 +21,6 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL || '/',
   routes: [
-    { path: '/', component: LandingPage },
     { path: '/alpha', component: Smooth },
     { path: '/alpha/search/:routeSearchText', component: Smooth, props: true },
     { path: '/alpha/refobj/:refObjId', component: Smooth, props: true },
@@ -47,9 +46,10 @@ export default new Router({
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
     { path: '/papersight', component: PaperSight },
+    { path: '/landing', component: LandingPage },
     {
-      path: '/parsevis',
-      alias: '/demo',
+      path: '/',
+      name: 'parsevis',
       component: ParseVis,
       props: (route) => ({
         inputUserId: route.query.user || route.query.userId,

@@ -94,6 +94,22 @@ export default {
       return this.articleEditable ? 'library_add' : ''
     }
   },
+  asyncComputed: {
+    authUser: {
+      default: null,
+      async get () {
+        try {
+          const user = await this.$Amplify.Auth.currentAuthenticatedUser()
+          return user
+        } catch (error) {
+          if (error !== 'not authenticated') {
+            console.log(error)
+          }
+          return null
+        }
+      }
+    }
+  },
   methods: {
     articleEdited (curr) {
       theArticlePool.setArticle(curr)
@@ -153,9 +169,6 @@ export default {
     onAddArticleToGraph (artId) {
       this.collectionArticleIds = _.union(this.collectionArticleIds, [ artId ])
     },
-    search (text) {
-      this.$router.push(`/demo/${text}`)
-    },
     selectImportCollJsonFile (arg) {
       let input = document.createElement('input')
       input.type = 'file'
@@ -181,7 +194,7 @@ export default {
       return value
     },
     toHome () {
-      this.$router.push('/demo')
+      this.$router.push({ name: 'parsevis' })
       this.$store.commit('parseVis/reset')
     },
     toVisView () {
@@ -192,6 +205,15 @@ export default {
     }
   },
   created () {
+    this.$Amplify.Auth.currentAuthenticatedUser().catch(error => {
+      if (error !== 'not authenticated') {
+        console.log(error)
+        return
+      }
+      if (!this.inputUserId) {
+        this.$router.replace('/landing')
+      }
+    })
     if (this.inputUserId && this.inputCollId && !this.inputArtId) {
       this.$store.commit('parseVis/set', {
         currUserId: this.inputUserId,

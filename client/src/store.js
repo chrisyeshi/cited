@@ -110,21 +110,21 @@ export default new Vuex.Store({
       const collId = context.getters.currCollectionId
       const random = Date.now()
       if (collId) {
-        router.push(`/demo/search/${text}/collection/${collId}#${random}`)
+        router.push(`/alpha/search/${text}/collection/${collId}#${random}`)
       } else {
-        router.push(`/demo/search/${text}#${random}`)
+        router.push(`/alpha/search/${text}#${random}`)
       }
     },
     showRefObjDetail (context, refObjId) {
       const collId = context.getters.currCollectionId
       if (collId) {
-        router.push(`/demo/refobj/${refObjId}/collection/${collId}`)
+        router.push(`/alpha/refobj/${refObjId}/collection/${collId}`)
       } else {
-        router.push(`/demo/refobj/${refObjId}`)
+        router.push(`/alpha/refobj/${refObjId}`)
       }
     },
     selectUserCollection (context, collId) {
-      router.push(`/demo/collection/${collId}`)
+      router.push(`/alpha/collection/${collId}`)
     },
     async pushToHistory (context, refObjId) {
       ga.event('links', 'click', 'add to current collection')
@@ -351,7 +351,7 @@ export default new Vuex.Store({
           currRefObj: null,
           searchText: null
         })
-        router.push('/demo/collection/insituvis')
+        router.push('/alpha/collection/insituvis')
       }
     }
   },

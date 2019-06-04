@@ -218,7 +218,10 @@ export default {
   },
   methods: {
     back () {
-      this.$router.push(`/demo?user=${this.currUserId}&coll=${this.currCollId}`)
+      this.$router.push({
+        name: 'parsevis',
+        query: { user: this.currUserId, coll: this.currCollId }
+      })
       this.$store.commit('parseVis/set', {
         drawerState: { name: 'pv-drawer-collection-view' },
         temporaryArticleIds:
@@ -228,8 +231,10 @@ export default {
       })
     },
     onClickArticle (artId) {
-      this.$router.push(
-        `/demo?user=${this.currUserId}&coll=${this.currCollId}&art=${artId}`)
+      this.$router.push({
+        name: 'parsevis',
+        query: { user: this.currUserId, coll: this.currCollId, art: artId }
+      })
       this.$store.commit('parseVis/set', {
         currUserId: this.currUserId,
         currCollId: this.currCollId,

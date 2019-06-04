@@ -125,7 +125,7 @@ export default {
         throw new Error(`cannot delete sample collection ${this.currCollId}`)
       }
       await deleteUserCollection(this.$apollo, this.currUserId, this.currCollId)
-      this.$router.push(`/demo`)
+      this.$router.push({ name: 'parsevis' })
       this.$store.commit('parseVis/set', {
         currUserId: this.currUserId,
         currCollId: null,
@@ -151,8 +151,10 @@ export default {
       a.dispatchEvent(e)
     },
     onClickArticle (artId) {
-      this.$router.push(
-        `/demo?user=${this.currUserId}&coll=${this.currCollId}&art=${artId}`)
+      this.$router.push({
+        name: 'parsevis',
+        query: { user: this.currUserId, coll: this.currCollId, art: artId }
+      })
       this.$store.commit('parseVis/set', {
         currUserId: this.currUserId,
         currCollId: this.currCollId,

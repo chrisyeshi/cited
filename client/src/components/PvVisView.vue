@@ -566,12 +566,19 @@ export default {
         this.isDrawerOpenComputed = false
       } else {
         // single selection
-        this.$router.push(`/demo?user=${this.currUserId}&coll=${this.currCollId}&art=${visNode.articleId}`)
+        this.$router.push({
+          name: 'parsevis',
+          query: {
+            user: this.currUserId,
+            coll: this.currCollId,
+            art: visNode.articleId
+          }
+        })
         this.$store.commit('parseVis/set', {
           currUserId: this.currUserId,
           currCollId: this.currCollId,
           currArtId: visNode.articleId,
-          drawerState: { name: 'article-view' },
+          drawerState: { name: 'pv-drawer-article-view' },
           selectedArticleIds: [ visNode.articleId ]
         })
         this.isDrawerOpenComputed = true

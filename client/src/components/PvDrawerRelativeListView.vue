@@ -140,17 +140,23 @@ export default {
   },
   methods: {
     back () {
-      const userClause = `user=${this.currUserId}`
-      const collClause = `coll=${this.currCollId}`
-      const artClause = `art=${this.currArtId}`
-      this.$router.push(`/demo?${userClause}&${collClause}&${artClause}`)
+      this.$router.push({
+        name: 'parsevis',
+        query: {
+          user: this.currUserId,
+          coll: this.currCollId,
+          art: this.currArtId
+        }
+      })
       this.$store.commit('parseVis/set', {
         drawerState: { name: 'pv-drawer-article-view' }
       })
     },
     onClickArticle (artId) {
-      this.$router.push(
-        `/demo?user=${this.currUserId}&coll=${this.currCollId}&art=${artId}`)
+      this.$router.push({
+        name: 'parsevis',
+        query: { user: this.currUserId, coll: this.currCollId, art: artId }
+      })
       this.$store.commit('parseVis/set', {
         currUserId: this.currUserId,
         currCollId: this.currCollId,
