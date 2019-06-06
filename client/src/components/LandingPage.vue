@@ -306,8 +306,6 @@ export default {
       }
     })
     community.start()
-
-    window.$ga = this.$ga
   }
 }
 </script>

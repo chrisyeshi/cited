@@ -1,5 +1,6 @@
 <template>
-  <v-app overflow-hidden>
+  <landing-page v-if="isLandingPageVisible"></landing-page>
+  <v-app v-else overflow-hidden>
     <v-toolbar app flat clipped-left>
       <v-toolbar-title @click="toHome" class="page-title">
         Cited
@@ -32,6 +33,8 @@
 
 <script>
 import _ from 'lodash'
+import { Hub } from 'aws-amplify'
+import LandingPage from '@/components/LandingPage.vue'
 import PvDrawerCollectionList from '@/components/PvDrawerCollectionList.vue'
 import PvDrawerCollectionView from '@/components/PvDrawerCollectionView.vue'
 import PvDrawerArticleView from '@/components/PvDrawerArticleView.vue'
@@ -48,6 +51,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'ParseVis',
   components: {
+    LandingPage,
     PvDrawerArticleView,
     PvDrawerCollectionList,
     PvDrawerCollectionView,
@@ -71,6 +75,7 @@ export default {
     enableToolbarDrawerIcon: false,
     isDrawerOpen: true,
     isFooterVisible: false,
+    isSignedIn: true,
     pageQuery: null,
     searchText: ''
   }),
@@ -78,6 +83,9 @@ export default {
     ...mapState('parseVis', [
       'articleEditable', 'contentState', 'drawerState'
     ]),
+    isLandingPageVisible () {
+      return !this.isSignedIn && !this.inputUserId
+    },
     isVisViewVisible () {
       return this.contentState === 'vis-view'
     },
@@ -92,22 +100,6 @@ export default {
     },
     searchTextFieldOuterIcon () {
       return this.articleEditable ? 'library_add' : ''
-    }
-  },
-  asyncComputed: {
-    authUser: {
-      default: null,
-      async get () {
-        try {
-          const user = await this.$Amplify.Auth.currentAuthenticatedUser()
-          return user
-        } catch (error) {
-          if (error !== 'not authenticated') {
-            console.log(error)
-          }
-          return null
-        }
-      }
     }
   },
   methods: {
@@ -204,16 +196,23 @@ export default {
       this.$store.commit('parseVis/set', { contentState: 'list-view' })
     }
   },
-  created () {
-    this.$Amplify.Auth.currentAuthenticatedUser().catch(error => {
+  async beforeCreate () {
+    this.$Amplify.Auth.currentAuthenticatedUser().then(() => {
+      this.isSignedIn = true
+    }).catch(error => {
       if (error !== 'not authenticated') {
         console.log(error)
         return
       }
-      if (!this.inputUserId) {
-        this.$router.replace('/landing')
+      this.isSignedIn = false
+    })
+    Hub.listen('auth', data => {
+      if (data.payload.event === 'signIn') {
+        this.isSignedIn = true
       }
     })
+  },
+  created () {
     if (this.inputUserId && this.inputCollId && !this.inputArtId) {
       this.$store.commit('parseVis/set', {
         currUserId: this.inputUserId,
