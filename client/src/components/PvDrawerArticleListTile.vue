@@ -1,6 +1,6 @@
 <template>
-  <v-list-tile v-on="$listeners" @mouseenter.native.stop="onMouseEnter"
-    @mouseleave.native.stop="onMouseLeave">
+  <v-list-tile v-on="$listeners" @pointerenter.native="onMouseEnter"
+    @pointerleave.native="onMouseLeave">
     <div :style="leftSideStyle"></div>
     <v-list-tile-content style="justify-content: space-evenly;">
       <div class="caption text-truncate font-weight-bold">{{ label }}</div>

@@ -2,8 +2,8 @@
   <pv-vis-meta-card :label="label" :main="title" :left-attr="venue"
     :right-attr="nCitedByText" :left-side-color="collReferenceColor"
     :right-side-color="collCitedByColor" style="cursor: pointer;"
-    :class="elevation" v-on="$listeners" @mouseenter.native.stop="onMouseEnter"
-    @mouseleave.native.stop="onMouseLeave">
+    :class="elevation" v-on="$listeners" @pointerenter.native="onMouseEnter"
+    @pointerleave.native="onMouseLeave">
   </pv-vis-meta-card>
 </template>
 

@@ -5,7 +5,7 @@ export default {
     isHovering: false
   }),
   methods: {
-    onMouseEnter () {
+    onMouseEnter (event, el) {
       this.isHovering = true
       this.$store.commit('parseVis/set', {
         temporaryArticleIds:
@@ -13,7 +13,7 @@ export default {
         hoveringArticleId: this.artId
       })
     },
-    onMouseLeave () {
+    onMouseLeave (event) {
       this.isHovering = false
       this.$store.commit('parseVis/set', {
         temporaryArticleIds:
