@@ -71,7 +71,6 @@ export default {
   data: () => ({
     collectionArticleIds: [],
     currArticleId: null,
-    drawerWidth: 450,
     enableToolbarDrawerIcon: false,
     isDrawerOpen: true,
     isFooterVisible: false,
@@ -83,6 +82,12 @@ export default {
     ...mapState('parseVis', [
       'articleEditable', 'contentState', 'drawerState'
     ]),
+    drawerWidth () {
+      if (this.$vuetify.breakpoint.xs) {
+        return undefined
+      }
+      return 450
+    },
     isLandingPageVisible () {
       return !this.isSignedIn && !this.inputUserId
     },
