@@ -45,7 +45,7 @@ export default {
       return _.property('venues[0].name')(this.mixArt)
     },
     year () {
-      return _.property('year')(this.mixArt)
+      return _.toNumber(_.property('year')(this.mixArt))
     },
     collArts () {
       return _.property('articles')(this.mixColl)

@@ -28,7 +28,7 @@ export class InMemoryArticleSource extends ArticleSourceInterface {
         new Paper(
           flatArt.title /* title */,
           flatArt.abstract /* abstract */,
-          flatArt.year /* year */,
+          _.toNumber(flatArt.year) /* year */,
           flatArt.authors /* authors */,
           flatArt.venues && flatArt.venues[0] /* venue */) /* data */,
         flatArt.nReferences /* nReferences */,

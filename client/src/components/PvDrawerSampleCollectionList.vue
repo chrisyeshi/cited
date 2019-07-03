@@ -26,6 +26,11 @@ export default {
         collId: 'in-situ-collection',
         title: 'In Situ Visualization',
         description: 'In situ visualization means transforming data into visualization without saving the data first.'
+      },
+      {
+        collId: 'infovis-toolkits',
+        title: 'Information Visualization Toolkits',
+        description: 'Programming toolkits for data and information visualization.'
       }
     ]
   }),
