@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import queryArxiv from './arxivwrapper.js'
+import queryArxiv from '../academic_apis/arxiv.js'
 import { AffiliatedAuthor, Paper, SourceArticle, Venue } from './pvmodels.js'
 
 export class ArticlePool {
