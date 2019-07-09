@@ -1,5 +1,6 @@
 import { parseString } from 'xml2js'
 import _ from 'lodash'
+import axios from 'axios'
 
 const baseUrl = 'https://export.arxiv.org/api'
 const queryUrl = `${baseUrl}/query`
@@ -23,11 +24,8 @@ export default async function query (
   { searchQuery, idList, start, maxResults, sortBy }) {
   const queryParaStr =
     buildQueryParaStr({ searchQuery, idList, start, maxResults, sortBy })
-  const res = await fetch(`${queryUrl}?${queryParaStr}`)
-  if (!res.ok) {
-    throw new Error({ code: res.status, text: res.statusText })
-  }
-  const xml = await res.text()
+  const res = await axios.get(`${queryUrl}?${queryParaStr}`)
+  const xml = res.data
   return new Promise((resolve, reject) => {
     parseString(xml, (err, result) => {
       if (err) {

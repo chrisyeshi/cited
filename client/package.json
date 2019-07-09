@@ -55,5 +55,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "devDependencies": {
+    "esm": "^3.2.25"
+  }
 }

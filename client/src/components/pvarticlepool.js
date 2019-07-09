@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import queryArxiv from '../academic_apis/arxiv.js'
+import querySemanticScholar from '../academic_apis/semanticscholar.js'
 import { AffiliatedAuthor, Paper, SourceArticle, Venue } from './pvmodels.js'
 
 export class ArticlePool {
@@ -334,13 +335,6 @@ async function getExternSourceArticleFromSemanticScholar (externs) {
   }
   const externSrcArt = createExternSourceArticleFromSemanticScholarEntry(entry)
   return externSrcArt
-}
-
-async function querySemanticScholar ({ arxiv, doi, semanticScholar }) {
-  const url = 'https://api.semanticscholar.org/v1/paper/'
-  const idStr = semanticScholar || arxiv ? `arxiv:${arxiv}` : null || doi
-  const res = await fetch(`${url}${idStr}`)
-  return res.json()
 }
 
 export default new ArticlePool()
