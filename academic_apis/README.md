@@ -31,3 +31,9 @@ node -r esm process_pdf.js ./paper.pdf
 ```
 
 Use grobid to parse the input pdf for detailed paper information. Grobid web service has to be running for this to work. Follow (https://grobid.readthedocs.io/en/latest/Install-Grobid/) to install Grobid and run the web service.
+
+```
+node -r esm create_collection.js articles.json
+```
+
+Converts articles.json into a format that can be used in the client app.
