@@ -440,18 +440,118 @@ export class VisGraph {
 
 class VisGrid {
   static getColRows (visNodesMap) {
-    const refLevelsMap =
-      VisGrid.getNodeLevels(
-        visNodesMap, 'inGraphReferenceIds', 'inGraphCitedByIds')
-    const sortedArtIdGrid =
-      VisGrid.getSortedArticleIdGrid(visNodesMap, refLevelsMap)
-    const colRowsMap = {}
-    _.forEach(sortedArtIdGrid, (sortedArtIdColumn, iCol) => {
-      _.forEach(sortedArtIdColumn, (artId, iRow) => {
-        colRowsMap[artId] = { col: iCol, row: iRow }
+    const layout = 'balance'
+    if (layout === 'skewLeft') {
+      const refLevelsMap =
+        VisGrid.getNodeLevels(
+          visNodesMap, 'inGraphReferenceIds', 'inGraphCitedByIds')
+      const sortedArtIdGrid =
+        VisGrid.getSortedArticleIdGrid(visNodesMap, refLevelsMap)
+      const colRowsMap = {}
+      _.forEach(sortedArtIdGrid, (sortedArtIdColumn, iCol) => {
+        _.forEach(sortedArtIdColumn, (artId, iRow) => {
+          colRowsMap[artId] = { col: iCol, row: iRow }
+        })
       })
-    })
-    return colRowsMap
+      return colRowsMap
+    }
+    if (layout === 'balance') {
+      const referenceLevelsMap = VisGrid.getNodeLevels(
+        visNodesMap, 'inGraphReferenceIds', 'inGraphCitedByIds')
+      const citedByLevelsMap = VisGrid.getNodeLevels(
+        visNodesMap, 'inGraphCitedByIds', 'inGraphReferenceIds')
+      const maxReferenceLevel = _.max(_.values(referenceLevelsMap)) || 0
+      const nCol = maxReferenceLevel + 1
+      const colIdxRangesMap = _.mapValues(visNodesMap, (node, artId) => {
+        const minColIdx = referenceLevelsMap[artId]
+        const maxColIdx = nCol - citedByLevelsMap[artId] - 1
+        return { min: minColIdx, max: maxColIdx }
+      })
+      // sort by column index range
+      const artIds = _.keys(visNodesMap)
+      const artIdsByColIdxRange = _.sortBy(artIds, artId => {
+        const range = colIdxRangesMap[artId].max - colIdxRangesMap[artId].min
+        const nInGraphReferences = _.size(visNodesMap[artId].inGraphReferenceIds)
+        const nInGraphCitedBys = _.size(visNodesMap[artId].inGraphCitedByIds)
+        const nConn = nInGraphReferences + nInGraphCitedBys
+        return range * 10000 - nConn
+      })
+      // use the sorted array as a queue
+      const colIdxMap = {}
+      const grid = _.map(new Array(nCol), () => [])
+      _.forEach(artIdsByColIdxRange, artId => {
+        // only one possible column for the article
+        if (colIdxRangesMap[artId].max === colIdxRangesMap[artId].min) {
+          colIdxMap[artId] = colIdxRangesMap[artId].min
+          grid[colIdxRangesMap[artId].min].push(artId)
+        } else {
+          // get min column index from referencing articles
+          const referencingArtIds = visNodesMap[artId].inGraphReferenceIds
+          const referencingColIndexes =
+            _.map(referencingArtIds, artId => colIdxMap[artId])
+          const existingReferencingColIndexes =
+            _.filter(referencingColIndexes, v => !_.isNil(v))
+          const minColIdx =
+            _.max([
+              ...existingReferencingColIndexes, colIdxRangesMap[artId].min - 1
+            ]) + 1
+          const nNeighborReferencingNode =
+            _.size(
+              _.filter(
+                existingReferencingColIndexes,
+                colIdx => colIdx === minColIdx - 1))
+          // get max column index from cited by articles
+          const citedByArtIds = visNodesMap[artId].inGraphCitedByIds
+          const citedByColIndexes =
+            _.map(citedByArtIds, artId => colIdxMap[artId])
+          const existingCitedByColIndexes =
+            _.filter(citedByColIndexes, v => !_.isNil(v))
+          const maxColIdx =
+            _.min([
+              ...existingCitedByColIndexes, colIdxRangesMap[artId].max + 1
+            ]) - 1
+          const nNeighborCitedByNode =
+            _.size(
+              _.filter(
+                existingCitedByColIndexes,
+                colIdx => colIdx === maxColIdx + 1))
+          // set column index to maximize neighboring paths
+          if (nNeighborReferencingNode === 0 && nNeighborCitedByNode === 0) {
+            // put into the column with fewest articles
+            const cols = _.slice(grid, minColIdx, maxColIdx + 1)
+            const nArts = _.map(cols, _.size)
+            const colOffset = _.indexOf(nArts, _.min(nArts))
+            const colIdx = minColIdx + colOffset
+            colIdxMap[artId] = colIdx
+            grid[colIdx].push(artId)
+          } else if (nNeighborReferencingNode >= nNeighborCitedByNode) {
+            colIdxMap[artId] = minColIdx
+            grid[minColIdx].push(artId)
+          } else {
+            colIdxMap[artId] = maxColIdx
+            grid[maxColIdx].push(artId)
+          }
+        }
+      })
+      // sort rows within columns
+      const sortedGrid = _.map(grid, col => {
+        return _.sortBy(col, artId => {
+          const colIdxRange =
+            colIdxRangesMap[artId].max - colIdxRangesMap[artId].min
+          const nInGraphCitedBy = _.size(visNodesMap[artId].inGraphCitedByIds)
+          return colIdxRange * 10000 + nInGraphCitedBy
+        })
+      })
+      // return colrows map
+      const colRowsMap = {}
+      _.forEach(sortedGrid, (sortedArtIdColumn, iCol) => {
+        _.forEach(sortedArtIdColumn, (artId, iRow) => {
+          colRowsMap[artId] = { col: iCol, row: iRow }
+        })
+      })
+      return colRowsMap
+    }
+    throw new Error('invalid article card layout method')
   }
 
   static getNodeLevels (visNodesMap, rootProp, connProp) {

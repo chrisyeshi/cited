@@ -1,0 +1,720 @@
+{
+    "collId": "progressive-visual-analytics",
+    "title": "Progressive visual analytics",
+    "description": "Concepts, frameworks, and techniques for progressive visual analytics",
+    "articles": [
+        {
+            "year": "2016",
+            "authors": [
+                {
+                    "surname": "Fekete",
+                    "given": "Jean-Daniel"
+                },
+                {
+                    "surname": "Primet",
+                    "given": "Romain"
+                }
+            ],
+            "title": "Progressive Analytics: A Computation Paradigm for Exploratory Data Analysis",
+            "abstract": "— Exploring data requires a fast feedback loop from the analyst to the system, with a latency below about 10 seconds because of human cognitive limitations. When data becomes large or analysis becomes complex, sequential computations can no longer be completed in a few seconds and data exploration is severely hampered. This article describes a novel computation paradigm called Progressive Computation for Data Analysis or more concisely Progressive Analytics , that brings at the programming language level a low-latency guarantee by performing computations in a progressive fashion. Moving this progressive computation at the language level relieves the programmer of exploratory data analysis systems from implementing the whole analytics pipeline in a progressive way from scratch, streamlining the implementation of scalable exploratory data analysis systems. This article describes the new paradigm through a prototype implementation called ProgressiVis, and explains the requirements it implies through examples.",
+            "keywords": "—Analytics, Visualization, Big-Data, Scalability, Interaction1    I",
+            "id": 45,
+            "venue": "arXiv",
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "arXiv"
+                }
+            ],
+            "nCitedBys": 1,
+            "nReferences": 44,
+            "artId": "paper-fekete2016-progress"
+        },
+        {
+            "title": "Opening the Black Box: Strategies for Increased User Involvementin Existing Algorithm Implementations",
+            "authors": [
+                {
+                    "surname": "̈uhlbacher",
+                    "given": "Thomas M"
+                },
+                {
+                    "surname": "Piringer",
+                    "given": "Harald"
+                },
+                {
+                    "surname": "Gratzl",
+                    "given": "Samuel"
+                },
+                {
+                    "surname": "Sedlmair",
+                    "given": "Michael"
+                },
+                {
+                    "surname": "Streit",
+                    "given": "Marc"
+                }
+            ],
+            "abstract": "— An increasing number of interactive visualization tools stress the integration with computational software like MATLAB and R to access a variety of proven algorithms. In many cases, however, the algorithms are used as black boxes that run to completion in isolation which contradicts the needs of interactive data exploration. This paper structures, formalizes, and discusses possibilities to enable user involvement in ongoing computations. Based on a structured characterization of needs regarding intermediate feedback and control, the main contribution is a formalization and comparison of strategies for achieving user involvement for algorithms with different characteristics. In the context of integration, we describe considerations for implementing these strategies either as part of the visualization tool or as part of the algorithm, and we identify requirements and guidelines for the design of algorithmic APIs. To assess the practical applicability, we provide a survey of frequently used algorithm implementations within R regarding the fulfillment of these guidelines. While echoing previous calls for analysis modules which support data exploration more directly, we conclude that a range of pragmatic options for enabling user involvement in ongoing computations exists on both the visualization and algorithm side and should be used.",
+            "keywords": "—Visual analytics infrastructures, integration, interactive algorithms, user involvement, problem subdivision",
+            "year": "2014",
+            "id": 94,
+            "venue": "TVCG",
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "TVCG"
+                }
+            ],
+            "nCitedBys": 1,
+            "nReferences": 50,
+            "artId": "paper-̈uhlbacher2014-openingt"
+        },
+        {
+            "title": "Designing Progressive and Interactive Analytics Processes forHigh-Dimensional Data Analysis",
+            "authors": [
+                {
+                    "surname": "Turkay",
+                    "given": "Cagatay"
+                },
+                {
+                    "surname": "Kaya",
+                    "given": " Erdem"
+                },
+                {
+                    "surname": "Balcisoy",
+                    "given": " Selim"
+                },
+                {
+                    "surname": "Hauser",
+                    "given": " Helwig"
+                }
+            ],
+            "abstract": "—In interactive data analysis processes, the dialogue between the human and the computer is the enabling mechanism that can lead to actionable observations about the phenomena being investigated. It is of paramount importance that this dialogue is not interrupted by slow computational mechanisms that do not consider any known temporal human-computer interaction characteristics that prioritize the perceptual and cognitive capabilities of the users. In cases where the analysis involves an integrated computational method, for instance to reduce the dimensionality of the data or to perform clustering, such non-optimal processes are often likely. To remedy this, progressive computations, where results are iteratively improved, are getting increasing interest in visual analytics. In this paper, we present techniques and design considerations to incorporate progressive methods within interactive analysis processes that involve high-dimensional data. We define methodologies to facilitate processes that adhere to the perceptual characteristics of users and describe how online algorithms can be incorporated within these. A set of design recommendations and according methods to support analysts in accomplishing high-dimensional data analysis tasks are then presented. Our arguments and decisions here are informed by observations gathered over a series of analysis sessions with analysts from finance. We document observations and recommendations from this study and present evidence on how our approach contribute to the efficiency and productivity of interactive visual analysis sessions involving high-dimensional data.",
+            "keywords": "—Progressive analytics, high dimensional data, iterative refinement, visual analytics.1  I",
+            "year": "2018",
+            "id": 236,
+            "type": "paper",
+            "venues": [
+                {}
+            ],
+            "nCitedBys": 1,
+            "nReferences": 46,
+            "artId": "paper-turkay2018-designin"
+        },
+        {
+            "title": "Blinkdb: queries with bounded errors and bounded response times on very large data",
+            "venue": "Proceedings of the 8th ACM European Conference on Computer Systems",
+            "year": "2013",
+            "date": "2013",
+            "pages": "29–42",
+            "publisher": "ACM",
+            "origin": "  S. Agarwal, B. Mozafari, A. Panda, H. Milner, S. Madden, and I. Stoica. Blinkdb:  queries  with  bounded  errors  and  bounded  response  times  on very large data. In Proceedings of the 8th ACM European Conference on Computer Systems , pages 29–42. ACM, 2013.",
+            "authors": [
+                {
+                    "surname": "Agarwal",
+                    "given": "S."
+                },
+                {
+                    "surname": "Mozafari",
+                    "given": "B."
+                },
+                {
+                    "surname": "Panda",
+                    "given": "A."
+                },
+                {
+                    "surname": "Milner",
+                    "given": "H."
+                },
+                {
+                    "surname": "Madden",
+                    "given": "S."
+                },
+                {
+                    "surname": "Stoica",
+                    "given": "I."
+                }
+            ],
+            "id": 1,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Proceedings of the 8th ACM European Conference on Computer Systems"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-agarwal2013-blinkdb:"
+        },
+        {
+            "title": "Progressivis: a toolkit for steerable progressive analytics and visualization",
+            "venue": "1st Workshop on Data Systems for Interactive Analysis",
+            "year": "2015",
+            "date": "2015",
+            "origin": "  J.-D. Fekete.   Progressivis:  a toolkit for steerable progressive analytics and visualization. In 1st Workshop on Data Systems for Interactive Analysis , page 5, 2015.",
+            "authors": [
+                {
+                    "surname": "Fekete",
+                    "given": "J.-D."
+                }
+            ],
+            "id": 11,
+            "pages": "5,",
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "1st Workshop on Data Systems for Interactive Analysis"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-fekete2015-progress"
+        },
+        {
+            "title": "Trust me, i’m partially right: incremental visualization lets analysts explore large datasets faster",
+            "venue": "Proceedings of the 2012 ACM annual conference on Human Factors in Computing Systems",
+            "year": "2012",
+            "date": "2012",
+            "pages": "1673–1682",
+            "origin": "  D. Fisher, I. Popov, S. Drucker, et al.  Trust me, i’m partially right:  incremental visualization lets analysts explore large datasets faster. In Proceedings of the 2012 ACM annual conference on Human Factors in Computing Systems , pages 1673–1682. ACM, 2012.",
+            "authors": [
+                {
+                    "surname": "Fisher",
+                    "given": "D."
+                },
+                {
+                    "surname": "Popov",
+                    "given": "I."
+                },
+                {
+                    "surname": "Drucker",
+                    "given": "S."
+                },
+                {
+                    "surname": "",
+                    "given": ""
+                }
+            ],
+            "id": 12,
+            "publisher": "ACM",
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Proceedings of the 2012 ACM annual conference on Human Factors in Computing Systems"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-fisher2012-trustme,"
+        },
+        {
+            "title": "Nanocubes for real-time exploration of spatiotemporal datasets",
+            "venue": "IEEE Transactions on Visualization and Computer Graphics",
+            "year": "2013",
+            "date": "2013",
+            "volume": "19",
+            "issue": "12",
+            "origin": "  L. Lins, J. T. Klosowski, and C. Scheidegger. Nanocubes for real-time exploration of spatiotemporal datasets. IEEE Transactions on Visualization and Computer Graphics , 19(12):2456–2465, 2013.",
+            "authors": [
+                {
+                    "surname": "Lins",
+                    "given": "L."
+                },
+                {
+                    "surname": "Klosowski",
+                    "given": "J.T."
+                },
+                {
+                    "surname": "Scheidegger",
+                    "given": "C."
+                }
+            ],
+            "id": 19,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "IEEE Transactions on Visualization and Computer Graphics"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-lins2013-nanocube"
+        },
+        {
+            "title": "Usability Engineering",
+            "year": "1993",
+            "date": "1993",
+            "publisher": "Morgan Kaufmann",
+            "origin": " J. Nielsen. Usability Engineering . Morgan Kaufmann, 1993.",
+            "authors": [
+                {
+                    "surname": "Nielsen",
+                    "given": "J."
+                }
+            ],
+            "id": 29,
+            "type": "paper",
+            "venues": [
+                {}
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-nielsen1993-usabilit"
+        },
+        {
+            "title": "An enhanced visualization process model for incremental visualization",
+            "venue": "IEEE Transactions on Visualization and Computer Graphics",
+            "year": "2016-07",
+            "date": "2016-07",
+            "volume": "22",
+            "origin": "  H. J. Schulz, M. Angelini, G. Santucci, and H. Schumann.  An enhanced visualization process model for incremental visualization. IEEE Transactions on Visualization and Computer Graphics , 22(7):1830–1842, July 2016.",
+            "authors": [
+                {
+                    "surname": "Schulz",
+                    "given": "H.J."
+                },
+                {
+                    "surname": "Angelini",
+                    "given": "M."
+                },
+                {
+                    "surname": "Santucci",
+                    "given": "G."
+                },
+                {
+                    "surname": "Schumann",
+                    "given": "H."
+                }
+            ],
+            "id": 36,
+            "issue": "7",
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "IEEE Transactions on Visualization and Computer Graphics"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-schulz2016-07-anenhanc"
+        },
+        {
+            "title": "Web-scale k-means clustering",
+            "venue": "Proceedings of the 19th international conference on World wide web",
+            "year": "2010",
+            "date": "2010",
+            "pages": "1177–1178",
+            "publisher": "ACM",
+            "origin": "  D. Sculley.   Web-scale k-means clustering.   In Proceedings of the 19th international conference on World wide web ,  pages 1177–1178. ACM, 2010.",
+            "authors": [
+                {
+                    "surname": "Sculley",
+                    "given": "D."
+                }
+            ],
+            "id": 37,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Proceedings of the 19th international conference on World wide web"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-sculley2010-web-scal"
+        },
+        {
+            "title": "Progressive visual analytics: Userdriven visual exploration of in-progress analytics",
+            "venue": "Visualization and Computer Graphics, IEEE Transactions on",
+            "year": "2014",
+            "date": "2014",
+            "volume": "20",
+            "issue": "12",
+            "origin": "  C. D. Stolper, A. Perer, and D. Gotz.  Progressive visual analytics: Userdriven visual exploration of in-progress analytics. Visualization and Computer Graphics, IEEE Transactions on , 20(12):1653–1662, 2014.",
+            "authors": [
+                {
+                    "surname": "Stolper",
+                    "given": "C.D."
+                },
+                {
+                    "surname": "Perer",
+                    "given": "A."
+                },
+                {
+                    "surname": "Gotz",
+                    "given": "D."
+                }
+            ],
+            "id": 41,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Visualization and Computer Graphics, IEEE Transactions on"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-stolper2014-progress"
+        },
+        {
+            "title": "Steerable, Progressive Multidimensional Scaling",
+            "venue": "IEEE Symp. on Information Visualization, 2004. INFOVIS 2004",
+            "year": "2004",
+            "date": "2004",
+            "pages": "57–64,",
+            "origin": " M. Williams and T. Munzner. Steerable, Progressive Multidimensional Scaling. In IEEE Symp. on Information Visualization, 2004. INFOVIS 2004 , pages 57–64, 2004.",
+            "authors": [
+                {
+                    "surname": "Williams",
+                    "given": "M."
+                },
+                {
+                    "surname": "Munzner",
+                    "given": "T."
+                }
+            ],
+            "id": 43,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "IEEE Symp. on Information Visualization, 2004. INFOVIS 2004"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-williams2004-steerabl"
+        },
+        {
+            "title": "Quality metrics in high-dimensional data visualization: An overview and systematization",
+            "venue": "Visualization and Computer Graphics, IEEE Transactions on",
+            "year": "2011",
+            "date": "2011",
+            "volume": "17",
+            "issue": "12",
+            "origin": "  E. Bertini, A. Tatu, and D. Keim.   Quality metrics in high-dimensional data visualization:  An overview and systematization. Visualization and Computer Graphics, IEEE Transactions on , 17(12):2203–2212, 2011.",
+            "authors": [
+                {
+                    "surname": "Bertini",
+                    "given": "E."
+                },
+                {
+                    "surname": "Tatu",
+                    "given": "A."
+                },
+                {
+                    "surname": "Keim",
+                    "given": "D."
+                }
+            ],
+            "id": 48,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Visualization and Computer Graphics, IEEE Transactions on"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-bertini2011-qualitym"
+        },
+        {
+            "title": "Visual analytics: Scope and challenges",
+            "venue": "Visual Data Mining",
+            "year": "2008",
+            "date": "2008",
+            "pages": "76–90,",
+            "publisher": "Springer",
+            "volume": "number 4404",
+            "origin": "  D. Keim, F. Mansmann, J. Schneidewind, J. Thomas, and H. Ziegler. Visual analytics: Scope and challenges. Visual Data Mining , pages 76–90, 2008.",
+            "authors": [
+                {
+                    "surname": "Keim",
+                    "given": "D."
+                },
+                {
+                    "surname": "Mansmann",
+                    "given": "F."
+                },
+                {
+                    "surname": "Schneidewind",
+                    "given": "J."
+                },
+                {
+                    "surname": "Thomas",
+                    "given": "J."
+                },
+                {
+                    "surname": "Ziegler",
+                    "given": "H."
+                }
+            ],
+            "id": 55,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Visual Data Mining"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-keim2008-visualan"
+        },
+        {
+            "title": "immens: Real-time visual querying of big data",
+            "venue": "Computer Graphics Forum",
+            "year": "2013",
+            "date": "2013",
+            "volume": "32",
+            "issue": "3pt4",
+            "origin": "  Z. Liu, B. Jiang, and J. Heer.  immens:  Real-time visual querying of big data.  In Computer Graphics Forum , volume 32, pages 421–430. Wiley Online Library, 2013.",
+            "authors": [
+                {
+                    "surname": "Liu",
+                    "given": "Z."
+                },
+                {
+                    "surname": "Jiang",
+                    "given": "B."
+                },
+                {
+                    "surname": "Heer",
+                    "given": "J."
+                }
+            ],
+            "id": 57,
+            "pages": "421–430",
+            "publisher": "Wiley Online Library",
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Computer Graphics Forum"
+                }
+            ],
+            "nCitedBys": 3,
+            "artId": "paper-liu2013-immens:r"
+        },
+        {
+            "title": "A partition-based framework for building and validating regression models",
+            "venue": "Visualization and Computer Graphics, IEEE Transactions on",
+            "year": "2013",
+            "date": "2013",
+            "volume": "19",
+            "issue": "12",
+            "origin": "  T. Muhlbacher and H. Piringer. A partition-based framework for building and validating regression models. Visualization and Computer Graphics, IEEE Transactions on , 19(12):1962–1971, 2013.",
+            "authors": [
+                {
+                    "surname": "Muhlbacher",
+                    "given": "T."
+                },
+                {
+                    "surname": "Piringer",
+                    "given": "H."
+                }
+            ],
+            "id": 58,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Visualization and Computer Graphics, IEEE Transactions on"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-muhlbacher2013-apartiti"
+        },
+        {
+            "title": "Illuminating the Path: The Research and Development Agenda for Visual Analytics",
+            "year": "2005",
+            "date": "2005",
+            "publisher": "National Visualization and Analytics Ctr",
+            "origin": "  J. J. Thomas and K. A. Cook. Illuminating the Path:  The Research and Development  Agenda  for  Visual  Analytics .   National  Visualization  and Analytics Ctr, 2005.",
+            "authors": [
+                {
+                    "surname": "Thomas",
+                    "given": "J.J."
+                },
+                {
+                    "surname": "Cook",
+                    "given": "K.A."
+                }
+            ],
+            "id": 70,
+            "type": "paper",
+            "venues": [
+                {}
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-thomas2005-illumina"
+        },
+        {
+            "title": "The information visualizer, an information workspace",
+            "venue": "Proceedings of the SIGCHI Conference on Human Factors in Computing Systems , CHI ’91",
+            "year": "1991",
+            "date": "1991",
+            "pages": "181–186,",
+            "publisher": "ACM",
+            "origin": "  S. K. Card, G. G. Robertson, and J. D. Mackinlay. The information visualizer, an information workspace. In Proceedings of the SIGCHI Conference on Human Factors in Computing Systems , CHI ’91, pages 181–186, New York, NY, USA, 1991. ACM.",
+            "authors": [
+                {
+                    "surname": "Card",
+                    "given": "S.K."
+                },
+                {
+                    "surname": "Robertson",
+                    "given": "G.G."
+                },
+                {
+                    "surname": "Mackinlay",
+                    "given": "J.D."
+                }
+            ],
+            "id": 92,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Proceedings of the SIGCHI Conference on Human Factors in Computing Systems , CHI ’91"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-card1991-theinfor"
+        },
+        {
+            "title": "Animated transitions in statistical data graphics",
+            "venue": "Visualization and Computer Graphics, IEEE Transactions on",
+            "year": "2007",
+            "date": "2007",
+            "volume": "13",
+            "issue": "6",
+            "origin": "  J.  Heer  and  G.  Robertson. Animated  transitions  in  statistical  data graphics. Visualization and Computer Graphics, IEEE Transactions on , 13(6):1240–1247, 2007.",
+            "authors": [
+                {
+                    "surname": "Heer",
+                    "given": "J."
+                },
+                {
+                    "surname": "Robertson",
+                    "given": "G."
+                }
+            ],
+            "id": 141,
+            "type": "paper",
+            "venues": [
+                {
+                    "name": "Visualization and Computer Graphics, IEEE Transactions on"
+                }
+            ],
+            "nCitedBys": 2,
+            "artId": "paper-heer2007-animated"
+        }
+    ],
+    "relations": [
+        {
+            "referenceId": "paper-agarwal2013-blinkdb:",
+            "citedById": "paper-fekete2016-progress"
+        },
+        {
+            "referenceId": "paper-fekete2015-progress",
+            "citedById": "paper-fekete2016-progress"
+        },
+        {
+            "referenceId": "paper-fisher2012-trustme,",
+            "citedById": "paper-fekete2016-progress"
+        },
+        {
+            "referenceId": "paper-lins2013-nanocube",
+            "citedById": "paper-fekete2016-progress"
+        },
+        {
+            "referenceId": "paper-nielsen1993-usabilit",
+            "citedById": "paper-fekete2016-progress"
+        },
+        {
+            "referenceId": "paper-schulz2016-07-anenhanc",
+            "citedById": "paper-fekete2016-progress"
+        },
+        {
+            "referenceId": "paper-sculley2010-web-scal",
+            "citedById": "paper-fekete2016-progress"
+        },
+        {
+            "referenceId": "paper-stolper2014-progress",
+            "citedById": "paper-fekete2016-progress"
+        },
+        {
+            "referenceId": "paper-williams2004-steerabl",
+            "citedById": "paper-fekete2016-progress"
+        },
+        {
+            "referenceId": "paper-bertini2011-qualitym",
+            "citedById": "paper-̈uhlbacher2014-openingt"
+        },
+        {
+            "referenceId": "paper-card1991-theinfor",
+            "citedById": "paper-̈uhlbacher2014-openingt"
+        },
+        {
+            "referenceId": "paper-keim2008-visualan",
+            "citedById": "paper-̈uhlbacher2014-openingt"
+        },
+        {
+            "referenceId": "paper-liu2013-immens:r",
+            "citedById": "paper-̈uhlbacher2014-openingt"
+        },
+        {
+            "referenceId": "paper-muhlbacher2013-apartiti",
+            "citedById": "paper-̈uhlbacher2014-openingt"
+        },
+        {
+            "referenceId": "paper-nielsen1993-usabilit",
+            "citedById": "paper-̈uhlbacher2014-openingt"
+        },
+        {
+            "referenceId": "paper-thomas2005-illumina",
+            "citedById": "paper-̈uhlbacher2014-openingt"
+        },
+        {
+            "referenceId": "paper-williams2004-steerabl",
+            "citedById": "paper-̈uhlbacher2014-openingt"
+        },
+        {
+            "referenceId": "paper-agarwal2013-blinkdb:",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-bertini2011-qualitym",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-card1991-theinfor",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-fekete2015-progress",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-fisher2012-trustme,",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-heer2007-animated",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-keim2008-visualan",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-liu2013-immens:r",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-muhlbacher2013-apartiti",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-schulz2016-07-anenhanc",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-sculley2010-web-scal",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-stolper2014-progress",
+            "citedById": "paper-turkay2018-designin"
+        },
+        {
+            "referenceId": "paper-thomas2005-illumina",
+            "citedById": "paper-turkay2018-designin"
+        }
+    ]
+}

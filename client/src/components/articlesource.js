@@ -30,7 +30,8 @@ export class InMemoryArticleSource extends ArticleSourceInterface {
           flatArt.abstract /* abstract */,
           _.toNumber(flatArt.year) /* year */,
           flatArt.authors /* authors */,
-          flatArt.venues && flatArt.venues[0] /* venue */) /* data */,
+          flatArt.venue || (flatArt.venues && flatArt.venues[0]) /* venue */
+        ) /* data */,
         flatArt.nReferences /* nReferences */,
         [] /* references */,
         flatArt.nCitedBys /* nCitedBys */,

@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import queryArxiv from '../academic_apis/arxiv.js'
-import querySemanticScholar from '../academic_apis/semanticscholar.js'
+import queryArxiv from '../../../academic_apis/arxiv.js'
+import querySemanticScholar from '../../../academic_apis/semanticscholar.js'
 import { AffiliatedAuthor, Paper, SourceArticle, Venue } from './pvmodels.js'
 
 export class ArticlePool {

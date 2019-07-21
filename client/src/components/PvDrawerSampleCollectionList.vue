@@ -28,9 +28,14 @@ export default {
         description: 'In situ visualization means transforming data into visualization without saving the data first.'
       },
       {
-        collId: 'infovis-toolkits',
+        collId: 'pva',
         title: 'Information Visualization Toolkits',
         description: 'Programming toolkits for data and information visualization.'
+      },
+      {
+        collId: 'traffic-ml-collection',
+        title: 'Chuan',
+        description: 'Traffic Machine Learning'
       }
     ]
   }),

@@ -62,7 +62,7 @@ export default {
   },
   asyncComputed: {
     async citedBySideColor () { return this.citedByColor },
-    async referenceSideColor () { return this.referenceSideColor }
+    async referenceSideColor () { return this.referenceColor }
   }
 }
 </script>

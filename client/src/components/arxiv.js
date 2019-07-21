@@ -1,4 +1,4 @@
-import query from '../academic_apis/arxiv.js'
+import query from '../../../academic_apis/arxiv.js'
 
 export default {
   async signIn (email, password) {

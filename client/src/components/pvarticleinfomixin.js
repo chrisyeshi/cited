@@ -42,7 +42,8 @@ export default {
       return _.property('abstract')(this.mixArt)
     },
     venue () {
-      return _.property('venues[0].name')(this.mixArt)
+      return _.property('venue.name')(this.mixArt) ||
+        _.property('venues[0].name')(this.mixArt)
     },
     year () {
       return _.toNumber(_.property('year')(this.mixArt))
