@@ -536,10 +536,13 @@ class VisGrid {
       // sort rows within columns
       const sortedGrid = _.map(grid, col => {
         return _.sortBy(col, artId => {
-          const colIdxRange =
-            colIdxRangesMap[artId].max - colIdxRangesMap[artId].min
-          const nInGraphCitedBy = _.size(visNodesMap[artId].inGraphCitedByIds)
-          return colIdxRange * 10000 + nInGraphCitedBy
+          // const colIdxRange =
+          //   colIdxRangesMap[artId].max - colIdxRangesMap[artId].min
+          const nInGraphReferences =
+            _.size(visNodesMap[artId].inGraphReferenceIds)
+          const nInGraphCitedBys = _.size(visNodesMap[artId].inGraphCitedByIds)
+          // return colIdxRange * 10000 - nInGraphCitedBys - nInGraphReferences
+          return 0 - nInGraphCitedBys - nInGraphReferences
         })
       })
       // return colrows map

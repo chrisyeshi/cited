@@ -28,14 +28,9 @@ export default {
         description: 'In situ visualization means transforming data into visualization without saving the data first.'
       },
       {
-        collId: 'pva',
-        title: 'Information Visualization Toolkits',
-        description: 'Programming toolkits for data and information visualization.'
-      },
-      {
         collId: 'traffic-ml-collection',
-        title: 'Chuan',
-        description: 'Traffic Machine Learning'
+        title: 'Traffic Machine Learning',
+        description: 'The ability to discover patterns of behavior or operational significance from multivariate temporal sequences (MTS) is essential to tasks such as purchase behavior analysis, sales performance management, manufacturing operation analysis, and electronic health record analysis.'
       }
     ]
   }),

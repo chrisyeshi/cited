@@ -110,8 +110,8 @@ export default {
     nReferences () { return this.art && this.art.nReferences },
     title () { return this.art && this.art.title },
     venue () {
-      return this.art && this.art.venues && this.art.venues[0] &&
-        this.art.venues[0].name
+      return _.property('art.venue.name')(this) ||
+        _.property('art.venues[0].name')(this) || ''
     },
     year () { return this.art && this.art.year }
   },

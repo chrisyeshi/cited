@@ -1,7 +1,7 @@
 <template>
   <pv-vis-meta-card :label="labelRowText" :main="article.data.title"
     :left-attr="article.data.venue ? article.data.venue.name : ''"
-    :right-attr="`Cited by ${article.nCitedBys}`"
+    :right-attr="nCitedByText"
     :left-side-color="referenceSideColor" :right-side-color="citedBySideColor"
     :background-color="backgroundColorText" :config="config">
   </pv-vis-meta-card>
@@ -58,6 +58,11 @@ export default {
     },
     labelRowText () {
       return `${this.firstAuthorSurname} ${this.article.data.year}`
+    },
+    nCitedByText () {
+      return _.isNil(this.article.nCitedBys)
+        ? null
+        : `Cited by ${this.article.nCitedBys}`
     }
   },
   asyncComputed: {

@@ -220,12 +220,14 @@ export default {
   created () {
     if (this.inputUserId && this.inputCollId && !this.inputArtId) {
       this.$store.commit('parseVis/set', {
+        contentState: 'vis-view',
         currUserId: this.inputUserId,
         currCollId: this.inputCollId,
         drawerState: { name: 'pv-drawer-collection-view' }
       })
     } else if (this.inputUserId && this.inputCollId && this.inputArtId) {
       this.$store.commit('parseVis/set', {
+        contentState: 'vis-view',
         currUserId: this.inputUserId,
         currCollId: this.inputCollId,
         currArtId: this.inputArtId,

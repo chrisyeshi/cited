@@ -101,7 +101,7 @@ export default {
       return this.rightAttr
     },
     isAttrRowVisible () {
-      return this.isLeftAttrVisible && this.isRightAttrVisible
+      return this.isLeftAttrVisible || this.isRightAttrVisible
     },
     isSingleAttrVisible () {
       return (this.isLeftAttrVisible && !this.isRightAttrVisible) ||
