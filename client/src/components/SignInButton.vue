@@ -25,7 +25,7 @@ export default {
   name: 'SignInButton',
   data () {
     return {
-      firebaseAuth: null,
+      auth: new FirebaseAuth(),
       user: null
     }
   },
@@ -42,18 +42,22 @@ export default {
   },
   methods: {
     signIn () {
-      this.firebaseAuth.signIn().then(response => {
+      this.auth.signIn().then(response => {
         this.user = response.user
       })
     },
     logout () {
-      this.user = null
-      this.firebaseAuth.signOut()
+      this.auth.signOut().then(() => {
+        this.user = null
+      })
     }
   },
   created () {
-    this.firebaseAuth = new FirebaseAuth()
-    this.user = this.firebaseAuth.getUser()
+    this.auth.checkSignIn().then(result => {
+      this.user = result.user
+    }).catch(error => {
+      console.log(error)
+    })
   }
 }
 </script>
