@@ -7,7 +7,10 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <sign-in-button ref="SignInButton"></sign-in-button>
+        <sign-in-button ref="SignInButton"
+          @signin="signIn"
+          @signout="signOut">
+        </sign-in-button>
       </v-toolbar-items>
     </v-toolbar>
     <v-navigation-drawer v-if="isDrawerVisible" app stateless clipped
@@ -49,7 +52,6 @@ import { mapState } from 'vuex'
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import {firebaseConfig} from '../../config/firebase.conf'
-import FirebaseAuth from '../FirebaseAuth'
 firebase.initializeApp(firebaseConfig)
 
 export default {
@@ -112,6 +114,13 @@ export default {
     }
   },
   methods: {
+    signIn () {
+      let provider = new firebase.auth.GoogleAuthProvider()
+      return firebase.auth().signInWithPopup(provider)
+    },
+    signOut () {
+      return firebase.auth().signOut()
+    },
     articleEdited (curr) {
       theArticlePool.setArticle(curr)
     },
@@ -206,9 +215,6 @@ export default {
     }
   },
   async beforeCreate () {
-    if (firebase.auth().currentUser) {
-      this.isSignedIn = true
-    }
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.isSignedIn = true
@@ -232,9 +238,16 @@ export default {
         drawerState: { name: 'pv-drawer-article-view' }
       })
     }
-  },
-  mounted () {
-    this.$refs.SignInButton.auth = FirebaseAuth(firebase)
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.isSignedIn = true
+        this.$refs.SignInButton.user = {
+          email: user.email,
+          name: user.displayName,
+          photoURL: user.photoURL
+        }
+      }
+    })
   }
 }
 </script>
