@@ -32,7 +32,7 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    modules: [path.resolve(__dirname, '../../node_modules'), '../node_modules'],
+    modules: [path.resolve(__dirname, '../node_modules')],
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',

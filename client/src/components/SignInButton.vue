@@ -19,13 +19,13 @@
 </template>
 
 <script>
-import { AmplifyEventBus } from 'aws-amplify-vue'
+import FirebaseAuth from '../FirebaseAuth'
 
 export default {
   name: 'SignInButton',
   data () {
-    this.populateAuthState()
     return {
+      firebaseAuth: null,
       user: null
     }
   },
@@ -34,35 +34,26 @@ export default {
       return this.user
     },
     userEmail () {
-      return this.isSignedIn ? this.user.attributes.email : null
+      return this.isSignedIn ? this.user.email : null
     },
     userImg () {
-      return this.isSignedIn ? this.user.attributes.picture : null
+      return this.isSignedIn ? this.user.photoURL : null
     }
   },
   methods: {
     signIn () {
-      this.$Amplify.Auth.federatedSignIn({ provider: 'Google' })
+      this.firebaseAuth.signIn().then(response => {
+        this.user = response.user
+      })
     },
     logout () {
-      this.$Amplify.Auth.signOut()
-    },
-    async populateAuthState () {
-      try {
-        this.user = await this.$Amplify.Auth.currentAuthenticatedUser()
-      } catch (error) {
-        if (error === 'not authenticated') {
-          this.user = null
-        } else {
-          console.log(error)
-        }
-      }
+      this.user = null
+      this.firebaseAuth.signOut()
     }
   },
   created () {
-    AmplifyEventBus.$on('authState', info => {
-      console.log(info)
-    })
+    this.firebaseAuth = new FirebaseAuth()
+    this.user = this.firebaseAuth.getUser()
   }
 }
 </script>

@@ -9,7 +9,6 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 const Contail = () => import('@/components/Contail')
 const Kanban = () => import('@/components/Kanban')
-const PaperSight = () => import('@/components/PaperSight/PaperSight')
 const ParseVis = () => import('@/components/ParseVis')
 const Smooth = () => import('@/components/Smooth')
 
@@ -45,7 +44,6 @@ export default new Router({
     },
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
-    { path: '/papersight', component: PaperSight },
     { path: '/landing', component: LandingPage },
     {
       path: '/',
