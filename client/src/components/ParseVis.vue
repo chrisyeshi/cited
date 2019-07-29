@@ -214,13 +214,6 @@ export default {
       this.$store.commit('parseVis/set', { contentState: 'list-view' })
     }
   },
-  async beforeCreate () {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.isSignedIn = true
-      }
-    })
-  },
   created () {
     if (this.inputUserId && this.inputCollId && !this.inputArtId) {
       this.$store.commit('parseVis/set', {
