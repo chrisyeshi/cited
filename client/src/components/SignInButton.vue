@@ -19,13 +19,11 @@
 </template>
 
 <script>
-import FirebaseAuth from '../FirebaseAuth'
-
 export default {
   name: 'SignInButton',
   data () {
     return {
-      auth: new FirebaseAuth(),
+      auth: null,
       user: null
     }
   },
@@ -42,7 +40,7 @@ export default {
   },
   methods: {
     signIn () {
-      this.auth.signIn().then(response => {
+      this.auth.signInWithPopup().then(response => {
         this.user = response.user
       })
     },
@@ -51,13 +49,6 @@ export default {
         this.user = null
       })
     }
-  },
-  created () {
-    this.auth.checkSignIn().then(result => {
-      this.user = result.user
-    }).catch(error => {
-      console.log(error)
-    })
   }
 }
 </script>

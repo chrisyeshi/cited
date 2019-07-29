@@ -7,7 +7,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <sign-in-button></sign-in-button>
+        <sign-in-button ref="SignInButton"></sign-in-button>
       </v-toolbar-items>
     </v-toolbar>
     <v-navigation-drawer v-if="isDrawerVisible" app stateless clipped
@@ -33,7 +33,6 @@
 
 <script>
 import _ from 'lodash'
-import { Hub } from 'aws-amplify'
 import LandingPage from '@/components/LandingPage.vue'
 import PvDrawerCollectionList from '@/components/PvDrawerCollectionList.vue'
 import PvDrawerCollectionView from '@/components/PvDrawerCollectionView.vue'
@@ -47,6 +46,11 @@ import SignInButton from './SignInButton.vue'
 import theArticlePool from './pvarticlepool.js'
 import { SourceArticle } from './pvmodels.js'
 import { mapState } from 'vuex'
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
+import {firebaseConfig} from '../../config/firebase.conf'
+import FirebaseAuth from '../FirebaseAuth'
+firebase.initializeApp(firebaseConfig)
 
 export default {
   name: 'ParseVis',
@@ -202,17 +206,11 @@ export default {
     }
   },
   async beforeCreate () {
-    this.$Amplify.Auth.currentAuthenticatedUser().then(() => {
+    if (firebase.auth().currentUser) {
       this.isSignedIn = true
-    }).catch(error => {
-      if (error !== 'not authenticated') {
-        console.log(error)
-        return
-      }
-      this.isSignedIn = false
-    })
-    Hub.listen('auth', data => {
-      if (data.payload.event === 'signIn') {
+    }
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
         this.isSignedIn = true
       }
     })
@@ -234,6 +232,9 @@ export default {
         drawerState: { name: 'pv-drawer-article-view' }
       })
     }
+  },
+  mounted () {
+    this.$refs.SignInButton.auth = FirebaseAuth(firebase)
   }
 }
 </script>

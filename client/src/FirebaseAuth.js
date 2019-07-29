@@ -1,45 +1,38 @@
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
-import {firebaseConfig} from '../config/firebase.conf'
-firebase.initializeApp(firebaseConfig)
+export default function FirebaseAuth (firebase) {
+  let provider = new firebase.auth.GoogleAuthProvider()
 
-export default class FirebaseAuth {
-  constructor (mode = 'popup') {
-    this.mode = mode
-    this.auth = firebase.auth()
-    this.provider = new firebase.auth.GoogleAuthProvider()
-  }
-
-  signIn () {
-    let method = (this.mode === 'redirect') ? this.signInWithRedirect : this.signInWithPopup
-    return this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-      return method.call(this)
-    })
-  }
-
-  signInWithPopup () {
-    return new Promise((resolve, reject) => {
-      this.auth.signInWithPopup(this.provider).then(result => {
-        resolve(result)
-      }).catch(error => {
-        reject(error)
+  return {
+    signIn () {
+      let method = (this.mode === 'redirect') ? this.signInWithRedirect : this.signInWithPopup
+      return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+        return method.call(this)
       })
-    })
-  }
+    },
 
-  signInWithRedirect () {
-    return this.auth.signInWithRedirect(this.provider)
-  }
+    signInWithPopup () {
+      return new Promise((resolve, reject) => {
+        firebase.auth().signInWithPopup(provider).then(result => {
+          resolve(result)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
 
-  checkSignIn () {
-    return this.auth.getRedirectResult()
-  }
+    signInWithRedirect () {
+      return firebase.auth().signInWithRedirect(this.provider)
+    },
 
-  signOut () {
-    return this.auth.signOut()
-  }
+    getRedirectResult () {
+      return firebase.auth().getRedirectResult()
+    },
 
-  getUser () {
-    return this.auth.currentUser
+    signOut () {
+      return firebase.auth().signOut()
+    },
+
+    getUser () {
+      return firebase.auth().currentUser
+    }
   }
 }
