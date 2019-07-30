@@ -201,14 +201,16 @@
 </template>
 
 <script>
-import ResponsiveTextLogo from './ResponsiveTextLogo.vue'
 import * as basicScroll from 'basicscroll'
+import AuthMixin from '@/components/authmixin.js'
+import ResponsiveTextLogo from './ResponsiveTextLogo.vue'
 
 export default {
   name: 'LandingPage',
   components: {
     ResponsiveTextLogo
   },
+  mixins: [ AuthMixin ],
   data () {
     return {
       email: '',
@@ -253,9 +255,6 @@ export default {
       }
       style[side] = '0px'
       return style
-    },
-    signIn () {
-      this.$Amplify.Auth.federatedSignIn({ provider: 'Google' })
     }
   },
   computed: {

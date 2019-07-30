@@ -1,5 +1,6 @@
 <template>
-  <landing-page v-if="isLandingPageVisible"></landing-page>
+  <div v-if="isWaitingForAuth"></div>
+  <landing-page v-else-if="isLandingPageVisible"></landing-page>
   <v-app v-else overflow-hidden>
     <v-toolbar app flat clipped-left>
       <v-toolbar-title @click="toHome" class="page-title">
@@ -7,10 +8,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <sign-in-button ref="SignInButton"
-          @signin="signIn"
-          @signout="signOut">
-        </sign-in-button>
+        <sign-in-button></sign-in-button>
       </v-toolbar-items>
     </v-toolbar>
     <v-navigation-drawer v-if="isDrawerVisible" app stateless clipped
@@ -36,6 +34,7 @@
 
 <script>
 import _ from 'lodash'
+import AuthMixin from '@/components/authmixin.js'
 import LandingPage from '@/components/LandingPage.vue'
 import PvDrawerCollectionList from '@/components/PvDrawerCollectionList.vue'
 import PvDrawerCollectionView from '@/components/PvDrawerCollectionView.vue'
@@ -49,10 +48,6 @@ import SignInButton from './SignInButton.vue'
 import theArticlePool from './pvarticlepool.js'
 import { SourceArticle } from './pvmodels.js'
 import { mapState } from 'vuex'
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
-import {firebaseConfig} from '../../config/firebase.conf'
-firebase.initializeApp(firebaseConfig)
 
 export default {
   name: 'ParseVis',
@@ -68,6 +63,7 @@ export default {
     PvVisView,
     SignInButton
   },
+  mixins: [ AuthMixin ],
   props: {
     input: String,
     inputUserId: String,
@@ -80,7 +76,6 @@ export default {
     enableToolbarDrawerIcon: false,
     isDrawerOpen: true,
     isFooterVisible: false,
-    isSignedIn: true,
     pageQuery: null,
     searchText: ''
   }),
@@ -95,7 +90,7 @@ export default {
       return 450
     },
     isLandingPageVisible () {
-      return !this.isSignedIn && !this.inputUserId
+      return this.isSignedIn === false && !this.inputUserId
     },
     isVisViewVisible () {
       return this.contentState === 'vis-view'
@@ -109,18 +104,14 @@ export default {
     isDrawerVisible () {
       return this.isListViewVisible || this.isVisViewVisible
     },
+    isWaitingForAuth () {
+      return this.isSignedIn === null
+    },
     searchTextFieldOuterIcon () {
       return this.articleEditable ? 'library_add' : ''
     }
   },
   methods: {
-    signIn () {
-      let provider = new firebase.auth.GoogleAuthProvider()
-      return firebase.auth().signInWithPopup(provider)
-    },
-    signOut () {
-      return firebase.auth().signOut()
-    },
     articleEdited (curr) {
       theArticlePool.setArticle(curr)
     },
@@ -231,16 +222,6 @@ export default {
         drawerState: { name: 'pv-drawer-article-view' }
       })
     }
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.isSignedIn = true
-        this.$refs.SignInButton.user = {
-          email: user.email,
-          name: user.displayName,
-          photoURL: user.photoURL
-        }
-      }
-    })
   }
 }
 </script>

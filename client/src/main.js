@@ -7,6 +7,9 @@ import VueLineClamp from 'vue-line-clamp'
 import App from './App'
 import router from './router'
 import store from './store'
+import * as firebase from 'firebase/app'
+import { firebaseConfig } from '../config/firebase.conf'
+firebase.initializeApp(firebaseConfig)
 
 Vue.use(VueLineClamp, { importCss: true })
 Vue.use(VueAsyncComputed)
