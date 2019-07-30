@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import getSampleCollection from './getsamplecollection.js'
 import getVisCardSideColor from './getviscardsidecolor.js'
-import gql from 'graphql-tag'
 
 export default {
   computed: {
@@ -75,46 +74,8 @@ export default {
         })
         return art
       }
-      const GetUserCollectionArticle = `
-        query getUserCollectionArticle(
-          $userId: ID!, $collId: ID!, $artId: ID!) {
-          getUserCollectionArticle(
-            userId: $userId, collId: $collId, artId: $artId) {
-            userId
-            collId
-            artId
-            type
-            title
-            abstract
-            year
-            authors {
-              surname
-              given
-            }
-            venues {
-              name
-            }
-            nCitedBys
-            nReferences
-            references {
-              articles {
-                userId
-                collId
-                artId
-              }
-            }
-          }
-        }
-      `
-      const result = await this.$apollo.query({
-        query: gql(GetUserCollectionArticle),
-        variables: {
-          userId: this.userId,
-          collId: this.collId,
-          artId: this.artId
-        }
-      })
-      return result.data.getUserCollectionArticle
+      throw new Error(
+        'no backend at the moment in pvarticleinfomixin.js:mixArt')
     },
     async mixColl () {
       if (this.userId === 'sample') {
@@ -132,34 +93,7 @@ export default {
         })
         return { articles: arts }
       }
-      const GetUserCollection = `
-        query getUserCollection($userId: ID!, $collId: ID!) {
-          getUserCollection(userId: $userId, collId: $collId) {
-            userId
-            collId
-            articles {
-              userId
-              collId
-              artId
-              references {
-                articles {
-                  userId
-                  collId
-                  artId
-                }
-              }
-            }
-          }
-        }
-      `
-      const result = await this.$apollo.query({
-        query: gql(GetUserCollection),
-        variables: {
-          userId: this.userId,
-          collId: this.collId
-        }
-      })
-      return result.data.getUserCollection
+      throw new Error('no backend yet at pvarticleinfomixin.js:mixColl')
     }
   }
 }

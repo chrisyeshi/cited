@@ -1,9 +1,0 @@
-#set($artIds = [])
-#foreach($item in $ctx.result.items)
-  $util.qr($artIds.add($item.citedById))
-#end
-
-{
-  "artIds": $util.toJson($artIds),
-  "nextToken": $util.toJson($ctx.result.nextToken)
-}

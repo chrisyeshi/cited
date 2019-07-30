@@ -23,7 +23,6 @@
 <script>
 import _ from 'lodash'
 import getSampleCollection from './getsamplecollection.js'
-import gql from 'graphql-tag'
 import { mapState } from 'vuex'
 import PvDrawerArticleListTile from '@/components/PvDrawerArticleListTile.vue'
 
@@ -85,56 +84,7 @@ export default {
           })
           return art
         }
-        const GetUserCollectionArticleRelatives = `
-          query getUserCollectionArticle(
-            $userId: ID!, $collId: ID!, $artId: ID!) {
-            getUserCollectionArticle(
-              userId: $userId, collId: $collId, artId: $artId) {
-              userId
-              collId
-              artId
-              type
-              title
-              year
-              authors {
-                surname
-                given
-              }
-              nReferences
-              nCitedBys
-              ${this.relationProp} {
-                nextToken
-                articles {
-                  userId
-                  collId
-                  artId
-                  type
-                  title
-                  abstract
-                  year
-                  authors {
-                    surname
-                    given
-                  }
-                  venues {
-                    name
-                  }
-                  nReferences
-                  nCitedBys
-                }
-              }
-            }
-          }
-        `
-        const result = await this.$apollo.query({
-          query: gql(GetUserCollectionArticleRelatives),
-          variables: {
-            userId: this.currUserId,
-            collId: this.currCollId,
-            artId: this.currArtId
-          }
-        })
-        return result.data.getUserCollectionArticle
+        throw new Error('no backend yet at PvDrawerRelativeListView.vue:art')
       }
     }
   },

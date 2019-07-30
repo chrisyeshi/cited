@@ -41,10 +41,8 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import {
-  serializeSampleCollection, serializeAppsyncUserCollection
+  serializeSampleCollection
 } from './serializecollection.js'
-import gql from 'graphql-tag'
-import deleteUserCollection from './deleteAppsyncUserCollection.js'
 import ExpandableText from '@/components/ExpandableText.vue'
 import getSampleCollection from './getsamplecollection.js'
 import PvDrawerArticleListTile from '@/components/PvDrawerArticleListTile.vue'
@@ -75,40 +73,6 @@ export default {
       if (this.currUserId === 'sample') {
         return getSampleCollection(this.currCollId)
       }
-      if (this.currUserId === 'me') {
-        const GetMyCollection = `
-          query getMyCollection($collId: ID!) {
-            getMyCollection(collId: $collId) {
-              userId
-              collId
-              title
-              description
-              articles {
-                artId
-                title
-                abstract
-                year
-                authors {
-                  surname
-                  given
-                }
-                venues {
-                  name
-                }
-                nReferences
-                nCitedBys
-              }
-            }
-          }
-        `
-        const result = await this.$apollo.query({
-          query: gql(GetMyCollection),
-          variables: {
-            collId: this.currCollId
-          }
-        })
-        return result.data.getMyCollection
-      }
       throw new Error(
         `invalid userId (${this.currUserId}) and/or` +
         ` collId (${this.currCollId})`)
@@ -124,7 +88,6 @@ export default {
       if (this.currUserId === 'sample') {
         throw new Error(`cannot delete sample collection ${this.currCollId}`)
       }
-      await deleteUserCollection(this.$apollo, this.currUserId, this.currCollId)
       this.$router.push({ name: 'parsevis' })
       this.$store.commit('parseVis/set', {
         currUserId: this.currUserId,
@@ -136,8 +99,10 @@ export default {
     async exportCollection () {
       const output = this.currUserId === 'sample'
         ? serializeSampleCollection(this.coll)
-        : await serializeAppsyncUserCollection(
-          this.$apollo, this.currUserId, this.currCollId)
+        : () => {
+          throw new Error(
+            'no backend yet at PvDrawerCollectionView.vue:exportCollection')
+        }
       const data = JSON.stringify(output, null, 2)
       const blob = new Blob([ data ], { type: 'text/plain' })
       const e = document.createEvent('MouseEvents')

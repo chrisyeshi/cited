@@ -183,14 +183,11 @@ export default {
         if (!this.currCollId) {
           return new VisGraph({})
         }
-        if (this.currUserId === 'me') {
-          return VisGraph.fromAppsyncUserCollection(
-            this.$apollo, this.currUserId, this.currCollId)
-        }
         if (this.currUserId === 'sample') {
           return VisGraph.fromFlatColl(
             await getSampleCollection(this.currCollId))
         }
+        throw new Error('no backend yet at PvVisView.vue:baseVisGraph')
       }
     },
     visGraph: {

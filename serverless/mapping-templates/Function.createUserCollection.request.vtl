@@ -1,9 +1,0 @@
-{
-  "version": "2018-05-29",
-  "operation": "PutItem",
-  "key": {
-    "userId": $util.dynamodb.toDynamoDBJson($ctx.stash.userId),
-    "collId": $util.dynamodb.toDynamoDBJson($util.autoId())
-  },
-  "attributeValues": $util.dynamodb.toMapValuesJson($ctx.args.input)
-}

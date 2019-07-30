@@ -6,12 +6,7 @@
 
 <script>
 export default {
-  name: 'App',
-  data: () => ({ hydrated: false }),
-  async mounted () {
-    await this.$apollo.provider.defaultClient.hydrated()
-    this.hydrated = true
-  }
+  name: 'App'
 }
 </script>
 

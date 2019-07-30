@@ -1,8 +1,5 @@
 import _ from 'lodash'
-import {
-  AppsyncMyCollectionArticleSource, InMemoryArticleSource
-} from './articlesource.js'
-import gql from 'graphql-tag'
+import { InMemoryArticleSource } from './articlesource.js'
 
 class InternalVisNode {
   constructor (
@@ -36,85 +33,6 @@ export class VisGraph {
   constructor (internalVisNodesMap, articleSource) {
     this.internalVisNodesMap = internalVisNodesMap
     this.articleSource = articleSource
-  }
-
-  static async fromAppsyncUserCollection (client, userId, collId) {
-    const GetUserCollectionArticles = `
-      query getUserCollection($userId: ID!, $collId: ID!) {
-        getUserCollection(userId: $userId, collId: $collId) {
-          userId
-          collId
-          title
-          description
-          articles {
-            userId
-            collId
-            artId
-            type
-            title
-            abstract
-            year
-            authors {
-              surname
-              given
-            }
-            venues {
-              name
-            }
-            nReferences
-            references {
-              articles {
-                userId
-                collId
-                artId
-              }
-            }
-            nCitedBys
-            citedBys(limit: 3) {
-              articles {
-                userId
-                collId
-                artId
-              }
-            }
-          }
-        }
-      }
-    `
-    const result = await client.query({
-      query: gql(GetUserCollectionArticles),
-      variables: { userId: userId, collId: collId }
-    })
-    const coll = result.data.getUserCollection
-    const artsMap = Object.assign({}, ..._.map(coll.articles, art => ({
-      [art.artId]: art
-    })))
-    const artIds = _.map(coll.articles, art => art.artId)
-    const visNodesMap = Object.assign({}, ..._.map(artIds, artId => ({
-      [artId]: new InternalVisNode(
-        artId /* articleId */,
-        { col: null, row: null } /* colRow */,
-        [] /* inGraphReferenceIds */,
-        [] /* inGraphCitedByIds */,
-        [] /* inGraphVisReferenceIds */,
-        [] /* inGraphVisCitedByIds */,
-        {} /* visStatus */)
-    })))
-    _.forEach(visNodesMap, (visNode, currArtId) => {
-      const allRefArtIds =
-        _.map(artsMap[currArtId].references.articles, art => art.artId)
-      const refArtIds =
-        _.filter(allRefArtIds, refArtId => _.has(visNodesMap, refArtId))
-      visNode.inGraphReferenceIds = refArtIds
-      _.forEach(refArtIds, refArtId => {
-        visNodesMap[refArtId].inGraphCitedByIds =
-          _.union(visNodesMap[refArtId].inGraphCitedByIds, [ currArtId ])
-      })
-    })
-    VisGraph.mixinColRows(visNodesMap)
-    VisGraph.mixinVisRelations(visNodesMap)
-    const artSrc = new AppsyncMyCollectionArticleSource(client, collId)
-    return new VisGraph(visNodesMap, artSrc)
   }
 
   static fromFlatColl (flatColl) {

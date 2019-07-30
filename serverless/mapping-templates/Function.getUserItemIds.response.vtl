@@ -1,6 +1,0 @@
-#set($artIds = [])
-#foreach($item in $ctx.result.items)
-  $util.qr($artIds.add($item.itemId))
-#end
-
-$util.toJson($artIds)

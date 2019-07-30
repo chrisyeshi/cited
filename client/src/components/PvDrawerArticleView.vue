@@ -71,7 +71,6 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
-import gql from 'graphql-tag'
 import ExpandableText from '@/components/ExpandableText.vue'
 import getSampleCollection from './getsamplecollection.js'
 import PvDrawerArticleRelativeCard from '@/components/PvDrawerArticleRelativeCard.vue'
@@ -139,79 +138,7 @@ export default {
           })
           return art
         }
-        const GetUserCollectionArticle = `
-          query getUserCollectionArticle(
-            $userId: ID!, $collId: ID!, $artId: ID!) {
-            getUserCollectionArticle(
-              userId: $userId, collId: $collId, artId: $artId) {
-              userId
-              collId
-              artId
-              type
-              title
-              abstract
-              year
-              authors {
-                surname
-                given
-              }
-              venues {
-                name
-              }
-              nReferences
-              nCitedBys
-              references(limit: 3) {
-                nextToken
-                articles {
-                  userId
-                  collId
-                  artId
-                  type
-                  title
-                  year
-                  authors {
-                    surname
-                    given
-                  }
-                  venues {
-                    name
-                  }
-                  nReferences
-                  nCitedBys
-                }
-              }
-              citedBys(limit: 3) {
-                nextToken
-                articles {
-                  userId
-                  collId
-                  artId
-                  type
-                  title
-                  year
-                  authors {
-                    surname
-                    given
-                  }
-                  venues {
-                    name
-                  }
-                  nReferences
-                  nCitedBys
-                }
-              }
-            }
-          }
-        `
-        const result = await this.$apollo.query({
-          query: gql(GetUserCollectionArticle),
-          variables: {
-            userId: this.currUserId,
-            collId: this.currCollId,
-            artId: this.currArtId
-          }
-        })
-        return result.data.getUserCollectionArticle
+        throw new Error('no backend yet at PvDrawerArticleView.vue:art')
       },
       watch: [ 'currUserId', 'currCollId', 'currArtId' ]
     }
