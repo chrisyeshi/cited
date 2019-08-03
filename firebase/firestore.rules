@@ -1,8 +1,50 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth.uid != null
+    }
+
+    function isAdmin() {
+      return request.auth.token.permission >= 10000
+    }
+
     match /{document=**} {
       allow read, write: if false;
+    }
+
+    match /collections/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /collMetas/{document=**} {
+      allow read: if isAuthenticated();
+      allow read, write: if isAdmin();
+    }
+
+    match /articles/{document=**} {
+      allow read: if isAuthenticated();
+      allow read, write: if isAdmin();
+    }
+
+    match /artMetas/{document=**} {
+      allow read: if isAuthenticated();
+      allow read, write: if isAdmin();
+    }
+
+    match /venues/{document=**} {
+      allow read: if isAuthenticated();
+      allow read, write: if isAdmin();
+    }
+
+    match /authors/{document=**} {
+      allow read: if isAuthenticated();
+      allow read, write: if isAdmin();
+    }
+
+    match /users/{document=**} {
+      allow read, write: if isAdmin();
     }
   }
 }

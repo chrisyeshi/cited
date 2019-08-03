@@ -4,7 +4,7 @@
   "description": "The ability to discover patterns of behavior or operational significance from multivariate temporal sequences (MTS) is essential to tasks such as purchase behavior analysis, sales performance management, manufacturing operation analysis, and electronic health record analysis.",
   "articles": [
     {
-      "artId": "pan-2019-93d5c1f50aa15490",
+      "artHash": "pan-2019-93d5c1f50aa15490",
       "type": "paper",
       "title": "Urban Traffic Prediction from Spatio-Temporal Data Using Deep Meta Learning",
       "abstract": "Predicting urban traffic is of great importance to intelligent transportation systems and public safety, yet is very challenging because of two aspects: 1) complex spatio-temporal correlations of urban traffic, including spatial correlations between locations along with temporal correlations among timestamps; 2) diversity of such spatiotemporal correlations, which vary from location to location and depend on the surrounding geographical information, e.g., points of interests and road networks. To tackle these challenges, we proposed a deep-meta-learning based model, entitled ST-MetaNet, to collectively predict traffic in all location at once. ST-MetaNet employs a sequence-to-sequence architecture, consisting of an encoder to learn historical information and a decoder to make predictions step by step. In specific, the encoder and decoder have the same network structure, consisting of a recurrent neural network to encode the traffic, a meta graph attention network to capture diverse spatial correlations, and a meta recurrent neural network to consider diverse temporal correlations. Extensive experiments were conducted based on two real-world datasets to illustrate the effectiveness of ST-MetaNet beyond several state-of-the-art methods.",
@@ -41,7 +41,7 @@
       "nReferences": 31
     },
     {
-      "artId": "liu-2018-b585d419045cfdf",
+      "artHash": "liu-2018-b585d419045cfdf",
       "type": "paper",
       "title": "Efficient Similar Region Search with Deep Metric Learning",
       "abstract": "With the proliferation of mobile devices and location-based services, rich geo-tagged data is becoming prevalent and this offer great opportunities to understand different geographical regions (e.g., shopping areas). However, the huge number of regions with complicated spatial information are expensive for people to explore and understand. To solve this issue, we study the problem of searching similar regions given a user specified query region. The problem is challenging in both similarity definition and search efficiency. To tackle the two challenges, we propose a novel solution equipped by (1) a deep learning approach to learning the similarity that considers both object attributes and the relative locations between objects; and (2) an efficient branch and bound search algorithm for finding top-N similar regions. Moreover, we propose an approximation method to further improve the efficiency by slightly sacrificing the accuracy. Our experiments on three real world datasets demonstrate that our solution improves both the accuracy and search efficiency by a significant margin compared with the state-of-the-art methods.",
@@ -67,7 +67,7 @@
       "nCitedBys": 1
     },
     {
-      "artId": "zhao-2018-5fb92964e5c7b5bd",
+      "artHash": "zhao-2018-5fb92964e5c7b5bd",
       "type": "paper",
       "title": "On Prediction of User Destination by Sub-Trajectory Understanding: A Deep Learning based Approach",
       "abstract": "Destination prediction is known as an important problem for many location based services (LBSs). Existing solutions generally apply probabilistic models to predict destinations over a sub-trajectory, but their accuracies in fine-granularity prediction are always not satisfactory due to the data sparsity problem. This paper presents a carefully designed deep learning model called TALL model for destination prediction. It not only takes advantage of the bidirectional Long ShortTerm Memory (LSTM) network for sequence modeling, but also gives more attention to meaningful locations that have strong correlations w.r.t. destination by adopting attention mechanism. Furthermore, a hierarchical model that explores the fusion of multi-granularity learning capability is further proposed to improve the accuracy of prediction. Extensive experiments on Beijing and Chengdu real datasets finally demonstrate that our proposed models outperform existing methods without considering external features.",
@@ -105,7 +105,7 @@
       "nCitedBys": 5
     },
     {
-      "artId": "chen-2018-242c167adaa56135",
+      "artHash": "chen-2018-242c167adaa56135",
       "type": "paper",
       "title": "Exploiting Spatio-Temporal Correlations with Multiple 3D Convolutional Neural Networks for Citywide Vehicle Flow Prediction",
       "abstract": "Predicting vehicle flows is of great importance to traffic management and public safety in smart cities, and very challenging as it is affected by many complex factors, such as spatio-temporal dependencies with external factors (e.g., holidays, events and weather). Recently, deep learning has shown remarkable performance on traditional challenging tasks, such as image classification, due to its powerful feature learning capabilities. Some works have utilized LSTMs to connect the high-level layers of 2D convolutional neural networks (CNNs) to learn the spatio-temporal features, and have shown better performance as compared to many classical methods in traffic prediction. However, these works only build temporal connections on the high-level features at the top layer while leaving the spatio-temporal correlations in the low-level layers not fully exploited. In this paper, we propose to apply 3D CNNs to learn the spatio-temporal correlation features jointly from low-level to high-level layers for traffic data. We also design an end-to-end structure, named as MST3D, especially for vehicle flow prediction. MST3D can learn spatial and multiple temporal dependencies jointly by multiple 3D CNNs, combine the learned features with external factors and assign different weights to different branches dynamically. To the best of our knowledge, it is the first framework that utilizes 3D CNNs for traffic prediction. Experiments on two vehicle flow datasets Beijing and New York City have demonstrated that the proposed framework, MST3D, outperforms the state-of-the-art methods.",
@@ -155,7 +155,7 @@
       "nCitedBys": 4
     },
     {
-      "artId": "gong-2018-60e720efa6375ca6",
+      "artHash": "gong-2018-60e720efa6375ca6",
       "type": "paper",
       "title": "Network-wide Crowd Flow Prediction of Sydney Trains via Customized Online Non-negative Matrix Factorization",
       "abstract": "Crowd Flow Prediction (CFP) is one major challenge in the intelligent transportation systems of the Sydney Trains Network. However, most advanced CFP methods only focus on entrance and exit flows at the major stations or a few subway lines, neglecting Crowd Flow Distribution (CFD) forecasting problem across the entire city network. CFD prediction plays an irreplaceable role in metro management as a tool that can help authorities plan route schedules and avoid congestion. In this paper, we propose three online non-negative matrix factorization (ONMF) models. ONMF-AO incorporates an Average Optimization strategy that adapts to stable passenger flows. ONMF-MR captures the Most Recent trends to achieve better performance when sudden changes in crowd flow occur. The Hybrid model, ONMF-H, integrates both ONMF-AO and ONMF-MR to exploit the strengths of each model in different scenarios and enhance the models' applicability to real-world situations. Given a series of CFD snapshots, both models learn the latent attributes of the train stations and, therefore, are able to capture transition patterns from one timestamp to the next by combining historic guidance. Intensive experiments on a large-scale, real-world dataset containing transactional data demonstrate the superiority of our ONMF models.",
@@ -193,7 +193,7 @@
       "nCitedBys": 2
     },
     {
-      "artId": "wang-2019-c2508fa0f3bea9be",
+      "artHash": "wang-2019-c2508fa0f3bea9be",
       "type": "paper",
       "title": "Enhancing transportation systems via deep learning: A survey",
       "abstract": "Machine learning (ML) plays the core function to intellectualize the transportation systems. Recent years have witnessed the advent and prevalence of deep learning which has provoked a storm in ITS (Intelligent Transportation Systems). Consequently, traditional ML models in many applications have been replaced by the new learning techniques and the landscape of ITS is being reshaped. Under such perspective, we provide a comprehensive survey that focuses on the utilization of deep learning models to enhance the intelligence level of transportation systems. By organizing multiple dozens of relevant works that were originally scattered here and there, this survey attempts to provide a clear picture of how various deep learning models have been applied in multiple transportation applications.",
@@ -227,7 +227,7 @@
       "nCitedBys": 6
     },
     {
-      "artId": "yao-2019-cda228e0e1723463",
+      "artHash": "yao-2019-cda228e0e1723463",
       "type": "paper",
       "title": "Learning from Multiple Cities: A Meta-Learning Approach for Spatial-Temporal Prediction",
       "abstract": "Spatial-temporal prediction is a fundamental problem for constructing smart city, which is useful for tasks such as traffic control, taxi dispatching, and environment policy making. Due to data collection mechanism, it is common to see data collection with unbalanced spatial distributions. For example, some cities may release taxi data for multiple years while others only release a few days of data; some regions may have constant water quality data monitored by sensors whereas some regions only have a small collection of water samples. In this paper, we tackle the problem of spatial-temporal prediction for the cities with only a short period of data collection. We aim to utilize the long-period data from other cities via transfer learning. Different from previous studies that transfer knowledge from one single source city to a target city, we are the first to leverage information from multiple cities to increase the stability of transfer. Specifically, our proposed model is designed as a spatial-temporal network with a meta-learning paradigm. The meta-learning paradigm learns a well-generalized initialization of the spatial-temporal network, which can be effectively adapted to target cities. In addition, a pattern-based spatial-temporal memory is designed to distill long-term temporal information (i.e., periodicity). We conduct extensive experiments on two tasks: traffic (taxi and bike) prediction and water quality prediction. The experiments demonstrate the effectiveness of our proposed model over several competitive baseline models.",
@@ -261,7 +261,7 @@
       "nCitedBys": 1
     },
     {
-      "artId": "shi-2018-37455629a702887f",
+      "artHash": "shi-2018-37455629a702887f",
       "type": "paper",
       "title": "Machine Learning for Spatiotemporal Sequence Forecasting: A Survey",
       "abstract": "Spatiotemporal systems are common in the real-world. Forecasting the multi-step future of these spatiotemporal systems based on the past observations, or, Spatiotemporal Sequence Forecasting (STSF), is a significant and challenging problem. Although lots of real-world problems can be viewed as STSF and many research works have proposed machine learning based methods for them, no existing work has summarized and compared these methods from a unified perspective. This survey aims to provide a systematic review of machine learning for STSF. In this survey, we define the STSF problem and classify it into three subcategories: Trajectory Forecasting of Moving Point Cloud (TF-MPC), STSF on Regular Grid (STSF-RG) and STSF on Irregular Grid (STSF-IG). We then introduce the two major challenges of STSF: 1) how to learn a model for multi-step forecasting and 2) how to adequately model the spatial and temporal structures. After that, we review the existing works for solving these challenges, including the general learning strategies for multi-step forecasting, the classical machine learning based methods for STSF, and the deep learning based methods for STSF. We also compare these methods and point out some potential research directions.",
@@ -283,7 +283,7 @@
       "nCitedBys": 3
     },
     {
-      "artId": "li-2018-3dd737e81b2d2f12",
+      "artHash": "li-2018-3dd737e81b2d2f12",
       "type": "paper",
       "title": "Non-locally Enhanced Encoder-Decoder Network for Single Image De-raining",
       "abstract": "Single image rain streaks removal has recently witnessed substantial progress due to the development of deep convolutional neural networks. However, existing deep learning based methods either focus on the entrance and exit of the network by decomposing the input image into high and low frequency information and employing residual learning to reduce the mapping range, or focus on the introduction of cascaded learning scheme to decompose the task of rain streaks removal into multi-stages. These methods treat the convolutional neural network as an encapsulated end-to-end mapping module without deepening into the rationality and superiority of neural network design. In this paper, we delve into an effective end-to-end neural network structure for stronger feature expression and spatial correlation learning. Specifically, we propose a non-locally enhanced encoder-decoder network framework, which consists of a pooling indices embedded encoder-decoder network to efficiently learn increasingly abstract feature representation for more accurate rain streaks modeling while perfectly preserving the image detail. The proposed encoder-decoder framework is composed of a series of non-locally enhanced dense blocks that are designed to not only fully exploit hierarchical features from all the convolutional layers but also well capture the long-distance dependencies and structural information. Extensive experiments on synthetic and real datasets demonstrate that the proposed method can effectively remove rain-streaks on rainy image of various densities while well preserving the image details, which achieves significant improvements over the recent state-of-the-art methods.",
@@ -321,7 +321,7 @@
       "nCitedBys": 8
     },
     {
-      "artId": "feng-2018-d1c4c7b6dc2a743a",
+      "artHash": "feng-2018-d1c4c7b6dc2a743a",
       "type": "paper",
       "title": "DeepMove: Predicting Human Mobility with Attentional Recurrent Networks",
       "abstract": "Human mobility prediction is of great importance for a wide spectrum of location-based applications. However, predicting mobility is not trivial because of three challenges: 1) the complex sequential transition regularities exhibited with time-dependent and highorder nature; 2) the multi-level periodicity of human mobility; and 3) the heterogeneity and sparsity of the collected trajectory data. In this paper, we propose DeepMove, an attentional recurrent network for mobility prediction from lengthy and sparse trajectories. In DeepMove, we first design a multi-modal embedding recurrent neural network to capture the complicated sequential transitions by jointly embedding the multiple factors that govern the human mobility. Then, we propose a historical attention model with two mechanisms to capture the multi-level periodicity in a principle way, which effectively utilizes the periodicity nature to augment the recurrent neural network for mobility prediction. We perform experiments on three representative real-life mobility datasets, and extensive evaluation results demonstrate that our model outperforms the state-of-the-art models by more than 10%. Moreover, compared with the state-of-the-art neural network models, DeepMove provides intuitive explanations into the prediction and sheds light on interpretable mobility prediction.",
@@ -362,7 +362,7 @@
       "nReferences": 45
     },
     {
-      "artId": "wang-2018-a02131721462a0f1",
+      "artHash": "wang-2018-a02131721462a0f1",
       "type": "paper",
       "title": "Cross-City Transfer Learning for Deep Spatio-Temporal Prediction",
       "abstract": "Spatio-temporal prediction is a key type of tasks in urban computing, e.g., traffic flow and air quality. Adequate data is usually a prerequisite, especially when deep learning is adopted. However, the development levels of different cities are unbalanced, and still many cities suffer from data scarcity. To address the problem, we propose a novel cross-city transfer learning method for deep spatio-temporal prediction tasks, called RegionTrans. RegionTrans aims to effectively transfer knowledge from a data-rich source city to a data-scarce target city. More specifically, we first learn an inter-city region matching function to match each target city region to a similar source city region. A neural network is designed to effectively extract region-level representation for spatio-temporal prediction. Finally, an optimization algorithm is proposed to transfer learned features from the source city to the target city with the region matching function. Using citywide crowd flow prediction as a demonstration experiment, we verify the effectiveness of RegionTrans. Results show that RegionTrans can outperform the state-of-the-art fine-tuning deep spatio-temporal prediction models by reducing up to 10.7% prediction error.",
@@ -396,7 +396,7 @@
       "nCitedBys": 8
     },
     {
-      "artId": "jauhri-2019-6f2285a18635db05",
+      "artHash": "jauhri-2019-6f2285a18635db05",
       "type": "paper",
       "title": "USING GANS FOR GENERATION OF REALISTIC CITY-SCALE RIDE SHARING/HAILING DATA SETS",
       "abstract": "This paper focuses on the synthetic generation of human mobility data in urban areas. We present a novel and scalable application of Generative Adversarial Networks (GANs) for modeling and generating human mobility data. We leverage actual ride requests from ride sharing/hailing services from four major cities in the US to train our GANs model. Our model captures the spatial and temporal variability of the ride-request patterns observed for all four cities on any typical day and over any typical week. Previous works have succinctly characterized the spatial and temporal properties of human mobility data sets using the fractal dimensionality and the densification power law, respectively, which we utilize to validate our GANs-generated synthetic data sets. Such synthetic data sets can avoid privacy concerns and be extremely useful for researchers and policy makers on urban mobility and intelligent transportation.",
@@ -418,7 +418,7 @@
       "nCitedBys": 0
     },
     {
-      "artId": "he-2018-b39e99910b45443b",
+      "artHash": "he-2018-b39e99910b45443b",
       "type": "paper",
       "title": "Detecting Vehicle Illegal Parking Events using Sharing Bikes' Trajectories",
       "abstract": "Illegal vehicle parking is a common urban problem faced by major cities in the world, as it incurs traffic jams, which lead to air pollution and traffic accidents. Traditional approaches to detect illegal vehicle parking events rely highly on active human efforts, e.g., police patrols or surveillance cameras. However, these approaches are extremely ineffective to cover a large city. The massive and high quality sharing bike trajectories from Mobike offer us with a unique opportunity to design a ubiquitous illegal parking detection system, as most of the illegal parking events happen at curbsides and have significant impact on the bike users. Two main components are employed to mine the trajectories in our system: 1)~trajectory pre-processing, which filters outlier GPS points, performs map-matching and builds indexes for bike trajectories; and 2)~illegal parking detection, which models the normal trajectories, extracts features from the evaluation trajectories and utilizes a distribution test-based method to discover the illegal parking events. The system is deployed on the cloud internally used by Mobike. Finally, extensive experiments and many insightful case studies based on the massive trajectories in Beijing are presented.",
@@ -460,7 +460,7 @@
       "nCitedBys": 1
     },
     {
-      "artId": "zhang-2018-4e19eabcb884a8b2",
+      "artHash": "zhang-2018-4e19eabcb884a8b2",
       "type": "paper",
       "title": "Multistep Speed Prediction on Traffic Networks: A Graph Convolutional\n  Sequence-to-Sequence Learning Approach with Attention Mechanism",
       "abstract": "Multistep traffic forecasting on road networks is a crucial task in successful intelligent transportation system applications. To capture the complex non-stationary temporal dynamics and spatial dependency in multistep traffic-condition prediction, we propose a novel deep learning framework named attention graph convolutional sequence-to-sequence model (AGC-Seq2Seq). In the proposed deep learning framework, spatial and temporal dependencies are modeled through the Seq2Seq model and graph convolution network separately, and the attention mechanism along with a newly designed training method based on the Seq2Seq architecture is proposed to overcome the difficulty in multistep prediction and further capture the temporal heterogeneity of traffic pattern. We conduct numerical tests to compare AGC-Seq2Seq with other benchmark models using a real-world dataset. The results indicate that our model yields the best prediction performance in terms of various prediction error measures. Furthermore, the variation of spatiotemporal correlation of traffic conditions under different perdition steps and road segments is revealed through sensitivity analyses.",
@@ -494,7 +494,7 @@
       "nCitedBys": 1
     },
     {
-      "artId": "geng-2019-56522245d8f6c77d",
+      "artHash": "geng-2019-56522245d8f6c77d",
       "type": "paper",
       "title": "Spatiotemporal Multi-Graph Convolution Network for Ride-hailing Demand Forecasting",
       "abstract": "Our Solution Spatio-Temporal Multi-Graph Convolution Network (ST-MGCN) Encode non-Euclidean correlations among regions into multiple graphs. Learnable temporal gates to utilize global contextual information. 10+% error reduction than SOTA methods on real-world large scale datasets. Region-level Ride-hailing Demand Forecasting Problem Statement Given T observations of historical demands from |V | regions, predict the demand values of these regions in the next time step. f : R|V |×T → R|V |",
@@ -535,7 +535,7 @@
       "nCitedBys": 5
     },
     {
-      "artId": "yao-2019-330182aa72049237",
+      "artHash": "yao-2019-330182aa72049237",
       "type": "paper",
       "title": "Revisiting Spatial-Temporal Similarity: A Deep Learning Framework for Traffic Prediction",
       "abstract": "Traffic prediction has drawn increasing attention in AI research field due to the increasing availability of large-scale traffic data and its importance in the real world. For example, an accurate taxi demand prediction can assist taxi companies in pre-allocating taxis. The key challenge of traffic prediction lies in how to model the complex spatial dependencies and temporal dynamics. Although both factors have been considered in modeling, existing works make strong assumptions about spatial dependence and temporal dynamics, i.e., spatial dependence is stationary in time, and temporal dynamics is strictly periodical. However, in practice, the spatial dependence could be dynamic (i.e., changing from time to time), and the temporal dynamics could have some perturbation from one period to another period. In this paper, we make two important observations: (1) the spatial dependencies between locations are dynamic; and (2) the temporal dependency follows daily and weekly pattern but it is not strictly periodic for its dynamic temporal shifting. To address these two issues, we propose a novel Spatial-Temporal Dynamic Network (STDN), in which a flow gating mechanism is introduced to learn the dynamic similarity between locations, and a periodically shifted attention mechanism is designed to handle long-term periodic temporal shifting. To the best of our knowledge, this is the first work that tackles both issues in a unified framework. Our experimental results on real-world traffic datasets verify the effectiveness of the proposed method.",
@@ -569,7 +569,7 @@
       "nCitedBys": 7
     },
     {
-      "artId": "ke-2018-8eb17cb824278f2b",
+      "artHash": "ke-2018-8eb17cb824278f2b",
       "type": "paper",
       "title": "Hexagon-Based Convolutional Neural Network for Supply-Demand Forecasting of Ride-Sourcing Services",
       "abstract": "Abstract-Ride-sourcing services are becoming an increasingly popular transportation mode in cities all over the world. With real-time information from both drivers and passengers, the ridesourcing platform can reduce matching frictions and improve efficiencies by surge pricing, optimal vehicle-trip assignment, and proactive ridesplitting strategies. An important foundation of these strategies is the short-term supply-demand forecasting. In this paper, we tackle the problem of predicting the shortterm supply-demand gap of ride-sourcing services. In contrast to the previous studies that partitioned a city area into numerous square lattices, we partition the city area into various regular hexagon lattices, which is motivated by the fact that hexagonal segmentation has an unambiguous neighborhood definition, smaller edge-to-area ratio, and isotropy. To capture the spatiotemporal characteristics in a hexagonal manner, we propose three hexagon-based convolutional neural networks (H-CNN), both the input and output of which are numerous local hexagon maps. Moreover, a hexagon-based ensemble mechanism is developed to enhance the prediction performance. Validated by a 3-week realworld ride-sourcing dataset in Guangzhou, China, the H-CNN models are found to significantly outperform the benchmark algorithms in terms of accuracy and robustness. Our approaches can be further extended to a broad range of spatio-temporal forecasting problems in the domain of shared mobility and urban computing.",
@@ -611,7 +611,7 @@
       "nCitedBys": 2
     },
     {
-      "artId": "li-2018-3ade67505d6eb586",
+      "artHash": "li-2018-3ade67505d6eb586",
       "type": "paper",
       "title": "Multi-task Representation Learning for Travel Time Estimation",
       "abstract": "One crucial task in intelligent transportation systems is estimating the duration of a potential trip given the origin location, destination location as well as the departure time. Most existing approaches for travel time estimation assume that the route of the trip is given, which does not hold in real-world applications since the route can be dynamically changed due to traffic conditions, user preferences, etc. As inferring the path from the origin and the destination can be time-consuming and nevertheless error-prone, it is desirable to perform origin-destination travel time estimation, which aims to predict the travel time without online route information. This problem is challenging mainly due to its limited amount of information available and the complicated spatiotemporal dependency. In this paper, we propose a MUlti-task Representation learning model for Arrival Time estimation (MURAT). This model produces meaningful representation that preserves various trip properties in the real-world and at the same time leverages the underlying road network and the spatiotemporal prior knowledge. Further-more, we propose a multi-task learning framework to utilize the path information of historical trips during the training phase which boosts the performance. Experimental results on two large-scale real-world datasets show that the proposed approach achieves clear improvements over state-of-the-art methods.",
@@ -649,7 +649,7 @@
       "nCitedBys": 13
     },
     {
-      "artId": "velickovic-2018-fe18384dc8668d25",
+      "artHash": "velickovic-2018-fe18384dc8668d25",
       "type": "paper",
       "title": "Graph Attention Networks",
       "abstract": "We present graph attention networks (GATs), novel neural network architectures that operate on graph-structured data, leveraging masked self-attentional layers to address the shortcomings of prior methods based on graph convolutions or their approximations. By stacking layers in which nodes are able to attend over their neighborhoods' features, we enable (implicitly) specifying different weights to different nodes in a neighborhood, without requiring any kind of computationally intensive matrix operation (such as inversion) or depending on knowing the graph structure upfront. In this way, we address several key challenges of spectral-based graph neural networks simultaneously, and make our model readily applicable to inductive as well as transductive problems. Our GAT models have achieved or matched state-of-the-art results across four established transductive and inductive graph benchmarks: the Cora, Citeseer and Pubmed citation network datasets, as well as a protein-protein interaction dataset (wherein test graphs remain unseen during training).",
@@ -687,7 +687,7 @@
       "nCitedBys": 202
     },
     {
-      "artId": "zhang-2017-41fcf676f9b50026",
+      "artHash": "zhang-2017-41fcf676f9b50026",
       "type": "paper",
       "title": "Predicting Citywide Crowd Flows Using Deep Spatio-Temporal Residual Networks",
       "abstract": "Forecasting the flow of crowds is of great importance to traffic management and public safety, and very challenging as it is affected by many complex factors, including spatial dependencies (nearby and distant), temporal dependencies (closeness, period, trend), and external conditions (e.g., weather and events). We propose a deep-learning-based approach, called ST-ResNet, to collectively forecast two types of crowd flows (i.e. inflow and outflow) in each and every region of a city. We design an end-to-end structure of ST-ResNet based on unique properties of spatio-temporal data. More specifically, we employ the residual neural network framework to model the temporal closeness, period, and trend properties of crowd traffic. For each property, we design a branch of residual convolutional units, each of which models the spatial properties of crowd traffic. ST-ResNet learns to dynamically aggregate the output of the three residual neural networks based on data, assigning different weights to different branches and regions. The aggregation is further combined with external factors, such as weather and day of the week, to predict the final traffic of crowds in each and every region. We have developed a real-time system based on Microsoft Azure Cloud, called UrbanFlow, providing the crowd flow monitoring and forecasting in Guiyang City of China. In addition, we present an extensive experimental evaluation using two types of crowd flows in Beijing and New York City (NYC), where ST-ResNet outperforms nine well-known baselines.",
@@ -725,7 +725,7 @@
       "nCitedBys": 20
     },
     {
-      "artId": "he-2018-3d1e028c978d954a",
+      "artHash": "he-2018-3d1e028c978d954a",
       "type": "paper",
       "title": "STANN: A Spatio-Temporal Attentive Neural Network for Traffic Prediction",
       "abstract": "ABSTRACT Recently, traffic prediction based on deep learning methods has attracted much attention. However, there still exist two major challenges, namely, dynamic spatio-temporal dependences among network-wide links and long-term traffic prediction for the next few hours. To address these two challenges, this paper proposes a spatio-temporal attentive neural network (STANN) for the network-wide and long-term traffic prediction. The STANN captures the spatial-temporal dependences based on the encoder-decoder architecture with the attention mechanisms. In the encoder, the STANN learns the spatio-temporal dependences from historical traffic series using a recurrent neural network (RNN) with long short-term memory (LSTM) units, in which a new spatial attention model is developed to consider the contribution of each link to the network-wide prediction. In the decoder, the STANN exploits another RNN with LSTM units and a temporal attention model to select the relevant and important historical spatio-temporal dependences from the encoder for long-term traffic prediction. Finally, we conduct extensive experiments to evaluate STANN on three real-world traffic datasets. The experimental results show that the STANN is significantly better than other state-of-the-art models.",
@@ -751,7 +751,7 @@
       "nCitedBys": 0
     },
     {
-      "artId": "yu-2018-602148405cb1948e",
+      "artHash": "yu-2018-602148405cb1948e",
       "type": "paper",
       "title": "Spatio-Temporal Graph Convolutional Networks: A Deep Learning Framework for Traffic Forecasting",
       "abstract": "Timely accurate traffic forecast is crucial for urban traffic control and guidance. Due to the high nonlinearity and complexity of traffic flow, traditional methods cannot satisfy the requirements of mid-and-long term prediction tasks and often neglect spatial and temporal dependencies. In this paper, we propose a novel deep learning framework, Spatio-Temporal Graph Convolutional Networks (STGCN), to tackle the time series prediction problem in traffic domain. Instead of applying regular convolutional and recurrent units, we formulate the problem on graphs and build the model with complete convolutional structures, which enable much faster training speed with fewer parameters. Experiments show that our model STGCN effectively captures comprehensive spatio-temporal correlations through modeling multi-scale traffic networks and consistently outperforms state-of-the-art baselines on various real-world traffic datasets.",
@@ -777,7 +777,7 @@
       "nCitedBys": 28
     },
     {
-      "artId": "pan-2018-70450f4916d49f19",
+      "artHash": "pan-2018-70450f4916d49f19",
       "type": "paper",
       "title": "HyperST-Net: Hypernetworks for Spatio-Temporal Forecasting",
       "abstract": "Spatio-temporal (ST) data, which represent multiple time series data corresponding to different spatial locations, are ubiquitous in real-world dynamic systems, such as air quality readings. Forecasting over ST data is of great importance but challenging as it is affected by many complex factors, including spatial characteristics, temporal characteristics and the intrinsic causality between them. In this paper, we propose a general framework (HyperST-Net) based on hypernetworks for deep ST models. More specifically, it consists of three major modules: a spatial module, a temporal module and a deduction module. Among them, the deduction module derives the parameter weights of the temporal module from the spatial characteristics, which are extracted by the spatial module. Then, we design a general form of HyperST layer as well as different forms for several basic layers in neural networks, including the dense layer (HyperST-Dense) and the convolutional layer (HyperST-Conv). Experiments on three types of real-world tasks demonstrate that the predictive models integrated with our framework achieve significant improvements, and outperform the state-of-the-art baselines as well.",
@@ -815,7 +815,7 @@
       "nCitedBys": 0
     },
     {
-      "artId": "liang-2019-43c996fbc168c210",
+      "artHash": "liang-2019-43c996fbc168c210",
       "type": "paper",
       "title": "UrbanFM: Inferring Fine-Grained Urban Flows",
       "abstract": "Urban flow monitoring systems play important roles in smart city efforts around the world. However, the ubiquitous deployment of monitoring devices, such as CCTVs, induces a long-lasting and enormous cost for maintenance and operation. This suggests the need for a technology that can reduce the number of deployed devices, while preventing the degeneration of data accuracy and granularity. In this paper, we aim to infer the real-time and fine-grained crowd flows throughout a city based on coarse-grained observations. This task is challenging due to two reasons: the spatial correlations between coarse- and fine-grained urban flows, and the complexities of external impacts. To tackle these issues, we develop a method entitled UrbanFM based on deep neural networks. Our model consists of two major parts: 1) an inference network to generate fine-grained flow distributions from coarse-grained inputs by using a feature extraction module and a novel distributional upsampling module; 2) a general fusion subnet to further boost the performance by considering the influences of different external factors. Extensive experiments on two real-world datasets, namely TaxiBJ and HappyValley, validate the effectiveness and efficiency of our method compared to seven baselines, demonstrating the state-of-the-art performance of our approach on the fine-grained urban flow inference problem.",
@@ -861,7 +861,7 @@
       "nCitedBys": 0
     },
     {
-      "artId": "davis-2019-1db255b04d630967",
+      "artHash": "davis-2019-1db255b04d630967",
       "type": "paper",
       "title": "Grids versus Graphs: Partitioning Space for Improved Taxi Demand-Supply Forecasts",
       "abstract": "Accurate taxi demand-supply forecasting is a challenging application of ITS (Intelligent Transportation Systems), due to the complex spatial and temporal patterns. We investigate the impact of different spatial partitioning techniques on the prediction performance of an LSTM (Long Short-Term Memory) network, in the context of taxi demand-supply forecasting. We consider two tessellation schemes: (i) the variable-sized Voronoi tessellation, and (ii) the fixed-sized Geohash tessellation. While the widely employed ConvLSTM (Convolutional LSTM) can model fixed-sized Geohash partitions, the standard convolutional filters cannot be applied on the variable-sized Voronoi partitions. To explore the Voronoi tessellation scheme, we propose the use of GraphLSTM (Graph-based LSTM), by representing the Voronoi spatial partitions as nodes on an arbitrarily structured graph. The GraphLSTM offers competitive performance against ConvLSTM, at lower computational complexity, across three real-world large-scale taxi demand-supply data sets, with different performance metrics. To ensure superior performance across diverse settings, a HEDGE based ensemble learning algorithm is applied over the ConvLSTM and the GraphLSTM networks.",
@@ -886,7 +886,7 @@
       "nReferences": 32
     },
     {
-      "artId": "do-2018-a355c9d54040beb7",
+      "artHash": "do-2018-a355c9d54040beb7",
       "type": "paper",
       "title": "Survey of neural network-based models for short-term traffic state prediction",
       "abstract": "Traffic state prediction is a key component in intelligent transport systems (ITS) and has attracted much attention over the last few decades. Advances in computational power and availability of a large amount of data have paved the way to employ advanced neural network (NN) models for ITS, including deep architectures. There have been various NN-based approaches proposed for short-term traffic state prediction that are surveyed in this article, where the existing NN models are classified and their application to this area is reviewed. An in-depth discussion is provided to demonstrate how different types of NNs have been used for different aspects of short-term traffic state prediction. Finally, possible further research directions are suggested for additional applications of NN models, especially using deep architectures, to address the dynamic nature in complex transportation networks.",
@@ -915,7 +915,7 @@
       "nCitedBys": 3
     },
     {
-      "artId": "cui-2018-696655e9aacc89b",
+      "artHash": "cui-2018-696655e9aacc89b",
       "type": "paper",
       "title": "High-Order Graph Convolutional Recurrent Neural Network: A Deep Learning Framework for Network-Scale Traffic Learning and Forecasting",
       "abstract": "Traffic forecasting is a challenging task, due to the complicated spatial dependencies on roadway networks and the time-varying traffic patterns. To address this challenge, we learn the traffic network as a graph and propose a novel deep learning framework, High-Order Graph Convolutional Long Short-Term Memory Neural Network (HGC-LSTM), to learn the interactions between links in the traffic network and forecast the network-wide traffic state. We define the high-order traffic graph convolution based on the physical network topology. The proposed framework employs L1-norms on the graph convolution weights and L2-norms on the graph convolution features to identify the most influential links in the traffic network. We propose a novel Real-Time Branching Learning (RTBL) algorithm for the HGC-LSTM framework to accelerate the training process for spatio-temporal data. Experiments show that our HGC-LSTM network is able to capture the complex spatio-temporal dependencies efficiently present in the traffic network and consistently outperforms state-of-the-art baseline methods on two heterogeneous real-world traffic datasets. The visualization of graph convolution weights shows that the proposed framework can accurately recognize the most influential roadway segments in real-world traffic networks.",
@@ -945,7 +945,7 @@
       "nCitedBys": 14
     },
     {
-      "artId": "li-2018-30d5adece5c9ea43",
+      "artHash": "li-2018-30d5adece5c9ea43",
       "type": "paper",
       "title": "Spatio-Temporal Graph Convolution for Skeleton Based Action Recognition",
       "abstract": "Variations of human body skeletons may be considered as dynamic graphs, which are generic data representation for numerous real-world applications. In this paper, we propose a spatio-temporal graph convolution (STGC) approach for assembling the successes of local convolutional filtering and sequence learning ability of autoregressive moving average. To encode dynamic graphs, the constructed multi-scale local graph convolution filters, consisting of matrices of local receptive fields and signal mappings, are recursively performed on structured graph data of temporal and spatial domain. The proposed model is generic and principled as it can be generalized into other dynamic models. We theoretically prove the stability of STGC and provide an upper-bound of the signal transformation to be learnt. Further, the proposed recursive model can be stacked into a multi-layer architecture. To evaluate our model, we conduct extensive experiments on four benchmark skeleton-based action datasets, including the large-scale challenging NTU RGB+D. The experimental results demonstrate the effectiveness of our proposed model and the improvement over the state-of-the-art.",
@@ -979,7 +979,7 @@
       "nCitedBys": 20
     },
     {
-      "artId": "wang-2018-95cd02daca280762",
+      "artHash": "wang-2018-95cd02daca280762",
       "type": "paper",
       "title": "Ensemble-Spotting: Ranking Urban Vibrancy via POI Embedding with Multi-view Spatial Graphs",
       "abstract": "Vibrant residential communities are defined as places with permeability, vitality, variety, accessibility, identity and legibility. Developing vibrant communities can help boost commercial activities, enhance public security, foster social interaction, and thus yield livable, sustainable, and viable environments. However, it is challenging to understand the underlying drivers of vibrant communities to make them traceable and predictable. Toward this goal, we study the problem of ranking vibrant communities using human mobility data and point-ofinterests (POIs) data. We analyze large-scale urban and mobile data related to residential communities and find that in order to effectively identify vibrant communities, we should not just consider community \"contents\" such as buildings, facilities, and transportation, but also take into account the spatial structure. The spatial structure of a community refers to how the geographical items (POIs, road networks, public transits, etc.) of a community are spatially arranged and interact with one another. Along this line, we first develop a geographical learning method to find proper representations of communities. In addition, we propose a novel geographic ensemble ranking strategy, which aggregates a variety of weak rankers to effectively spot vibrant communities. Finally, we conduct a comprehensive evaluation with real-world residential community data. The experimental results demonstrate the effectiveness of the proposed method.",
@@ -1013,7 +1013,7 @@
       "nCitedBys": 1
     },
     {
-      "artId": "gao-2019-99efee5c9b43bed1",
+      "artHash": "gao-2019-99efee5c9b43bed1",
       "type": "paper",
       "title": "Incomplete Label Multi-task Deep Learning for Spatio-temporal Event Subtype Forecasting",
       "abstract": "Due to the potentially significant benefits for society, forecasting spatio-temporal societal events is currently attracting considerable attention from researchers. Beyond merely predicting the occurrence of future events, practitioners are now looking for information about specific subtypes of future events in order to allocate appropriate amounts and types of resources to manage such events and any associated social risks. However, forecasting event subtypes is far more complex than merely extending binary prediction to cover multiple classes, as 1) different locations require different models to handle their characteristic event subtype patterns due to spatial heterogeneity; 2) historically, many locations have only experienced a incomplete set of event subtypes, thus limiting the local model's ability to predict previously \"unseen\" subtypes; and 3) the subtle discrepancy among different event subtypes requires more discriminative and profound representations of societal events. In order to address all these challenges concurrently, we propose a Spatial Incomplete Multi-task Deep leArning (SIMDA) framework that is capable of effectively forecasting the subtypes of future events. The new framework formulates spatial locations into tasks to handle spatial heterogeneity in event subtypes, and learns a joint deep representation of subtypes across tasks. Furthermore, based on the \"first law of geography\", spatiallyclosed tasks share similar event subtype patterns such that adjacent tasks can share knowledge with each other effectively. Optimizing the proposed model amounts to a new nonconvex and strongly-coupled problem, we propose a new algorithm based on Alternating Direction Method of Multipliers (ADMM) that can decompose the complex problem into subproblems that can be solved efficiently. Extensive experiments on six real-world datasets demonstrate the effectiveness and efficiency of the proposed model.",
@@ -1051,7 +1051,7 @@
       "nCitedBys": 2
     },
     {
-      "artId": "zhao-2018-c156f6f441a704e2",
+      "artHash": "zhao-2018-c156f6f441a704e2",
       "type": "paper",
       "title": "Where to Go Next: A Spatio-temporal LSTM model for Next POI Recommendation",
       "abstract": "Next Point-of-Interest (POI) recommendation is of great value for both location-based service providers and users. Recently Recurrent Neural Networks (RNNs) have been proved to be effective on sequential recommendation tasks. However, existing RNN solutions rarely consider the spatio-temporal intervals between neighbor check-ins, which are essential for modeling user check-in behaviors in next POI recommendation. In this paper, we propose a new variant of LSTM, named STLSTM, which implements time gates and distance gates into LSTM to capture the spatio-temporal relation between successive check-ins. Specifically, one-time gate and one distance gate are designed to control short-term interest update, and another time gate and distance gate are designed to control long-term interest update. Furthermore, to reduce the number of parameters and improve efficiency, we further integrate coupled input and forget gates with our proposed model. Finally, we evaluate the proposed model using four real-world datasets from various location-based social networks. Our experimental results show that our model significantly outperforms the state-of-the-art approaches for next POI recommendation.",
@@ -1089,7 +1089,7 @@
       "nCitedBys": 2
     },
     {
-      "artId": "krumm-2019-785e2e6a05081c2",
+      "artHash": "krumm-2019-785e2e6a05081c2",
       "type": "paper",
       "title": "Traffic Updates: Saying a Lot While Revealing a Little",
       "abstract": "Taking speed reports from vehicles is a proven, inexpensive way of inferring traffic conditions. However, due to concerns about privacy and bandwidth, not every vehicle occupant may want to transmit data about their location and speed in real time. We show how to drastically reduce the number of transmissions in two ways, both based on a Markov random field for modeling traffic speed and flow. First, we show that a only a small number of vehicles need to report from each location. We give a simple, probabilistic method that lets a group of vehicles decide on which subset will transmit a report, preserving privacy by coordinating without any communication. The second approach computes the potential value of any location's speed report, emphasizing those reports that will most affect the overall speed inferences, and omitting those that contribute little value. Both methods significantly reduce the amount of communication necessary for accurate speed inferences on a road network.",
@@ -1110,7 +1110,7 @@
       "nReferences": 22
     },
     {
-      "artId": "chandra-2018-7654c53792823dbb",
+      "artHash": "chandra-2018-7654c53792823dbb",
       "type": "paper",
       "title": "TraPHic: Trajectory Prediction in Dense and Heterogeneous Traffic Using Weighted Interactions",
       "abstract": "We present a new algorithm for predicting the near-term trajectories of road-agents in dense traffic videos. Our approach is designed for heterogeneous traffic, where the road-agents may correspond to buses, cars, scooters, bicycles, or pedestrians. We model the interactions between different road-agents using a novel LSTM-CNN hybrid network for trajectory prediction. In particular, we take into account heterogeneous interactions that implicitly accounts for the varying shapes, dynamics, and behaviors of different road agents. In addition, we model horizon-based interactions which are used to implicitly model the driving behavior of each road-agent. We evaluate the performance of our prediction algorithm, TraPHic, on the standard datasets and also introduce a new dense, heterogeneous traffic dataset corresponding to urban Asian videos and agent trajectories. We outperform state-of-the-art methods on dense traffic datasets by 30%.",
@@ -1140,7 +1140,7 @@
       "nCitedBys": 2
     },
     {
-      "artId": "ma-2018-78c33a257466b529",
+      "artHash": "ma-2018-78c33a257466b529",
       "type": "paper",
       "title": "TrafficPredict: Trajectory Prediction for Heterogeneous Traffic-Agents",
       "abstract": "To safely and efficiently navigate in complex urban traffic, autonomous vehicles must make responsible predictions in relation to surrounding traffic-agents (vehicles, bicycles, pedestrians, etc.). A challenging and critical task is to explore the movement patterns of different traffic-agents and predict their future trajectories accurately to help the autonomous vehicle make reasonable navigation decision. To solve this problem, we propose a long short-term memory-based (LSTM-based) realtime traffic prediction algorithm, TrafficPredict. Our approach uses an instance layer to learn instances' movements and interactions and has a category layer to learn the similarities of instances belonging to the same type to refine the prediction. In order to evaluate its performance, we collected trajectory datasets in a large city consisting of varying conditions and traffic densities. The dataset includes many challenging scenarios where vehicles, bicycles, and pedestrians move among one another. We evaluate the performance of TrafficPredict on our new dataset and highlight its higher accuracy for trajectory prediction by comparing with prior prediction methods.",
@@ -1178,7 +1178,7 @@
       "nCitedBys": 6
     },
     {
-      "artId": "zheng-2019-c71f4ac5f761a054",
+      "artHash": "zheng-2019-c71f4ac5f761a054",
       "type": "paper",
       "title": "Urban Computing Building Intelligent Cities with Big Data and AI",
       "year": 2019,
@@ -1195,7 +1195,7 @@
       "nCitedBys": 0
     },
     {
-      "artId": "lee-2018-b7b8fbce90b82aff",
+      "artHash": "lee-2018-b7b8fbce90b82aff",
       "type": "paper",
       "title": "Forecasting Taxi Demands with Fully Convolutional Networks and Temporal Guided Embedding",
       "abstract": "Learning complex spatiotemporal patterns is a key to predict future taxi demand volumes. We propose temporal guided networks (TGNet), which is an efficient model architecture with fully convolutional networks and temporal guided embedding, to capture spatiotemporal patterns. Existing approaches use complex architectures, historical demands (day/week/month ago) to capture the recurring patterns, and external data sources such as meteorological, traffic flow, or texture data. However, TGNet only uses fully convolutional networks and temporal guided embedding without those external data sources. In this study, only pick-up and drop-off volumes of NYC-taxi dataset are used to utilize the full potential of the hidden patterns in the historical data points. We show that TGNet provides notable performance gains on a real-world benchmark, NYC-taxi dataset, over previous state-of-the-art models. Finally we explain how to extend our architecture to incorporate external data sources.",
@@ -1229,7 +1229,7 @@
       "nCitedBys": 1
     },
     {
-      "artId": "fu-2019-8e61811116d92a23",
+      "artHash": "fu-2019-8e61811116d92a23",
       "type": "paper",
       "title": "Efficient Region Embedding with Multi-view Spatial Networks: A Perspective of Locality-Constrained Spatial Autocorrelations",
       "abstract": "Urban regions are places where people live, work, consume, and entertain. In this study, we investigate the problem of learning an embedding space for regions. Studying the representations of regions can help us to better understand the patterns, structures, and dynamics of cities, support urban planning, and, ultimately, to make our cities more livable and sustainable. While some efforts have been made for learning the embeddings of regions, existing methods can be improved by incorporating locality-constrained spatial autocorrelations into an encode-decode framework. Such embedding strategy is capable of taking into account both intra-region structural information and inter-region spatial autocorrelations. To this end, we propose to learn the representations of regions via a new embedding strategy with awareness of locality-constrained spatial autocorrelations. Specifically, we first construct multi-view (i.e., distance and mobility connectivity) POI-POI networks to represent regions. In addition, we introduce two properties into region embedding: (i) spatial autocorrelations: a global similarity between regions; (ii) top-k locality: spatial autocorrelations locally and approximately reside on top k most autocorrelated regions. We propose a new encoder-decoder based formulation that preserves the two properties while remaining efficient. As an application, we exploit the learned embeddings to predict the mobile checkin popularity of regions. Finally, extensive experiments with real-world urban region data demonstrate the effectiveness and efficiency of our method.",
@@ -1259,7 +1259,7 @@
       "nCitedBys": 0
     },
     {
-      "artId": "dell’amico-2018-ff59091ebe5395ec",
+      "artHash": "dell’amico-2018-ff59091ebe5395ec",
       "type": "paper",
       "title": "The Bike sharing Rebalancing Problem with Stochastic Demands",
       "abstract": "In this paper we deal with the stochastic version of a problem arising in the context of self-service bike sharing systems, which aims at determining minimum cost routes for a fleet of homogeneous vehicles in order to redistribute bikes among stations. The Bike sharing Rebalancing Problem with Stochastic Demands is a variant of the one-commodity many-to-many pickup and delivery vehicle routing problem where demands at each station are represented by random variables, with associated probability distributions, that depend on stochastic scenarios. We develop stochastic programming models that are solved using different approaches, in particular, the L-Shaped and branch-and-cut. Moreover, we also propose heuristic algorithms based on an innovative use of positive and negative correlations among stations’ stochastic demands, as well as an efficient strategy for checking feasibility. The proposed solution approaches are evaluated and compared by means of extensive computational experiments on newly realistic benchmark instances.",
@@ -1288,7 +1288,7 @@
       "nCitedBys": 1
     },
     {
-      "artId": "lin-2017-52098c8ecf732655",
+      "artHash": "lin-2017-52098c8ecf732655",
       "type": "paper",
       "title": "Predicting Station-level Hourly Demands in a Large-scale Bike-sharing Network: A Graph Convolutional Neural Network Approach",
       "abstract": "This study proposes a novel Graph Convolutional Neural Network with Data-driven Graph Filter (GCNN-DDGF) model that can learn hidden heterogeneous pairwise correlations between stations to predict station-level hourly demand in a large-scale bike-sharing network. Two architectures of the GCNN-DDGF model are explored; GCNNreg-DDGF is a regular GCNN-DDGF model which contains the convolution and feedforward blocks, and GCNNrec-DDGF additionally contains a recurrent block from the Long Short-term Memory neural network architecture to capture temporal dependencies in the bike-sharing demand series. Furthermore, four types of GCNN models are proposed whose adjacency matrices are based on various bike-sharing system data, including Spatial Distance matrix (SD), Demand matrix (DE), Average Trip Duration matrix (ATD), and Demand Correlation matrix (DC). These six types of GCNN models and seven other benchmark models are built and compared on a Citi Bike dataset from New York City which includes 272 stations and over 28 million transactions from 2013 to 2016. Results show that the GCNNrec-DDGF performs the best in terms of the Root Mean Square Error, the Mean Absolute Error and the coefficient of determination (R2), followed by the GCNNreg-DDGF. They outperform the other models. Through a more detailed graph network analysis based on the learned DDGF, insights are obtained on the black box of the GCNN-DDGF model. It is found to capture some information similar to details embedded in the SD, DE and DC matrices. More importantly, it also uncovers hidden heterogeneous pairwise correlations between stations that are not revealed by any of those matrices.",
@@ -1318,7 +1318,7 @@
       "nCitedBys": 5
     },
     {
-      "artId": "illgen-2019-7a108edff2b65733",
+      "artHash": "illgen-2019-7a108edff2b65733",
       "type": "paper",
       "title": "Literature review of the vehicle relocation problem in one-way car sharing networks",
       "abstract": "In this paper, we perform a systematic review of selected publications that offer method-based solutions to the vehicle relocation issues in car sharing networks. Asymmetric networks allowing one-way trips are the most promising form of car-sharing systems. However, the resulting vehicle imbalance across the station grid requires relocations. Typical approaches to solving the vehicle relocation problem include mixed-integer programming for strategic or operation-oriented design problems, as well as simulation models for management tasks. We survey how researchers define the decision problems related to the vehicle relocation issue, and consider their division into multistage approaches. This article offers a starting point for researchers interested in modeling one-way vehicle sharing.",
@@ -1339,7 +1339,7 @@
       "nCitedBys": 1
     },
     {
-      "artId": "ke-2017-ea6fbf48e317f0c0",
+      "artHash": "ke-2017-ea6fbf48e317f0c0",
       "type": "paper",
       "title": "Short-Term Forecasting of Passenger Demand under On-Demand Ride Services: A Spatio-Temporal Deep Learning Approach",
       "abstract": "Short-term passenger demand forecasting is of great importance to the on-demand ride service platform, which can incentivize vacant cars moving from over-supply regions to over-demand regions. The spatial dependences, temporal dependences, and exogenous dependences need to be considered simultaneously, however, which makes short-term passenger demand forecasting challenging. We propose a novel deep learning (DL) approach, named the fusion convolutional long short-term memory network (FCL-Net), to address these three dependences within one end-to-end learning architecture. The model is stacked and fused by multiple convolutional long short-term memory (LSTM) layers, standard LSTM layers, and convolutional layers. The fusion of convolutional techniques and the LSTM network enables the proposed DL approach to better capture the spatio-temporal characteristics and correlations of explanatory variables. A tailored spatially aggregated random forest is employed to rank the importance of the explanatory variables. The ranking is then used for feature selection. The proposed DL approach is applied to the short-term forecasting of passenger demand under an on-demand ride service platform in Hangzhou, China. Experimental results, validated on real-world data provided by DiDi Chuxing, show that the FCL-Net achieves better predictive performance than traditional approaches including both classical time-series prediction models and neural network based algorithms (e.g., artificial neural network and LSTM). This paper is one of the first DL studies to forecast the short-term passenger demand of an on-demand ride service platform by examining the spatio-temporal correlations.",
@@ -1369,7 +1369,7 @@
       "nCitedBys": 39
     },
     {
-      "artId": "nguyen-2018-60771e9ae09f420a",
+      "artHash": "nguyen-2018-60771e9ae09f420a",
       "type": "paper",
       "title": "Deep learning methods in transportation domain: a review",
       "abstract": "Abstract: Recent years have seen a significant amount of transportation data collected from multiple sources including road sensors, probe, GPS, CCTV and incident reports. Similar to many other industries, transportation has entered the generation of big data. With a rich volume of traffic data, it is challenging to build reliable prediction models based on traditional shallow machine learning methods. Deep learning is a new state-of-the-art machine learning approach which has been of great interest in both academic research and industrial applications. This study reviews recent studies of deep learning for popular topics in processing traffic data including transportation network representation, traffic flow forecasting, traffic signal control, automatic vehicle detection, traffic incident processing, travel demand prediction, autonomous driving and driver behaviours. In general, the use of deep learning systems in transportation is still limited and there are potential limitations for utilising this advanced approach to improve prediction models.",
@@ -1397,7 +1397,7 @@
       "nCitedBys": 4
     },
     {
-      "artId": "cheng-2018-a2f7984cf561be98",
+      "artHash": "cheng-2018-a2f7984cf561be98",
       "type": "paper",
       "title": "DeepTransport: Learning Spatial-Temporal Dependency for Traffic Condition Forecasting",
       "year": 2018,
@@ -1426,7 +1426,7 @@
       "nCitedBys": 10
     },
     {
-      "artId": "li-2018-c2cdd59655b0acc7",
+      "artHash": "li-2018-c2cdd59655b0acc7",
       "type": "paper",
       "title": "Diffusion Convolutional Recurrent Neural Network: Data-Driven Traffic Forecasting",
       "abstract": "Spatiotemporal forecasting has various applications in neuroscience, climate and transportation domain. Traffic forecasting is one canonical example of such learning task. The task is challenging due to (1) complex spatial dependency on road networks, (2) non-linear temporal dynamics with changing road conditions and (3) inherent difficulty of long-term forecasting. To address these challenges, we propose to model the traffic flow as a diffusion process on a directed graph and introduce Diffusion Convolutional Recurrent Neural Network (DCRNN), a deep learning framework for traffic forecasting that incorporates both spatial and temporal dependency in the traffic flow. Specifically, DCRNN captures the spatial dependency using bidirectional random walks on the graph, and the temporal dependency using the encoder-decoder architecture with scheduled sampling. We evaluate the framework on two real-world large scale road network traffic datasets and observe consistent improvement of 12% - 15% over state-of-the-art baselines.",
@@ -1456,7 +1456,7 @@
       "nCitedBys": 65
     },
     {
-      "artId": "yu-2017-76ccf0f9cf387e6e",
+      "artHash": "yu-2017-76ccf0f9cf387e6e",
       "type": "paper",
       "title": "Spatiotemporal Recurrent Convolutional Networks for Traffic Prediction in Transportation Networks",
       "abstract": "Predicting large-scale transportation network traffic has become an important and challenging topic in recent decades. Inspired by the domain knowledge of motion prediction, in which the future motion of an object can be predicted based on previous scenes, we propose a network grid representation method that can retain the fine-scale structure of a transportation network. Network-wide traffic speeds are converted into a series of static images and input into a novel deep architecture, namely, spatiotemporal recurrent convolutional networks (SRCNs), for traffic forecasting. The proposed SRCNs inherit the advantages of deep convolutional neural networks (DCNNs) and long short-term memory (LSTM) neural networks. The spatial dependencies of network-wide traffic can be captured by DCNNs, and the temporal dynamics can be learned by LSTMs. An experiment on a Beijing transportation network with 278 links demonstrates that SRCNs outperform other deep learning-based algorithms in both short-term and long-term traffic prediction.",
@@ -1490,7 +1490,7 @@
       "nCitedBys": 47
     },
     {
-      "artId": "yao-2018-1320c57681ce38e4",
+      "artHash": "yao-2018-1320c57681ce38e4",
       "type": "paper",
       "title": "Deep Multi-View Spatial-Temporal Network for Taxi Demand Prediction",
       "abstract": "Taxi demand prediction is an important building block to enabling intelligent transportation systems in a smart city. An accurate prediction model can help the city pre-allocate resources to meet travel demand and to reduce empty taxis on streets which waste energy and worsen the traffic congestion. With the increasing popularity of taxi requesting services such as Uber and Didi Chuxing (in China), we are able to collect large-scale taxi demand data continuously. How to utilize such big data to improve the demand prediction is an interesting and critical real-world problem. Traditional demand prediction methods mostly rely on time series forecasting techniques, which fail to model the complex non-linear spatial and temporal relations. Recent advances in deep learning have shown superior performance on traditionally challenging tasks such as image classification by learning the complex features and correlations from large-scale data. This breakthrough has inspired researchers to explore deep learning techniques on traffic prediction problems. However, existing methods on traffic prediction have only considered spatial relation (e.g., using CNN) or temporal relation (e.g., using LSTM) independently. We propose a Deep Multi-View Spatial-Temporal Network (DMVST-Net) framework to model both spatial and temporal relations. Specifically, our proposed model consists of three views: temporal view (modeling correlations between future demand values with near time points via LSTM), spatial view (modeling local spatial correlation via local CNN), and semantic view (modeling correlations among regions sharing similar temporal patterns). Experiments on large-scale real taxi demand data demonstrate effectiveness of our approach over state-of-the-art methods.",
@@ -1540,7 +1540,7 @@
       "nCitedBys": 52
     },
     {
-      "artId": "zhang-2016-7687d0d64ce7dac8",
+      "artHash": "zhang-2016-7687d0d64ce7dac8",
       "type": "paper",
       "title": "Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction",
       "abstract": "Forecasting the flow of crowds is of great importance to traffic management and public safety, and very challenging as it is affected by many complex factors, such as inter-region traffic, events, and weather. We propose a deep-learning-based approach, called ST-ResNet, to collectively forecast the inflow and outflow of crowds in each and every region of a city. We design an end-to-end structure of ST-ResNet based on unique properties of spatio-temporal data. More specifically, we employ the residual neural network framework to model the temporal closeness, period, and trend properties of crowd traffic. For each property, we design a branch of residual convolutional units, each of which models the spatial properties of crowd traffic. ST-ResNet learns to dynamically aggregate the output of the three residual neural networks based on data, assigning different weights to different branches and regions. The aggregation is further combined with external factors, such as weather and day of the week, to predict the final traffic of crowds in each and every region. Experiments on two types of crowd flows in Beijing and New York City (NYC) demonstrate that the proposed ST-ResNet outperforms six well-known methods.",
@@ -1566,7 +1566,7 @@
       "nCitedBys": 171
     },
     {
-      "artId": "polson-2017-482a305df1b5fd98",
+      "artHash": "polson-2017-482a305df1b5fd98",
       "type": "paper",
       "title": "Deep learning for short-term traffic flow prediction",
       "abstract": "We develop a deep learning model to predict traffic flows. The main contribution is development of an architecture that combines a linear model that is fitted using l1 regularization and a sequence of tanh layers. The challenge of predicting traffic flows are the sharp nonlinearities due to transitions between free flow, breakdown, recovery and congestion. We show that deep learning architectures can capture these nonlinear spatio-temporal effects. The first layer identifies spatio-temporal relations among predictors and other layers model nonlinear relations. We illustrate our methodology on road sensor data from Interstate I-55 and predict traffic flows during two special events; a Chicago Bears football game and an extreme snowstorm event. Both cases have sharp traffic flow regime changes, occurring very suddenly, and we show how deep learning provides precise short term traffic flow predictions.",
@@ -1588,7 +1588,7 @@
       "nCitedBys": 91
     },
     {
-      "artId": "cui-2018-bec1f04d41bd78ce",
+      "artHash": "cui-2018-bec1f04d41bd78ce",
       "type": "paper",
       "title": "Deep Bidirectional and Unidirectional LSTM Recurrent Neural Network for Network-wide Traffic Speed Prediction",
       "abstract": "Short-term traffic forecasting based on deep learning methods, especially long short-term memory (LSTM) neural networks, has received much attention in recent years. However, the potential of deep learning methods in traffic forecasting has not yet fully been exploited in terms of the depth of the model architecture, the spatial scale of the prediction area, and the predictive power of spatial-temporal data. In this paper, a deep stacked bidirectional and unidirectional LSTM (SBU- LSTM) neural network architecture is proposed, which considers both forward and backward dependencies in time series data, to predict network-wide traffic speed. A bidirectional LSTM (BDLSM) layer is exploited to capture spatial features and bidirectional temporal dependencies from historical data. To the best of our knowledge, this is the first time that BDLSTMs have been applied as building blocks for a deep architecture model to measure the backward dependency of traffic data for prediction. The proposed model can handle missing values in input data by using a masking mechanism. Further, this scalable model can predict traffic speed for both freeway and complex urban traffic networks. Comparisons with other classical and state-of-the-art models indicate that the proposed SBU-LSTM neural network achieves superior prediction performance for the whole traffic network in both accuracy and robustness.",
@@ -1614,7 +1614,7 @@
       "nCitedBys": 9
     },
     {
-      "artId": "zhang-2017-ed3b89c029fb97c9",
+      "artHash": "zhang-2017-ed3b89c029fb97c9",
       "type": "paper",
       "title": "Short-Term Traffic Prediction: Modelling Temporal-Spatial Features in Local Highway Networks with Deep Neural Networks",
       "abstract": "Both temporal and spatial features provide significant implications for short-term traffic volume prediction. The problem is challenging due to various non-linear temporal dynamics at different locations, complicated spatial dependencies and difficulty for longer-step ahead forecasting. We propose two deep learning models, CNN-LSTM with attention mechanism (CNN-LSTM-Attn) and Temporal-Spatial-LSTM (TS-LSTM) to incorporate temporal and spatial correlations. Experiments show that both models outperform baselines on the Highways England dataset and the CNN-LSTMAttn achieves lowest MAPE 9.26% on 2-hour traffic volume prediction. We also evaluate the CNN-LSTM-Attn on the KDDCUP17 dataset and our model defeats the model that got first place in the competition with lower MAPE 10.48%. Our models achieve 2-hour forecasting, which is longer than previous literature, with outstanding accuracy and robustness.",
@@ -1635,7 +1635,7 @@
       "nReferences": 56
     },
     {
-      "artId": "deng-2016-35dad05257ece482",
+      "artHash": "deng-2016-35dad05257ece482",
       "type": "paper",
       "title": "Latent Space Model for Road Networks to Predict Time-Varying Traffic",
       "abstract": "Real-time traffic prediction from high-fidelity spatiotemporal traffic sensor datasets is an important problem for intelligent transportation systems and sustainability. However, it is challenging due to the complex topological dependencies and high dynamics associated with changing road conditions. In this paper, we propose a Latent Space Model for Road Networks (LSM-RN) to address these challenges. In particular, given a series of road network snapshots, we learn the attributes of vertices in latent spaces which capture both topological and temporal properties. As these latent attributes are time-dependent, they can estimate how traffic patterns form and evolve. In addition, we present an incremental online algorithm which sequentially and adaptively learn the latent attributes from the temporal graph changes. Our framework enables real-time traffic prediction by 1) exploiting real-time sensor readings to adjust/update the existing latent spaces, and 2) training as data arrives and making predictions on-the-fly with given data. By conducting extensive experiments with a large volume of real-world traffic sensor data, we demonstrate the utility superiority of our framework for real-time traffic prediction on large road networks over competitors as well as a baseline graph-based LSM.",
@@ -1673,7 +1673,7 @@
       "nCitedBys": 31
     },
     {
-      "artId": "zhu-2018-e5cc5bb898af2c56",
+      "artHash": "zhu-2018-e5cc5bb898af2c56",
       "type": "paper",
       "title": "pg-Causality: Identifying Spatiotemporal Causal Pathways for Air Pollutants with Urban Big Data",
       "abstract": "Abstract-Many countries are suffering from severe air pollution. Understanding how different air pollutants accumulate and propagate is critical to making relevant public policies. In this paper, we use urban big data (air quality data and meteorological data) to identify the spatiotemporal (ST) causal pathways for air pollutants. This problem is challenging because: (1) there are numerous noisy and low-pollution periods in the raw air quality data, which may lead to unreliable causality analysis; (2) for large-scale data in the ST space, the computational complexity of constructing a causal structure is very high; and (3) the ST causal pathways are complex due to the interactions of multiple pollutants and the influence of environmental factors. Therefore, we present pgCausality, a novel pattern-aided graphical causality analysis approach that combines the strengths of pattern mining and Bayesian learning to efficiently identify the ST causal pathways. First, pattern mining helps suppress the noise by capturing frequent evolving patterns (FEPs) of each monitoring sensor, and greatly reduce the complexity by selecting the pattern-matched sensors as \"causers\". Then, Bayesian learning carefully encodes the local and ST causal relations with a Gaussian Bayesian Network (GBN)-based graphical model, which also integrates environmental influences to minimize biases in the final results. We evaluate our approach with three real-world data sets containing 982 air quality sensors in 128 cities, in three regions of China from 01-Jun-2013 to 31-Dec-2016. Results show that our approach outperforms the traditional causal structure learning methods in time efficiency, inference accuracy and interpretability.",
@@ -1715,7 +1715,7 @@
       "nCitedBys": 3
     },
     {
-      "artId": "azgomi-2018-7d284bfbf33dbe35",
+      "artHash": "azgomi-2018-7d284bfbf33dbe35",
       "type": "paper",
       "title": "A Brief survey on Smart Community and Smart Transportation",
       "abstract": "World population growing in conjunction with the preference to live in the cities; make the city management a challenging issue. Traditional Cities with their common features will not be able to handle the human needs. As a result, smart city and its beneficial outcomes will attract a lot of attention recently. In fact, Smart city/community that is the field of collecting and processing data from so many different areas while making proper decisions and feeding to all parts of the system will be the future style of the cities. In other words, smart community is a complex big data problem which should combine different fields of research to make a unit environment. This brief survey will deal with all aspects of the smart communities. There will also be explained different categories of the smart communities in addition to their future challenges. In this work we try to introduce some aspects of the smart transportation in more detail.",
@@ -1736,7 +1736,7 @@
       "nReferences": 32
     },
     {
-      "artId": "wu-2018-f45b163cf4be08a7",
+      "artHash": "wu-2018-f45b163cf4be08a7",
       "type": "paper",
       "title": "Semantic Exploration of Traffic Dynamics",
       "abstract": "Given a large collection of urban datasets, how can we find their hidden correlations? For example, New York City (NYC) provides open access to taxi data from year 2012 to 2015 with about half million taxi trips generated per day. In the meantime, we have a rich set of urban data in NYC including points-of-interest (POIs), geo-tagged tweets, weather, vehicle collisions, etc. Is it possible that these ubiquitous datasets can be used to explain the city traffic? Understanding the hidden correlation between external data and traffic data would allow us to answer many important questions in urban computing such as: If we observe a high traffic volume at Madison Square Garden (MSG) in NYC, is it because of the regular peak hour or a big event being held at MSG? If a disaster weather such as a hurricane or a snow storm hits the city, how would the traffic be affected? While existing studies may utilize external datasets for prediction task, they do not explicitly seek for direct explanations from the external datasets. In this paper, we present our results in attempts to understand taxi traffic dynamics in NYC from multiple external data sources. We use four real-world ubiquitous urban datasets, including POI, weather, geo-tagged tweet, and collision records. To address the heterogeneity of ubiquitous urban data, we present carefully-designed feature representations for various datasets. Extensive experiments on real data demonstrate the explanatory power on taxi traffic by using external datasets. More specifically, our analysis suggests that POIs can well describe the regular traffic patterns. At the same time, geo-tagged tweets can explain irregular traffic caused by big events and weather can explain the abnormal traffic drop.",
@@ -1762,7 +1762,7 @@
       "nCitedBys": 0
     },
     {
-      "artId": "kitchin-2016-4a1624d87eaed6b7",
+      "artHash": "kitchin-2016-4a1624d87eaed6b7",
       "type": "paper",
       "title": "Urban data and city dashboards: Six key issues",
       "abstract": "This chapter considers the relationship between data and the city by critically examining six key issues with respect city dashboards: epistemology, scope and access, veracity and validity, usability and literacy, use and utility, and ethics. While city dashboards provide useful tools for evaluating and managing urban services, understanding and formulating policy, and creating public knowledge and counter-narratives, our analysis reveals a number of conceptual and practical shortcomings. In order for city dashboards to reach their full potential we advocate a number of related shifts in thinking and praxes and forward an agenda for addressing the issues we highlight. Our analysis is informed by our endeavours in building the Dublin Dashboard.",
@@ -1780,7 +1780,7 @@
       "nCitedBys": 1
     },
     {
-      "artId": "albino-2015-2b548387a11f2c46",
+      "artHash": "albino-2015-2b548387a11f2c46",
       "type": "paper",
       "title": "Smart Cities: Definitions, Dimensions, Performance, and Initiatives",
       "abstract": "ABSTRACT As the term \"smart city\" gains wider and wider currency, there is still confusion about what a smart city is, especially since several similar terms are often used interchangeably. This paper aims to clarify the meaning of the word \"smart\" in the context of cities through an approach based on an in-depth literature review of relevant studies as well as official documents of international institutions. It also identifies the main dimensions and elements characterizing a smart city. The different metrics of urban smartness are reviewed to show the need for a shared definition of what constitutes a smart city, what are its features, and how it performs in comparison to traditional cities. Furthermore, performance measures and initiatives in a few smart cities are identified.",
@@ -1806,7 +1806,7 @@
       "nCitedBys": 239
     },
     {
-      "artId": "moustaka-2017-9e0b24ec7f5d086f",
+      "artHash": "moustaka-2017-9e0b24ec7f5d086f",
       "type": "paper",
       "title": "CityDNA: Smart City Dimensions' Correlations for Identifying Urban Profile",
       "abstract": "Smart cities evolve over multiple themes and areas with the development of cyber-physical systems and smart services that address several urban issues regarding economy, mobility,  environment, people, living and governance. This evolution has bliged the definition of several conceptualization and evaluation models, which respect alternative smart city perspectives. This work proposes smart city profiling with the introduction of the “CityDNA” model, ccording which, smart city’s dimensions’ relevance can be captured and visualized. Based on this model, a smart city’s profile can be defined and characterized, under a simple comprehensive view of local needs and challenges. A particular smart city scenario is highlighted as a proof of concept for CityDNA and future design and implementation ideas are identified and justified.",
@@ -1832,7 +1832,7 @@
       "nCitedBys": 3
     },
     {
-      "artId": "anthopoulos-2017-91557dd28f7a02aa",
+      "artHash": "anthopoulos-2017-91557dd28f7a02aa",
       "type": "paper",
       "title": "Understanding Smart Cities: A Tool for Smart Government or an Industrial Trick?",
       "abstract": "This book investigates the role of smart cities in the broader context of urban innovation and e-government, identifies what a smart city is in practice and highlights their importance to the welfare of society. The book offers specific, measurable, and action-oriented public sector planning and management principles and ideas for smart governance in the era of global urbanization and innovation to help with the challenges in maintaining the democratic system of checks and balances as well as the division of powers in a highly interconnected world. The book will be of interest researchers, practitioners, students, and public sector IT professionals that work within innovation management, public administration, urban technologies and urban innovation, and public local administration studies.",
@@ -1850,7 +1850,7 @@
       "nCitedBys": 9
     },
     {
-      "artId": "anthopoulos-2017-ba6d653ed869f26f",
+      "artHash": "anthopoulos-2017-ba6d653ed869f26f",
       "type": "paper",
       "title": "Smart utopia VS smart reality: Learning by experience from 10 smart city cases",
       "abstract": "20 years after the appearance of literature evidence and the launch of the first, pioneering cases, the smart city domain remains ambiguous and generates an increasing argument with regard to its feasibility and potential. Indeed, today the smart city domain is being characterized by an emerging market that provides novel solutions for cyber-physical integration in the urban space; a competitive standardization arena that attempts to clarify the domain and homogenize these solutions; a growing network of city alliances, forums and market places that aim to bring together scientists, practitioners and city governments in an attempt to define a common urban future; and a promising international network of scholars that studies and evolves the domain. Nevertheless, a “common understanding” of what smart city is or could be missing and generates questions regarding whether a “smart utopia” - that is the outcome of the “wedding” of vendors and local governments - drives the above efforts and leaves out real community problems. The aim of this paper is to perform an analysis of 10 representative international city cases that claim to be smart. The analysis is based on a multi-method that combines literature evidence, official websites and reports, narrative city walks, and interviews with corresponding officials. The outcomes distinguish utopia from reality, introduce a pool of evidence that can justify whether a city can claim to be smart and depict a brief view of the future smart city.",
@@ -1868,7 +1868,7 @@
       "nCitedBys": 11
     },
     {
-      "artId": "harmon-2015-46bb200801e61a1e",
+      "artHash": "harmon-2015-46bb200801e61a1e",
       "type": "paper",
       "title": "Smart cities and the Internet of Things",
       "abstract": "The smart city concept represents a compelling platform for IT-enabled service innovation. It offers a view of the city where service providers use information technologies to engage with citizens to create more effective urban organizations and systems that can improve the quality of life. The emerging Internet of Things (IoT) model is foundational to the development of smart cities. Integrated cloud-oriented architecture of networks, software, sensors, human interfaces, and data analytics are essential for value creation. IoT smart-connected products and the services they provision will become essential for the future development of smart cities. This paper will explore the smart city concept and propose a strategy development model for the implementation of IoT systems in a smart city context.",
@@ -1894,7 +1894,7 @@
       "nCitedBys": 0
     },
     {
-      "artId": "anthopoulos-2015-cca4a4dbcc6371b",
+      "artHash": "anthopoulos-2015-cca4a4dbcc6371b",
       "type": "paper",
       "title": "Understanding the Smart City Domain: A Literature Review",
       "abstract": "Smart cities appeared in literature in the late 1990s and various approaches have been developed so far. Until today, smart city does not describe a city with particular attributes but it is used to describe different cases in urban spaces: web portals that virtualize cities or city guides, knowledge bases that address local needs, agglomerations with information and communication technology (ICT) infrastructure that attract business relocation, metropolitan-wide ICT infrastructures that deliver e-services to the citizens, ubiquitous environments, and recently ICT infrastructure for ecological use. Researchers, practicians, businessmen, and policy makers consider smart city from different perspectives and most of them agree on a model that measures urban economy, mobility, environment, living, people, and governance. On the other hand, ICT and construction industries stress to capitalize smart city and a new market seems to be generated in this domain. This chapter aims to perform a literature review, discover and classify the particular schools of thought, universities and research centres as well as companies that deal with smart city domain and discover alternative approaches, models, architectures, and frameworks with this regard.",
@@ -1912,7 +1912,7 @@
       "nCitedBys": 42
     },
     {
-      "artId": "anthopoulos-2019-efeb7c652fa02059",
+      "artHash": "anthopoulos-2019-efeb7c652fa02059",
       "type": "paper",
       "title": "A Unified Smart City Model (USCM) for Smart City Conceptualization and Benchmarking",
       "abstract": "Smart cities have attracted an extensive and emerging interest from both science and industry with an increasing number of international examples emerging from all over the world. However, despite the significant role that smart cities can play to deal with recent urban challenges, the concept has been being criticized for not being able to realize its potential and for being a vendor hype. This paper reviews different conceptualization, benchmarks and evaluations of the smart city concept. Eight different classes of smart city conceptualization models have been discovered, which structure the unified conceptualization model and concern smart city facilities (i.e., energy, water, IoT etc.), services (i.e., health, education etc.), governance, planning and management, architecture, data and people. Benchmarking though is still ambiguous and different perspectives are followed by the researchers that measure -and recently monitor-various factors, which somehow exceed typical technological or urban characteristics. This can be attributed to the broadness of the smart city concept. This paper sheds light to parameters that can be measured and controlled in an attempt to improve smart city potential and leaves space for corresponding future research. More specifically, smart city progress, local capacity, vulnerabilities for resilience and policy impact are only some of the variants that scholars pay attention to measure and control.",
@@ -1939,292 +1939,292 @@
   ],
   "relations": [
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "pan-2019-93d5c1f50aa15490"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "pan-2019-93d5c1f50aa15490"
     },
     {
-      "referenceId": "yu-2017-76ccf0f9cf387e6e",
-      "citedById": "chen-2018-242c167adaa56135"
+      "reference": "yu-2017-76ccf0f9cf387e6e",
+      "citedBy": "chen-2018-242c167adaa56135"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "chen-2018-242c167adaa56135"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "chen-2018-242c167adaa56135"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "chen-2018-242c167adaa56135"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "chen-2018-242c167adaa56135"
     },
     {
-      "referenceId": "deng-2016-35dad05257ece482",
-      "citedById": "gong-2018-60e720efa6375ca6"
+      "reference": "deng-2016-35dad05257ece482",
+      "citedBy": "gong-2018-60e720efa6375ca6"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "gong-2018-60e720efa6375ca6"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "gong-2018-60e720efa6375ca6"
     },
     {
-      "referenceId": "liu-2018-b585d419045cfdf",
-      "citedById": "yao-2019-cda228e0e1723463"
+      "reference": "liu-2018-b585d419045cfdf",
+      "citedBy": "yao-2019-cda228e0e1723463"
     },
     {
-      "referenceId": "li-2018-c2cdd59655b0acc7",
-      "citedById": "yao-2019-cda228e0e1723463"
+      "reference": "li-2018-c2cdd59655b0acc7",
+      "citedBy": "yao-2019-cda228e0e1723463"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "yao-2019-cda228e0e1723463"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "yao-2019-cda228e0e1723463"
     },
     {
-      "referenceId": "wang-2018-a02131721462a0f1",
-      "citedById": "yao-2019-cda228e0e1723463"
+      "reference": "wang-2018-a02131721462a0f1",
+      "citedBy": "yao-2019-cda228e0e1723463"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "yao-2019-cda228e0e1723463"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "yao-2019-cda228e0e1723463"
     },
     {
-      "referenceId": "yao-2019-330182aa72049237",
-      "citedById": "yao-2019-cda228e0e1723463"
+      "reference": "yao-2019-330182aa72049237",
+      "citedBy": "yao-2019-cda228e0e1723463"
     },
     {
-      "referenceId": "ke-2017-ea6fbf48e317f0c0",
-      "citedById": "yao-2019-cda228e0e1723463"
+      "reference": "ke-2017-ea6fbf48e317f0c0",
+      "citedBy": "yao-2019-cda228e0e1723463"
     },
     {
-      "referenceId": "li-2018-c2cdd59655b0acc7",
-      "citedById": "shi-2018-37455629a702887f"
+      "reference": "li-2018-c2cdd59655b0acc7",
+      "citedBy": "shi-2018-37455629a702887f"
     },
     {
-      "referenceId": "yu-2018-602148405cb1948e",
-      "citedById": "shi-2018-37455629a702887f"
+      "reference": "yu-2018-602148405cb1948e",
+      "citedBy": "shi-2018-37455629a702887f"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "wang-2018-a02131721462a0f1"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "wang-2018-a02131721462a0f1"
     },
     {
-      "referenceId": "ke-2017-ea6fbf48e317f0c0",
-      "citedById": "wang-2018-a02131721462a0f1"
+      "reference": "ke-2017-ea6fbf48e317f0c0",
+      "citedBy": "wang-2018-a02131721462a0f1"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "wang-2018-a02131721462a0f1"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "wang-2018-a02131721462a0f1"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "he-2018-b39e99910b45443b"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "he-2018-b39e99910b45443b"
     },
     {
-      "referenceId": "ke-2017-ea6fbf48e317f0c0",
-      "citedById": "zhang-2018-4e19eabcb884a8b2"
+      "reference": "ke-2017-ea6fbf48e317f0c0",
+      "citedBy": "zhang-2018-4e19eabcb884a8b2"
     },
     {
-      "referenceId": "li-2018-c2cdd59655b0acc7",
-      "citedById": "zhang-2018-4e19eabcb884a8b2"
+      "reference": "li-2018-c2cdd59655b0acc7",
+      "citedBy": "zhang-2018-4e19eabcb884a8b2"
     },
     {
-      "referenceId": "polson-2017-482a305df1b5fd98",
-      "citedById": "zhang-2018-4e19eabcb884a8b2"
+      "reference": "polson-2017-482a305df1b5fd98",
+      "citedBy": "zhang-2018-4e19eabcb884a8b2"
     },
     {
-      "referenceId": "cui-2018-696655e9aacc89b",
-      "citedById": "zhang-2018-4e19eabcb884a8b2"
+      "reference": "cui-2018-696655e9aacc89b",
+      "citedBy": "zhang-2018-4e19eabcb884a8b2"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "yao-2019-330182aa72049237"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "yao-2019-330182aa72049237"
     },
     {
-      "referenceId": "deng-2016-35dad05257ece482",
-      "citedById": "yao-2019-330182aa72049237"
+      "reference": "deng-2016-35dad05257ece482",
+      "citedBy": "yao-2019-330182aa72049237"
     },
     {
-      "referenceId": "ke-2017-ea6fbf48e317f0c0",
-      "citedById": "yao-2019-330182aa72049237"
+      "reference": "ke-2017-ea6fbf48e317f0c0",
+      "citedBy": "yao-2019-330182aa72049237"
     },
     {
-      "referenceId": "li-2018-c2cdd59655b0acc7",
-      "citedById": "yao-2019-330182aa72049237"
+      "reference": "li-2018-c2cdd59655b0acc7",
+      "citedBy": "yao-2019-330182aa72049237"
     },
     {
-      "referenceId": "feng-2018-d1c4c7b6dc2a743a",
-      "citedById": "yao-2019-330182aa72049237"
+      "reference": "feng-2018-d1c4c7b6dc2a743a",
+      "citedBy": "yao-2019-330182aa72049237"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "yao-2019-330182aa72049237"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "yao-2019-330182aa72049237"
     },
     {
-      "referenceId": "ke-2017-ea6fbf48e317f0c0",
-      "citedById": "ke-2018-8eb17cb824278f2b"
+      "reference": "ke-2017-ea6fbf48e317f0c0",
+      "citedBy": "ke-2018-8eb17cb824278f2b"
     },
     {
-      "referenceId": "li-2018-c2cdd59655b0acc7",
-      "citedById": "li-2018-3ade67505d6eb586"
+      "reference": "li-2018-c2cdd59655b0acc7",
+      "citedBy": "li-2018-3ade67505d6eb586"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "zhang-2017-41fcf676f9b50026"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "zhang-2017-41fcf676f9b50026"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "he-2018-3d1e028c978d954a"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "he-2018-3d1e028c978d954a"
     },
     {
-      "referenceId": "li-2018-c2cdd59655b0acc7",
-      "citedById": "yu-2018-602148405cb1948e"
+      "reference": "li-2018-c2cdd59655b0acc7",
+      "citedBy": "yu-2018-602148405cb1948e"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "pan-2018-70450f4916d49f19"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "pan-2018-70450f4916d49f19"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "pan-2018-70450f4916d49f19"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "pan-2018-70450f4916d49f19"
     },
     {
-      "referenceId": "li-2018-c2cdd59655b0acc7",
-      "citedById": "pan-2018-70450f4916d49f19"
+      "reference": "li-2018-c2cdd59655b0acc7",
+      "citedBy": "pan-2018-70450f4916d49f19"
     },
     {
-      "referenceId": "wang-2018-a02131721462a0f1",
-      "citedById": "liang-2019-43c996fbc168c210"
+      "reference": "wang-2018-a02131721462a0f1",
+      "citedBy": "liang-2019-43c996fbc168c210"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "liang-2019-43c996fbc168c210"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "liang-2019-43c996fbc168c210"
     },
     {
-      "referenceId": "cui-2018-696655e9aacc89b",
-      "citedById": "davis-2019-1db255b04d630967"
+      "reference": "cui-2018-696655e9aacc89b",
+      "citedBy": "davis-2019-1db255b04d630967"
     },
     {
-      "referenceId": "nguyen-2018-60771e9ae09f420a",
-      "citedById": "davis-2019-1db255b04d630967"
+      "reference": "nguyen-2018-60771e9ae09f420a",
+      "citedBy": "davis-2019-1db255b04d630967"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "davis-2019-1db255b04d630967"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "davis-2019-1db255b04d630967"
     },
     {
-      "referenceId": "li-2018-c2cdd59655b0acc7",
-      "citedById": "davis-2019-1db255b04d630967"
+      "reference": "li-2018-c2cdd59655b0acc7",
+      "citedBy": "davis-2019-1db255b04d630967"
     },
     {
-      "referenceId": "geng-2019-56522245d8f6c77d",
-      "citedById": "davis-2019-1db255b04d630967"
+      "reference": "geng-2019-56522245d8f6c77d",
+      "citedBy": "davis-2019-1db255b04d630967"
     },
     {
-      "referenceId": "wang-2019-c2508fa0f3bea9be",
-      "citedById": "davis-2019-1db255b04d630967"
+      "reference": "wang-2019-c2508fa0f3bea9be",
+      "citedBy": "davis-2019-1db255b04d630967"
     },
     {
-      "referenceId": "ke-2017-ea6fbf48e317f0c0",
-      "citedById": "davis-2019-1db255b04d630967"
+      "reference": "ke-2017-ea6fbf48e317f0c0",
+      "citedBy": "davis-2019-1db255b04d630967"
     },
     {
-      "referenceId": "cui-2018-bec1f04d41bd78ce",
-      "citedById": "cui-2018-696655e9aacc89b"
+      "reference": "cui-2018-bec1f04d41bd78ce",
+      "citedBy": "cui-2018-696655e9aacc89b"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "cui-2018-696655e9aacc89b"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "cui-2018-696655e9aacc89b"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "krumm-2019-785e2e6a05081c2"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "krumm-2019-785e2e6a05081c2"
     },
     {
-      "referenceId": "chandra-2018-7654c53792823dbb",
-      "citedById": "ma-2018-78c33a257466b529"
+      "reference": "chandra-2018-7654c53792823dbb",
+      "citedBy": "ma-2018-78c33a257466b529"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "lee-2018-b7b8fbce90b82aff"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "lee-2018-b7b8fbce90b82aff"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "lee-2018-b7b8fbce90b82aff"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "lee-2018-b7b8fbce90b82aff"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "lin-2017-52098c8ecf732655"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "lin-2017-52098c8ecf732655"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "lin-2017-52098c8ecf732655"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "lin-2017-52098c8ecf732655"
     },
     {
-      "referenceId": "ke-2017-ea6fbf48e317f0c0",
-      "citedById": "lin-2017-52098c8ecf732655"
+      "reference": "ke-2017-ea6fbf48e317f0c0",
+      "citedBy": "lin-2017-52098c8ecf732655"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "ke-2017-ea6fbf48e317f0c0"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "ke-2017-ea6fbf48e317f0c0"
     },
     {
-      "referenceId": "polson-2017-482a305df1b5fd98",
-      "citedById": "ke-2017-ea6fbf48e317f0c0"
+      "reference": "polson-2017-482a305df1b5fd98",
+      "citedBy": "ke-2017-ea6fbf48e317f0c0"
     },
     {
-      "referenceId": "yao-2018-1320c57681ce38e4",
-      "citedById": "nguyen-2018-60771e9ae09f420a"
+      "reference": "yao-2018-1320c57681ce38e4",
+      "citedBy": "nguyen-2018-60771e9ae09f420a"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "cheng-2018-a2f7984cf561be98"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "cheng-2018-a2f7984cf561be98"
     },
     {
-      "referenceId": "polson-2017-482a305df1b5fd98",
-      "citedById": "cheng-2018-a2f7984cf561be98"
+      "reference": "polson-2017-482a305df1b5fd98",
+      "citedBy": "cheng-2018-a2f7984cf561be98"
     },
     {
-      "referenceId": "deng-2016-35dad05257ece482",
-      "citedById": "cheng-2018-a2f7984cf561be98"
+      "reference": "deng-2016-35dad05257ece482",
+      "citedBy": "cheng-2018-a2f7984cf561be98"
     },
     {
-      "referenceId": "deng-2016-35dad05257ece482",
-      "citedById": "li-2018-c2cdd59655b0acc7"
+      "reference": "deng-2016-35dad05257ece482",
+      "citedBy": "li-2018-c2cdd59655b0acc7"
     },
     {
-      "referenceId": "cheng-2018-a2f7984cf561be98",
-      "citedById": "li-2018-c2cdd59655b0acc7"
+      "reference": "cheng-2018-a2f7984cf561be98",
+      "citedBy": "li-2018-c2cdd59655b0acc7"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "li-2018-c2cdd59655b0acc7"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "li-2018-c2cdd59655b0acc7"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "yu-2017-76ccf0f9cf387e6e"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "yu-2017-76ccf0f9cf387e6e"
     },
     {
-      "referenceId": "deng-2016-35dad05257ece482",
-      "citedById": "yao-2018-1320c57681ce38e4"
+      "reference": "deng-2016-35dad05257ece482",
+      "citedBy": "yao-2018-1320c57681ce38e4"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "yao-2018-1320c57681ce38e4"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "yao-2018-1320c57681ce38e4"
     },
     {
-      "referenceId": "zhang-2016-7687d0d64ce7dac8",
-      "citedById": "zhang-2017-ed3b89c029fb97c9"
+      "reference": "zhang-2016-7687d0d64ce7dac8",
+      "citedBy": "zhang-2017-ed3b89c029fb97c9"
     },
     {
-      "referenceId": "albino-2015-2b548387a11f2c46",
-      "citedById": "azgomi-2018-7d284bfbf33dbe35"
+      "reference": "albino-2015-2b548387a11f2c46",
+      "citedBy": "azgomi-2018-7d284bfbf33dbe35"
     },
     {
-      "referenceId": "albino-2015-2b548387a11f2c46",
-      "citedById": "moustaka-2017-9e0b24ec7f5d086f"
+      "reference": "albino-2015-2b548387a11f2c46",
+      "citedBy": "moustaka-2017-9e0b24ec7f5d086f"
     },
     {
-      "referenceId": "anthopoulos-2017-ba6d653ed869f26f",
-      "citedById": "anthopoulos-2017-91557dd28f7a02aa"
+      "reference": "anthopoulos-2017-ba6d653ed869f26f",
+      "citedBy": "anthopoulos-2017-91557dd28f7a02aa"
     },
     {
-      "referenceId": "albino-2015-2b548387a11f2c46",
-      "citedById": "harmon-2015-46bb200801e61a1e"
+      "reference": "albino-2015-2b548387a11f2c46",
+      "citedBy": "harmon-2015-46bb200801e61a1e"
     }
   ]
 }

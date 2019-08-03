@@ -1,75 +1,98 @@
 <template>
-  <amplify-connect :query="queryGetAllMyCollections">
-    <template slot-scope="{ loading, data, errors }">
-      <v-progress-circular v-if="loading" indeterminate class="ma-4"
-        style="width: 100%;">
-      </v-progress-circular>
-      <div v-else-if="errors.length > 0">{{ errors }}</div>
-      <v-list v-else-if="data" two-line>
-        <v-subheader style="display: flex;">
-          <span>My Collections</span>
-          <v-btn flat size="1em" color="primary" style="margin-left: auto;"
-            @click="selectImportCollJsonFile">
-            <v-icon size="1em" class="mr-2">add</v-icon>Import
-          </v-btn>
-        </v-subheader>
-        <v-list-tile v-for="coll in data.getAllMyCollections"
-          :key="coll.collId" @click="navigateToCollectionView(coll.collId)"
-          :style="getMyCollTileStyle(coll)">
-          <v-list-tile-content>
-            <v-list-tile-title>{{ coll.title }}</v-list-tile-title>
-            <v-list-tile-sub-title>
-              {{ coll.description }}
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </template>
-  </amplify-connect>
+  <v-progress-circular
+    v-if="isLoading" indeterminate class="ma-4" style="width: 100%">
+  </v-progress-circular>
+  <v-list v-else two-line>
+    <v-subheader style="display: flex;">
+      <span>My Collections</span>
+      <v-btn flat size="1em" color="primary" style="margin-left: auto;"
+        @click="selectImportCollFile">
+        <v-icon size="1em" class="mr-2">add</v-icon>Import
+      </v-btn>
+    </v-subheader>
+    <v-list-tile v-for="coll in myColls" :key="coll.collId"
+      :style="getMyCollTileStyle(coll)"
+      @click="navigateToCollView(coll.collId)">
+      <v-list-tile-content>
+        <v-list-tile-title>{{ coll.title }}</v-list-tile-title>
+        <v-list-tile-sub-title>
+          {{ coll.description }}
+        </v-list-tile-sub-title>
+      </v-list-tile-content>
+      <v-list-tile-action>
+        <v-btn icon ripple @click.stop="deleteMyColl(coll.collId)">
+          <v-icon color="grey lighten-1">clear</v-icon>
+        </v-btn>
+      </v-list-tile-action>
+    </v-list-tile>
+  </v-list>
 </template>
 
 <script>
-import { components as AmplifyComponents } from 'aws-amplify-vue'
+import _ from 'lodash'
 import { mapState } from 'vuex'
-import importUserCollection from './importAppsyncUserCollection.js'
+import * as firebase from 'firebase/app'
+import 'firebase/firestore'
+import AuthMixin from '@/components/authmixin.js'
 
 export default {
   name: 'PvDrawerMyCollectionList',
-  components: {
-    ...AmplifyComponents
-  },
+  mixins: [ AuthMixin ],
+  data: () => ({
+    myColls: null
+  }),
   computed: {
     ...mapState('parseVis', [ 'currUserId', 'currCollId' ]),
-    queryGetAllMyCollections () {
-      return this.$Amplify.graphqlOperation(GetAllMyCollections)
+    isLoading () {
+      return this.myColls === null
     }
   },
   methods: {
+    async deleteMyColl (collId) {
+      if (!confirm('Are you sure you want delete the collection?')) {
+        return
+      }
+      try {
+        await firebase.firestore().doc(`collections/${collId}`).delete()
+      } catch (err) {
+        console.log('Error removing my collection:', err)
+      }
+    },
     getMyCollTileStyle (coll) {
       const style = {}
-      if (this.currUserId === 'me' && this.currCollId === coll.collId) {
+      if (this.currUserId === this.currUser.uid &&
+          this.currCollId === coll.collId) {
         style.background = '#EBF5FB'
       }
       return style
     },
-    async importCollection (flatColl) {
-      const coll = await importUserCollection(this.$apollo, flatColl)
-      this.navigateToCollectionView(coll.collId)
+    async importJsonColl (coll) {
+      try {
+        await firebase.firestore().collection('collections').add({
+          title: coll.title,
+          description: coll.description,
+          articles: coll.articles,
+          relations: coll.relations,
+          owner: this.currUser.uid
+        })
+      } catch (err) {
+        console.error('Error adding document: ', err)
+      }
     },
-    navigateToCollectionView (collId) {
+    navigateToCollView (collId) {
       this.$router.push({
         name: 'parsevis',
-        query: { user: 'me', coll: collId }
+        query: { user: this.currUser.uid, coll: collId }
       })
       this.$store.commit('parseVis/set', {
         contentState: 'vis-view',
         drawerState: { name: 'pv-drawer-collection-view' },
-        currUserId: 'me',
+        currUserId: this.currUser.uid,
         currCollId: collId,
         currArtId: null
       })
     },
-    selectImportCollJsonFile () {
+    selectImportCollFile () {
       let input = document.createElement('input')
       input.type = 'file'
       input.accept = 'application/json'
@@ -79,7 +102,7 @@ export default {
         reader.onload = e => {
           const text = e.target.result
           const coll = JSON.parse(text)
-          this.importCollection(coll)
+          this.importJsonColl(coll)
         }
         reader.readAsText(file)
       }
@@ -88,18 +111,21 @@ export default {
         'click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false,
         0, null)
       input.dispatchEvent(event)
+    },
+    trace (value) {
+      console.log(value)
+      return value
     }
+  },
+  async created () {
+    const fireColl = firebase.firestore().collection('collMetas')
+    const query = fireColl.where('owner', '==', this.currUser.uid)
+    query.onSnapshot(snapshot => {
+      this.myColls = _.map(snapshot.docs, docSnap => ({
+        ...docSnap.data(),
+        collId: docSnap.id
+      }))
+    })
   }
 }
-
-const GetAllMyCollections = `
-  query getAllMyCollections {
-    getAllMyCollections {
-      userId
-      collId
-      title
-      description
-    }
-  }
-`
 </script>

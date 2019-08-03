@@ -1,6 +1,6 @@
 <template>
-  <pv-vis-meta-card :label="labelRowText" :main="article.data.title"
-    :left-attr="article.data.venue ? article.data.venue.name : ''"
+  <pv-vis-meta-card :label="labelRowText" :main="article.title"
+    :left-attr="article.venue ? article.venue.name : ''"
     :right-attr="nCitedByText"
     :left-side-color="referenceSideColor" :right-side-color="citedBySideColor"
     :background-color="backgroundColorText" :config="config">
@@ -9,17 +9,13 @@
 
 <script>
 import _ from 'lodash'
-import { Article, Paper, Venue } from './pvmodels.js'
 import PvVisMetaCard from '@/components/PvVisMetaCard.vue'
 
 export default {
   name: 'PvVisArticleCard',
   components: { PvVisMetaCard },
   props: {
-    article: {
-      type: Object,
-      default: new Article('', '', new Paper('', '', 0, [], new Venue('')))
-    },
+    article: Object,
     backgroundColor: {
       type: Object,
       default: () => ({ r: 255, g: 255, b: 255 })
@@ -53,11 +49,13 @@ export default {
       return `rgba(${r}, ${g}, ${b}, ${this.config.opacity})`
     },
     firstAuthorSurname () {
-      const firstAuthor = _.first(this.article.data.authors)
+      const firstAuthor =
+        _.property('firstAuthor')(this.article) ||
+        _.first(_.property('authors')(this.article))
       return firstAuthor ? firstAuthor.surname : 'noauthor'
     },
     labelRowText () {
-      return `${this.firstAuthorSurname} ${this.article.data.year}`
+      return `${this.firstAuthorSurname} ${this.article.year}`
     },
     nCitedByText () {
       return _.isNil(this.article.nCitedBys)

@@ -3,8 +3,8 @@ import 'firebase/auth'
 
 export default {
   data: () => ({
-    currentUser: null,
-    isSignedIn: null
+    currentUser: firebase.auth().currentUser,
+    isSignedIn: !!firebase.auth().currentUser || null
   }),
   created () {
     this.detachAuthStateChanged = firebase.auth().onAuthStateChanged(user => {

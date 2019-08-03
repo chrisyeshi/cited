@@ -30,7 +30,7 @@ import * as d3Color from 'd3-color'
 import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 import getVisCardSideColor from './getviscardsidecolor.js'
 import { mapState } from 'vuex'
-import { VisGraph, VisLink } from './pvvismodels.js'
+import { VisGraph } from '@/components/visgraph.js'
 import ExpandableText from './ExpandableText.vue'
 import getSampleCollection from './getsamplecollection.js'
 import PvArticleForm from './PvArticleForm.vue'
@@ -67,7 +67,7 @@ export default {
         canvasPadding: { left: 2, top: 2, right: 2, bottom: 2 },
         fontSize: 12,
         hoveringCardElevation: 6,
-        hoverLinger: 100,
+        hoverLinger: 50,
         path: {
           darkness: 0.35,
           endMinX: 0.5,
@@ -113,12 +113,17 @@ export default {
       const hoveringArtId = this.hoveringVisNodeId
       const selectedArtIds = this.selectedVisNodeIds
       const artIds = _.uniq(_.filter([ hoveringArtId, ...selectedArtIds ]))
-      const visNodes =
-        _.map(artIds, artId => this.baseVisGraph.getVisNode(artId))
-      const focusedVisNodes = _.flatten(_.map(visNodes, visNode => ([
-        visNode, ...visNode.inGraphReferences, ...visNode.inGraphCitedBys
-      ])))
-      return _.uniq(_.map(focusedVisNodes, visNode => visNode.articleId))
+      const visNodeIds = _.filter(artIds, artId => this.baseVisGraph.has(artId))
+      const focusedVisNodeIds = [
+        ...visNodeIds,
+        ..._.flatMap(
+          visNodeIds,
+          visNodeId => this.baseVisGraph.getInGraphReferenceIds(visNodeId)),
+        ..._.flatMap(
+          visNodeIds,
+          visNodeId => this.baseVisGraph.getInGraphCitedByIds(visNodeId))
+      ]
+      return _.uniq(focusedVisNodeIds)
     },
     hoveringVisNodeId () {
       return this.hoveringArticleId
@@ -149,14 +154,18 @@ export default {
         return this.visGraph.visLinks
       }
       const focusedVisGraph =
-        this.visGraph.getSubVisGraph(this.focusedVisNodeIds)
+        VisGraph.extractSubgraph(this.visGraph, this.focusedVisNodeIds)
       const focusedVisLinks = _.map(focusedVisGraph.visLinks, visLink => {
-        return new VisLink(
-          visLink.weight,
-          () => this.visGraph.getVisNode(visLink.referenceId),
-          () => this.visGraph.getVisNode(visLink.citedById),
-          this.getPathColorByWeight(visLink.weight),
-          this.visConfig.path.opacity)
+        const visGraph = this.visGraph
+        return {
+          ...visLink,
+          referenceId: visLink.referenceId,
+          get reference () { return visGraph.getVisNode(this.referenceId) },
+          citedById: visLink.citedById,
+          get citedBy () { return visGraph.getVisNode(this.citedById) },
+          color: this.getPathColorByWeight(visLink.weight),
+          opacity: this.visConfig.path.opacity
+        }
       })
       const otherVisLinks =
         _.differenceWith(
@@ -164,28 +173,24 @@ export default {
             return aLink.referenceId === bLink.referenceId &&
               aLink.citedById === bLink.citedById
           })
-      const greyedOutVisLinks = _.map(otherVisLinks, visLink => {
-        return new VisLink(
-          visLink.weight,
-          visLink.getReference,
-          visLink.getCitedBy,
-          this.visConfig.path.greyedOutColor,
-          this.visConfig.path.greyedOutOpacity)
-      })
+      const greyedOutVisLinks = _.map(otherVisLinks, visLink => ({
+        ...visLink,
+        color: this.visConfig.path.greyedOutColor,
+        opacity: this.visConfig.path.greyedOutOpacity
+      }))
       const visLinks = [ ...greyedOutVisLinks, ...focusedVisLinks ]
       return visLinks
     }
   },
   asyncComputed: {
     baseVisGraph: {
-      default: new VisGraph({}),
+      default: new VisGraph(),
       async get () {
         if (!this.currCollId) {
-          return new VisGraph({})
+          return new VisGraph()
         }
         if (this.currUserId === 'sample') {
-          return VisGraph.fromFlatColl(
-            await getSampleCollection(this.currCollId))
+          return VisGraph.fromColl(await getSampleCollection(this.currCollId))
         }
         throw new Error('no backend yet at PvVisView.vue:baseVisGraph')
       }
@@ -210,7 +215,7 @@ export default {
         const greyedOutVisNodeIds =
           _.isEmpty(this.focusedVisNodeIds)
             ? []
-            : _.without(tempVisGraph.articleIds, ...this.focusedVisNodeIds)
+            : _.without(tempVisGraph.visNodeIds, ...this.focusedVisNodeIds)
         const greyedOutStatuses =
           _.mapValues(
             _.keyBy(greyedOutVisNodeIds),
@@ -220,9 +225,9 @@ export default {
           { [this.drawerArticleId]: { displayed: true } }
         const statusesMap =
           _.merge(
-            tempStatuses, hoveringStatus, selectedStatuses, greyedOutStatuses,
-            displayedStatus)
-        return VisGraph.setStatus(tempVisGraph, statusesMap)
+            {}, tempStatuses, hoveringStatus, selectedStatuses,
+            greyedOutStatuses, displayedStatus)
+        return VisGraph.mergeStats(tempVisGraph, statusesMap)
       }
     }
   },
@@ -344,7 +349,7 @@ export default {
       const index =
         _.findIndex(
           refVisNode.inGraphVisCitedBys,
-          ({ visNode }) => visNode.articleId === link.citedById)
+          ({ visNodeId }) => visNodeId === link.citedById)
       const nConns = refVisNode.inGraphVisCitedBys.length
       const totalWidth = nConns * this.visConfig.path.width
       const refRect = this.getCardRect(link.reference.colRow)
@@ -552,12 +557,12 @@ export default {
         if (visNode.visStatus.selected) {
           this.$store.commit('parseVis/set', {
             selectedArticleIds:
-              _.without(this.selectedVisNodeIds, visNode.articleId)
+              _.without(this.selectedVisNodeIds, visNode.visNodeId)
           })
         } else {
           this.$store.commit('parseVis/set', {
             selectedArticleIds:
-              _.union(this.selectedVisNodeIds, [ visNode.articleId ])
+              _.union(this.selectedVisNodeIds, [ visNode.visNodeId ])
           })
         }
         this.isDrawerOpenComputed = false
@@ -576,7 +581,7 @@ export default {
           currCollId: this.currCollId,
           currArtId: visNode.articleId,
           drawerState: { name: 'pv-drawer-article-view' },
-          selectedArticleIds: [ visNode.articleId ]
+          selectedArticleIds: [ visNode.visNodeId ]
         })
         this.isDrawerOpenComputed = true
       }
@@ -584,7 +589,7 @@ export default {
     onCardMouseEnter (visNode) {
       clearTimeout(this.hoverLingerTimer)
       this.$store.commit('parseVis/set', {
-        hoveringArticleId: visNode.articleId
+        hoveringArticleId: visNode.visNodeId
       })
     },
     onCardMouseLeave (visNode) {

@@ -33,10 +33,10 @@ function createRelations (arts) {
 
 function parseArticle (art) {
   return {
-    artId: getFirstArtHash(art),
+    artHash: getFirstArtHash(art),
     type: 'paper',
     title: _.isArray(art.title) ? art.title[0] : art.title,
-    abstract: art.abstract,
+    // abstract: art.abstract,
     year: art.year,
     authors: art.authors,
     venue: art.venue,
