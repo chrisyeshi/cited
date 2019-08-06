@@ -42,14 +42,14 @@ export default {
     myColls: null
   }),
   computed: {
-    ...mapState('parseVis', [ 'currUserId', 'currCollId' ]),
+    ...mapState('parseVis', [ 'currCollId' ]),
     isLoading () {
       return this.myColls === null
     }
   },
   methods: {
     async deleteMyColl (collId) {
-      if (!confirm('Are you sure you want delete the collection?')) {
+      if (!confirm('Are you sure you want to delete the collection?')) {
         return
       }
       try {
@@ -60,8 +60,7 @@ export default {
     },
     getMyCollTileStyle (coll) {
       const style = {}
-      if (this.currUserId === this.currUser.uid &&
-          this.currCollId === coll.collId) {
+      if (this.currCollId === coll.collId) {
         style.background = '#EBF5FB'
       }
       return style
@@ -82,14 +81,10 @@ export default {
     navigateToCollView (collId) {
       this.$router.push({
         name: 'parsevis',
-        query: { user: this.currUser.uid, coll: collId }
+        query: { coll: collId }
       })
-      this.$store.commit('parseVis/set', {
-        contentState: 'vis-view',
-        drawerState: { name: 'pv-drawer-collection-view' },
-        currUserId: this.currUser.uid,
-        currCollId: collId,
-        currArtId: null
+      this.$store.dispatch('parseVis/setCollArt', {
+        collId: collId, artId: null
       })
     },
     selectImportCollFile () {

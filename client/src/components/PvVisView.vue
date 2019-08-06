@@ -9,7 +9,7 @@
       <div class="cards-container" :style="cardsContainerStyle"
         @click="onCanvasClicked">
         <pv-vis-node-card v-for="node in visGraph.visNodes"
-          :key="node.articleId" ref="cards" :visNode="node"
+          :key="node.visNodeId" ref="cards" :visNode="node"
           :config="visConfig.card" :class="getCardClasses(node)"
           :style="getCardStyle(node)"
           :backgroundColor="getCardBackgroundColor(node)"
@@ -31,10 +31,6 @@ import { interpolateBuPu as interpolateColor } from 'd3-scale-chromatic'
 import getVisCardSideColor from './getviscardsidecolor.js'
 import { mapState } from 'vuex'
 import { VisGraph } from '@/components/visgraph.js'
-import ExpandableText from './ExpandableText.vue'
-import getSampleCollection from './getsamplecollection.js'
-import PvArticleForm from './PvArticleForm.vue'
-import PvExpandableAuthorsLinks from './PvExpandableAuthorsLinks.vue'
 import PvVisNodeCard from './PvVisNodeCard.vue'
 import resize from 'vue-resize-directive'
 import Vec from './vec.js'
@@ -42,9 +38,7 @@ import Vec from './vec.js'
 export default {
   name: 'PvVisView',
   directives: { resize },
-  components: {
-    ExpandableText, PvArticleForm, PvExpandableAuthorsLinks, PvVisNodeCard
-  },
+  components: { PvVisNodeCard },
   data () {
     return {
       visConfig: {
@@ -85,8 +79,8 @@ export default {
   },
   computed: {
     ...mapState('parseVis', [
-      'currUserId', 'currCollId', 'temporaryArticleIds', 'hoveringArticleId',
-      'selectedArticleIds'
+      'currCollId', 'currColl', 'currVisGraph', 'temporaryArticleIds',
+      'hoveringArticleId', 'selectedArticleIds'
     ]),
     canvasHeight () {
       const nRows = this.gridConfig.nRow
@@ -180,55 +174,41 @@ export default {
       }))
       const visLinks = [ ...greyedOutVisLinks, ...focusedVisLinks ]
       return visLinks
-    }
-  },
-  asyncComputed: {
-    baseVisGraph: {
-      default: new VisGraph(),
-      async get () {
-        if (!this.currCollId) {
-          return new VisGraph()
-        }
-        if (this.currUserId === 'sample') {
-          return VisGraph.fromColl(await getSampleCollection(this.currCollId))
-        }
-        throw new Error('no backend yet at PvVisView.vue:baseVisGraph')
-      }
     },
-    visGraph: {
-      default: new VisGraph({}),
-      async get () {
-        const tempVisGraph = this.baseVisGraph
-        const tempStatuses =
-          _.mapValues(
-            _.keyBy(this.temporaryArticleIds),
-            (value, artId) => this.baseVisGraph.has(artId)
-              ? { hovering: true }
-              : { temporary: true, hovering: true })
-        const hoveringStatus =
-          this.hoveringVisNodeId &&
-          { [this.hoveringVisNodeId]: { hovering: true } }
-        const selectedStatuses =
-          _.mapValues(
-            _.keyBy(this.selectedVisNodeIds),
-            (value, artId) => ({ selected: true }))
-        const greyedOutVisNodeIds =
-          _.isEmpty(this.focusedVisNodeIds)
-            ? []
-            : _.without(tempVisGraph.visNodeIds, ...this.focusedVisNodeIds)
-        const greyedOutStatuses =
-          _.mapValues(
-            _.keyBy(greyedOutVisNodeIds),
-            (value, artId) => ({ greyedOut: true }))
-        const displayedStatus =
-          this.drawerArticleId &&
-          { [this.drawerArticleId]: { displayed: true } }
-        const statusesMap =
-          _.merge(
-            {}, tempStatuses, hoveringStatus, selectedStatuses,
-            greyedOutStatuses, displayedStatus)
-        return VisGraph.mergeStats(tempVisGraph, statusesMap)
-      }
+    baseVisGraph () {
+      return this.currVisGraph || new VisGraph()
+    },
+    visGraph () {
+      const tempVisGraph = this.baseVisGraph
+      const tempStatuses =
+        _.mapValues(
+          _.keyBy(this.temporaryArticleIds),
+          (value, artId) => this.baseVisGraph.has(artId)
+            ? { hovering: true }
+            : { temporary: true, hovering: true })
+      const hoveringStatus =
+        this.hoveringVisNodeId &&
+        { [this.hoveringVisNodeId]: { hovering: true } }
+      const selectedStatuses =
+        _.mapValues(
+          _.keyBy(this.selectedVisNodeIds),
+          (value, artId) => ({ selected: true }))
+      const greyedOutVisNodeIds =
+        _.isEmpty(this.focusedVisNodeIds)
+          ? []
+          : _.without(tempVisGraph.visNodeIds, ...this.focusedVisNodeIds)
+      const greyedOutStatuses =
+        _.mapValues(
+          _.keyBy(greyedOutVisNodeIds),
+          (value, artId) => ({ greyedOut: true }))
+      const displayedStatus =
+        this.drawerArticleId &&
+        { [this.drawerArticleId]: { displayed: true } }
+      const statusesMap =
+        _.merge(
+          {}, tempStatuses, hoveringStatus, selectedStatuses,
+          greyedOutStatuses, displayedStatus)
+      return VisGraph.mergeStats(tempVisGraph, statusesMap)
     }
   },
   methods: {
@@ -571,17 +551,13 @@ export default {
         this.$router.push({
           name: 'parsevis',
           query: {
-            user: this.currUserId,
             coll: this.currCollId,
-            art: visNode.articleId
+            art: visNode.visNodeId
           }
         })
-        this.$store.commit('parseVis/set', {
-          currUserId: this.currUserId,
-          currCollId: this.currCollId,
-          currArtId: visNode.articleId,
-          drawerState: { name: 'pv-drawer-article-view' },
-          selectedArticleIds: [ visNode.visNodeId ]
+        this.$store.dispatch('parseVis/setCollArt', {
+          collId: this.currCollId,
+          artId: visNode.visNodeId
         })
         this.isDrawerOpenComputed = true
       }

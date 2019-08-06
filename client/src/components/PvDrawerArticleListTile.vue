@@ -21,17 +21,15 @@
 
 <script>
 import PvArticleHoverMixin from './pvarticlehovermixin.js'
-import PvArticleInfoMixin from './pvarticleinfomixin.js'
+import PvCollArtInfoMixin from './pvcollartinfomixin.js'
 import PvDrawerArticleStatsRow from '@/components/PvDrawerArticleStatsRow.vue'
 
 export default {
   name: 'PvDrawerArticleListTile',
   components: { PvDrawerArticleStatsRow },
-  mixins: [ PvArticleHoverMixin, PvArticleInfoMixin ],
+  mixins: [ PvArticleHoverMixin, PvCollArtInfoMixin ],
   props: {
-    userId: String,
-    collId: String,
-    artId: String
+    art: Object
   },
   data: () => ({
     sideWidth: '8px'

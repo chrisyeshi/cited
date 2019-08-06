@@ -21,8 +21,8 @@ function createRelations (arts) {
       _.forEach(arts, bRefArt => {
         if (isSameArtHash(aRefArt.artHash, bRefArt.artHash)) {
           relations.push({
-            referenceId: getFirstArtHash(bRefArt),
-            citedById: getFirstArtHash(citedByArt)
+            reference: getFirstArtHash(bRefArt),
+            citedBy: getFirstArtHash(citedByArt)
           })
         }
       })

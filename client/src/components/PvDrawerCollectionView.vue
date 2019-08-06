@@ -13,8 +13,7 @@
             <v-list-tile @click="exportCollection">
               <v-list-tile-title>Export</v-list-tile-title>
             </v-list-tile>
-            <v-list-tile v-if="currUserId !== 'sample'"
-              @click="deleteCollection">
+            <v-list-tile @click="deleteCollection">
               <v-list-tile-title>Delete</v-list-tile-title>
             </v-list-tile>
           </v-list>
@@ -29,9 +28,8 @@
           </expandable-text>
         </v-card-text>
       </v-card>
-      <pv-drawer-article-list-tile v-for="art in collArts" :key="art.artId"
-        :user-id="currUserId" :coll-id="currCollId" :art-id="art.artId"
-        class="my-3" @click="onClickArticle(art.artId)">
+      <pv-drawer-article-list-tile v-for="art in collArts" :key="art.artHash"
+        :art="art" class="my-3" @click="onClickArticle(art.artId)">
       </pv-drawer-article-list-tile>
     </v-list>
   </div>
@@ -40,12 +38,10 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
-import {
-  serializeSampleCollection
-} from './serializecollection.js'
 import ExpandableText from '@/components/ExpandableText.vue'
-import getSampleCollection from './getsamplecollection.js'
 import PvDrawerArticleListTile from '@/components/PvDrawerArticleListTile.vue'
+import * as firebase from 'firebase/app'
+import 'firebase/firestore'
 
 export default {
   name: 'PvDrawerCollectionView',
@@ -54,7 +50,10 @@ export default {
     descriptionLimit: 200
   }),
   computed: {
-    ...mapState('parseVis', [ 'currUserId', 'currCollId' ]),
+    ...mapState('parseVis', [ 'currCollId', 'currColl', 'collVisGraph' ]),
+    coll () {
+      return this.currColl
+    },
     collTitle () {
       return this.coll && this.coll.title
     },
@@ -65,19 +64,6 @@ export default {
       return this.coll && this.coll.articles
     }
   },
-  asyncComputed: {
-    async coll () {
-      if (!this.currUserId || !this.currCollId) {
-        return null
-      }
-      if (this.currUserId === 'sample') {
-        return getSampleCollection(this.currCollId)
-      }
-      throw new Error(
-        `invalid userId (${this.currUserId}) and/or` +
-        ` collId (${this.currCollId})`)
-    }
-  },
   methods: {
     back () {
       this.$store.commit('parseVis/set', {
@@ -85,24 +71,21 @@ export default {
       })
     },
     async deleteCollection () {
-      if (this.currUserId === 'sample') {
-        throw new Error(`cannot delete sample collection ${this.currCollId}`)
+      if (!confirm('Are you sure you want to delete the collection?')) {
+        return
+      }
+      try {
+        await firebase.firestore().doc(`collection/${this.currCollId}`).delete()
+      } catch (err) {
+        console.log('Error removing collection:', err)
       }
       this.$router.push({ name: 'parsevis' })
-      this.$store.commit('parseVis/set', {
-        currUserId: this.currUserId,
-        currCollId: null,
-        currArtId: null,
-        drawerState: { name: 'pv-drawer-collection-list' }
+      this.$store.dispatch('parseVis/setCurrArt', {
+        collId: null, artId: null
       })
     },
-    async exportCollection () {
-      const output = this.currUserId === 'sample'
-        ? serializeSampleCollection(this.coll)
-        : () => {
-          throw new Error(
-            'no backend yet at PvDrawerCollectionView.vue:exportCollection')
-        }
+    exportCollection () {
+      const output = this.coll
       const data = JSON.stringify(output, null, 2)
       const blob = new Blob([ data ], { type: 'text/plain' })
       const e = document.createEvent('MouseEvents')
@@ -118,13 +101,13 @@ export default {
     onClickArticle (artId) {
       this.$router.push({
         name: 'parsevis',
-        query: { user: this.currUserId, coll: this.currCollId, art: artId }
+        query: { coll: this.currCollId, art: artId }
+      })
+      this.$store.dispatch('parseVis/setCollArt', {
+        currCollId: this.currCollId,
+        currArtId: artId
       })
       this.$store.commit('parseVis/set', {
-        currUserId: this.currUserId,
-        currCollId: this.currCollId,
-        currArtId: artId,
-        drawerState: { name: 'pv-drawer-article-view' },
         temporaryArticleIds:
           _.union(this.$store.state.temporaryArticleIds, [ artId ]),
         selectedArticleIds:
