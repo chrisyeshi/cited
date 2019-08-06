@@ -29,7 +29,7 @@
         </v-card-text>
       </v-card>
       <pv-drawer-article-list-tile v-for="art in collArts" :key="art.artHash"
-        :art="art" class="my-3" @click="onClickArticle(art.artId)">
+        :art="art" class="my-3" @click="onClickArticle(art.artHash)">
       </pv-drawer-article-list-tile>
     </v-list>
   </div>
@@ -104,8 +104,8 @@ export default {
         query: { coll: this.currCollId, art: artId }
       })
       this.$store.dispatch('parseVis/setCollArt', {
-        currCollId: this.currCollId,
-        currArtId: artId
+        collId: this.currCollId,
+        artId: artId
       })
       this.$store.commit('parseVis/set', {
         temporaryArticleIds:

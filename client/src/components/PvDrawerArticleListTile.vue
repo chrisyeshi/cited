@@ -20,9 +20,11 @@
 </template>
 
 <script>
-import PvArticleHoverMixin from './pvarticlehovermixin.js'
+import createPvArticleHoverMixin from '@/components/pvarticlehovermixin.js'
 import PvCollArtInfoMixin from './pvcollartinfomixin.js'
 import PvDrawerArticleStatsRow from '@/components/PvDrawerArticleStatsRow.vue'
+
+const PvArticleHoverMixin = createPvArticleHoverMixin(obj => obj.art.artHash)
 
 export default {
   name: 'PvDrawerArticleListTile',

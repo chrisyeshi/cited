@@ -57,19 +57,18 @@ export default {
         // TODO: article view
         throw new Error('full screen article view is not implemented yet.')
       }
-      throw new Error('unknown information for fetching collections.')
+      throw new Error(`unknown information for fetching collections:
+        collId = ${collId} and artId = ${artId}`)
     }
   },
   actions: {
     async setCollArt (context, { collId, artId }) {
-      if (context.state.currCollId === collId &&
-          context.state.currArtId === artId) {
-        // nothing changes
-        return
-      }
       const prevCollId = context.state.currCollId
       const prevArtId = context.state.currArtId
       context.commit('setCollArtId', { collId, artId })
+      if (prevCollId === collId && prevArtId === artId) {
+        return
+      }
       let currColl = null
       let currVisGraph = null
       let currArt = null
