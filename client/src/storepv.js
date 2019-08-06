@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
 import { VisGraph } from '@/components/visgraph.js'
@@ -69,10 +70,10 @@ export default {
       if (prevCollId === collId && prevArtId === artId) {
         return
       }
-      let currColl = null
-      let currVisGraph = null
-      let currArt = null
-      if (prevCollId !== collId) {
+      let currColl = _.isNil(collId) ? null : context.state.currColl
+      let currVisGraph = _.isNil(collId) ? null : context.state.currVisGraph
+      let currArt = _.isNil(artId) ? null : context.state.currArt
+      if (prevCollId !== collId && !_.isNil(collId)) {
         // collection changes
         const docRef = firebase.firestore().doc(`collections/${collId}`)
         const snapshot = await docRef.get()
@@ -80,12 +81,15 @@ export default {
         currColl = coll
         currVisGraph = VisGraph.fromColl(currColl)
       }
-      if (prevArtId !== artId) {
+      if (prevArtId !== artId && !_.isNil(artId)) {
         // article chanages
-        const docRef = firebase.firestore().doc(`articles`)
+        const docRef = firebase.firestore().doc(`articles/${artId}`)
         const snapshot = await docRef.get()
-        const art = snapshot.data()
-        currArt = art
+        if (snapshot.exists) {
+          currArt = snapshot.data()
+        } else {
+          currArt = currVisGraph ? currVisGraph.getArt(artId) : null
+        }
       }
       context.commit('set', {
         currColl, currVisGraph, currArt

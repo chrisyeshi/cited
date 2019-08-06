@@ -33,7 +33,7 @@
             <v-flex v-for="art in references" :key="art.artId"
               style="font-size: 12px;">
               <pv-drawer-article-relative-card
-                :user-id="currUserId" :coll-id="currCollId" :art-id="art.artId"
+                :coll-id="currCollId" :art-id="art.artId"
                 @click="onClickArticle(art.artId)">
               </pv-drawer-article-relative-card>
             </v-flex>
@@ -51,7 +51,7 @@
             <v-flex v-for="art in citedBys" :key="art.artId"
               style="font-size: 12px;">
               <pv-drawer-article-relative-card
-                :user-id="currUserId" :coll-id="currCollId" :art-id="art.artId"
+                :coll-id="currCollId" :art-id="art.artId"
                 @click="onClickArticle(art.artId)">
               </pv-drawer-article-relative-card>
             </v-flex>
@@ -72,7 +72,6 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import ExpandableText from '@/components/ExpandableText.vue'
-import getSampleCollection from './getsamplecollection.js'
 import PvDrawerArticleRelativeCard from '@/components/PvDrawerArticleRelativeCard.vue'
 import PvDrawerArticleStatsRow from '@/components/PvDrawerArticleStatsRow.vue'
 import PvExpandableAuthorsLinks from '@/components/PvExpandableAuthorsLinks.vue'
@@ -89,7 +88,10 @@ export default {
     abstractLimit: 200
   }),
   computed: {
-    ...mapState('parseVis', [ 'currUserId', 'currCollId', 'currArtId' ]),
+    ...mapState('parseVis', [ 'currCollId', 'currArtId', 'currArt' ]),
+    art () {
+      return this.currArt
+    },
     artLabel () { return `${this.firstAuthorSurname} ${this.year}` },
     abstract () { return this.art && this.art.abstract },
     authors () { return this.art ? this.art.authors : [] },
@@ -114,43 +116,15 @@ export default {
     },
     year () { return this.art && this.art.year }
   },
-  asyncComputed: {
-    art: {
-      async get () {
-        if (this.currUserId === 'sample') {
-          const coll = await getSampleCollection(this.currCollId)
-          const flatArtsMap =
-            Object.assign(
-              {}, ..._.map(coll.articles, art => ({ [art.artId]: art })))
-          const flatArt =
-            _.find(coll.articles, art => art.artId === this.currArtId)
-          const art = {
-            ...flatArt,
-            references: { articles: [] },
-            citedBys: { articles: [] }
-          }
-          _.forEach(coll.relations, relation => {
-            if (relation.referenceId === art.artId) {
-              art.citedBys.articles.push(flatArtsMap[relation.citedById])
-            } else if (relation.citedById === art.artId) {
-              art.references.articles.push(flatArtsMap[relation.referenceId])
-            }
-          })
-          return art
-        }
-        throw new Error('no backend yet at PvDrawerArticleView.vue:art')
-      },
-      watch: [ 'currUserId', 'currCollId', 'currArtId' ]
-    }
-  },
   methods: {
     back () {
       this.$router.push({
         name: 'parsevis',
-        query: { user: this.currUserId, coll: this.currCollId }
+        query: { coll: this.currCollId }
       })
+      this.$store.dispatch(
+        'parseVis/setCollArt', { collId: this.currCollId, artId: null })
       this.$store.commit('parseVis/set', {
-        drawerState: { name: 'pv-drawer-collection-view' },
         temporaryArticleIds:
           _.without(this.$store.state.temporaryArticleIds, this.currArtId),
         selectedArticleIds:
@@ -160,13 +134,11 @@ export default {
     onClickArticle (artId) {
       this.$router.push({
         name: 'parsevis',
-        query: { user: this.currUserId, coll: this.currCollId, art: artId }
+        query: { coll: this.currCollId, art: artId }
       })
+      this.$store.dispatch(
+        'parseVis/setCollArt', { collId: this.currCollId, artId: artId })
       this.$store.commit('parseVis/set', {
-        currUserId: this.currUserId,
-        currCollId: this.currCollId,
-        currArtId: artId,
-        drawerState: { name: 'pv-drawer-article-view' },
         temporaryArticleIds:
           _.union(this.$store.state.temporaryArticleIds, [ artId ]),
         selectedArticleIds:
