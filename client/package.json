@@ -24,6 +24,7 @@
     "dexie": "^2.0.4",
     "dotenv-webpack": "^1.7.0",
     "firebase": "^6.3.3",
+    "firebaseui": "^4.1.0",
     "flipping": "^1.1.0",
     "form-data": "^2.5.0",
     "lodash": "^4.17.10",
