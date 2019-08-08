@@ -33,6 +33,19 @@ export default {
     },
     setCollArtId (state, { collId, artId }) {
       // commit state
+      if (!collId && !artId) {
+        // landing page or home view
+        Object.assign(state, {
+          contentState: 'home-view',
+          currCollId: null,
+          currColl: null,
+          currVisGraph: null,
+          currArtId: null,
+          currArt: null,
+          drawerState: { name: 'pv-drawer-collection-list' }
+        })
+        return
+      }
       if (collId && !artId) {
         // vis view with collection drawer
         Object.assign(state, {
@@ -87,8 +100,6 @@ export default {
         const snapshot = await docRef.get()
         if (snapshot.exists) {
           currArt = snapshot.data()
-        } else {
-          currArt = currVisGraph ? currVisGraph.getArt(artId) : null
         }
       }
       context.commit('set', {

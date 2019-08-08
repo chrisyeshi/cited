@@ -106,11 +106,11 @@ export class ArtGraph {
   }
 
   getInGraphReferenceIds (nodeId) {
-    return this.adjLists[nodeId].references
+    return _.property('references')(this.adjLists[nodeId])
   }
 
   getInGraphCitedByIds (nodeId) {
-    return this.adjLists[nodeId].citedBys
+    return _.property('citedBys')(this.adjLists[nodeId])
   }
 
   getNodeLevels (rootProp, connProp) {

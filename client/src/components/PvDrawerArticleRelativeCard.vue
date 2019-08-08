@@ -8,18 +8,18 @@
 </template>
 
 <script>
-import PvArticleHoverMixin from './pvarticlehovermixin.js'
-import PvArticleInfoMixin from './pvarticleinfomixin.js'
+import createPvArticleHoverMixin from '@/components/pvarticlehovermixin.js'
+import PvCollArtInfoMixin from '@/components/pvcollartinfomixin.js'
 import PvVisMetaCard from '@/components/PvVisMetaCard.vue'
+
+const PvArticleHoverMixin = createPvArticleHoverMixin(obj => obj.art.artHash)
 
 export default {
   name: 'PvDrawerArticleRelativeCard',
   components: { PvVisMetaCard },
-  mixins: [ PvArticleHoverMixin, PvArticleInfoMixin ],
+  mixins: [ PvArticleHoverMixin, PvCollArtInfoMixin ],
   props: {
-    userId: String,
-    collId: String,
-    artId: String
+    art: Object
   },
   computed: {
     elevation () {
