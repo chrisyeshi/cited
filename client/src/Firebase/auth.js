@@ -5,8 +5,7 @@ export function fetchUserInfo (firebaseUser) {
     uid: firebaseUser.uid,
     name: firebaseUser.displayName,
     email: firebaseUser.email,
-    photo: firebaseUser.photoURL,
-    isNew: firebaseUser.metadata.lastSignInTime === firebaseUser.metadata.creationTime
+    photo: firebaseUser.photoURL
   }
 }
 

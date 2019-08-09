@@ -16,6 +16,7 @@ const defaultState = {
   currVisGraph: null,
   currArtId: null,
   currArt: null,
+  isDrawerOpen: true,
   temporaryArticleIds: [],
   hoveringArticleId: null,
   selectedArticleIds: []

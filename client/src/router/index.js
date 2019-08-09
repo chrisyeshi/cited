@@ -8,12 +8,20 @@ import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import { onUserSignIn } from '@/Firebase/auth'
 import UserAuth from '@/components/UserAuth'
+import PvHomeView from '@/components/PvHomeView.vue'
 
 const Contail = () => import('@/components/Contail')
 const Kanban = () => import('@/components/Kanban')
-const ParseVis = () => import('@/components/ParseVis')
 const Smooth = () => import('@/components/Smooth')
 const UserPage = () => import('@/pages/User')
+const PvCollectionView = () => import('@/components/PvCollectionView.vue')
+const PvDrawerCollectionView =
+  () => import('@/components/PvDrawerCollectionView')
+const PvDrawerCollectionList =
+  () => import('@/components/PvDrawerCollectionList')
+const PvDrawerArticleView = () => import('@/components/PvDrawerArticleView.vue')
+const PvDrawerRelativeListView =
+  () => import('@/components/PvDrawerRelativeListView.vue')
 
 Vue.use(Router)
 Vue.use(Resource)
@@ -47,21 +55,24 @@ let router = new Router({
     },
     { path: '/kanban', component: Kanban },
     { path: '/contail', component: Contail },
-    { path: '/landing', component: LandingPage, meta: { requireAuth: true } },
+    { path: '/landing', component: LandingPage },
+    { path: '/', component: PvHomeView },
     {
-      path: '/',
-      name: 'parsevis',
-      component: ParseVis,
-      props: (route) => ({
-        inputUserId: route.query.user || route.query.userId,
-        inputCollId:
-          route.query.coll || route.query.collId ||
-          route.query.collection || route.query.collectionId,
-        inputArtId:
-          route.query.art || route.query.artId ||
-          route.query.article || route.query.articleId
-      })
+      path: '/coll/:collId',
+      component: PvCollectionView,
+      props: true,
+      children: [
+        { path: '', component: PvDrawerCollectionView },
+        { path: 'list', component: PvDrawerCollectionList },
+        { path: ':artId', component: PvDrawerArticleView },
+        {
+          path: ':artId/:relationProp',
+          component: PvDrawerRelativeListView,
+          props: true
+        }
+      ]
     },
+    // { path: '/art/:artId', component: PvArtView },
     {
       path: '/auth/:action',
       name: 'UserAuth',

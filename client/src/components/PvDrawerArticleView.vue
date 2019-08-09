@@ -193,40 +193,13 @@ export default {
   },
   methods: {
     back () {
-      this.$router.push({
-        name: 'parsevis',
-        query: { coll: this.currCollId }
-      })
-      this.$store.dispatch(
-        'parseVis/setCollArt', { collId: this.currCollId, artId: null })
-      this.$store.commit('parseVis/set', {
-        temporaryArticleIds:
-          _.without(this.$store.state.temporaryArticleIds, this.currArtId),
-        selectedArticleIds:
-          _.without(this.$store.state.selectedArticleIds, this.currArtId)
-      })
+      this.$router.push(`/coll/${this.currCollId}`)
     },
     onClickArticle (artId) {
-      this.$router.push({
-        name: 'parsevis',
-        query: { coll: this.currCollId, art: artId }
-      })
-      this.$store.dispatch(
-        'parseVis/setCollArt', { collId: this.currCollId, artId: artId })
-      this.$store.commit('parseVis/set', {
-        temporaryArticleIds:
-          _.union(this.$store.state.temporaryArticleIds, [ artId ]),
-        selectedArticleIds:
-          _.union(this.$store.state.selectedArticleIds, [ artId ])
-      })
+      this.$router.push(`/coll/${this.currCollId}/${artId}`)
     },
     onClickMoreRelatives (relationProp) {
-      this.$store.commit('parseVis/set', {
-        drawerState: {
-          name: 'pv-drawer-relative-list-view',
-          props: { relationProp }
-        }
-      })
+      this.$router.push(`/coll/${this.currCollId}/${this.currArtId}/references`)
     },
     trace (value) {
       console.log(value)

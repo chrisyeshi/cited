@@ -4,7 +4,7 @@
       <v-toolbar-title class="page-title">Cited</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn flat :to="{ name: 'parsevis', query: { user: 'sample' } }"
+        <v-btn flat @click="$emit('input', true)"
           v-ga="$ga.event.bind(this, 'buttons', 'click', 'toolbar demo')">
           Explore
         </v-btn>
@@ -21,8 +21,9 @@
             <v-flex class="mt-5"
               style="display: flex; justify-content: center;">
               <div style="position: relative;">
-                <!-- <h1 class="responsive-font-size">Discovery Engine</h1> -->
-                <h1 style="font-family: 'Lora', serif; font-size: 100px;">Cited</h1>
+                <h1 style="font-family: 'Lora', serif; font-size: 100px;">
+                  Cited
+                </h1>
                 <p class="title white--text px-2 py-1"
                   style="position: absolute; top: -8px; right: -20px; border-radius: 25px; background: #FC5457;">
                   alpha
@@ -40,7 +41,7 @@
             </v-flex>
             <v-flex class="mt-4 text-xs-center action-buttons-container">
               <v-btn large dark color="cyan darken-4"
-                :to="{ name: 'parsevis', query: { user: 'sample' } }"
+                @click="$emit('input', true)"
                 v-ga="$ga.event.bind(this, 'buttons', 'click', 'center demo')">
                 Explore
               </v-btn>
@@ -211,6 +212,9 @@ export default {
     ResponsiveTextLogo
   },
   mixins: [ AuthMixin ],
+  props: {
+    value: Boolean
+  },
   data () {
     return {
       email: '',

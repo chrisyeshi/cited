@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { mapState } from 'vuex'
 import ExpandableText from '@/components/ExpandableText.vue'
 import PvDrawerArticleListTile from '@/components/PvDrawerArticleListTile.vue'
@@ -66,9 +65,7 @@ export default {
   },
   methods: {
     back () {
-      this.$store.commit('parseVis/set', {
-        drawerState: { name: 'pv-drawer-collection-list' }
-      })
+      this.$router.push(`/coll/${this.currCollId}/list`)
     },
     async deleteCollection () {
       if (!confirm('Are you sure you want to delete the collection?')) {
@@ -79,10 +76,7 @@ export default {
       } catch (err) {
         console.log('Error removing collection:', err)
       }
-      this.$router.push({ name: 'parsevis' })
-      this.$store.dispatch('parseVis/setCurrArt', {
-        collId: null, artId: null
-      })
+      this.$router.push('/')
     },
     exportCollection () {
       const output = this.coll
@@ -99,20 +93,7 @@ export default {
       a.dispatchEvent(e)
     },
     onClickArticle (artId) {
-      this.$router.push({
-        name: 'parsevis',
-        query: { coll: this.currCollId, art: artId }
-      })
-      this.$store.dispatch('parseVis/setCollArt', {
-        collId: this.currCollId,
-        artId: artId
-      })
-      this.$store.commit('parseVis/set', {
-        temporaryArticleIds:
-          _.union(this.$store.state.temporaryArticleIds, [ artId ]),
-        selectedArticleIds:
-          _.union(this.$store.state.selectedArticleIds, [ artId ])
-      })
+      this.$router.push(`/coll/${this.currCollId}/${artId}`)
     }
   }
 }

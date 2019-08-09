@@ -79,13 +79,7 @@ export default {
       }
     },
     navigateToCollView (collId) {
-      this.$router.push({
-        name: 'parsevis',
-        query: { coll: collId }
-      })
-      this.$store.dispatch('parseVis/setCollArt', {
-        collId: collId, artId: null
-      })
+      this.$router.push(`/coll/${collId}`)
     },
     selectImportCollFile () {
       let input = document.createElement('input')

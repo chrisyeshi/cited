@@ -2,15 +2,7 @@
   <div v-if="isWaitingForAuth"></div>
   <landing-page v-else-if="isLandingPageVisible"></landing-page>
   <v-app v-else overflow-hidden>
-    <v-toolbar app flat clipped-left>
-      <v-toolbar-title @click="toHome" class="page-title">
-        Cited
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <sign-in-button></sign-in-button>
-      </v-toolbar-items>
-    </v-toolbar>
+    <pv-app-bar></pv-app-bar>
     <v-navigation-drawer v-if="isDrawerVisible" app stateless clipped
       :width="drawerWidth" v-model="isDrawerOpen" style="overflow: visible;">
       <pv-drawer-toggle-button v-model="isDrawerOpen"></pv-drawer-toggle-button>
@@ -27,8 +19,6 @@
       @add-to-vis="onAddArticleToGraph"
       @article-edited="articleEdited">
     </pv-vis-view>
-    <pv-list-view v-if="isListViewVisible" :isDrawerOpen="isDrawerOpen">
-    </pv-list-view>
   </v-app>
 </template>
 
@@ -36,13 +26,13 @@
 import _ from 'lodash'
 import AuthMixin from '@/components/authmixin.js'
 import LandingPage from '@/components/LandingPage.vue'
+import PvAppBar from '@/components/PvAppBar.vue'
 import PvDrawerCollectionList from '@/components/PvDrawerCollectionList.vue'
 import PvDrawerCollectionView from '@/components/PvDrawerCollectionView.vue'
 import PvDrawerArticleView from '@/components/PvDrawerArticleView.vue'
 import PvDrawerRelativeListView from '@/components/PvDrawerRelativeListView.vue'
 import PvDrawerToggleButton from '@/components/PvDrawerToggleButton.vue'
 import PvHomeCollectionList from '@/components/PvHomeCollectionList.vue'
-import PvListView from './PvListView.vue'
 import PvVisView from './PvVisView.vue'
 import SignInButton from './SignInButton.vue'
 import theArticlePool from './pvarticlepool.js'
@@ -53,13 +43,13 @@ export default {
   name: 'ParseVis',
   components: {
     LandingPage,
+    PvAppBar,
     PvDrawerArticleView,
     PvDrawerCollectionList,
     PvDrawerCollectionView,
     PvDrawerRelativeListView,
     PvDrawerToggleButton,
     PvHomeCollectionList,
-    PvListView,
     PvVisView,
     SignInButton
   },
@@ -94,9 +84,6 @@ export default {
     },
     isVisViewVisible () {
       return this.contentState === 'vis-view'
-    },
-    isListViewVisible () {
-      return this.contentState === 'list-view'
     },
     isHomeViewVisible () {
       return this.contentState === 'home-view'
@@ -193,16 +180,6 @@ export default {
     trace (value) {
       console.log(value)
       return value
-    },
-    toHome () {
-      this.$router.push({ name: 'parsevis' })
-      this.$store.commit('parseVis/reset')
-    },
-    toVisView () {
-      this.$store.commit('parseVis/set', { contentState: 'vis-view' })
-    },
-    toListView () {
-      this.$store.commit('parseVis/set', { contentState: 'list-view' })
     }
   },
   created () {

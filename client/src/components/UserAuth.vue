@@ -1,14 +1,8 @@
 <template>
   <v-app>
     <v-content>
-      <v-container
-        fluid
-        fill-height
-      >
-        <v-layout
-          align-center
-          justify-center
-        >
+      <v-container fluid fill-height>
+        <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
             <v-card>
               <v-card-title>
@@ -18,10 +12,14 @@
                 <v-container grid-list-md>
                   <v-layout wrap>
                     <v-flex xs12>
-                      <v-text-field label="Email*" v-model="email" required outline></v-text-field>
+                      <v-text-field
+                        label="Email*" v-model="email" required outline>
+                      </v-text-field>
                     </v-flex>
                     <v-flex xs12>
-                      <v-text-field label="Password*" v-model="password" type="password" required outline></v-text-field>
+                      <v-text-field label="Password*" v-model="password"
+                        type="password" required outline>
+                      </v-text-field>
                     </v-flex>
                     <v-flex xs12>
                       <div id="firebaseui-auth-container"></div>

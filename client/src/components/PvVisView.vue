@@ -79,8 +79,8 @@ export default {
   },
   computed: {
     ...mapState('parseVis', [
-      'currCollId', 'currColl', 'currVisGraph', 'temporaryArticleIds',
-      'hoveringArticleId', 'selectedArticleIds'
+      'currCollId', 'currColl', 'currVisGraph', 'isDrawerOpen',
+      'temporaryArticleIds', 'hoveringArticleId', 'selectedArticleIds'
     ]),
     canvasHeight () {
       const nRows = this.gridConfig.nRow
@@ -127,6 +127,14 @@ export default {
     },
     gridConfig () {
       return this.getGridConfig()
+    },
+    isDrawerOpenComputed: {
+      set (isDrawerOpen) {
+        this.$store.commit('parseVis/set', { isDrawerOpen })
+      },
+      get () {
+        return this.isDrawerOpen
+      }
     },
     maxReferenceLevel () { return Math.max(0, this.visGraph.grid.length - 1) },
     overlayContainerStyle () {
@@ -548,17 +556,7 @@ export default {
         this.isDrawerOpenComputed = false
       } else {
         // single selection
-        this.$router.push({
-          name: 'parsevis',
-          query: {
-            coll: this.currCollId,
-            art: visNode.visNodeId
-          }
-        })
-        this.$store.dispatch('parseVis/setCollArt', {
-          collId: this.currCollId,
-          artId: visNode.visNodeId
-        })
+        this.$router.push(`/coll/${this.currCollId}/${visNode.visNodeId}`)
         this.isDrawerOpenComputed = true
       }
     },

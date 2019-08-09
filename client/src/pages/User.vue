@@ -23,7 +23,6 @@
 import CollectionList from '@/components/CollectionList'
 import UserMenu from '@/components/UserMenu'
 import { users } from '@/Firebase/database'
-import { getUser } from '@/Firebase/auth'
 
 export default {
   name: 'UserPage',
@@ -40,12 +39,6 @@ export default {
       description: null
     }
   }),
-  created () {
-    this.user = getUser()
-    if (this.user.isNew) {
-      users.register(this.user)
-    }
-  },
   mounted () {
     users.getCollections().then(collections => {
       this.$refs.UserCollections.collections = collections

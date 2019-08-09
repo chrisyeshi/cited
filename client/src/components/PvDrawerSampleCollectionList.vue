@@ -43,17 +43,7 @@ export default {
       return style
     },
     navToCollView (collId) {
-      this.$router.push({
-        name: 'parsevis',
-        query: { user: 'sample', coll: collId }
-      })
-      this.$store.commit('parseVis/set', {
-        contentState: 'vis-view',
-        drawerState: { name: 'pv-drawer-collection-view' },
-        currUserId: 'sample',
-        currCollId: collId,
-        currArtId: null
-      })
+      this.$router.push(`/coll/${collId}`)
     }
   }
 }

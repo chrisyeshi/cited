@@ -90,33 +90,10 @@ export default {
   },
   methods: {
     back () {
-      this.$router.push({
-        name: 'parsevis',
-        query: {
-          user: this.currUserId,
-          coll: this.currCollId,
-          art: this.currArtId
-        }
-      })
-      this.$store.commit('parseVis/set', {
-        drawerState: { name: 'pv-drawer-article-view' }
-      })
+      this.$router.push(`/coll/${this.currCollId}/${this.currArtId}`)
     },
     onClickArticle (artId) {
-      this.$router.push({
-        name: 'parsevis',
-        query: { user: this.currUserId, coll: this.currCollId, art: artId }
-      })
-      this.$store.commit('parseVis/set', {
-        currUserId: this.currUserId,
-        currCollId: this.currCollId,
-        currArtId: artId,
-        drawerState: { name: 'pv-drawer-article-view' },
-        temporaryArticleIds:
-          _.union(this.$store.state.temporaryArticleIds, [ artId ]),
-        selectedArticleIds:
-          _.union(this.$store.state.selectedArticleIds, [ artId ])
-      })
+      this.$router.push(`/coll/${this.currCollId}/${artId}`)
     }
   }
 }
