@@ -100,7 +100,10 @@ export default {
         const docRef = firebase.firestore().doc(`articles/${artId}`)
         const snapshot = await docRef.get()
         if (snapshot.exists) {
-          currArt = snapshot.data()
+          currArt = {
+            ...snapshot.data(),
+            artHash: snapshot.id
+          }
         }
       }
       context.commit('set', {

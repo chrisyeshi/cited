@@ -33,6 +33,11 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    match /citedBys/{document=**} {
+      allow read: if isAuthenticated();
+      allow read, write: if isAdmin();
+    }
+
     match /venues/{document=**} {
       allow read: if isAuthenticated();
       allow read, write: if isAdmin();

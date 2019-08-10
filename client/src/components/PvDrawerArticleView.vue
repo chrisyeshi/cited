@@ -101,9 +101,7 @@ export default {
     ...mapState('parseVis', [
       'currCollId', 'currVisGraph', 'currArtId', 'currArt'
     ]),
-    art () {
-      return this.currArt || this.visGraph.getArt(this.currArtId)
-    },
+    art () { return this.currArt || this.visGraph.getArt(this.currArtId) },
     artLabel () { return `${this.firstAuthorSurname} ${this.year}` },
     artStats () {
       const stats = []
@@ -199,7 +197,8 @@ export default {
       this.$router.push(`/coll/${this.currCollId}/${artId}`)
     },
     onClickMoreRelatives (relationProp) {
-      this.$router.push(`/coll/${this.currCollId}/${this.currArtId}/references`)
+      this.$router.push(
+        `/coll/${this.currCollId}/${this.currArtId}/${relationProp}`)
     },
     trace (value) {
       console.log(value)
