@@ -1,0 +1,2124 @@
+{
+  "collId": "collection-id",
+  "title": "collection title",
+  "description": "collection description",
+  "articles": [
+    {
+      "artHash": "pan-2019-93d5c1f50aa15490",
+      "type": "paper",
+      "title": "Urban Traffic Prediction from Spatio-Temporal Data Using Deep Meta Learning",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Pan",
+          "given": "Zheyi"
+        },
+        {
+          "surname": "Liang",
+          "given": "Yuxuan"
+        },
+        {
+          "surname": "Wang",
+          "given": "Weifeng"
+        },
+        {
+          "surname": "Yu",
+          "given": "Yong"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Yu"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Junbo"
+        }
+      ],
+      "venue": {
+        "name": "The 25th ACM SIGKDD Conference on Knowledge Discovery & Data Mining (KDD'19)"
+      },
+      "nReferences": 31
+    },
+    {
+      "artHash": "liu-2018-b585d419045cfdf",
+      "type": "paper",
+      "title": "Efficient Similar Region Search with Deep Metric Learning",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Liu",
+          "given": "Yiding"
+        },
+        {
+          "surname": "Zhao",
+          "given": "Kaiqi"
+        },
+        {
+          "surname": "Cong",
+          "given": "Gao"
+        }
+      ],
+      "venue": {
+        "name": "KDD"
+      },
+      "nReferences": 35,
+      "nCitedBys": 1
+    },
+    {
+      "artHash": "zhao-2018-5fb92964e5c7b5bd",
+      "type": "paper",
+      "title": "On Prediction of User Destination by Sub-Trajectory Understanding: A Deep Learning based Approach",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Zhao",
+          "given": "Jing"
+        },
+        {
+          "surname": "Xu",
+          "given": "Jiajie"
+        },
+        {
+          "surname": "Zhou",
+          "given": "Rui"
+        },
+        {
+          "surname": "Zhao",
+          "given": "Pengpeng"
+        },
+        {
+          "surname": "Liu",
+          "given": "Chengfei"
+        },
+        {
+          "surname": "Zhu",
+          "given": "Feng"
+        }
+      ],
+      "venue": {
+        "name": "The 27th ACM International Conference on Information and Knowledge Management (CIKM '18)"
+      },
+      "nReferences": 26
+    },
+    {
+      "artHash": "chen-2018-242c167adaa56135",
+      "type": "paper",
+      "title": "Exploiting Spatio-Temporal Correlations with Multiple 3D Convolutional Neural Networks for Citywide Vehicle Flow Prediction",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Chen",
+          "given": "Cen"
+        },
+        {
+          "surname": "Li",
+          "given": "Keping"
+        },
+        {
+          "surname": "Teo",
+          "given": "Sin"
+        },
+        {
+          "surname": "Chen",
+          "given": "Guizi"
+        },
+        {
+          "surname": "Zou",
+          "given": "Xiaofeng"
+        },
+        {
+          "surname": "Yang",
+          "given": "Xulei"
+        },
+        {
+          "surname": "Vijay",
+          "given": "Ramaseshan"
+        },
+        {
+          "surname": "Feng",
+          "given": "Jiashi"
+        },
+        {
+          "surname": "Zeng",
+          "given": "Zeng"
+        }
+      ],
+      "venue": {
+        "name": "2018 IEEE International Conference on Data Mining (ICDM)"
+      },
+      "nReferences": 33,
+      "nCitedBys": 4
+    },
+    {
+      "artHash": "gong-2018-60e720efa6375ca6",
+      "type": "paper",
+      "title": "Network-wide Crowd Flow Prediction of Sydney Trains via Customized Online Non-negative Matrix Factorization",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Gong",
+          "given": "Yongshun"
+        },
+        {
+          "surname": "Li",
+          "given": "Zhibin"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Jian"
+        },
+        {
+          "surname": "Liu",
+          "given": "Weiwei"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Yuan"
+        },
+        {
+          "surname": "Kirsch",
+          "given": "Christina"
+        }
+      ],
+      "venue": {
+        "name": "CIKM"
+      },
+      "nReferences": 29,
+      "nCitedBys": 1
+    },
+    {
+      "artHash": "wang-2019-c2508fa0f3bea9be",
+      "type": "paper",
+      "title": "Enhancing transportation systems via deep learning: A survey",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Wang",
+          "given": "Yuan"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Dongxiang"
+        },
+        {
+          "surname": "Liu",
+          "given": "Ying"
+        },
+        {
+          "surname": "Dai",
+          "given": "Bo"
+        },
+        {
+          "surname": "Lee",
+          "given": "Loo"
+        }
+      ],
+      "nReferences": 218,
+      "nCitedBys": 6
+    },
+    {
+      "artHash": "yao-2019-cda228e0e1723463",
+      "type": "paper",
+      "title": "Learning from Multiple Cities: A Meta-Learning Approach for Spatial-Temporal Prediction",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Yao",
+          "given": "Huaxiu"
+        },
+        {
+          "surname": "Liu",
+          "given": "Yiding"
+        },
+        {
+          "surname": "Wei",
+          "given": "Ying"
+        },
+        {
+          "surname": "Tang",
+          "given": "Xianfeng"
+        },
+        {
+          "surname": "Li",
+          "given": "Zhenhui"
+        }
+      ],
+      "venue": {
+        "name": "WWW"
+      },
+      "nReferences": 45
+    },
+    {
+      "artHash": "shi-2018-37455629a702887f",
+      "type": "paper",
+      "title": "Machine Learning for Spatiotemporal Sequence Forecasting: A Survey",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Shi",
+          "given": "Xingjian"
+        },
+        {
+          "surname": "Yeung",
+          "given": "Dit-Yan"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 92,
+      "nCitedBys": 3
+    },
+    {
+      "artHash": "li-2018-3dd737e81b2d2f12",
+      "type": "paper",
+      "title": "Non-locally Enhanced Encoder-Decoder Network for Single Image De-raining",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Li",
+          "given": "Guangchang"
+        },
+        {
+          "surname": "He",
+          "given": "Xiang"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Wei"
+        },
+        {
+          "surname": "Chang",
+          "given": "HuiYou"
+        },
+        {
+          "surname": "Dong",
+          "given": "Le"
+        },
+        {
+          "surname": "Lin",
+          "given": "Liang"
+        }
+      ],
+      "venue": {
+        "name": "ACM Multimedia"
+      },
+      "nReferences": 41,
+      "nCitedBys": 8
+    },
+    {
+      "artHash": "feng-2018-d1c4c7b6dc2a743a",
+      "type": "paper",
+      "title": "DeepMove: Predicting Human Mobility with Attentional Recurrent Networks",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Feng",
+          "given": "Jie"
+        },
+        {
+          "surname": "Li",
+          "given": "Yong"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Chao"
+        },
+        {
+          "surname": "Sun",
+          "given": "Funing"
+        },
+        {
+          "surname": "Meng",
+          "given": "Fanchao"
+        },
+        {
+          "surname": "Guo",
+          "given": "Ang"
+        },
+        {
+          "surname": "Jin",
+          "given": "Depeng"
+        }
+      ],
+      "venue": {
+        "name": "WWW 2018: The 2018 Web Conference"
+      },
+      "nReferences": 45
+    },
+    {
+      "artHash": "wang-2018-a02131721462a0f1",
+      "type": "paper",
+      "title": "Cross-City Transfer Learning for Deep Spatio-Temporal Prediction",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Wang",
+          "given": "Leye"
+        },
+        {
+          "surname": "Geng",
+          "given": "Xu"
+        },
+        {
+          "surname": "Ma",
+          "given": "Xiaojuan"
+        },
+        {
+          "surname": "Liu",
+          "given": "Feng"
+        },
+        {
+          "surname": "Yang",
+          "given": "Qiang"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 20,
+      "nCitedBys": 8
+    },
+    {
+      "artHash": "jauhri-2019-6f2285a18635db05",
+      "type": "paper",
+      "title": "USING GANS FOR GENERATION OF REALISTIC CITY-SCALE RIDE SHARING/HAILING DATA SETS",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Jauhri",
+          "given": "Abhinav"
+        },
+        {
+          "surname": "Shen",
+          "given": "John"
+        }
+      ],
+      "nReferences": 27
+    },
+    {
+      "artHash": "he-2018-b39e99910b45443b",
+      "type": "paper",
+      "title": "Detecting Vehicle Illegal Parking Events using Sharing Bikes' Trajectories",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "He",
+          "given": "Tianfu"
+        },
+        {
+          "surname": "Bao",
+          "given": "Jie"
+        },
+        {
+          "surname": "Li",
+          "given": "Ruiyuan"
+        },
+        {
+          "surname": "Ruan",
+          "given": "Sijie"
+        },
+        {
+          "surname": "Li",
+          "given": "Yanhua"
+        },
+        {
+          "surname": "Tian",
+          "given": "Chao"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Yuan"
+        }
+      ],
+      "venue": {
+        "name": "KDD"
+      },
+      "nReferences": 36,
+      "nCitedBys": 1
+    },
+    {
+      "artHash": "zhang-2018-4e19eabcb884a8b2",
+      "type": "paper",
+      "title": "Multistep Speed Prediction on Traffic Networks: A Graph Convolutional\n  Sequence-to-Sequence Learning Approach with Attention Mechanism",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Zhang",
+          "given": "Zhengchao"
+        },
+        {
+          "surname": "Li",
+          "given": "Meng"
+        },
+        {
+          "surname": "Lin",
+          "given": "Xi"
+        },
+        {
+          "surname": "Wang",
+          "given": "Yinhai"
+        },
+        {
+          "surname": "He",
+          "given": "Fang"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 42,
+      "nCitedBys": 1
+    },
+    {
+      "artHash": "geng-2019-56522245d8f6c77d",
+      "type": "paper",
+      "title": "Spatiotemporal Multi-Graph Convolution Network for Ride-hailing Demand Forecasting",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Geng",
+          "given": "Xu"
+        },
+        {
+          "surname": "Li",
+          "given": "Yaguang"
+        },
+        {
+          "surname": "Wang",
+          "given": "Leye"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Lingyu"
+        },
+        {
+          "surname": "Ye",
+          "given": "Jieping"
+        },
+        {
+          "surname": "Liu",
+          "given": "Yan"
+        },
+        {
+          "surname": "Yang",
+          "given": "Qiang"
+        }
+      ],
+      "venue": {
+        "name": "AAAI 2019"
+      },
+      "nCitedBys": 5
+    },
+    {
+      "artHash": "yao-2019-330182aa72049237",
+      "type": "paper",
+      "title": "Revisiting Spatial-Temporal Similarity: A Deep Learning Framework for Traffic Prediction",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Yao",
+          "given": "Huaxiu"
+        },
+        {
+          "surname": "Tang",
+          "given": "Xianfeng"
+        },
+        {
+          "surname": "Wei",
+          "given": "Hua"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Guanjie"
+        },
+        {
+          "surname": "Li",
+          "given": "Zhenhui"
+        }
+      ],
+      "venue": {
+        "name": "AAAI 2019"
+      },
+      "nReferences": 30,
+      "nCitedBys": 7
+    },
+    {
+      "artHash": "ke-2018-8eb17cb824278f2b",
+      "type": "paper",
+      "title": "Hexagon-Based Convolutional Neural Network for Supply-Demand Forecasting of Ride-Sourcing Services",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Ke",
+          "given": "Jintao"
+        },
+        {
+          "surname": "Yang",
+          "given": "Hai"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Hongyu"
+        },
+        {
+          "surname": "Chen",
+          "given": "Xiqun"
+        },
+        {
+          "surname": "Jia",
+          "given": "Yitian"
+        },
+        {
+          "surname": "Gong",
+          "given": "Pinghua"
+        },
+        {
+          "surname": "Ye",
+          "given": "Jieping"
+        }
+      ],
+      "nReferences": 48,
+      "nCitedBys": 2
+    },
+    {
+      "artHash": "li-2018-3ade67505d6eb586",
+      "type": "paper",
+      "title": "Multi-task Representation Learning for Travel Time Estimation",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Li",
+          "given": "Yaguang"
+        },
+        {
+          "surname": "Fu",
+          "given": "Kun"
+        },
+        {
+          "surname": "Wang",
+          "given": "Zheng"
+        },
+        {
+          "surname": "Shahabi",
+          "given": "Cyrus"
+        },
+        {
+          "surname": "Ye",
+          "given": "Jiandong"
+        },
+        {
+          "surname": "Liu",
+          "given": "Yan"
+        }
+      ],
+      "venue": {
+        "name": "KDD"
+      },
+      "nReferences": 33,
+      "nCitedBys": 13
+    },
+    {
+      "artHash": "velickovic-2018-fe18384dc8668d25",
+      "type": "paper",
+      "title": "Graph Attention Networks",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Velickovic",
+          "given": "Petar"
+        },
+        {
+          "surname": "Cucurull",
+          "given": "Guillem"
+        },
+        {
+          "surname": "Casanova",
+          "given": "Arantxa"
+        },
+        {
+          "surname": "Romero",
+          "given": "Adriana"
+        },
+        {
+          "surname": "Liò",
+          "given": "Pietro"
+        },
+        {
+          "surname": "Bengio",
+          "given": "Yoshua"
+        }
+      ],
+      "venue": {
+        "name": "ICLR"
+      },
+      "nReferences": 41,
+      "nCitedBys": 202
+    },
+    {
+      "artHash": "zhang-2017-41fcf676f9b50026",
+      "type": "paper",
+      "title": "Predicting Citywide Crowd Flows Using Deep Spatio-Temporal Residual Networks",
+      "year": 2017,
+      "authors": [
+        {
+          "surname": "Zhang",
+          "given": "Junbo"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Yu"
+        },
+        {
+          "surname": "Qi",
+          "given": "Dekang"
+        },
+        {
+          "surname": "Li",
+          "given": "Ruiyuan"
+        },
+        {
+          "surname": "Yi",
+          "given": "Xiuwen"
+        },
+        {
+          "surname": "Li",
+          "given": "Tianrui"
+        }
+      ],
+      "venue": {
+        "name": "Artif. Intell."
+      },
+      "nReferences": 42,
+      "nCitedBys": 20
+    },
+    {
+      "artHash": "he-2018-3d1e028c978d954a",
+      "type": "paper",
+      "title": "STANN: A Spatio-Temporal Attentive Neural Network for Traffic Prediction",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "He",
+          "given": "Zhixiang"
+        },
+        {
+          "surname": "Chow",
+          "given": "Chi-Yin"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Jia-Dong"
+        }
+      ],
+      "nReferences": 36
+    },
+    {
+      "artHash": "yu-2018-602148405cb1948e",
+      "type": "paper",
+      "title": "Spatio-Temporal Graph Convolutional Networks: A Deep Learning Framework for Traffic Forecasting",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Yu",
+          "given": "Bing"
+        },
+        {
+          "surname": "Yin",
+          "given": "Haoteng"
+        },
+        {
+          "surname": "Zhu",
+          "given": "Zhanxing"
+        }
+      ],
+      "venue": {
+        "name": "IJCAI"
+      },
+      "nReferences": 19,
+      "nCitedBys": 28
+    },
+    {
+      "artHash": "pan-2018-70450f4916d49f19",
+      "type": "paper",
+      "title": "HyperST-Net: Hypernetworks for Spatio-Temporal Forecasting",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Pan",
+          "given": "Zheyi"
+        },
+        {
+          "surname": "Liang",
+          "given": "Yuxuan"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Junbo"
+        },
+        {
+          "surname": "Yi",
+          "given": "Xiuwen"
+        },
+        {
+          "surname": "Yu",
+          "given": "Yingrui"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Yu"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 31,
+      "nCitedBys": 0
+    },
+    {
+      "artHash": "liang-2019-43c996fbc168c210",
+      "type": "paper",
+      "title": "UrbanFM: Inferring Fine-Grained Urban Flows",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Liang",
+          "given": "Yuxuan"
+        },
+        {
+          "surname": "Ouyang",
+          "given": "Kun"
+        },
+        {
+          "surname": "Jing",
+          "given": "Lin"
+        },
+        {
+          "surname": "Ruan",
+          "given": "Sijie"
+        },
+        {
+          "surname": "Liu",
+          "given": "Ye"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Junbo"
+        },
+        {
+          "surname": "Rosenblum",
+          "given": "David"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Yu"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 28,
+      "nCitedBys": 0
+    },
+    {
+      "artHash": "davis-2019-1db255b04d630967",
+      "type": "paper",
+      "title": "Grids versus Graphs: Partitioning Space for Improved Taxi Demand-Supply Forecasts",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Davis",
+          "given": "Neema"
+        },
+        {
+          "surname": "Raina",
+          "given": "Gaurav"
+        },
+        {
+          "surname": "Jagannathan",
+          "given": "Krishna"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 32
+    },
+    {
+      "artHash": "do-2018-a355c9d54040beb7",
+      "type": "paper",
+      "title": "Survey of neural network-based models for short-term traffic state prediction",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Do",
+          "given": "Loan"
+        },
+        {
+          "surname": "Taherifar",
+          "given": "Neda"
+        },
+        {
+          "surname": "Vu",
+          "given": "Hai"
+        },
+        {
+          "given": "K"
+        }
+      ],
+      "nReferences": 184
+    },
+    {
+      "artHash": "cui-2018-696655e9aacc89b",
+      "type": "paper",
+      "title": "High-Order Graph Convolutional Recurrent Neural Network: A Deep Learning Framework for Network-Scale Traffic Learning and Forecasting",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Cui",
+          "given": "Zhiyong"
+        },
+        {
+          "surname": "Henrickson",
+          "given": "Kristian"
+        },
+        {
+          "surname": "Ke",
+          "given": "Ruimin"
+        },
+        {
+          "surname": "Wang",
+          "given": "Yinhai"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 23,
+      "nCitedBys": 14
+    },
+    {
+      "artHash": "li-2018-30d5adece5c9ea43",
+      "type": "paper",
+      "title": "Spatio-Temporal Graph Convolution for Skeleton Based Action Recognition",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Li",
+          "given": "Chaolong"
+        },
+        {
+          "surname": "Cui",
+          "given": "Zhen"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Wenming"
+        },
+        {
+          "surname": "Xu",
+          "given": "Chunyan"
+        },
+        {
+          "surname": "Yang",
+          "given": "Jian"
+        }
+      ],
+      "venue": {
+        "name": "AAAI"
+      },
+      "nReferences": 48,
+      "nCitedBys": 20
+    },
+    {
+      "artHash": "wang-2018-95cd02daca280762",
+      "type": "paper",
+      "title": "Ensemble-Spotting: Ranking Urban Vibrancy via POI Embedding with Multi-view Spatial Graphs",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Wang",
+          "given": "Pengyang"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Jiawei"
+        },
+        {
+          "surname": "Liu",
+          "given": "Guannan"
+        },
+        {
+          "surname": "Fu",
+          "given": "Yanjie"
+        },
+        {
+          "surname": "Aggarwal",
+          "given": "Charu"
+        }
+      ],
+      "venue": {
+        "name": "SDM"
+      },
+      "nReferences": 25,
+      "nCitedBys": 1
+    },
+    {
+      "artHash": "gao-2019-99efee5c9b43bed1",
+      "type": "paper",
+      "title": "Incomplete Label Multi-task Deep Learning for Spatio-temporal Event Subtype Forecasting",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Gao",
+          "given": "Yuyang"
+        },
+        {
+          "surname": "Zhao",
+          "given": "Liang"
+        },
+        {
+          "surname": "Wu",
+          "given": "Lingfei"
+        },
+        {
+          "surname": "Ye",
+          "given": "Yanfang"
+        },
+        {
+          "surname": "Xiong",
+          "given": "Hui"
+        },
+        {
+          "surname": "Yang",
+          "given": "Chaowei"
+        }
+      ],
+      "venue": {
+        "name": "AAAI 2019"
+      },
+      "nReferences": 31,
+      "nCitedBys": 2
+    },
+    {
+      "artHash": "zhao-2018-c156f6f441a704e2",
+      "type": "paper",
+      "title": "Where to Go Next: A Spatio-temporal LSTM model for Next POI Recommendation",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Zhao",
+          "given": "Pengpeng"
+        },
+        {
+          "surname": "Zhu",
+          "given": "Haifeng"
+        },
+        {
+          "surname": "Liu",
+          "given": "Yanchi"
+        },
+        {
+          "surname": "Li",
+          "given": "Zhixu"
+        },
+        {
+          "surname": "Xu",
+          "given": "Jiajie"
+        },
+        {
+          "surname": "Sheng",
+          "given": "Victor"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 19,
+      "nCitedBys": 2
+    },
+    {
+      "type": "paper",
+      "title": "Attention Based Spatial-Temporal Graph Convolutional Networks for Traffic Flow Forecasting"
+    },
+    {
+      "artHash": "krumm-2019-785e2e6a05081c2",
+      "type": "paper",
+      "title": "Traffic Updates: Saying a Lot While Revealing a Little",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Krumm",
+          "given": "John"
+        },
+        {
+          "surname": "Horvitz",
+          "given": "Eric"
+        }
+      ],
+      "nReferences": 22
+    },
+    {
+      "artHash": "chandra-2018-7654c53792823dbb",
+      "type": "paper",
+      "title": "TraPHic: Trajectory Prediction in Dense and Heterogeneous Traffic Using Weighted Interactions",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Chandra",
+          "given": "Rohan"
+        },
+        {
+          "surname": "Bhattacharya",
+          "given": "Uttaran"
+        },
+        {
+          "surname": "Bera",
+          "given": "Aniket"
+        },
+        {
+          "surname": "Manocha",
+          "given": "Dinesh"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 31,
+      "nCitedBys": 2
+    },
+    {
+      "artHash": "ma-2018-78c33a257466b529",
+      "type": "paper",
+      "title": "TrafficPredict: Trajectory Prediction for Heterogeneous Traffic-Agents",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Ma",
+          "given": "Yuexin"
+        },
+        {
+          "surname": "Zhu",
+          "given": "Xinge"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Sibo"
+        },
+        {
+          "surname": "Yang",
+          "given": "Ruigang"
+        },
+        {
+          "surname": "Wang",
+          "given": "Wenping"
+        },
+        {
+          "surname": "Manocha",
+          "given": "Dinesh"
+        }
+      ],
+      "venue": {
+        "name": "AAAI 2019"
+      },
+      "nReferences": 29,
+      "nCitedBys": 6
+    },
+    {
+      "artHash": "zheng-2019-c71f4ac5f761a054",
+      "type": "paper",
+      "title": "Urban Computing Building Intelligent Cities with Big Data and AI",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Zheng",
+          "given": "Yu"
+        }
+      ],
+      "nReferences": 0
+    },
+    {
+      "artHash": "lee-2018-b7b8fbce90b82aff",
+      "type": "paper",
+      "title": "Forecasting Taxi Demands with Fully Convolutional Networks and Temporal Guided Embedding",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Lee",
+          "given": "Doyup"
+        },
+        {
+          "surname": "Jung",
+          "given": "Suehun"
+        },
+        {
+          "surname": "Cheon",
+          "given": "Yeongjae"
+        },
+        {
+          "surname": "Kim",
+          "given": "Dongil"
+        },
+        {
+          "surname": "You",
+          "given": "Seungil"
+        }
+      ],
+      "venue": "",
+      "nReferences": 12,
+      "nCitedBys": 1
+    },
+    {
+      "artHash": "fu-2019-8e61811116d92a23",
+      "type": "paper",
+      "title": "Efficient Region Embedding with Multi-view Spatial Networks: A Perspective of Locality-Constrained Spatial Autocorrelations",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Fu",
+          "given": "Yanjie"
+        },
+        {
+          "surname": "Wang",
+          "given": "Pengyang"
+        },
+        {
+          "surname": "Du",
+          "given": "Jiadi"
+        },
+        {
+          "surname": "Le Wu"
+        },
+        {
+          "surname": "Li",
+          "given": "Xiaolin"
+        }
+      ],
+      "nReferences": 25
+    },
+    {
+      "type": "paper",
+      "title": "Learning Urban Community Structures"
+    },
+    {
+      "type": "paper",
+      "title": "Incentivized vehicle relocation in vehicle sharing systems"
+    },
+    {
+      "artHash": "dell’amico-2018-ff59091ebe5395ec",
+      "type": "paper",
+      "title": "The Bike sharing Rebalancing Problem with Stochastic Demands",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Dell’Amico",
+          "given": "Mauro"
+        },
+        {
+          "surname": "Iori",
+          "given": "Manuel"
+        },
+        {
+          "surname": "Novellani",
+          "given": "Stefano"
+        },
+        {
+          "surname": "Subramanian",
+          "given": "Anand"
+        }
+      ],
+      "nCitedBys": 1
+    },
+    {
+      "artHash": "lin-2017-52098c8ecf732655",
+      "type": "paper",
+      "title": "Predicting Station-level Hourly Demands in a Large-scale Bike-sharing Network: A Graph Convolutional Neural Network Approach",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Lin",
+          "given": "Lei"
+        },
+        {
+          "surname": "He",
+          "given": "Zhengbing"
+        },
+        {
+          "surname": "Peeta",
+          "given": "Srinivas"
+        },
+        {
+          "surname": "Wen",
+          "given": "Xuejin"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 43,
+      "nCitedBys": 5
+    },
+    {
+      "artHash": "illgen-2019-7a108edff2b65733",
+      "type": "paper",
+      "title": "Literature review of the vehicle relocation problem in one-way car sharing networks",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Illgen",
+          "given": "Stefan"
+        },
+        {
+          "surname": "Hoeck",
+          "given": "Michael"
+        }
+      ],
+      "nCitedBys": 1
+    },
+    {
+      "artHash": "ke-2017-ea6fbf48e317f0c0",
+      "type": "paper",
+      "title": "Short-Term Forecasting of Passenger Demand under On-Demand Ride Services: A Spatio-Temporal Deep Learning Approach",
+      "year": 2017,
+      "authors": [
+        {
+          "surname": "Ke",
+          "given": "Jintao"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Hongyu"
+        },
+        {
+          "surname": "Yang",
+          "given": "Hai"
+        },
+        {
+          "surname": "Chen",
+          "given": "Xiqun"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 55,
+      "nCitedBys": 39
+    },
+    {
+      "artHash": "nguyen-2018-60771e9ae09f420a",
+      "type": "paper",
+      "title": "Deep learning methods in transportation domain: a review",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Nguyen",
+          "given": "Hoang"
+        },
+        {
+          "surname": "Kieu",
+          "given": "Le-Minh"
+        },
+        {
+          "surname": "Wen",
+          "given": "Tao"
+        },
+        {
+          "surname": "Cai",
+          "given": "Chen"
+        },
+        {}
+      ],
+      "nReferences": 60,
+      "nCitedBys": 4
+    },
+    {
+      "artHash": "cheng-2018-a2f7984cf561be98",
+      "type": "paper",
+      "title": "DeepTransport: Learning Spatial-Temporal Dependency for Traffic Condition Forecasting",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Cheng",
+          "given": "Xingyi"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Ruiqing"
+        },
+        {
+          "surname": "Zhou",
+          "given": "Jie"
+        },
+        {
+          "surname": "Xu",
+          "given": "Wei"
+        }
+      ],
+      "venue": {
+        "name": "2018 International Joint Conference on Neural Networks (IJCNN)"
+      },
+      "nReferences": 30,
+      "nCitedBys": 10
+    },
+    {
+      "artHash": "li-2018-c2cdd59655b0acc7",
+      "type": "paper",
+      "title": "Diffusion Convolutional Recurrent Neural Network: Data-Driven Traffic Forecasting",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Li",
+          "given": "Yaguang"
+        },
+        {
+          "surname": "Yu",
+          "given": "Rose"
+        },
+        {
+          "surname": "Shahabi",
+          "given": "Cyrus"
+        },
+        {
+          "surname": "Liu",
+          "given": "Yan"
+        }
+      ],
+      "venue": {
+        "name": "ICLR"
+      },
+      "nReferences": 36,
+      "nCitedBys": 65
+    },
+    {
+      "artHash": "yu-2017-76ccf0f9cf387e6e",
+      "type": "paper",
+      "title": "Spatiotemporal Recurrent Convolutional Networks for Traffic Prediction in Transportation Networks",
+      "year": 2017,
+      "authors": [
+        {
+          "surname": "Yu",
+          "given": "Haiyang"
+        },
+        {
+          "surname": "Wu",
+          "given": "Zhihai"
+        },
+        {
+          "surname": "Wang",
+          "given": "Shuqin"
+        },
+        {
+          "surname": "Wang",
+          "given": "Yunpeng"
+        },
+        {
+          "surname": "Ma",
+          "given": "Xiaolei"
+        }
+      ],
+      "venue": {
+        "name": "Sensors"
+      },
+      "nReferences": 49,
+      "nCitedBys": 47
+    },
+    {
+      "artHash": "yao-2018-1320c57681ce38e4",
+      "type": "paper",
+      "title": "Deep Multi-View Spatial-Temporal Network for Taxi Demand Prediction",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Yao",
+          "given": "Huaxiu"
+        },
+        {
+          "surname": "Wu",
+          "given": "Fei"
+        },
+        {
+          "surname": "Ke",
+          "given": "Jintao"
+        },
+        {
+          "surname": "Tang",
+          "given": "Xianfeng"
+        },
+        {
+          "surname": "Jia",
+          "given": "Yitian"
+        },
+        {
+          "surname": "Lu",
+          "given": "Siyu"
+        },
+        {
+          "surname": "Gong",
+          "given": "Pinghua"
+        },
+        {
+          "surname": "Ye",
+          "given": "Jiandong"
+        },
+        {
+          "surname": "Li",
+          "given": "Zhenhui"
+        }
+      ],
+      "venue": {
+        "name": "AAAI"
+      },
+      "nReferences": 20,
+      "nCitedBys": 52
+    },
+    {
+      "artHash": "zhang-2016-7687d0d64ce7dac8",
+      "type": "paper",
+      "title": "Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction",
+      "year": 2016,
+      "authors": [
+        {
+          "surname": "Zhang",
+          "given": "Junbo"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Yu"
+        },
+        {
+          "surname": "Qi",
+          "given": "Dekang"
+        }
+      ],
+      "venue": {
+        "name": "AAAI"
+      },
+      "nReferences": 24,
+      "nCitedBys": 171
+    },
+    {
+      "artHash": "polson-2017-482a305df1b5fd98",
+      "type": "paper",
+      "title": "Deep learning for short-term traffic flow prediction",
+      "year": 2017,
+      "authors": [
+        {
+          "surname": "Polson",
+          "given": "Nicholas"
+        },
+        {
+          "surname": "Sokolov",
+          "given": "Vadim"
+        }
+      ],
+      "venue": "",
+      "nReferences": 67,
+      "nCitedBys": 91
+    },
+    {
+      "artHash": "cui-2018-bec1f04d41bd78ce",
+      "type": "paper",
+      "title": "Deep Bidirectional and Unidirectional LSTM Recurrent Neural Network for Network-wide Traffic Speed Prediction",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Cui",
+          "given": "Zhiyong"
+        },
+        {
+          "surname": "Ke",
+          "given": "Ruimin"
+        },
+        {
+          "surname": "Wang",
+          "given": "Yinhai"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 24,
+      "nCitedBys": 9
+    },
+    {
+      "artHash": "zhang-2017-ed3b89c029fb97c9",
+      "type": "paper",
+      "title": "Short-Term Traffic Prediction: Modelling Temporal-Spatial Features in Local Highway Networks with Deep Neural Networks",
+      "year": 2017,
+      "authors": [
+        {
+          "surname": "Zhang",
+          "given": "Jingqing"
+        },
+        {
+          "surname": "Yike",
+          "given": "Guo"
+        },
+        {
+          "surname": "Chao Wu"
+        }
+      ],
+      "nReferences": 56
+    },
+    {
+      "artHash": "deng-2016-35dad05257ece482",
+      "type": "paper",
+      "title": "Latent Space Model for Road Networks to Predict Time-Varying Traffic",
+      "year": 2016,
+      "authors": [
+        {
+          "surname": "Deng",
+          "given": "Dingxiong"
+        },
+        {
+          "surname": "Shahabi",
+          "given": "Cyrus"
+        },
+        {
+          "surname": "Demiryurek",
+          "given": "Ugur"
+        },
+        {
+          "surname": "Zhu",
+          "given": "Linhong"
+        },
+        {
+          "surname": "Yu",
+          "given": "Rose"
+        },
+        {
+          "surname": "Liu",
+          "given": "Yan"
+        }
+      ],
+      "venue": {
+        "name": "KDD"
+      },
+      "nReferences": 28,
+      "nCitedBys": 31
+    },
+    {
+      "artHash": "zhu-2018-e5cc5bb898af2c56",
+      "type": "paper",
+      "title": "pg-Causality: Identifying Spatiotemporal Causal Pathways for Air Pollutants with Urban Big Data",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Zhu",
+          "given": "Julie Yixuan"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Chao"
+        },
+        {
+          "surname": "Zhang",
+          "given": "Huichu"
+        },
+        {
+          "surname": "Zhi",
+          "given": "Shi"
+        },
+        {
+          "surname": "Li",
+          "given": "Victor O.K."
+        },
+        {
+          "surname": "Han",
+          "given": "Jiawei"
+        },
+        {
+          "surname": "Zheng",
+          "given": "Yu"
+        }
+      ],
+      "nReferences": 43,
+      "nCitedBys": 3
+    },
+    {
+      "artHash": "azgomi-2018-7d284bfbf33dbe35",
+      "type": "paper",
+      "title": "A Brief survey on Smart Community and Smart Transportation",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Azgomi",
+          "given": "Hamid"
+        },
+        {
+          "surname": "Jamshidi",
+          "given": "Mo"
+        }
+      ],
+      "venue": {
+        "name": "2018 IEEE 30th International Conference on Tools with Artificial Intelligence (ICTAI)"
+      },
+      "nReferences": 32
+    },
+    {
+      "artHash": "wu-2018-f45b163cf4be08a7",
+      "type": "paper",
+      "title": "Semantic Exploration of Traffic Dynamics",
+      "year": 2018,
+      "authors": [
+        {
+          "surname": "Wu",
+          "given": "Fei"
+        },
+        {
+          "surname": "Wang",
+          "given": "Hongjian"
+        },
+        {
+          "surname": "Li",
+          "given": "Zhenhui"
+        }
+      ],
+      "venue": {
+        "name": "ArXiv"
+      },
+      "nReferences": 30,
+      "nCitedBys": 0
+    },
+    {
+      "artHash": "kitchin-2016-4a1624d87eaed6b7",
+      "type": "paper",
+      "title": "Urban data and city dashboards: Six key issues",
+      "year": 2016,
+      "authors": [
+        {
+          "surname": "Kitchin",
+          "given": "Rob"
+        }
+      ],
+      "venue": "",
+      "nReferences": 33,
+      "nCitedBys": 1
+    },
+    {
+      "artHash": "albino-2015-2b548387a11f2c46",
+      "type": "paper",
+      "title": "Smart Cities: Definitions, Dimensions, Performance, and Initiatives",
+      "year": 2015,
+      "authors": [
+        {
+          "surname": "Albino",
+          "given": "Vito"
+        },
+        {
+          "surname": "Berardi",
+          "given": "Umberto"
+        },
+        {
+          "surname": "Dangelico",
+          "given": "Rosa"
+        }
+      ],
+      "nReferences": 83,
+      "nCitedBys": 239
+    },
+    {
+      "artHash": "moustaka-2017-9e0b24ec7f5d086f",
+      "type": "paper",
+      "title": "CityDNA: Smart City Dimensions' Correlations for Identifying Urban Profile",
+      "year": 2017,
+      "authors": [
+        {
+          "surname": "Moustaka",
+          "given": "Vaia"
+        },
+        {
+          "surname": "Vakali",
+          "given": "Athena"
+        },
+        {
+          "surname": "Anthopoulos",
+          "given": "Leonidas"
+        }
+      ],
+      "venue": {
+        "name": "WWW"
+      },
+      "nReferences": 10,
+      "nCitedBys": 3
+    },
+    {
+      "artHash": "anthopoulos-2017-91557dd28f7a02aa",
+      "type": "paper",
+      "title": "Understanding Smart Cities: A Tool for Smart Government or an Industrial Trick?",
+      "year": 2017,
+      "authors": [
+        {
+          "surname": "Anthopoulos",
+          "given": "Leonidas"
+        }
+      ],
+      "nReferences": 8,
+      "nCitedBys": 9
+    },
+    {
+      "artHash": "anthopoulos-2017-ba6d653ed869f26f",
+      "type": "paper",
+      "title": "Smart utopia VS smart reality: Learning by experience from 10 smart city cases",
+      "year": 2017,
+      "authors": [
+        {
+          "surname": "Anthopoulos",
+          "given": "Leonidas"
+        }
+      ],
+      "nReferences": 65,
+      "nCitedBys": 11
+    },
+    {
+      "artHash": "harmon-2015-46bb200801e61a1e",
+      "type": "paper",
+      "title": "Smart cities and the Internet of Things",
+      "year": 2015,
+      "authors": [
+        {
+          "surname": "Harmon",
+          "given": "Robert"
+        },
+        {
+          "surname": "Castro-Leon",
+          "given": "Enrique"
+        },
+        {
+          "surname": "Bhide",
+          "given": "Sandhiprakash"
+        }
+      ],
+      "venue": {
+        "name": "2015 Portland International Conference on Management of Engineering and Technology (PICMET)"
+      },
+      "nReferences": 32,
+      "nCitedBys": 0
+    },
+    {
+      "artHash": "anthopoulos-2015-cca4a4dbcc6371b",
+      "type": "paper",
+      "title": "Understanding the Smart City Domain: A Literature Review",
+      "year": 2015,
+      "authors": [
+        {
+          "surname": "Anthopoulos",
+          "given": "Dr."
+        }
+      ],
+      "nReferences": 30,
+      "nCitedBys": 42
+    },
+    {
+      "artHash": "anthopoulos-2019-efeb7c652fa02059",
+      "type": "paper",
+      "title": "A Unified Smart City Model (USCM) for Smart City Conceptualization and Benchmarking",
+      "year": 2019,
+      "authors": [
+        {
+          "surname": "Anthopoulos",
+          "given": "Leonidas"
+        },
+        {
+          "surname": "Janssen",
+          "given": "Marijn"
+        },
+        {
+          "surname": "Weerakkody",
+          "given": "Vishanth"
+        }
+      ],
+      "nReferences": 69
+    }
+  ],
+  "relations": [
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "pan-2019-93d5c1f50aa15490"
+    },
+    {
+      "referenceId": "yu-2017-76ccf0f9cf387e6e",
+      "citedById": "chen-2018-242c167adaa56135"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "chen-2018-242c167adaa56135"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "chen-2018-242c167adaa56135"
+    },
+    {
+      "referenceId": "deng-2016-35dad05257ece482",
+      "citedById": "gong-2018-60e720efa6375ca6"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "gong-2018-60e720efa6375ca6"
+    },
+    {
+      "referenceId": "liu-2018-b585d419045cfdf",
+      "citedById": "yao-2019-cda228e0e1723463"
+    },
+    {
+      "referenceId": "li-2018-c2cdd59655b0acc7",
+      "citedById": "yao-2019-cda228e0e1723463"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "yao-2019-cda228e0e1723463"
+    },
+    {
+      "referenceId": "wang-2018-a02131721462a0f1",
+      "citedById": "yao-2019-cda228e0e1723463"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "yao-2019-cda228e0e1723463"
+    },
+    {
+      "referenceId": "yao-2019-330182aa72049237",
+      "citedById": "yao-2019-cda228e0e1723463"
+    },
+    {
+      "referenceId": "ke-2017-ea6fbf48e317f0c0",
+      "citedById": "yao-2019-cda228e0e1723463"
+    },
+    {
+      "referenceId": "li-2018-c2cdd59655b0acc7",
+      "citedById": "shi-2018-37455629a702887f"
+    },
+    {
+      "referenceId": "yu-2018-602148405cb1948e",
+      "citedById": "shi-2018-37455629a702887f"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "wang-2018-a02131721462a0f1"
+    },
+    {
+      "referenceId": "ke-2017-ea6fbf48e317f0c0",
+      "citedById": "wang-2018-a02131721462a0f1"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "wang-2018-a02131721462a0f1"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "he-2018-b39e99910b45443b"
+    },
+    {
+      "referenceId": "ke-2017-ea6fbf48e317f0c0",
+      "citedById": "zhang-2018-4e19eabcb884a8b2"
+    },
+    {
+      "referenceId": "li-2018-c2cdd59655b0acc7",
+      "citedById": "zhang-2018-4e19eabcb884a8b2"
+    },
+    {
+      "referenceId": "polson-2017-482a305df1b5fd98",
+      "citedById": "zhang-2018-4e19eabcb884a8b2"
+    },
+    {
+      "referenceId": "cui-2018-696655e9aacc89b",
+      "citedById": "zhang-2018-4e19eabcb884a8b2"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "yao-2019-330182aa72049237"
+    },
+    {
+      "referenceId": "deng-2016-35dad05257ece482",
+      "citedById": "yao-2019-330182aa72049237"
+    },
+    {
+      "referenceId": "ke-2017-ea6fbf48e317f0c0",
+      "citedById": "yao-2019-330182aa72049237"
+    },
+    {
+      "referenceId": "li-2018-c2cdd59655b0acc7",
+      "citedById": "yao-2019-330182aa72049237"
+    },
+    {
+      "referenceId": "feng-2018-d1c4c7b6dc2a743a",
+      "citedById": "yao-2019-330182aa72049237"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "yao-2019-330182aa72049237"
+    },
+    {
+      "referenceId": "ke-2017-ea6fbf48e317f0c0",
+      "citedById": "ke-2018-8eb17cb824278f2b"
+    },
+    {
+      "referenceId": "li-2018-c2cdd59655b0acc7",
+      "citedById": "li-2018-3ade67505d6eb586"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "zhang-2017-41fcf676f9b50026"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "he-2018-3d1e028c978d954a"
+    },
+    {
+      "referenceId": "li-2018-c2cdd59655b0acc7",
+      "citedById": "yu-2018-602148405cb1948e"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "pan-2018-70450f4916d49f19"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "pan-2018-70450f4916d49f19"
+    },
+    {
+      "referenceId": "li-2018-c2cdd59655b0acc7",
+      "citedById": "pan-2018-70450f4916d49f19"
+    },
+    {
+      "referenceId": "wang-2018-a02131721462a0f1",
+      "citedById": "liang-2019-43c996fbc168c210"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "liang-2019-43c996fbc168c210"
+    },
+    {
+      "referenceId": "cui-2018-696655e9aacc89b",
+      "citedById": "davis-2019-1db255b04d630967"
+    },
+    {
+      "referenceId": "nguyen-2018-60771e9ae09f420a",
+      "citedById": "davis-2019-1db255b04d630967"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "davis-2019-1db255b04d630967"
+    },
+    {
+      "referenceId": "li-2018-c2cdd59655b0acc7",
+      "citedById": "davis-2019-1db255b04d630967"
+    },
+    {
+      "referenceId": "geng-2019-56522245d8f6c77d",
+      "citedById": "davis-2019-1db255b04d630967"
+    },
+    {
+      "referenceId": "wang-2019-c2508fa0f3bea9be",
+      "citedById": "davis-2019-1db255b04d630967"
+    },
+    {
+      "referenceId": "ke-2017-ea6fbf48e317f0c0",
+      "citedById": "davis-2019-1db255b04d630967"
+    },
+    {
+      "referenceId": "cui-2018-bec1f04d41bd78ce",
+      "citedById": "cui-2018-696655e9aacc89b"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "cui-2018-696655e9aacc89b"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "krumm-2019-785e2e6a05081c2"
+    },
+    {
+      "referenceId": "chandra-2018-7654c53792823dbb",
+      "citedById": "ma-2018-78c33a257466b529"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "lee-2018-b7b8fbce90b82aff"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "lee-2018-b7b8fbce90b82aff"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "lin-2017-52098c8ecf732655"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "lin-2017-52098c8ecf732655"
+    },
+    {
+      "referenceId": "ke-2017-ea6fbf48e317f0c0",
+      "citedById": "lin-2017-52098c8ecf732655"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "ke-2017-ea6fbf48e317f0c0"
+    },
+    {
+      "referenceId": "polson-2017-482a305df1b5fd98",
+      "citedById": "ke-2017-ea6fbf48e317f0c0"
+    },
+    {
+      "referenceId": "yao-2018-1320c57681ce38e4",
+      "citedById": "nguyen-2018-60771e9ae09f420a"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "cheng-2018-a2f7984cf561be98"
+    },
+    {
+      "referenceId": "polson-2017-482a305df1b5fd98",
+      "citedById": "cheng-2018-a2f7984cf561be98"
+    },
+    {
+      "referenceId": "deng-2016-35dad05257ece482",
+      "citedById": "cheng-2018-a2f7984cf561be98"
+    },
+    {
+      "referenceId": "deng-2016-35dad05257ece482",
+      "citedById": "li-2018-c2cdd59655b0acc7"
+    },
+    {
+      "referenceId": "cheng-2018-a2f7984cf561be98",
+      "citedById": "li-2018-c2cdd59655b0acc7"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "li-2018-c2cdd59655b0acc7"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "yu-2017-76ccf0f9cf387e6e"
+    },
+    {
+      "referenceId": "deng-2016-35dad05257ece482",
+      "citedById": "yao-2018-1320c57681ce38e4"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "yao-2018-1320c57681ce38e4"
+    },
+    {
+      "referenceId": "zhang-2016-7687d0d64ce7dac8",
+      "citedById": "zhang-2017-ed3b89c029fb97c9"
+    },
+    {
+      "referenceId": "albino-2015-2b548387a11f2c46",
+      "citedById": "azgomi-2018-7d284bfbf33dbe35"
+    },
+    {
+      "referenceId": "albino-2015-2b548387a11f2c46",
+      "citedById": "moustaka-2017-9e0b24ec7f5d086f"
+    },
+    {
+      "referenceId": "anthopoulos-2017-ba6d653ed869f26f",
+      "citedById": "anthopoulos-2017-91557dd28f7a02aa"
+    },
+    {
+      "referenceId": "albino-2015-2b548387a11f2c46",
+      "citedById": "harmon-2015-46bb200801e61a1e"
+    }
+  ]
+}
