@@ -3,8 +3,7 @@
     <v-container grid-list-lg>
       <v-layout row wrap>
         <v-flex md6>
-          <pv-drawer-sample-collection-list>
-          </pv-drawer-sample-collection-list>
+          <pv-drawer-all-collection-list />
         </v-flex>
         <v-flex md6>
           <v-progress-circular v-if="isSignedIn === null" indeterminate
@@ -26,12 +25,13 @@
 
 <script>
 import AuthMixin from '@/components/authmixin.js'
-import PvDrawerSampleCollectionList from '@/components/PvDrawerSampleCollectionList.vue'
+import PvDrawerAllCollectionList
+  from '@/components/PvDrawerAllCollectionList.vue'
 import PvDrawerMyCollectionList from '@/components/PvDrawerMyCollectionList.vue'
 
 export default {
   name: 'PvHomeCollectionList',
-  components: { PvDrawerMyCollectionList, PvDrawerSampleCollectionList },
+  components: { PvDrawerMyCollectionList, PvDrawerAllCollectionList },
   mixins: [ AuthMixin ]
 }
 </script>

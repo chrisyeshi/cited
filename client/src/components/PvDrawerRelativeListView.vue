@@ -14,9 +14,9 @@
       </v-card>
       <v-progress-circular
         v-if="isLoading" indeterminate class="ma-4" style="width: 100%" />
-      <pv-drawer-article-list-tile v-else
-        v-for="art in relatives" :key="art.artHash" :art="art" class="my-3"
-        @click="onClickArticle(art.artHash)" />
+      <pv-drawer-article-list-tile
+        v-else v-for="art in relatives" :key="art.artHash" :art="art"
+        class="my-3" @click="onClickArticle(art.artHash)" />
     </v-list>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pv-drawer-sample-collection-list></pv-drawer-sample-collection-list>
+    <pv-drawer-all-collection-list />
     <v-divider></v-divider>
     <v-progress-circular v-if="isSignedIn === null" indeterminate
       class="ma-4" style="width: 100%">
@@ -17,12 +17,13 @@
 
 <script>
 import AuthMixin from '@/components/authmixin.js'
-import PvDrawerSampleCollectionList from '@/components/PvDrawerSampleCollectionList.vue'
+import PvDrawerAllCollectionList
+  from '@/components/PvDrawerAllCollectionList.vue'
 import PvDrawerMyCollectionList from '@/components/PvDrawerMyCollectionList.vue'
 
 export default {
   name: 'PvDrawerCollectionList',
-  components: { PvDrawerSampleCollectionList, PvDrawerMyCollectionList },
+  components: { PvDrawerAllCollectionList, PvDrawerMyCollectionList },
   mixins: [ AuthMixin ]
 }
 </script>

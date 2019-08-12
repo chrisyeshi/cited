@@ -14,37 +14,37 @@ service cloud.firestore {
     }
 
     match /collections/{document=**} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if isAdmin();
     }
 
     match /collMetas/{document=**} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow read, write: if isAdmin();
     }
 
     match /articles/{document=**} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow read, write: if isAdmin();
     }
 
     match /artMetas/{document=**} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow read, write: if isAdmin();
     }
 
     match /citedBys/{document=**} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow read, write: if isAdmin();
     }
 
     match /venues/{document=**} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow read, write: if isAdmin();
     }
 
     match /authors/{document=**} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow read, write: if isAdmin();
     }
 
