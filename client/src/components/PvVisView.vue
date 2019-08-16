@@ -557,6 +557,9 @@ export default {
       } else {
         // single selection
         this.$router.push(`/coll/${this.currCollId}/${visNode.visNodeId}`)
+        this.$store.commit('parseVis/set', {
+          selectedArticleIds: [ visNode.visNodeId ]
+        })
         this.isDrawerOpenComputed = true
       }
     },
