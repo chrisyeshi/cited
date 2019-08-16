@@ -322,9 +322,9 @@ export default {
       const citedByVisNode = link.citedBy
       const index =
         _.findIndex(
-          citedByVisNode.inGraphVisReferences,
-          ({ visNode }) => visNode.articleId === link.referenceId)
-      const nConns = citedByVisNode.inGraphVisReferences.length
+          citedByVisNode.inGraphVisReferenceIds,
+          ({ visNodeId }) => visNodeId === link.referenceId)
+      const nConns = citedByVisNode.inGraphVisReferenceIds.length
       const totalWidth = nConns * this.visConfig.path.width
       const citedByRect = this.getCardRect(link.citedBy.colRow)
       const yMin = citedByRect.center.y - 0.5 * totalWidth
@@ -336,9 +336,9 @@ export default {
       const refVisNode = link.reference
       const index =
         _.findIndex(
-          refVisNode.inGraphVisCitedBys,
+          refVisNode.inGraphVisCitedByIds,
           ({ visNodeId }) => visNodeId === link.citedById)
-      const nConns = refVisNode.inGraphVisCitedBys.length
+      const nConns = refVisNode.inGraphVisCitedByIds.length
       const totalWidth = nConns * this.visConfig.path.width
       const refRect = this.getCardRect(link.reference.colRow)
       const yMin = refRect.center.y - 0.5 * totalWidth
