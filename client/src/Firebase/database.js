@@ -8,8 +8,8 @@ const db = firebase.firestore()
 function getUser () {
   return {
     ...firebase.auth().currentUser,
-    name () { return this.displayName },
-    photo () { return this.photoURL }
+    get name () { return this.displayName },
+    get photo () { return this.photoURL }
   }
 }
 

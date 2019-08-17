@@ -11,8 +11,8 @@ export default {
       if (user) {
         this.currentUser = {
           ...user,
-          name () { return this.displayName },
-          photo () { return this.photoURL }
+          get name () { return this.displayName },
+          get photo () { return this.photoURL }
         }
         this.isSignedIn = true
       } else {

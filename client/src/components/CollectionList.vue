@@ -1,68 +1,59 @@
 <template>
-  <v-container
-    fluid
-    fill-height
-  >
-    <v-layout row align-top justify-center>
-      <v-flex xs3 class="pa-1">
-        <v-card
-          flat class="pa-2"
-        >
+  <v-container>
+    <v-row align="start" justify="center">
+      <v-col cols=3 class="pa-1">
+        <v-card flat class="pa-2">
           <v-btn color="primary" class="ma-3" @click="dialog = true">
-            <v-icon>add</v-icon> New Collection
+            <v-icon left>mdi-plus</v-icon>New Collection
           </v-btn>
           <v-list rounded>
-              <v-list-tile
-                v-for="(filter, i) in filters"
-                :key="i"
-                @click="filterCollection(i)"
-                v-bind:class="{active: selected == i}"
-              >
-                <v-list-tile-action>
-                  <v-icon :class="{active: selected == i}" v-text="filter.icon"></v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title v-text="filter.text"></v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-
+            <v-list-item v-for="(filter, i) in filters" :key="i"
+              @click="filterCollection(i)" :class="{active: selected == i}">
+              <v-list-item-action>
+                <v-icon :class="{active: selected == i}">
+                  {{ filter.icon }}
+                </v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title v-text="filter.text"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </v-card>
-      </v-flex>
-      <v-flex xs9 class="pa-1">
-        <v-toolbar flat dense>
+      </v-col>
+      <v-col cols=9 class="pa-1">
+        <v-toolbar flat dense color="#f5f5f5">
           <v-toolbar-title>Paper Collections</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
-        <v-card flat>
-          <v-list>
-            <template v-for="(collection, index) in collections">
-              <v-list-tile
-                :key="collection.title"
-                avatar
-                ripple
-                style="cursor: pointer"
-                :to="collectionURL(collection)"
-              >
-                <v-list-tile-content>
-                  <v-list-tile-title>
-                    {{ collection.title }}
-                  </v-list-tile-title>
-                  <v-list-tile-sub-title class="text--primary">{{ collection.description }}</v-list-tile-sub-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-list-tile-action-text>{{ collection.nArticle }}</v-list-tile-action-text>
-                </v-list-tile-action>
-              </v-list-tile>
-              <v-divider
-                v-if="index + 1 < collections.length"
-                :key="index"
-              ></v-divider>
-            </template>
-          </v-list>
-        </v-card>
-      </v-flex>
-    </v-layout>
+        <v-list two-line>
+          <template v-for="(collection, index) in collections">
+            <v-list-item
+              :key="collection.title"
+              ripple
+              style="cursor: pointer"
+              :to="collectionURL(collection)"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ collection.title }}
+                </v-list-item-title>
+                <v-list-item-subtitle class="text--primary">
+                  {{ collection.description }}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-list-item-action-text>{{ collection.nArticle }}</v-list-item-action-text>
+              </v-list-item-action>
+            </v-list-item>
+            <v-divider
+              v-if="index + 1 < collections.length"
+              :key="index"
+            ></v-divider>
+          </template>
+        </v-list>
+      </v-col>
+    </v-row>
     <v-dialog
       persistent
       v-model="dialog"
@@ -118,10 +109,10 @@ export default {
       ],
       selected: 0,
       filters: [
-        { text: 'All Collections', icon: 'home' },
-        { text: 'My Collections', icon: 'face' },
-        { text: 'Shared with Me', icon: 'people' },
-        { text: 'Watched', icon: 'bookmark' }
+        { text: 'All Collections', icon: 'mdi-home' },
+        { text: 'My Collections', icon: 'mdi-face' },
+        { text: 'Shared with Me', icon: 'mdi-account-multiple' },
+        { text: 'Watched', icon: 'mdi-bookmark' }
       ]
     }
   },
@@ -139,7 +130,7 @@ export default {
     createCollection () {
       this.newCollection.lastUpdated =
         firebase.firestore.FieldValue.serverTimestamp()
-      Collections.add(this.newCollection).then((c) => {
+      Collections.add(this.newCollection).then(() => {
         this.collections.push(Object.assign({}, this.newCollection))
         this.setDefaultsForNewCollection()
         this.dialog = false

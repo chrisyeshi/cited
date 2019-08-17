@@ -2,34 +2,34 @@
   <v-app>
     <v-content>
       <v-container fluid fill-height>
-        <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md4>
+        <v-row align="center" justify="center">
+          <v-col cols=12 sm=8 md=4>
             <v-card>
               <v-card-title>
                 <span class="headline">User Sign in</span>
               </v-card-title>
               <v-card-text>
                 <v-container grid-list-md>
-                  <v-layout wrap>
-                    <v-flex xs12>
+                  <v-row>
+                    <v-col cols=12>
                       <v-text-field
-                        label="Email*" v-model="email" required outline>
+                        label="Email*" v-model="email" required outlined>
                       </v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
+                    </v-col>
+                    <v-col cols=12>
                       <v-text-field label="Password*" v-model="password"
-                        type="password" required outline>
+                        type="password" required outlined>
                       </v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
+                    </v-col>
+                    <v-col cols=12>
                       <div id="firebaseui-auth-container"></div>
-                    </v-flex>
-                  </v-layout>
+                    </v-col>
+                  </v-row>
                 </v-container>
               </v-card-text>
             </v-card>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
       </v-container>
     </v-content>
   </v-app>
