@@ -1,16 +1,16 @@
 <template>
-  <v-btn v-if="!user" flat small to="/auth/signin">Sign In</v-btn>
+  <v-btn v-if="!currUser" flat small to="/auth/signin">Sign In</v-btn>
   <v-menu v-else offset-y>
     <v-btn slot="activator" large icon>
-      <v-icon v-if="!user.photo" large color="grey darken-2" key="icon">
+      <v-icon v-if="!currUser.photo" large color="grey darken-2" key="icon">
         account_circle
       </v-icon>
       <v-avatar size="36px">
-        <img :src="user.photo">
+        <img :src="currUser.photo">
       </v-avatar>
     </v-btn>
     <v-list>
-      <v-subheader>{{ user.email }}</v-subheader>
+      <v-subheader>{{ currUser.email }}</v-subheader>
       <v-list-tile to="/user#collections">
         <v-list-tile-title>My collections</v-list-tile-title>
       </v-list-tile>
@@ -28,14 +28,11 @@
 </template>
 
 <script>
-import { getUser } from '@/Firebase/auth'
+import AuthMixin from '@/components/authmixin'
+
 export default {
   name: 'UserMenu',
-  data () {
-    return {
-      user: getUser()
-    }
-  }
+  mixins: [ AuthMixin ]
 }
 </script>
 

@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { Collections } from '@/Firebase/database'
+import { Collections } from '@/firebase/database'
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
 export default {

@@ -1,18 +1,29 @@
 import _ from 'lodash'
-import { Database } from '../Firebase'
-import { getUser } from './auth'
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore'
+
+const db = firebase.firestore()
+
+function getUser () {
+  return {
+    ...firebase.auth().currentUser,
+    name () { return this.displayName },
+    photo () { return this.photoURL }
+  }
+}
 
 export const Collections = {
   add (collection) {
     const user = getUser()
-    return Database.collection('collections').add({
+    return db.collection('collections').add({
       ...collection,
       owner: user.uid
     })
   },
 
   get (collectionId) {
-    return Database.doc(`collections/${collectionId}`).get().then(snapshot => {
+    return db.doc(`collections/${collectionId}`).get().then(snapshot => {
       if (snapshot.exists) {
         return snapshot.data()
       }
@@ -22,7 +33,7 @@ export const Collections = {
 
   list () {
     const user = getUser()
-    return Database.collection('collMetas')
+    return db.collection('collMetas')
       .where('owner', '==', user.uid).get()
   }
 }

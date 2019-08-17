@@ -9,7 +9,11 @@ export default {
   created () {
     this.detachAuthStateChanged = firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.currentUser = user
+        this.currentUser = {
+          ...user,
+          name () { return this.displayName },
+          photo () { return this.photoURL }
+        }
         this.isSignedIn = true
       } else {
         this.currentUser = null
