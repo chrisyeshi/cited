@@ -191,7 +191,7 @@ export default {
       const tempStatuses =
         _.mapValues(
           _.keyBy(this.temporaryArticleIds),
-          (value, artId) => this.baseVisGraph.has(artId)
+          (_value, artId) => this.baseVisGraph.has(artId)
             ? { hovering: true }
             : { temporary: true, hovering: true })
       const hoveringStatus =
@@ -200,7 +200,7 @@ export default {
       const selectedStatuses =
         _.mapValues(
           _.keyBy(this.selectedVisNodeIds),
-          (value, artId) => ({ selected: true }))
+          () => ({ selected: true }))
       const greyedOutVisNodeIds =
         _.isEmpty(this.focusedVisNodeIds)
           ? []
@@ -208,7 +208,7 @@ export default {
       const greyedOutStatuses =
         _.mapValues(
           _.keyBy(greyedOutVisNodeIds),
-          (value, artId) => ({ greyedOut: true }))
+          () => ({ greyedOut: true }))
       const displayedStatus =
         this.drawerArticleId &&
         { [this.drawerArticleId]: { displayed: true } }
@@ -569,7 +569,7 @@ export default {
         hoveringArticleId: visNode.visNodeId
       })
     },
-    onCardMouseLeave (visNode) {
+    onCardMouseLeave () {
       this.hoverLingerTimer = setTimeout(() => {
         this.$store.commit('parseVis/set', {
           hoveringArticleId: null
@@ -579,10 +579,6 @@ export default {
     onVisContainerResize (el) {
       this.visContainerWidth = el.offsetWidth / this.visConfig.fontSize
       this.visContainerHeight = el.offsetHeight / this.visConfig.fontSize
-    },
-    trace (value) {
-      console.log(value)
-      return value
     }
   }
 }

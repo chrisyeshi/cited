@@ -133,10 +133,6 @@ export default {
     },
     onClickArticle (artId) {
       this.$router.push(`/coll/${this.currCollId}/${artId}`)
-    },
-    trace (value) {
-      console.log(value)
-      return value
     }
   }
 }

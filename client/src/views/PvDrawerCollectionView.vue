@@ -76,7 +76,7 @@ export default {
       try {
         await firebase.firestore().doc(`collection/${this.currCollId}`).delete()
       } catch (err) {
-        console.log('Error removing collection:', err)
+        this.$log.error('Error removing collection:', err)
       }
       this.$router.push('/')
     },

@@ -221,10 +221,6 @@ export default {
     }
   },
   methods: {
-    trace (value) {
-      console.log(value)
-      return value
-    },
     getImgUrl (img) {
       return require('../assets/' + img)
     },

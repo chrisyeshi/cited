@@ -122,7 +122,7 @@ export default {
   methods: {
     filterCollection (index) {
       this.selected = index
-      console.log(this.selected)
+      this.$log.info(this.selected)
     },
     collectionURL (coll) {
       return '/collection/' + coll.id
@@ -146,9 +146,9 @@ export default {
     },
     commitAction (action, index) {
       if (action === 'edit') {
-
+        this.$log.info(action, index)
       } else if (action === 'delete') {
-
+        this.$log.info(action, index)
       }
     }
   }

@@ -55,7 +55,7 @@ export default {
       try {
         await firebase.firestore().doc(`collections/${collId}`).delete()
       } catch (err) {
-        console.log('Error removing my collection:', err)
+        this.$log.error('Error removing my collection:', err)
       }
     },
     getMyCollTileStyle (coll) {
@@ -75,7 +75,7 @@ export default {
           owner: this.currUser.uid
         })
       } catch (err) {
-        console.error('Error adding document: ', err)
+        this.$log.error('Error adding document: ', err)
       }
     },
     navigateToCollView (collId) {
@@ -100,10 +100,6 @@ export default {
         'click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false,
         0, null)
       input.dispatchEvent(event)
-    },
-    trace (value) {
-      console.log(value)
-      return value
     }
   },
   async created () {

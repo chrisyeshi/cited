@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueAnalytics from 'vue-analytics'
 import VueAsyncComputed from 'vue-async-computed'
 import VueLineClamp from 'vue-line-clamp'
+import VueLogger from 'vuejs-logger'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -18,7 +19,6 @@ firebase.initializeApp({
   appId: '1:1079857398647:web:597796944284dd62'
 })
 
-Vue.use(VueLineClamp, { importCss: true })
 Vue.use(VueAsyncComputed)
 Vue.use(VueAnalytics, {
   id: 'UA-131008086-1',
@@ -34,6 +34,16 @@ Vue.use(VueAnalytics, {
       this.$ga.event(category, action, label, value)
     }
   }
+})
+Vue.use(VueLineClamp, { importCss: true })
+Vue.use(VueLogger, {
+  isEnabled: true,
+  logLevel : process.env.NODE_ENV === 'production' ? 'error' : 'debug',
+  stringifyArguments : false,
+  showLogLevel : true,
+  showMethodName : true,
+  separator: '|',
+  showConsoleColors: true
 })
 Vue.config.productionTip = false
 

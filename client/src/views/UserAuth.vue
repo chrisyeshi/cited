@@ -48,14 +48,14 @@ export default {
   }),
   created () {
     if (this.$route.params.action === 'signout') {
-      console.log('signout')
+      this.$log.info('signout')
       firebase.auth().signOut()
     }
   },
   mounted () {
     let ui = new firebaseui.auth.AuthUI(firebase.auth())
     let redirectURL = this.$route.query.redirect
-    console.log(redirectURL, firebase.auth().currentUser)
+    this.$log.info(redirectURL, firebase.auth().currentUser)
     ui.start('#firebaseui-auth-container', {
       signInOptions: [
         {
@@ -69,14 +69,14 @@ export default {
       signInSuccessUrl: redirectURL,
       callbacks: {
         signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-          console.log(redirectUrl)
+          this.$log.info(redirectUrl)
           return true
         },
         uiShown: function () {
-          console.log('uiShown')
+          this.$log.info('uiShown')
         },
         signInFailure: function (error) {
-          console.log(error)
+          this.$log.info(error)
         }
       }
     })

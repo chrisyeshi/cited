@@ -6,7 +6,7 @@ export default function createPvArticleHoverMixin (getArtId) {
       isHovering: false
     }),
     methods: {
-      onMouseEnter (event, el) {
+      onMouseEnter () {
         this.isHovering = true
         this.$store.commit('parseVis/set', {
           temporaryArticleIds:
@@ -14,7 +14,7 @@ export default function createPvArticleHoverMixin (getArtId) {
           hoveringArticleId: getArtId(this)
         })
       },
-      onMouseLeave (event) {
+      onMouseLeave () {
         this.isHovering = false
         this.$store.commit('parseVis/set', {
           temporaryArticleIds:

@@ -201,10 +201,6 @@ export default {
     onClickMoreRelatives (relationProp) {
       this.$router.push(
         `/coll/${this.currCollId}/${this.currArtId}/${relationProp}`)
-    },
-    trace (value) {
-      console.log(value)
-      return value
     }
   }
 }
