@@ -1,8 +1,8 @@
 <template>
-  <v-list-tile v-on="$listeners" @pointerenter.native="onMouseEnter"
+  <v-list-item v-on="$listeners" @pointerenter.native="onMouseEnter"
     @pointerleave.native="onMouseLeave">
     <div :style="leftSideStyle"></div>
-    <v-list-tile-content style="justify-content: space-evenly;">
+    <v-list-item-content style="justify-content: space-evenly;">
       <div class="caption text-truncate font-weight-bold">{{ label }}</div>
       <div class="body-1 text-truncate font-weight-medium full-width">
         {{ title }}
@@ -14,9 +14,9 @@
         :venue="venue" :year="year" :nReferences="nReferences"
         :nCitedBys="nCitedBys">
       </pv-drawer-article-stats-row>
-    </v-list-tile-content>
+    </v-list-item-content>
     <div :style="rightSideStyle"></div>
-  </v-list-tile>
+  </v-list-item>
 </template>
 
 <script>

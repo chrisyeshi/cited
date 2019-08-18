@@ -1,19 +1,21 @@
 <template>
-  <v-btn v-if="!isSignedIn" flat small @click="signIn">Sign In</v-btn>
+  <v-btn v-if="!isSignedIn" text small @click="signIn">Sign In</v-btn>
   <v-menu v-else offset-y>
-    <v-btn slot="activator" large icon>
-      <v-icon v-if="!userImg" large color="grey darken-2" key="icon">
-        account_circle
-      </v-icon>
-      <v-avatar size="36px">
-        <img :src="userImg">
-      </v-avatar>
-    </v-btn>
+    <template v-slot:activator="{ on }">
+      <v-btn v-on="on" large icon>
+        <v-icon v-if="!userImg" large color="grey darken-2" key="icon">
+          account_circle
+        </v-icon>
+        <v-avatar size="36px">
+          <img :src="userImg">
+        </v-avatar>
+      </v-btn>
+    </template>
     <v-list>
       <v-subheader>{{ userEmail }}</v-subheader>
-      <v-list-tile @click="signOut">
-        <v-list-tile-title>Logout</v-list-tile-title>
-      </v-list-tile>
+      <v-list-item @click="signOut">
+        <v-list-item-title>Logout</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>

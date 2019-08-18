@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-toolbar flat color="white">
-      <v-toolbar-side-icon @click="back">
-        <v-icon>arrow_back</v-icon>
-      </v-toolbar-side-icon>
+      <v-app-bar-nav-icon @click="back">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-app-bar-nav-icon>
       <v-toolbar-title>{{ artLabel }}</v-toolbar-title>
     </v-toolbar>
     <v-list three-line>
@@ -16,7 +16,7 @@
         v-if="isLoading" indeterminate class="ma-4" style="width: 100%" />
       <pv-drawer-article-list-tile
         v-else v-for="art in relatives" :key="art.artHash" :art="art"
-        class="my-3" @click="onClickArticle(art.artHash)" />
+        @click="onClickArticle(art.artHash)" />
     </v-list>
   </div>
 </template>
@@ -108,6 +108,9 @@ export default {
       return citedBys
     },
     async fetchReferences () {
+      if (!this.art) {
+        return []
+      }
       if (this.art.referenceArtHashes) {
         const dbReferences =
           Promise.all(

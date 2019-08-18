@@ -1,78 +1,80 @@
 <template>
   <div>
     <v-toolbar flat color="white">
-      <v-toolbar-side-icon @click="back">
-        <v-icon>arrow_back</v-icon>
-      </v-toolbar-side-icon>
+      <v-app-bar-nav-icon @click="back">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-app-bar-nav-icon>
       <v-toolbar-title v-if="art">{{ artLabel }}</v-toolbar-title>
       <v-toolbar-title v-else>
         <v-progress-circular indeterminate></v-progress-circular>
       </v-toolbar-title>
     </v-toolbar>
-    <v-container fluid grid-list-md pa-3>
-      <v-layout column>
-        <v-flex>
-          <v-tooltip v-for="(artStat, index) in artStats" :key="index" bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn small round depressed v-on="on" class="ma-1"
-                :color="artStat.color">
-                {{ artStat.label }}
-              </v-btn>
-            </template>
-            <span>{{ artStat.tooltip }}</span>
-          </v-tooltip>
-        </v-flex>
-        <v-flex tag="h3" class="headline">{{ title }}</v-flex>
-        <v-flex class="font-weight-medium">
-          <pv-expandable-authors-links :authors="authors">
-          </pv-expandable-authors-links>
-        </v-flex>
-        <v-flex class="font-weight-light">
+    <v-container fluid class="body-2">
+      <v-row class="mx-0">
+        <v-tooltip v-for="(artStat, index) in artStats" :key="index" bottom>
+          <template v-slot:activator="{ on }">
+            <v-chip small v-on="on" :color="artStat.color" class="mx-1"
+              :class="{ 'ml-0': index === 0 }">
+              {{ artStat.label }}
+            </v-chip>
+          </template>
+          <span>{{ artStat.tooltip }}</span>
+        </v-tooltip>
+      </v-row>
+      <v-row tag="h3" class="headline">
+        <v-col class="py-1">{{ title }}</v-col>
+      </v-row>
+      <v-row class="font-weight-medium">
+        <v-col class="py-1">
+          <pv-expandable-authors-links :authors="authors" />
+        </v-col>
+      </v-row>
+      <v-row class="font-weight-light">
+        <v-col class="py-1">
           <pv-drawer-article-stats-row :venue="venue" :year="year"
-            :nReferences="nReferences" :nCitedBys="nCitedBys">
-          </pv-drawer-article-stats-row>
-        </v-flex>
-        <v-flex class="font-weight-thin">
-          <expandable-text :text="abstract" :textLimit="abstractLimit">
-          </expandable-text>
-        </v-flex>
-        <v-layout row>
-          <v-flex xs6>
-            <v-flex tag="h4" shrink class="font-weight-bold">
-              References ({{ nReferences }})
-            </v-flex>
-            <v-flex v-for="art in references" :key="art.artHash"
-              style="font-size: 12px;">
-              <pv-drawer-article-relative-card
-                :art="art" @click="onClickArticle(art.artHash)">
-              </pv-drawer-article-relative-card>
-            </v-flex>
-            <v-flex class="text-xs-center">
-              <v-btn small flat color="primary"
-                @click="onClickMoreRelatives('references')">
-                More
-              </v-btn>
-            </v-flex>
-          </v-flex>
-          <v-flex xs6>
-            <v-flex tag="h4" shrink class="font-weight-bold">
-              Cited by ({{ nCitedBys }})
-            </v-flex>
-            <v-flex v-for="art in citedBys" :key="art.artHash"
-              style="font-size: 12px;">
-              <pv-drawer-article-relative-card
-                :art="art" @click="onClickArticle(art.artHash)">
-              </pv-drawer-article-relative-card>
-            </v-flex>
-            <v-flex class="text-xs-center">
-              <v-btn small flat color="primary"
-                @click="onClickMoreRelatives('citedBys')">
-                More
-              </v-btn>
-            </v-flex>
-          </v-flex>
-        </v-layout>
-      </v-layout>
+            :nReferences="nReferences" :nCitedBys="nCitedBys" />
+        </v-col>
+      </v-row>
+      <v-row class="font-weight-thin">
+        <v-col class="py-1">
+          <expandable-text :text="abstract" :textLimit="abstractLimit" />
+        </v-col>
+      </v-row>
+      <v-row class="mx-0">
+        <v-col cols=6 class="pr-1">
+          <v-row tag="h4" shrink class="font-weight-bold my-2 mr-0">
+            References ({{ nReferences }})
+          </v-row>
+          <v-row v-for="art in references" :key="art.artHash"
+            class="my-2 mr-0" style="font-size: 12px;">
+            <pv-drawer-article-relative-card
+              :art="art" @click="onClickArticle(art.artHash)" />
+          </v-row>
+          <v-row class="my-2 mr-0" justify="center">
+            <v-btn small text rounded outlined color="primary"
+              @click="onClickMoreRelatives('references')">
+              More
+            </v-btn>
+          </v-row>
+        </v-col>
+        <v-col cols=6 class="pl-1">
+          <v-row tag="h4" shrink class="font-weight-bold my-2 ml-0">
+            Cited by ({{ nCitedBys }})
+          </v-row>
+          <v-row v-for="art in citedBys" :key="art.artHash"
+            class="my-2 ml-0" style="font-size: 12px;">
+            <pv-drawer-article-relative-card
+              :art="art" @click="onClickArticle(art.artHash)">
+            </pv-drawer-article-relative-card>
+          </v-row>
+          <v-row class="my-2 ml-0" justify="center">
+            <v-btn small text rounded outlined color="primary"
+              @click="onClickMoreRelatives('citedBys')">
+              More
+            </v-btn>
+          </v-row>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>

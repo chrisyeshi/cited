@@ -3,18 +3,20 @@
     <div :style="leftSideStyle"></div>
     <div class="py-1 px-2" :style="rowsContainerStyle">
       <!-- TODO: truncate only the author name and leave the year alone -->
-      <div class="text-xs-center font-weight-bold card-row text-truncate">
+      <div class="text-center font-weight-bold card-row text-truncate">
         {{ label }}
       </div>
       <v-tooltip top close-delay=0>
-        <div slot="activator" v-line-clamp="config.lineClamp"
-          class="text-xs-center card-row font-italic"
-          :style="{ lineHeight: config.titleLineHeight }">
-          {{ main }}
-        </div>
+        <template v-slot:activator="{ on }">
+          <div v-on="on" v-line-clamp="config.lineClamp"
+            class="text-xs-center card-row font-italic"
+            :style="{ lineHeight: config.titleLineHeight }">
+            {{ main }}
+          </div>
+        </template>
         <span>{{ main }}</span>
       </v-tooltip>
-      <div v-if="isAttrRowVisible" class="text-xs-center card-row"
+      <div v-if="isAttrRowVisible" class="text-center card-row"
         style="display: flex; align-items: center;">
         <span v-if="isLeftAttrVisible" class="text-truncate"
           style="display: inline-flex; flex: 1; justify-content: center;">

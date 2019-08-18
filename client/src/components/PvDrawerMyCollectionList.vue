@@ -3,28 +3,28 @@
     v-if="isLoading" indeterminate class="ma-4" style="width: 100%">
   </v-progress-circular>
   <v-list v-else two-line>
-    <v-subheader style="display: flex;">
+    <v-subheader class="d-flex">
       <span>My Collections</span>
-      <v-btn flat size="1em" color="primary" style="margin-left: auto;"
+      <v-btn text rounded outlined color="primary" class="ml-auto"
         @click="selectImportCollFile">
-        <v-icon size="1em" class="mr-2">add</v-icon>Import
+        <v-icon left>mdi-plus</v-icon>Import
       </v-btn>
     </v-subheader>
-    <v-list-tile v-for="coll in myColls" :key="coll.collId"
+    <v-list-item v-for="coll in myColls" :key="coll.collId"
       :style="getMyCollTileStyle(coll)"
       @click="navigateToCollView(coll.collId)">
-      <v-list-tile-content>
-        <v-list-tile-title>{{ coll.title }}</v-list-tile-title>
-        <v-list-tile-sub-title>
+      <v-list-item-content>
+        <v-list-item-title>{{ coll.title }}</v-list-item-title>
+        <v-list-item-subtitle>
           {{ coll.description }}
-        </v-list-tile-sub-title>
-      </v-list-tile-content>
-      <v-list-tile-action>
+        </v-list-item-subtitle>
+      </v-list-item-content>
+      <v-list-item-action>
         <v-btn icon ripple @click.stop="deleteMyColl(coll.collId)">
-          <v-icon color="grey lighten-1">clear</v-icon>
+          <v-icon color="grey lighten-1">mdi-delete-outline</v-icon>
         </v-btn>
-      </v-list-tile-action>
-    </v-list-tile>
+      </v-list-item-action>
+    </v-list-item>
   </v-list>
 </template>
 

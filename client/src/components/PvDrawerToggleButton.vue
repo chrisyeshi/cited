@@ -1,10 +1,10 @@
 <template>
-  <v-hover>
-    <div v-ripple class="drawer-toggle-button" slot-scope="{ hover }"
+  <v-hover v-slot:default="{ hover }">
+    <div v-ripple class="drawer-toggle-button"
       :class="`state-${hover ? 'hover' : 'rest'}`"
       @click="$emit('input', !value)">
       <v-icon size="1.5em">
-        {{ value ? 'chevron_left' : 'chevron_right' }}
+        {{ value ? 'mdi-chevron-left' : 'mdi-chevron-right' }}
       </v-icon>
     </div>
   </v-hover>

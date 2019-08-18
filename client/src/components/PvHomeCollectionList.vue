@@ -1,11 +1,11 @@
 <template>
   <v-content>
     <v-container grid-list-lg>
-      <v-layout row wrap>
-        <v-flex md6>
+      <v-row>
+        <v-col cols=12 md=6>
           <pv-drawer-all-collection-list />
-        </v-flex>
-        <v-flex md6>
+        </v-col>
+        <v-col cols=12 md=6>
           <v-progress-circular v-if="isSignedIn === null" indeterminate
             class="ma-4" style="width: 100%;">
           </v-progress-circular>
@@ -13,12 +13,12 @@
           </pv-drawer-my-collection-list>
           <v-list v-else>
             <v-subheader>My Collections</v-subheader>
-            <v-btn flat small color="primary" @click="signIn">
+            <v-btn text small color="primary" @click="signIn">
               Login to view/save user collections
             </v-btn>
           </v-list>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </v-content>
 </template>

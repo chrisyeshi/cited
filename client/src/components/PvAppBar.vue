@@ -1,13 +1,11 @@
 <template>
-  <v-toolbar app flat clipped-left>
+  <v-app-bar app flat clipped-left class="px-2" color="#f5f5f5">
     <v-toolbar-title @click="toHome" class="page-title">
       Cited
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-toolbar-items>
-      <sign-in-button></sign-in-button>
-    </v-toolbar-items>
-  </v-toolbar>
+    <sign-in-button></sign-in-button>
+  </v-app-bar>
 </template>
 
 <script>

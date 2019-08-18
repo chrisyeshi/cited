@@ -1,14 +1,14 @@
 <template>
   <v-list two-line>
     <v-subheader>All Collections</v-subheader>
-    <v-list-tile v-for="coll in colls" :key="coll.collId"
+    <v-list-item v-for="coll in colls" :key="coll.collId"
       :style="getCollTileStyle(coll)"
       @click="navToCollView(coll.collId)">
-      <v-list-tile-content>
-        <v-list-tile-title>{{ coll.title }}</v-list-tile-title>
-        <v-list-tile-sub-title>{{ coll.description }}</v-list-tile-sub-title>
-      </v-list-tile-content>
-    </v-list-tile>
+      <v-list-item-content>
+        <v-list-item-title>{{ coll.title }}</v-list-item-title>
+        <v-list-item-subtitle>{{ coll.description }}</v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
   </v-list>
 </template>
 

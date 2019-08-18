@@ -1,35 +1,37 @@
 <template>
   <div>
-    <v-toolbar flat color="white">
-      <v-toolbar-side-icon @click="back">
-        <v-icon>arrow_back</v-icon>
-      </v-toolbar-side-icon>
+    <v-toolbar flat>
+      <v-app-bar-nav-icon @click="back">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-app-bar-nav-icon>
       <v-toolbar-title>{{ collTitle }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-menu offset-y min-width="8em">
-          <v-btn flat icon slot="activator"><v-icon>more_vert</v-icon></v-btn>
-          <v-list>
-            <v-list-tile @click="exportCollection">
-              <v-list-tile-title>Export</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile @click="deleteCollection">
-              <v-list-tile-title>Delete</v-list-tile-title>
-            </v-list-tile>
-          </v-list>
-        </v-menu>
-      </v-toolbar-items>
+      <v-menu offset-y min-width="8em">
+        <template v-slot:activator="{ on }">
+          <v-btn text icon v-on="on">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="exportCollection">
+            <v-list-item-title>Export</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="deleteCollection">
+            <v-list-item-title>Delete</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-toolbar>
     <v-list three-line>
       <v-card flat tile>
-        <v-card-text class="body-2 font-weight-thin">
+        <v-card-text class="body-2">
           <expandable-text :text="collDescription"
             :textLimit="descriptionLimit">
           </expandable-text>
         </v-card-text>
       </v-card>
       <pv-drawer-article-list-tile v-for="art in collArts" :key="art.artHash"
-        :art="art" class="my-3" @click="onClickArticle(art.artHash)">
+        :art="art" @click="onClickArticle(art.artHash)">
       </pv-drawer-article-list-tile>
     </v-list>
   </div>
