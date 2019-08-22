@@ -3,13 +3,6 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 const _ = require('lodash');
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
-
 exports.createUserDoc = functions.auth.user().onCreate(async user => {
   return admin.firestore().collection('users').doc(user.uid).set({
     claims: {}

@@ -13,8 +13,11 @@
     "node": "8"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "firebase-admin": "^8.0.0",
-    "firebase-functions": "^3.1.0"
+    "firebase-functions": "^3.1.0",
+    "xml2js": "^0.4.19",
+    "xxhashjs": "^0.2.2"
   },
   "devDependencies": {
     "eslint": "^5.12.0",

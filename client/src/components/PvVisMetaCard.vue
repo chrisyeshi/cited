@@ -6,7 +6,7 @@
       <div class="text-center font-weight-bold card-row text-truncate">
         {{ label }}
       </div>
-      <v-tooltip top close-delay=0>
+      <v-tooltip top open-delay=500 close-delay=0>
         <template v-slot:activator="{ on }">
           <div v-on="on" v-line-clamp="config.lineClamp"
             class="text-xs-center card-row font-italic"
