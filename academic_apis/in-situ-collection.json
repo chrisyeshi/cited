@@ -8,6 +8,11 @@
       "title": "Scientific discovery at the exascale. report from the DOE ASCR 2011",
       "abstract": "In February 2011, the Department of Energy (DOE) Office of Advanced Scientific Computing Research (ASCR) convened a workshop to explore the problem of scientific understanding of data from High Performance Computation (HPC) at the exascale. The goal of this workshop report is to identify the research and production directions that the Data Management, Analysis, and Visualization (DMAV) community must take to enable scientific discovery for HPC as it approaches the exascale (1 quintillion floating point calculations per second = 1 exaflop). Projections from the international TOP500 list [20] place that date around 2018–2019. Extracting scientific insight from large HPC facilities is of crucial importance for the nation. The scientific simulations that run on the supercomputers are only half of the “science”; scientific advances are made only once the data produced by the simulations is processed into an output that is understandable by an application scientist. As mathematician Richard Hamming famously said, “The purpose of computing is insight, not numbers.” [29] It is precisely the DMAV community that provides the algorithms, research, and tools to enable that critical insight. The hardware and software changes that will occur as HPC enters the exascale era will be dramatic and disruptive. Not only are scientific simulations forecasted to grow by many orders of magnitude, but also current methods by which HPC systems are programmed and data are extracted are not expected to survive into the exascale. Changing the fundamental methods by which scientific understanding is obtained from HPC simulations is a daunting task. Specifically, dramatic changes to on-node concurrency, access to memory hierarchies, accelerator and GPGPU processing, and input/output (I/O) subsystems will all necessitate reformulating existing DMAV algorithms and workflows. Additionally, reductions in inter-node and off-machine communication bandwidth will require rethinking how best to provide scalable algorithms for scientific understanding. Principal Finding: The disruptive changes imposed by a progressive movement toward the exascale in HPC threaten to derail the scientific discovery process. Today’s successes in extracting knowledge from large HPC simulation output are not generally applicable to the exascale era, and simply scaling existing techniques to higher concurrency is insufficient to meet the challenge. Recommendation: Focused and concerted efforts toward co-designing processes for exascale scientific understanding must be adopted by DOE ASCR. These efforts must include research into effective in situ processing frameworks, new I/O middleware systems, fine-grained visualization and analysis algorithms to exploit future architectures, and co-scheduling analysis and simulation on HPC platforms. Such efforts must be pursued in direct collaboration with the application domain scientists targeting exascale architectures. To ensure effective delivery to scientists, DMAV researchers require access to “testbed” systems so that they can prototype and pilot effective solutions. Our full set of findings and recommendations may be found in Section 8 “Conclusion: Findings and Recommendations” on page 31.",
       "year": 2011,
+      "tags": [
+        "parent foo::child foo",
+        "parent bar::bellevia",
+        "test"
+      ],
       "authors": [
         {
           "surname": "Ahern",
@@ -109,6 +114,11 @@
       "title": "Efficient Sort-Last Rendering Using Compression-Based Image Compositing",
       "abstract": "State of the art scientific simulations are currently working with data set sizes on the order of a billion cells. Parallel rendering is a promising approach for interactively visualizing multiple isosurface variables from data sets of this magnitude. In sort-last rendering, each processor creates a depth buffered image of its assigned objects. All processors’ images are composited together to create a final result. Improving the efficiency of this compositing step is key to interactive parallel rendering. This paper presents a compression-based image compositing algorithm which can provide significant savings in both communication and compositing costs.",
       "year": 1998,
+      "tags": [
+        "parent foo::child bar",
+        "parent bar::bellevia",
+        "test"
+      ],
       "authors": [
         {
           "surname": "Ahrens",

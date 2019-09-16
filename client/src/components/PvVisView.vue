@@ -79,8 +79,8 @@ export default {
   },
   computed: {
     ...mapState('parseVis', [
-      'currCollId', 'currColl', 'currVisGraph', 'isDrawerOpen',
-      'temporaryArticleIds', 'hoveringArticleId', 'selectedArticleIds'
+      'currCollId', 'currColl', 'currVisGraph', 'filters', 'isDrawerOpen',
+      'temporaryArticleIds', 'hoveringArticleId', 'selectedArticleIds',
     ]),
     canvasHeight () {
       const nRows = this.gridConfig.nRow
@@ -186,8 +186,17 @@ export default {
     baseVisGraph () {
       return this.currVisGraph || new VisGraph()
     },
+    filteredVisGraph () {
+      const artHashes = _.map(
+        _.filter(this.baseVisGraph.arts, art => {
+          return _.inRange(
+            art.year, this.filters.yearMin, this.filters.yearMax || Infinity)
+        }),
+        art => art.artHash)
+      return VisGraph.extractSubgraph(this.baseVisGraph, artHashes)
+    },
     visGraph () {
-      const tempVisGraph = this.baseVisGraph
+      const tempVisGraph = this.filteredVisGraph
       const tempStatuses =
         _.mapValues(
           _.keyBy(this.temporaryArticleIds),

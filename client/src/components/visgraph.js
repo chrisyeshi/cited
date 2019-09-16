@@ -349,6 +349,10 @@ export class VisGraph {
     return adjLists
   }
 
+  get arts () {
+    return this.graph.arts
+  }
+
   get links () {
     return this.graph.links
   }

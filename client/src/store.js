@@ -7,6 +7,11 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+const defaultFilters = {
+  yearMin: null,
+  yearMax: null
+}
+
 const defaultState = {
   contentState: 'home-view',
   drawerState: {
@@ -20,6 +25,7 @@ const defaultState = {
   currVisGraph: null,
   currArtId: null,
   currArt: null,
+  filters: defaultFilters,
   isDrawerOpen: true,
   temporaryArticleIds: [],
   hoveringArticleId: null,
@@ -35,6 +41,9 @@ const parseVis = {
     },
     reset (state) {
       Object.assign(state, defaultState)
+    },
+    setFilters (state, filters) {
+      Object.assign(state.filters, { ...state.filters, ...filters })
     },
     setCollArtId (state, { collId, artId }) {
       // commit state

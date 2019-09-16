@@ -30,6 +30,15 @@
           </expandable-text>
         </v-card-text>
       </v-card>
+      <v-card flat tile>
+        <v-card-text class="d-flex flex-row align-center">
+          <v-text-field outlined hide-details clearable name="from"
+            label="From Year" :placeholder="yearMin" v-model="yearFrom" />
+          <span class="mx-2">&#8212;</span>
+          <v-text-field outlined hide-details clearable name="to"
+            label="To Year" :placeholder="yearMax" v-model="yearTo" />
+        </v-card-text>
+      </v-card>
       <pv-drawer-article-list-tile v-for="art in collArts" :key="art.artHash"
         :art="art" @click="onClickArticle(art.artHash)">
       </pv-drawer-article-list-tile>
@@ -38,6 +47,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import { mapState } from 'vuex'
 import ExpandableText from '@/components/ExpandableText.vue'
 import PvDrawerArticleListTile from '@/components/PvDrawerArticleListTile.vue'
@@ -63,6 +73,34 @@ export default {
     },
     collArts () {
       return this.coll && this.coll.articles
+    },
+    yearFrom: {
+      get () {
+        return this.$store.state.parseVis.filters.yearMin
+      },
+      set: _.debounce(function (value) {
+        this.$store.commit(
+          'parseVis/setFilters',
+          { yearMin: _.isEmpty(value) ? null : _.toNumber(value) })
+      }, 200)
+    },
+    yearTo: {
+      get () {
+        return this.$store.state.parseVis.filters.yearMax
+      },
+      set: _.debounce(function(value) {
+        this.$store.commit(
+          'parseVis/setFilters',
+          { yearMax: _.isEmpty(value) ? null : _.toNumber(value) })
+      }, 200)
+    },
+    yearMin () {
+      const years = _.map(this.collArts, art => _.toNumber(art.year))
+      return _.toString(_.min(years))
+    },
+    yearMax () {
+      const years = _.map(this.collArts, art => _.toNumber(art.year))
+      return _.toString(_.max(years))
     }
   },
   methods: {
