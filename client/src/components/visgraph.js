@@ -353,6 +353,10 @@ export class VisGraph {
     return this.graph.arts
   }
 
+  get artHashes () {
+    return _.map(this.arts, art => art.artHash)
+  }
+
   get links () {
     return this.graph.links
   }

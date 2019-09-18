@@ -79,8 +79,9 @@ export default {
   },
   computed: {
     ...mapState('parseVis', [
-      'currCollId', 'currColl', 'currVisGraph', 'filters', 'isDrawerOpen',
-      'temporaryArticleIds', 'hoveringArticleId', 'selectedArticleIds',
+      'currCollId', 'currColl', 'currVisGraph', 'currHierTags', 'filters',
+      'isDrawerOpen', 'temporaryArticleIds', 'hoveringArticleId',
+      'selectedArticleIds',
     ]),
     canvasHeight () {
       const nRows = this.gridConfig.nRow
@@ -187,12 +188,27 @@ export default {
       return this.currVisGraph || new VisGraph()
     },
     filteredVisGraph () {
-      const artHashes = _.map(
+      const artHashesInYearRange = _.map(
         _.filter(this.baseVisGraph.arts, art => {
           return _.inRange(
             art.year, this.filters.yearMin, this.filters.yearMax || Infinity)
         }),
         art => art.artHash)
+      const tagSelects = _.merge({}, this.currHierTags, this.filters.tagSelects)
+      const getArtHashes = tag => {
+        return tag.selected
+          ? tag.artHashes
+          : _.map(tag.children, getArtHashes)
+      }
+      const treeArtHashesMatchingTags = _.map(tagSelects, getArtHashes)
+      const artHashesMatchingTags =
+        _.uniq(_.flattenDeep(treeArtHashesMatchingTags))
+      const artHashesFromTags =
+        _.isEmpty(artHashesMatchingTags)
+          ? this.baseVisGraph.artHashes
+          : artHashesMatchingTags
+      const artHashes =
+        _.intersection(artHashesInYearRange, artHashesFromTags)
       return VisGraph.extractSubgraph(this.baseVisGraph, artHashes)
     },
     visGraph () {

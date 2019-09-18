@@ -66,17 +66,28 @@ export default {
       return style
     },
     async importJsonColl (coll) {
-      try {
-        await firebase.firestore().collection('collections').add({
+      if (!coll.collId) {
+        try {
+          await firebase.firestore().collection('collections').add({
+            title: coll.title,
+            description: coll.description,
+            articles: coll.articles,
+            relations: coll.relations,
+            owner: this.currUser.uid
+          })
+        } catch (err) {
+          this.$log.error('Error adding document: ', err)
+        }
+      } else {
+        await firebase.firestore().doc(`collections/${coll.collId}`).set({
           title: coll.title,
           description: coll.description,
           articles: coll.articles,
           relations: coll.relations,
           owner: this.currUser.uid
         })
-      } catch (err) {
-        this.$log.error('Error adding document: ', err)
       }
+
     },
     navigateToCollView (collId) {
       this.$router.push(`/coll/${collId}`)

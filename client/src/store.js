@@ -1,6 +1,9 @@
 import _ from 'lodash'
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
+import {
+  fromColl as computeHierarchicalTags
+} from '@/components/hierarchicaltags.js'
 import { VisGraph } from '@/components/visgraph.js'
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -9,7 +12,8 @@ Vue.use(Vuex)
 
 const defaultFilters = {
   yearMin: null,
-  yearMax: null
+  yearMax: null,
+  tagSelects: {}
 }
 
 const defaultState = {
@@ -23,6 +27,7 @@ const defaultState = {
   currCollId: null,
   currColl: null,
   currVisGraph: null,
+  currHierTags: null,
   currArtId: null,
   currArt: null,
   filters: defaultFilters,
@@ -99,6 +104,7 @@ const parseVis = {
       }
       let currColl = _.isNil(collId) ? null : context.state.currColl
       let currVisGraph = _.isNil(collId) ? null : context.state.currVisGraph
+      let currHierTags = _.isNil(collId) ? null : context.state.currHierTags
       let currArt = _.isNil(artId) ? null : context.state.currArt
       if (prevCollId !== collId && !_.isNil(collId)) {
         // collection changes
@@ -107,6 +113,8 @@ const parseVis = {
         const coll = snapshot.data()
         currColl = coll
         currVisGraph = VisGraph.fromColl(currColl)
+        // compute hierarchical tags
+        currHierTags = computeHierarchicalTags(coll)
       }
       if (prevArtId !== artId && !_.isNil(artId)) {
         // article chanages
@@ -120,7 +128,7 @@ const parseVis = {
         }
       }
       context.commit('set', {
-        currColl, currVisGraph, currArt
+        currColl, currVisGraph, currHierTags, currArt
       })
     }
   },

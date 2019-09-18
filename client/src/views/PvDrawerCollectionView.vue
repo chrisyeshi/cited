@@ -39,6 +39,9 @@
             label="To Year" :placeholder="yearMax" v-model="yearTo" />
         </v-card-text>
       </v-card>
+      <pv-drawer-tag-group v-for="(tagGroup, index) in hierTags"
+        :key="index" flat tile :tag-group="tagGroup"
+        @select="onSelectTagGroup($event, index)" />
       <pv-drawer-article-list-tile v-for="art in collArts" :key="art.artHash"
         :art="art" @click="onClickArticle(art.artHash)">
       </pv-drawer-article-list-tile>
@@ -51,17 +54,20 @@ import _ from 'lodash'
 import { mapState } from 'vuex'
 import ExpandableText from '@/components/ExpandableText.vue'
 import PvDrawerArticleListTile from '@/components/PvDrawerArticleListTile.vue'
+import PvDrawerTagGroup from '@/components/PvDrawerTagGroup.vue'
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
 
 export default {
   name: 'PvDrawerCollectionView',
-  components: { ExpandableText, PvDrawerArticleListTile },
+  components: { ExpandableText, PvDrawerArticleListTile, PvDrawerTagGroup },
   data: () => ({
     descriptionLimit: 200
   }),
   computed: {
-    ...mapState('parseVis', [ 'currCollId', 'currColl', 'collVisGraph' ]),
+    ...mapState(
+      'parseVis',
+      [ 'currCollId', 'currColl', 'collVisGraph', 'currHierTags', 'filters' ]),
     coll () {
       return this.currColl
     },
@@ -74,9 +80,22 @@ export default {
     collArts () {
       return this.coll && this.coll.articles
     },
+    hierTags () {
+      const merged = _.merge({}, this.currHierTags, this.filters.tagSelects)
+      const singleLevelTags = _.pickBy(merged, obj => _.isEmpty(obj.children))
+      const multiLevelTags = _.pickBy(merged, obj => !_.isEmpty(obj.children))
+      return [
+        ..._.map(multiLevelTags),
+        {
+          name: 'other',
+          artHashes: _.union(..._.map(singleLevelTags, tag => tag.artHashes)),
+          children: singleLevelTags
+        }
+      ]
+    },
     yearFrom: {
       get () {
-        return this.$store.state.parseVis.filters.yearMin
+        return this.filters.yearMin
       },
       set: _.debounce(function (value) {
         this.$store.commit(
@@ -86,7 +105,7 @@ export default {
     },
     yearTo: {
       get () {
-        return this.$store.state.parseVis.filters.yearMax
+        return this.filters.yearMax
       },
       set: _.debounce(function(value) {
         this.$store.commit(
@@ -134,6 +153,22 @@ export default {
     },
     onClickArticle (artId) {
       this.$router.push(`/coll/${this.currCollId}/${artId}`)
+    },
+    onSelectTagGroup (tagKeys, groupIndex) {
+      const tagSelects = this.hierTags.length - 1 === groupIndex
+        ? {
+          ..._.pick(
+            this.filters.tagSelects,
+            _.map(_.dropRight(this.hierTags), tag => tag.name)),
+          ..._.mapValues(_.keyBy(tagKeys), () => ({ selected: true }))
+        }
+        : {
+          ...this.filters.tagSelects,
+          [this.hierTags[groupIndex].name]: {
+            children: _.mapValues(_.keyBy(tagKeys), () => ({ selected: true }))
+          }
+        }
+      this.$store.commit('parseVis/setFilters', { tagSelects })
     }
   }
 }
