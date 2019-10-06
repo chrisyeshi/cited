@@ -111,24 +111,23 @@ export default {
       if (!this.art) {
         return []
       }
-      if (this.art.referenceArtHashes) {
-        const dbReferences =
-          Promise.all(
-            _.map(this.art.referenceArtHashes, async artHash => {
-              const snapshot =
-                firebase.firestore().doc(`/artMetas/${artHash}`).get()
-              return snapshot.data()
-            }))
-        return _.filter(dbReferences)
-      }
       const cachedReferences = this.art.references || []
       const inGraphReferenceIds =
         this.visGraph.getInGraphReferenceIds(this.art.artHash)
       const inGraphReferences =
         _.map(inGraphReferenceIds, artHash => this.visGraph.getArt(artHash))
-      const references =
-        _.uniqBy(
-          [ ...cachedReferences, ...inGraphReferences ], art => art.artHash)
+      const artHashObjs =
+        _.map(this.art.referenceArtHashes, artHash => ({ artHash }))
+      const localReferences =
+        _.unionBy(inGraphReferences, cachedReferences, artHashObjs, 'artHash')
+      const references = Promise.all(_.map(localReferences, async reference => {
+        const ref = firebase.firestore().doc(`/artMetas/${reference.artHash}`)
+        const snap = await ref.get()
+        return {
+          ...reference,
+          ...snap.data()
+        }
+      }))
       return references
     },
     onClickArticle (artId) {

@@ -38,9 +38,29 @@ exports.onCollectionDocWrite =
   const after = change.after.data();
   return admin.firestore().doc(`collMetas/${context.params.collId}`).set({
     title: after.title,
-    description: _.toString(after.description).slice(0, 280),
+    description: _.truncate(after.description, { length: 280 }),
     nArticle: _.size(after.articles),
     nEditor: _.size(after.editors),
     owner: after.owner
+  })
+})
+
+exports.onArticleDocWrite =
+  functions.firestore.document('articles/{artHash}').onWrite(
+    async (change, context) => {
+  if (!change.after.exists) {
+    //delete event
+    return admin.firestore().doc(`artMetas/${context.params.artHash}`).delete()
+  }
+  // create or update event
+  const after = change.after.data()
+  return admin.firestore().doc(`artMetas/${context.params.artHash}`).set({
+    title: after.title,
+    abstract: _.truncate(after.abstract, { length: 280 }),
+    firstAuthor: _.first(after.authors),
+    year: after.year,
+    venue: after.venue,
+    nReference: after.nReference || after.nReferences,
+    nCitedBy: after.nCitedBy || after.nCitedBys
   })
 })

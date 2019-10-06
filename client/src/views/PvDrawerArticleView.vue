@@ -32,7 +32,7 @@
       <v-row class="font-weight-light">
         <v-col class="py-1">
           <pv-drawer-article-stats-row :venue="venue" :year="year"
-            :nReferences="nReferences" :nCitedBys="nCitedBys" />
+            :nReferences="nReference" :nCitedBys="nCitedBys" />
         </v-col>
       </v-row>
       <v-row class="font-weight-thin">
@@ -43,11 +43,11 @@
       <v-row class="mx-0">
         <v-col cols=6 class="pr-1">
           <v-row tag="h4" shrink class="font-weight-bold my-2 mr-0">
-            References ({{ nReferences }})
+            References ({{ nReference }})
           </v-row>
           <v-row v-for="art in references" :key="art.artHash"
             class="my-2 mr-0" style="font-size: 12px;">
-            <pv-drawer-article-relative-card
+            <pv-drawer-article-relative-card style="width: 100%;"
               :art="art" @click="onClickArticle(art.artHash)" />
           </v-row>
           <v-row class="my-2 mr-0" justify="center">
@@ -59,11 +59,11 @@
         </v-col>
         <v-col cols=6 class="pl-1">
           <v-row tag="h4" shrink class="font-weight-bold my-2 ml-0">
-            Cited by ({{ nCitedBys }})
+            Cited by ({{ nCitedBy }})
           </v-row>
           <v-row v-for="art in citedBys" :key="art.artHash"
             class="my-2 ml-0" style="font-size: 12px;">
-            <pv-drawer-article-relative-card
+            <pv-drawer-article-relative-card style="width: 100%;"
               :art="art" @click="onClickArticle(art.artHash)">
             </pv-drawer-article-relative-card>
           </v-row>
@@ -104,10 +104,14 @@ export default {
       'currCollId', 'currVisGraph', 'currArtId', 'currArt'
     ]),
     art () { return this.currArt || this.visGraph.getArt(this.currArtId) },
-    artLabel () { return `${this.firstAuthorSurname} ${this.year}` },
+    artLabel () {
+      return this.title
+        ? `${this.firstAuthorSurname} ${this.year}`
+        : this.currArtId
+    },
     artStats () {
       const stats = []
-      if (!this.currArt) {
+      if (_.isNil(_.property('title')(this.currArt))) {
         stats.push({
           label: 'db',
           tooltip: 'article not in database',
@@ -133,8 +137,8 @@ export default {
         })
       }
       const nReference = this.nReference
-      const references = this.references
-      if (_.isNil(nReference) || _.size(references) < nReference) {
+      const referenceArtHashes = this.art.referenceArtHashes
+      if (_.isNil(nReference) || _.size(referenceArtHashes) < nReference) {
         stats.push({
           label: 'references',
           tooltip: 'missing reference(s)',
@@ -144,7 +148,9 @@ export default {
       return stats
     },
     abstract () { return this.art && this.art.abstract },
-    authors () { return this.art ? this.art.authors : [] },
+    authors () {
+      return _.property('authors')(this.art) || []
+    },
     firstAuthorSurname () {
       return this.art && this.art.authors && this.art.authors[0] &&
         this.art.authors[0].surname

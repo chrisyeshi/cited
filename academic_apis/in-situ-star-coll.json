@@ -1,0 +1,1345 @@
+{
+  "collId": "in-situ-star",
+  "title": "In Situ Visualization STAR Report",
+  "description": "In Situ Methods, Infrastructures, and Applications on High Performance Computing Platforms",
+  "articles": [
+    {
+      "artHash": "lofstead-2009-9c408c145c390ccf",
+      "title": "Adaptable, metadata rich IO methods for portable high performance IO",
+      "abstract": "Since IO performance on HPC machines strongly depends on machine characteristics and configuration, it is important to carefully tune IO libraries and make good use of appropriate library APIs. For instance, on current petascale machines, independent IO tends to outperform col...",
+      "year": 2009,
+      "firstAuthor": {
+        "surname": "Lofstead",
+        "given": "Jay"
+      },
+      "venue": {
+        "name": "2009 IEEE International Symposium on Parallel & Distributed Processing"
+      },
+      "nReference": 16,
+      "nCitedBy": 129
+    },
+    {
+      "artHash": "agranovsky-2014-70363865cd8dfded",
+      "title": "Improved post hoc flow analysis via Lagrangian representations",
+      "abstract": "Fluid mechanics considers two frames of reference for an observer watching a flow field: Eulerian and Lagrangian. The former is the frame of reference traditionally used for flow analysis, and involves extracting particle trajectories based on a vector field. With this work, w...",
+      "year": 2014,
+      "firstAuthor": {
+        "surname": "Agranovsky",
+        "given": "Alexy"
+      },
+      "venue": {
+        "name": "2014 IEEE 4th Symposium on Large Data Analysis and Visualization (LDAV)"
+      },
+      "nReference": 27,
+      "nCitedBy": 31
+    },
+    {
+      "artHash": "fabian-2011-cd85bc215c9eed3c",
+      "title": "The ParaView Coprocessing Library: A scalable, general purpose in situ visualization library",
+      "abstract": "As high performance computing approaches exascale, CPU capability far outpaces disk write speed, and in situ visualization becomes an essential part of an analyst's workflow. In this paper, we describe the ParaView Coprocessing Library, a framework for in situ visualization an...",
+      "year": 2011,
+      "firstAuthor": {
+        "surname": "Fabian",
+        "given": "Nathan"
+      },
+      "venue": {
+        "name": "2011 IEEE Symposium on Large Data Analysis and Visualization"
+      },
+      "nReference": 18,
+      "nCitedBy": 139
+    },
+    {
+      "artHash": "ellsworth-2006-814ee41918ba75b6",
+      "title": "Concurrent Visualization in a Production Supercomputing Environment",
+      "abstract": "We describe a concurrent visualization pipeline designed for operation in a production supercomputing environment. The facility was initially developed on the NASA Ames &quot;Columbia&quot; supercomputer for a massively parallel forecast model (GEOS4). During the 2005 Atlantic...",
+      "year": 2006,
+      "firstAuthor": {
+        "surname": "Ellsworth",
+        "given": "David"
+      },
+      "venue": {
+        "name": "IEEE Transactions on Visualization and Computer Graphics"
+      },
+      "nReference": 16,
+      "nCitedBy": 32
+    },
+    {
+      "artHash": "larsen-2015-a08c10a6221f1c40",
+      "title": "Strawman: A Batch In Situ Visualization and Analysis Infrastructure for Multi-Physics Simulation Codes",
+      "abstract": "We present Strawman, a system designed to explore the in situ visualization and analysis needs of simulation code teams planning for multi-physics calculations on exascale architectures. Strawman&#39;s design derives from key requirements from a diverse set of simulation code ...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Larsen",
+        "given": "Matthew"
+      },
+      "venue": {
+        "name": "ISAV@SC"
+      },
+      "nReference": 18,
+      "nCitedBy": 21
+    },
+    {
+      "artHash": "parker-1997-948a870edbf39129",
+      "title": "Computational steering. Software systems and strategies",
+      "abstract": "With today&#39;s large and complex applications, scientists have increasing difficulty analyzing and visualizing vast amounts of data. Computational steering is an emerging technology that addresses this problem, providing a mechanism for integrating simulation, data analysis,...",
+      "year": 1997,
+      "firstAuthor": {
+        "surname": "Parker",
+        "given": "Steven"
+      },
+      "venue": "",
+      "nReference": 12,
+      "nCitedBy": 56
+    },
+    {
+      "artHash": "lofstead-2011-8a0e67a0c58ffcb4",
+      "title": "Extending scalability of collective IO through nessie and staging",
+      "abstract": "The increasing fidelity of scientific simulations as they scale towards exascale sizes is straining the proven IO techniques championed throughout terascale computing. Chief among the successful IO techniques is the idea of collective IO where processes coordinate and exchange...",
+      "year": 2011,
+      "firstAuthor": {
+        "surname": "Lofstead",
+        "given": "Jay"
+      },
+      "venue": {
+        "name": "PDSW '11"
+      },
+      "nReference": 19,
+      "nCitedBy": 19
+    },
+    {
+      "artHash": "globus-1995-59a9f73fa657f43b",
+      "title": "A software model for visualization of large unsteady 3-D CFD results",
+      "abstract": "The largest unsteady 3-D computational fluid dynamics (CFD) results produced today exceed 100 gigabytes. Visualizing these large data sets stresses computational resources, requiring users and visualization systems to make trade-offs between time, space, and flexibility. Curre...",
+      "year": 1995,
+      "firstAuthor": {
+        "surname": "Globus",
+        "given": "Al"
+      },
+      "venue": "",
+      "nReference": 24,
+      "nCitedBy": 8
+    },
+    {
+      "artHash": "dorier-2013-df88645db91a8842",
+      "title": "Damaris/Viz: A nonintrusive, adaptable and user-friendly in situ visualization framework",
+      "abstract": "Reducing the amount of data stored by simulations will be of utmost importance for the next generation of large-scale computing. Accordingly, there is active research to shift analysis and visualization tasks to run in situ, that is, closer to the simulation via the sharing of...",
+      "year": 2013,
+      "firstAuthor": {
+        "surname": "Dorier",
+        "given": "Matthieu"
+      },
+      "venue": {
+        "name": "2013 IEEE Symposium on Large-Scale Data Analysis and Visualization (LDAV)"
+      },
+      "nReference": 27,
+      "nCitedBy": 35
+    },
+    {
+      "artHash": "liu-2014-f0dba6fc0dc89d5d",
+      "title": "Hello ADIOS: the challenges and lessons of developing leadership class I/O frameworks",
+      "abstract": "Applications running on leadership platforms are more and more bottlenecked by storage input/output I/O. In an effort to combat the increasing disparity between I/O throughput and compute capability, we created Adaptable IO System ADIOS in 2005. Focusing on putting users first...",
+      "year": 2014,
+      "firstAuthor": {
+        "surname": "Liu",
+        "given": "Qing"
+      },
+      "venue": {
+        "name": "Concurrency and Computation: Practice and Experience"
+      },
+      "nReference": 47,
+      "nCitedBy": 91
+    },
+    {
+      "artHash": "whitlock-2016-1369753303e3216c",
+      "title": "In Situ Infrastructure Enhancements for Data Extract Generation",
+      "abstract": "Solvers are generating large datasets that require enormous compute resources to analyze and visualize using a traditional post-processing workflow. At the same time, the increase in the size of high performance computers is driving an architectural trend that demands saving l...",
+      "year": 2016,
+      "firstAuthor": {
+        "surname": "Whitlock",
+        "given": "Brad"
+      },
+      "venue": "",
+      "nReference": 0,
+      "nCitedBy": 4
+    },
+    {
+      "artHash": "jacobsen-1995-7e4ace28ef42d54f",
+      "title": "Petroleum Reservoir Simulation in a Virtual Environment",
+      "abstract": "In this paper, the authors describe an approach to combining a reservoir simulation with 3-D visualization and virtual reality technology. Their prototype VR/visualization system minimizes human-machine interface barriers and provides enhanced control over the simulation, ther...",
+      "year": 1995,
+      "firstAuthor": {
+        "surname": "Jacobsen",
+        "given": "Jurma"
+      },
+      "venue": "",
+      "nReference": 0,
+      "nCitedBy": 3
+    },
+    {
+      "artHash": "tu-2006-fd1d7dcdb06b634d",
+      "title": "From Mesh Generation to Scientific Visualization: An End-to-End Approach to Parallel Supercomputing",
+      "abstract": "Parallel supercomputing has traditionally focused on the inner kernel of scientific simulations: the solver. The front and back ends of the simulation pipeline---problem description and interpretation of the output---have taken a back seat to the solver when it comes to attent...",
+      "year": 2006,
+      "firstAuthor": {
+        "surname": "Tu",
+        "given": "Tiankai"
+      },
+      "venue": {
+        "name": "ACM/IEEE SC 2006 Conference (SC'06)"
+      },
+      "nReference": 10,
+      "nCitedBy": 90
+    },
+    {
+      "artHash": "bethel-2005-756fd0e3675b8ae",
+      "title": "Consuming Network Bandwidth with Visapult",
+      "abstract": "Visapult is a visualization application composed of visualization of multiple software components that execute in a pipelined-parallel fashion over wide-area networks. By design, Visapult was tailored for use in a remote and distributed visualization context. Visapult is argua...",
+      "year": 2005,
+      "firstAuthor": {
+        "surname": "Bethel",
+        "given": "Wes"
+      },
+      "venue": {
+        "name": "The Visualization Handbook"
+      },
+      "nReference": 0,
+      "nCitedBy": 6
+    },
+    {
+      "artHash": "docan-2015-13edbbcc4333945a",
+      "title": "ActiveSpaces: Exploring dynamic code deployment for extreme scale data processing",
+      "abstract": "Managing the large volumes of data produced by emerging scientific and engineering simulations running on leadership-class resources has become a critical challenge. The data have to be extracted off the computing nodes and transported to consumer nodes so that it can be proce...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Docan",
+        "given": "Ciprian"
+      },
+      "venue": {
+        "name": "Concurrency and Computation: Practice and Experience"
+      },
+      "nReference": 21,
+      "nCitedBy": 7
+    },
+    {
+      "artHash": "childs-2007-79d7a43083ea48e3",
+      "title": "Architectural challenges and solutions for petascale postprocessing",
+      "abstract": "With petascale applications comes petascale data; gleaning knowledge and insight from this large-scale data is widely accepted to be a limiting factor in many fields of scientific endeavor. Large-scale data presents two incredible challenges: scale and complexity. The scale ch...",
+      "year": 2007,
+      "firstAuthor": {
+        "surname": "Childs",
+        "given": "Hank"
+      },
+      "venue": "",
+      "nReference": 16,
+      "nCitedBy": 32
+    },
+    {
+      "artHash": "morozov-2013-4549a0240746d309",
+      "title": "Distributed merge trees",
+      "abstract": "Improved simulations and sensors are producing datasets whose increasing complexity exhausts our ability to visualize and comprehend them directly. To cope with this problem, we can detect and extract significant features in the data and use them as the basis for subsequent an...",
+      "year": 2013,
+      "firstAuthor": {
+        "surname": "Morozov",
+        "given": "Dmitriy"
+      },
+      "venue": {
+        "name": "PPOPP"
+      },
+      "nReference": 21,
+      "nCitedBy": 30
+    },
+    {
+      "artHash": "li-2015-60bf76b65fabf75b",
+      "title": "Evaluating the efficacy of wavelet configurations on turbulent-flow data",
+      "abstract": "I/O is increasingly becoming a significant constraint for simulation codes and visualization tools on modern supercomputers. Data compression is an attractive workaround, and, in particular, wavelets provide a promising solution. However, wavelets can be applied in multiple co...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Li",
+        "given": "Shaomeng"
+      },
+      "venue": {
+        "name": "2015 IEEE 5th Symposium on Large Data Analysis and Visualization (LDAV)"
+      },
+      "nReference": 30,
+      "nCitedBy": 12
+    },
+    {
+      "artHash": "crivelli-2004-bb30a8df5d9b18e",
+      "title": "ProteinShop: A tool for interactive protein manipulation and steering",
+      "abstract": "We describe ProteinShop, a new visualization tool that streamlines and simplifies the process of determining optimal protein folds. ProteinShop may be used at different stages of a protein structure prediction process. First, it can create protein configurations containing sec...",
+      "year": 2004,
+      "firstAuthor": {
+        "surname": "Crivelli",
+        "given": "Silvia"
+      },
+      "venue": {
+        "name": "Journal of Computer-Aided Molecular Design"
+      },
+      "nReference": 10,
+      "nCitedBy": 16
+    },
+    {
+      "artHash": "ma-2009-7b75045ff81f57c5",
+      "title": "In Situ Visualization at Extreme Scale: Challenges and Opportunities",
+      "abstract": "In situ visualization is clearly a promising solution for ultrascale simulations. We&#39;ve seen some success in realizing this solution and in ongoing efforts to add support for in situ visualization to open source visualization toolkits such as ParaView and Visit. However, f...",
+      "year": 2009,
+      "firstAuthor": {
+        "surname": "Ma",
+        "given": "Kwan-Liu"
+      },
+      "venue": {
+        "name": "IEEE Computer Graphics and Applications"
+      },
+      "nReference": 7,
+      "nCitedBy": 92
+    },
+    {
+      "artHash": "zajac-1964-737c2b08b4b76dd7",
+      "title": "Computer-made perspective movies as a scientific and communication tool",
+      "abstract": "It is easy to program the basic transformation required for a perspective drawing. This fact plus the advent of high speed microfilm printers such as the General Dynamics Electronics S-C 4020 makes possible perspective movies as the direct output from a computer. The programmi...",
+      "year": 1964,
+      "firstAuthor": {
+        "surname": "Zajac",
+        "given": "E."
+      },
+      "venue": {
+        "name": "Commun. ACM"
+      },
+      "nReference": 0,
+      "nCitedBy": 6
+    },
+    {
+      "artHash": "nouanesengsy-2014-55d6e589f8d164c0",
+      "title": "ADR visualization: A generalized framework for ranking large-scale scientific data using Analysis-Driven Refinement",
+      "abstract": "Prioritization of data is necessary for managing large-scale scientific data, as the scale of the data implies that there are only enough resources available to process a limited subset of the data. For example, data prioritization is used during in situ triage to scale with b...",
+      "year": 2014,
+      "firstAuthor": {
+        "surname": "Nouanesengsy",
+        "given": "Boonthanome"
+      },
+      "venue": {
+        "name": "2014 IEEE 4th Symposium on Large Data Analysis and Visualization (LDAV)"
+      },
+      "nReference": 29,
+      "nCitedBy": 19
+    },
+    {
+      "artHash": "ye-2015-4f804523663bbb32",
+      "title": "In situ depth maps based feature extraction and tracking",
+      "abstract": "Parallel numerical simulation is a powerful tool used by scientists to study complex problems. It has been a common practice to save the simulation output to disk and then conduct post-hoc in-depth analyses of the saved data. System I/O capabilities have not kept pace as simul...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Ye",
+        "given": "Yucong"
+      },
+      "venue": {
+        "name": "2015 IEEE 5th Symposium on Large Data Analysis and Visualization (LDAV)"
+      },
+      "nReference": 30,
+      "nCitedBy": 5
+    },
+    {
+      "artHash": "biedert-2015-e3fbdadb436d853a",
+      "title": "Contour Tree Depth Images For Large Data Visualization",
+      "abstract": "High-fidelity simulation models on large-scale parallel computer systems can produce data at high computational throughput, but modern architectural trade-offs make full persistent storage to the slow I/O subsystem prohibitively costly with respect to time. We demonstrate the ...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Biedert",
+        "given": "Tim"
+      },
+      "venue": {
+        "name": "EGPGV"
+      },
+      "nReference": 35,
+      "nCitedBy": 7
+    },
+    {
+      "artHash": "whitlock-2011-d9f162c2b64d329a",
+      "title": "Parallel In Situ Coupling of Simulation with a Fully Featured Visualization System",
+      "abstract": "There is a widening gap between compute performance and the ability to store computation results. Complex scientific codes are the most affected since they must save massive files containing meshes and fields for offline analysis. Time and storage costs instead dictate that da...",
+      "year": 2011,
+      "firstAuthor": {
+        "surname": "Whitlock",
+        "given": "Brad"
+      },
+      "venue": {
+        "name": "EGPGV"
+      },
+      "nReference": 10,
+      "nCitedBy": 142
+    },
+    {
+      "artHash": "bethel-2011-3f3ff359e8c39979",
+      "title": "Visualization at Supercomputing Centers: The Tale of Little Big Iron and the Three Skinny Guys",
+      "abstract": "Supercomputing centers are unique resources that aim to enable scientific knowledge discovery by employing large computational resources-the &quot;Big Iron.&quot; Design, acquisition, installation, and management of the Big Iron are carefully planned and monitored. Because the...",
+      "year": 2011,
+      "firstAuthor": {
+        "surname": "Bethel",
+        "given": "E."
+      },
+      "venue": {
+        "name": "IEEE Computer Graphics and Applications"
+      },
+      "nReference": 0,
+      "nCitedBy": 11
+    },
+    {
+      "artHash": "ye-2013-46fc07f2bcb51f48",
+      "title": "In Situ Pathtube Visualization with Explorable Images",
+      "abstract": "In situ processing is considered to be the most plausible data analysis and visualization solution for extreme-scale simulations. Explorable images were introduced as an in situ visualization method to enable interactive exploration of scalar field data without need for access...",
+      "year": 2013,
+      "firstAuthor": {
+        "surname": "Ye",
+        "given": "Yucong"
+      },
+      "venue": {
+        "name": "EGPGV"
+      },
+      "nReference": 0,
+      "nCitedBy": 8
+    },
+    {
+      "artHash": "duque-2015-b32f6aa9a18b0f3b",
+      "title": "EPIC - An Extract Plug-In Components Toolkit for In-Situ Data Extracts Architecture",
+      "abstract": "A new data extract toolkit known as EPICExtract Plug-In Components Toolkit has been designed and implemented to create data surface extracts in situ via the TURBO CFD code. New FieldView extracts (eXDB) with a Proper Orthogonal Decomposition (POD) reduced order model were impl...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Duque",
+        "given": "Earl"
+      },
+      "venue": "",
+      "nReference": 0,
+      "nCitedBy": 3
+    },
+    {
+      "artHash": "fernandes-2015-b87e11186d02de56",
+      "title": "On in-situ visualization for strongly coupled partitioned fluid-structure interaction",
+      "abstract": "We present an integrated in-situ visualization approach for partitioned multi-physics simulation of fluid-structure interaction. The simulation itself is treated as a black box and only the information at the fluid-structure interface is considered, and communicated between th...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Fernandes",
+        "given": "Oliver"
+      },
+      "venue": "",
+      "nReference": 35,
+      "nCitedBy": 4
+    },
+    {
+      "artHash": "tikhonova-2011-826ecc8136e6e54b",
+      "title": "A Preview and Exploratory Technique for Large-Scale Scientific Simulations",
+      "abstract": "Successful in-situ and remote visualization solutions must have minimal storage requirements and account for only a small percentage of supercomputing time. One solution that meets these requirements is to store a compact intermediate representation of the data, instead of a 3...",
+      "year": 2011,
+      "firstAuthor": {
+        "surname": "Tikhonova",
+        "given": "Anna"
+      },
+      "venue": {
+        "name": "EGPGV"
+      },
+      "nReference": 25,
+      "nCitedBy": 19
+    },
+    {
+      "artHash": "forsythe-2015-c7b718980e08b33b",
+      "title": "Coupled Flight Simulator and CFD Calculations of Ship Airwake using Kestrel",
+      "abstract": "The coherent vortical wakes of the flow past Navy ships can pose a flight risk to fixed and rotary wing aircraft landing on the deck. Safety can be greatly enhanced by using realistic flight simulators to train pilots. However, flight simulators typically use atmospheric model...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Forsythe",
+        "given": "James"
+      },
+      "venue": "",
+      "nReference": 0,
+      "nCitedBy": 11
+    },
+    {
+      "artHash": "ahrens-2015-de9d0207b5b1f2f9",
+      "title": "Increasing Scientific Data Insights about Exascale Class Simulations under Power and Storage Constraints",
+      "abstract": "Creating the next-generation high-performance simulation and analysis environment will be a significant challenge because of power and storage technology trends. Responding to these challenges will require rethinking and reframing how we approach visualization and analysis. A ...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Ahrens",
+        "given": "James"
+      },
+      "venue": {
+        "name": "IEEE Computer Graphics and Applications"
+      },
+      "nReference": 1,
+      "nCitedBy": 10
+    },
+    {
+      "artHash": "o'leary-2015-b6cc8dfdedcb5f9c",
+      "title": "HPCCloud: A Cloud/Web-Based Simulation Environment",
+      "abstract": "Advanced modeling and simulation has enabled the design of a variety of innovative products and the analysis of numerous complex phenomenon. However, significant barriers exist to widespread adoption of these tools. In particular, advanced modeling and simulation: (1) is consi...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "O'Leary",
+        "given": "Patrick"
+      },
+      "venue": {
+        "name": "2015 IEEE 7th International Conference on Cloud Computing Technology and Science (CloudCom)"
+      },
+      "nReference": 14,
+      "nCitedBy": 4
+    },
+    {
+      "artHash": "yu-2010-1b97bd57e6ac1f4a",
+      "title": "In Situ Visualization for Large-Scale Combustion Simulations",
+      "abstract": "As scientific supercomputing moves toward petascale and exascale levels, in situ visualization stands out as a scalable way for scientists to view the data their simulations generate. This full picture is crucial particularly for capturing and understanding highly intermittent...",
+      "year": 2010,
+      "firstAuthor": {
+        "surname": "Yu",
+        "given": "Hongfeng"
+      },
+      "venue": {
+        "name": "IEEE Computer Graphics and Applications"
+      },
+      "nReference": 13,
+      "nCitedBy": 125
+    },
+    {
+      "artHash": "goodale-2002-e34adfb1a9c0c1bf",
+      "title": "The Cactus Framework and Toolkit: Design and Applications",
+      "abstract": "We describe Cactus, a framework for building a variety of computing applications in science and engineering, including astrophysics, relativity and chemical engineering. We first motivate by example the need for such frameworks to support multi-platform, high performance appli...",
+      "year": 2002,
+      "firstAuthor": {
+        "surname": "Goodale",
+        "given": "Tom"
+      },
+      "venue": {
+        "name": "VECPAR"
+      },
+      "nReference": 18,
+      "nCitedBy": 233
+    },
+    {
+      "artHash": "chen-2008-2faf9e847a6c6871",
+      "title": "Interactive, Internet Delivery of Visualization via Structured Prerendered Multiresolution Imagery",
+      "abstract": "We present a novel approach for latency-tolerant delivery of visualization and rendering results, where client-side frame rate display performance is independent of source data set size, image size, visualization technique, or rendering complexity. Our approach delivers preren...",
+      "year": 2008,
+      "firstAuthor": {
+        "surname": "Chen",
+        "given": "Jerry"
+      },
+      "venue": {
+        "name": "IEEE Transactions on Visualization and Computer Graphics"
+      },
+      "nReference": 1,
+      "nCitedBy": 19
+    },
+    {
+      "artHash": "li-2003-1fb55a4467688b2f",
+      "title": "Parallel netCDF: A High-Performance Scientific I/O Interface",
+      "abstract": "Dataset storage, exchange, and access play a critical role in scientific applications. For such purposes netCDF serves as a portable, efficient file format and programming interface, which is popular in numerous scientific application domains. However, the original interface d...",
+      "year": 2003,
+      "firstAuthor": {
+        "surname": "Li",
+        "given": "Jianwei"
+      },
+      "venue": {
+        "name": "ACM/IEEE SC 2003 Conference (SC'03)"
+      },
+      "nReference": 14,
+      "nCitedBy": 242
+    },
+    {
+      "artHash": "duque-2005-3a20b7699c742323",
+      "title": "Visualization of Large-Scale Unsteady Computational Fluid Dynamics Datasets",
+      "abstract": "This paper represents an entry to the SC|05 Analytics Challenge and describes a new scientific visualization tool designed to allow investigators to more effectively interrogate large unsteady datasets. By utilizing techniques such as data extracts and programmable graphics pr...",
+      "year": 2005,
+      "firstAuthor": {
+        "surname": "Duque",
+        "given": "Earl"
+      },
+      "venue": {
+        "name": "ACM/IEEE SC 2005 Conference (SC'05)"
+      },
+      "nReference": 7,
+      "nCitedBy": 2
+    },
+    {
+      "artHash": "choi-2013-4891ec87910ab73",
+      "title": "ICEE: Wide-area In Transit Data Processing Framework For Near Real-Time Scientific Applications",
+      "abstract": "Abstract—Modern science often requires a large group of scientists to pool their resources together to make progress. These collaborations produce huge amounts of data that needs to be shared across geographically distant locations. In some of these cases, immediate feedback i...",
+      "year": 2013,
+      "firstAuthor": {
+        "surname": "Choi",
+        "given": "Jong"
+      },
+      "venue": "",
+      "nReference": 19,
+      "nCitedBy": 12
+    },
+    {
+      "artHash": "fernandes-2014-bb630a4b1e45df44",
+      "title": "Space-time volumetric depth images for in-situ visualization",
+      "abstract": "Volumetric depth images (VDI) are a view-dependent representation that combines the high quality of images with the explorability of 3D fields. By compressing the scalar data along view rays into sets of coherent supersegments, VDIs provide an efficient representation that sup...",
+      "year": 2014,
+      "firstAuthor": {
+        "surname": "Fernandes",
+        "given": "Oliver"
+      },
+      "venue": {
+        "name": "2014 IEEE 4th Symposium on Large Data Analysis and Visualization (LDAV)"
+      },
+      "nReference": 21,
+      "nCitedBy": 16
+    },
+    {
+      "artHash": "lofstead-2013-9703b045966f55a5",
+      "title": "Experiences Applying Data Staging Technology in Unconventional Ways",
+      "abstract": "Several efforts have shown the potential of using additional compute-area resources to enhance the IO path to storage. Efforts like data staging, IO forwarding, and similar techniques can accelerate IO performance and reduce the impact of IO time to a compute application. Hybr...",
+      "year": 2013,
+      "firstAuthor": {
+        "surname": "Lofstead",
+        "given": "Jay"
+      },
+      "venue": {
+        "name": "2013 13th IEEE/ACM International Symposium on Cluster, Cloud, and Grid Computing"
+      },
+      "nReference": 18,
+      "nCitedBy": 5
+    },
+    {
+      "artHash": "ahrens-2014-9231637a6fe76c46",
+      "title": "In Situ MPAS-Ocean Image-based Visualization",
+      "abstract": "Due to power and I/O constraints associated with extreme scale scientific simulations, in situ visualization and analysis to will become a critical component to scientific discovery. The options for extreme scale visualization and analysis are often presented as a stark contra...",
+      "year": 2014,
+      "firstAuthor": {
+        "surname": "Ahrens",
+        "given": "James"
+      },
+      "venue": "",
+      "nReference": 12,
+      "nCitedBy": 10
+    },
+    {
+      "artHash": "biddiscombe-2012-fc3c3c82ba4c1c1",
+      "title": "Parallel Computational Steering for HPC Applications Using HDF5 Files in Distributed Shared Memory",
+      "abstract": "Interfacing a GUI driven visualization/analysis package to an HPC application enables a supercomputer to be used as an interactive instrument. We achieve this by replacing the IO layer in the HDF5 library with a custom driver which transfers data in parallel between simulation...",
+      "year": 2012,
+      "firstAuthor": {
+        "surname": "Biddiscombe",
+        "given": "John"
+      },
+      "venue": {
+        "name": "IEEE Transactions on Visualization and Computer Graphics"
+      },
+      "nReference": 17,
+      "nCitedBy": 13
+    },
+    {
+      "artHash": "upson-1989-f3596a2e45e5bea1",
+      "title": "The application visualization system: a computational environment for scientific visualization",
+      "abstract": "A software system for developing interactive scientific visualization applications quickly, with a minimum of programming effort, is described. This application visualization system (AVS) is an application framework targeted at scientists and engineers. The goal of the system ...",
+      "year": 1989,
+      "firstAuthor": {
+        "surname": "Upson",
+        "given": "Craig"
+      },
+      "venue": {
+        "name": "IEEE Computer Graphics and Applications"
+      },
+      "nReference": 18,
+      "nCitedBy": 489
+    },
+    {
+      "artHash": "lofstead-2008-58fd7adb75f0fe11",
+      "title": "Flexible IO and integration for scientific codes through the adaptable IO system (ADIOS)",
+      "abstract": "Scientific codes are all subject to variation in performance depending on the runtime platform and/or configuration, the output writing API employed, and the file system for output. Since changing the IO routines to match the optimal or desired configuration for a given system...",
+      "year": 2008,
+      "firstAuthor": {
+        "surname": "Lofstead",
+        "given": "Jay"
+      },
+      "venue": {
+        "name": "CLADE"
+      },
+      "nReference": 9,
+      "nCitedBy": 214
+    },
+    {
+      "artHash": "leaf-2013-707fca3f2ab4a27c",
+      "title": "Efficient parallel volume rendering of large-scale adaptive mesh refinement data",
+      "abstract": "Adaptive Mesh Refinement is a popular approach for allocating scarce computing resources to the most important portions of the simulation domain. This approach implies spatial compression and the large simulation sizes which necessitate it. We present a novel, cluster- and GPU...",
+      "year": 2013,
+      "firstAuthor": {
+        "surname": "Leaf",
+        "given": "Nick"
+      },
+      "venue": {
+        "name": "2013 IEEE Symposium on Large-Scale Data Analysis and Visualization (LDAV)"
+      },
+      "nReference": 17,
+      "nCitedBy": 6
+    },
+    {
+      "artHash": "docan-2010-6d8851514b08ddcb",
+      "title": "DataSpaces: an interaction and coordination framework for coupled simulation workflows",
+      "abstract": "Emerging high-performance distributed computing environments are enabling new end-to-end formulations in science and engineering that involve multiple interacting processes and data-intensive application workflows. For example, current fusion simulation efforts are exploring c...",
+      "year": 2010,
+      "firstAuthor": {
+        "surname": "Docan",
+        "given": "Ciprian"
+      },
+      "venue": {
+        "name": "Cluster Computing"
+      },
+      "nReference": 25,
+      "nCitedBy": 139
+    },
+    {
+      "artHash": "o'leary-2016-e219aab3eab5e0d1",
+      "title": "Cinema image-based in situ analysis and visualization of MPAS-ocean simulations",
+      "abstract": "We created an in situ exploration visualization of an MPAS-Ocean simulation.We leveraged compositing in Cinema to provide interactive exploration.We decreased the storage footprint of the analysis and visualization results. Due to power and I/O constraints associated with extr...",
+      "year": 2016,
+      "firstAuthor": {
+        "surname": "O'Leary",
+        "given": "Patrick"
+      },
+      "venue": {
+        "name": "Parallel Computing"
+      },
+      "nReference": 0,
+      "nCitedBy": 14
+    },
+    {
+      "artHash": "moreland-2016-e5c47b5a1563ecb3",
+      "title": "The Tensions of In Situ Visualization",
+      "abstract": "In situ visualization is the coupling of visualization software with a simulation or other data producer to process the data &quot;in memory&quot; before the data are offloaded to a storage system. Although in situ visualization provides superior analysis, it has implementatio...",
+      "year": 2016,
+      "firstAuthor": {
+        "surname": "Moreland",
+        "given": "Kenneth"
+      },
+      "venue": {
+        "name": "IEEE Computer Graphics and Applications"
+      },
+      "nReference": 8,
+      "nCitedBy": 7
+    },
+    {
+      "artHash": "childs-2012-98cbd4bc735a0046",
+      "title": "Research Challenges for Visualization Software",
+      "abstract": "As the visualization research community reorients its software to address up-coming challenges, it must successfully deal with diverse processor architectures, distributed systems, various data sources, massive parallelism, multiple input and output devices, and interactivity.",
+      "year": 2012,
+      "firstAuthor": {
+        "surname": "Childs",
+        "given": "Hank"
+      },
+      "venue": {
+        "name": "Computer"
+      },
+      "nReference": 7,
+      "nCitedBy": 31
+    },
+    {
+      "artHash": "dayal-2013-2dc28c6f09b30526",
+      "title": "I/O Containers: Managing the Data Analytics and Visualization Pipelines of High End Codes",
+      "abstract": "Lack of I/O scalability is known to cause measurable slowdowns for large-scale scientific applications running on high end machines. This is prompting researchers to devise &#39;I/O staging&#39; methods in which outputs are processed via online analysis and visualization metho...",
+      "year": 2013,
+      "firstAuthor": {
+        "surname": "Dayal",
+        "given": "Jai"
+      },
+      "venue": {
+        "name": "2013 IEEE International Symposium on Parallel & Distributed Processing, Workshops and Phd Forum"
+      },
+      "nReference": 29,
+      "nCitedBy": 15
+    },
+    {
+      "artHash": "fogal-2015-5170156996cac59b",
+      "title": "An Approach to Lowering the In Situ Visualization Barrier",
+      "abstract": "Coupling visualization and analysis software with simulation code is a resource-intensive task. As the usage of simulation-based science grows, we asked ourselves: what would it take to enable in situ visualization for every simulation in existence? This paper presents an alte...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Fogal",
+        "given": "Thomas"
+      },
+      "venue": {
+        "name": "ISAV@SC"
+      },
+      "nReference": 19,
+      "nCitedBy": 1
+    },
+    {
+      "artHash": "schroeder-1990-998608be49dc8d9",
+      "title": "An Object-Oriented Approach to 3D Graphics",
+      "abstract": "Semantic Scholar extracted view of &quot;An Object-Oriented Approach to 3D Graphics&quot; by William J. Schroeder et al.",
+      "year": 1990,
+      "firstAuthor": {
+        "surname": "Schroeder",
+        "given": "William"
+      },
+      "venue": "",
+      "nReference": 0,
+      "nCitedBy": 812
+    },
+    {
+      "artHash": "haimes-1996-1f7ca599dd580d47",
+      "title": "Concurrent distributed visualization and solution steering",
+      "abstract": "Publisher Summary This chapter focuses on Concurrent Distributed Visualization and Solution Steering. It reveals that one solution to dealing with the masses of information created by transient computational fluid dynamics (CFD) codes is to closely couple the components avoidi...",
+      "year": 1996,
+      "firstAuthor": {
+        "surname": "Haimes",
+        "given": "Robert"
+      },
+      "venue": "",
+      "nReference": 0,
+      "nCitedBy": 4
+    },
+    {
+      "artHash": "bethel-2012-a62422e919889df",
+      "title": "High Performance Visualization - Enabling Extreme-Scale Scientific Insight",
+      "abstract": "Visualization and analysis tools, techniques, and algorithms have undergone a rapid evolution in recent decades to accommodate explosive growth in data size and complexity and to exploit emerging multi- and many-core computational platforms. High Performance Visualization: Ena...",
+      "year": 2012,
+      "firstAuthor": {
+        "surname": "Bethel",
+        "given": "E."
+      },
+      "venue": {
+        "name": "High Performance Visualization"
+      },
+      "nReference": 0,
+      "nCitedBy": 53
+    },
+    {
+      "artHash": "bethel-1994-16c7856f491f9d4",
+      "title": "Site remediation in a virtual environment",
+      "abstract": "We describe the process used in combining an existing computer simulation with Virtual Reality (VR) I/O devices and conventional visualization tools to make the simulation easier to use and the results easier to understand. VR input technology facilitates direct user manipulat...",
+      "year": 1994,
+      "firstAuthor": {
+        "surname": "Bethel",
+        "given": "E."
+      },
+      "venue": {
+        "name": "Electronic Imaging"
+      },
+      "nReference": 11,
+      "nCitedBy": 4
+    },
+    {
+      "artHash": "ahrens-2014-e83004b1883b6a10",
+      "title": "An Image-Based Approach to Extreme Scale in Situ Visualization and Analysis",
+      "abstract": "Extreme scale scientific simulations are leading a charge to exascale computation, and data analytics runs the risk of being a bottleneck to scientific discovery. Due to power and I/O constraints, we expect in situ visualization and analysis will be a critical component of the...",
+      "year": 2014,
+      "firstAuthor": {
+        "surname": "Ahrens",
+        "given": "James"
+      },
+      "venue": {
+        "name": "SC14: International Conference for High Performance Computing, Networking, Storage and Analysis"
+      },
+      "nReference": 36,
+      "nCitedBy": 80
+    },
+    {
+      "artHash": "fryxell-2000-be2250f6ad2e0e5e",
+      "title": "FLASH: An Adaptive Mesh Hydrodynamics Code for Modeling Astrophysical Thermonuclear Flashes",
+      "abstract": "We report on the completion of the first version of a new-generation simulation code, FLASH. The FLASH code solves the fully compressible, reactive hydrodynamic equations and allows for the use of adaptive mesh refinement. It also contains state-of-the-art modules for the equa...",
+      "year": 2000,
+      "firstAuthor": {
+        "surname": "Fryxell",
+        "given": "Bruce"
+      },
+      "venue": "",
+      "nReference": 0,
+      "nCitedBy": 325
+    },
+    {
+      "artHash": "tikhonova-2010-21fe360603edb017",
+      "title": "Visualization by Proxy: A Novel Framework for Deferred Interaction with Volume Data",
+      "abstract": "Interactivity is key to exploration of volume data. Interactivity may be hindered due to many factors, e.g. large data size,high resolution or complexity of a data set, or an expensive rendering algorithm. We present a novel framework for visualizing volumedata that enables in...",
+      "year": 2010,
+      "firstAuthor": {
+        "surname": "Tikhonova",
+        "given": "Anna"
+      },
+      "venue": {
+        "name": "IEEE Transactions on Visualization and Computer Graphics"
+      },
+      "nReference": 32,
+      "nCitedBy": 39
+    },
+    {
+      "artHash": "haimes-1994-779aa638071ae7ff",
+      "title": "pV3 - A distributed system for large-scale unsteady CFD visualization",
+      "abstract": "This paper presents a distributed architecture for the vi-sualization of large steady and transient data-sets. Because one of the goals is to not have to store away the 10s to 100s of Gigabytes necessary to perform a post-processing animation of the data, this system must be a...",
+      "year": 1994,
+      "firstAuthor": {
+        "surname": "Haimes",
+        "given": "Robert"
+      },
+      "venue": "",
+      "nReference": 9,
+      "nCitedBy": 54
+    },
+    {
+      "artHash": "malakar-2015-e471bf3f74d233",
+      "title": "Optimal scheduling of in-situ analysis for large-scale scientific simulations",
+      "abstract": "Today&#39;s leadership computing facilities have enabled the execution of transformative simulations at unprecedented scales. However, analyzing the huge amount of output from these simulations remains a challenge. Most analyses of this output is performed in post-processing m...",
+      "year": 2015,
+      "firstAuthor": {
+        "surname": "Malakar",
+        "given": "Preeti"
+      },
+      "venue": {
+        "name": "SC15: International Conference for High Performance Computing, Networking, Storage and Analysis"
+      },
+      "nReference": 38,
+      "nCitedBy": 18
+    },
+    {
+      "artHash": "shoshani-2011-37a5276f65cca5d7",
+      "title": "Scientific Discovery at the Exascale",
+      "abstract": "Semantic Scholar extracted view of &quot;Scientific Discovery at the Exascale&quot; by Arie Shoshani et al.",
+      "year": 2011,
+      "firstAuthor": {
+        "surname": "Shoshani",
+        "given": "Arie"
+      },
+      "venue": "",
+      "nReference": 0,
+      "nCitedBy": 48
+    },
+    {
+      "artHash": "ringler-2013-e220bb376a5aa44b",
+      "title": "A multi-resolution approach to global ocean modeling",
+      "abstract": "Abstract A new global ocean model (MPAS-Ocean) capable of using enhanced resolution in selected regions of the ocean domain is described and evaluated. Three simulations using different grids are presented. The first grid is a uniform high-resolution (15 km) mesh; the second g...",
+      "year": 2013,
+      "firstAuthor": {
+        "surname": "Ringler",
+        "given": "Todd"
+      },
+      "venue": "",
+      "nReference": 66,
+      "nCitedBy": 90
+    },
+    {
+      "artHash": "rübel-2016-44096eb03928c9be",
+      "title": "In situ Visualization and Analysis of Ion Accelerator Simulations using Warp and VisIt",
+      "abstract": "The generation of short pulses of ion beams through the interaction of an intense laser with a plasma sheath offers the possibility of compact and cheaper ion sources for many applications; from fast ignition and radiography of dense targets to hadron therapy and injection int...",
+      "year": 2016,
+      "firstAuthor": {
+        "surname": "Rübel",
+        "given": "Oliver"
+      },
+      "venue": "",
+      "nReference": 11,
+      "nCitedBy": 1
+    },
+    {
+      "artHash": "vishwanath-2011-93e9eeb2f86313f8",
+      "title": "Topology-aware data movement and staging for I/O acceleration on Blue Gene/P supercomputing systems",
+      "abstract": "There is growing concern that I/O systems will be hard pressed to satisfy the requirements of future leadership-class machines. Even current machines are found to be I/O bound for some applications. In this paper, we identify existing performance bottlenecks in data movement f...",
+      "year": 2011,
+      "firstAuthor": {
+        "surname": "Vishwanath",
+        "given": "Venkatram"
+      },
+      "venue": {
+        "name": "2011 International Conference for High Performance Computing, Networking, Storage and Analysis (SC)"
+      },
+      "nReference": 13,
+      "nCitedBy": 63
+    },
+    {
+      "artHash": "bremer-2011-6da66230d7495b73",
+      "title": "Interactive Exploration and Analysis of Large-Scale Simulations Using Topology-Based Data Segmentation",
+      "abstract": "Large-scale simulations are increasingly being used to study complex scientific and engineering phenomena. As a result, advanced visualization and data analysis are also becoming an integral part of the scientific process. Often, a key step in extracting insight from these lar...",
+      "year": 2011,
+      "firstAuthor": {
+        "surname": "Bremer",
+        "given": "Peer-Timo"
+      },
+      "venue": {
+        "name": "IEEE Transactions on Visualization and Computer Graphics"
+      },
+      "nReference": 56,
+      "nCitedBy": 74
+    }
+  ],
+  "relations": [
+    {
+      "reference": "lofstead-2008-58fd7adb75f0fe11",
+      "citedBy": "lofstead-2009-9c408c145c390ccf"
+    },
+    {
+      "reference": "fabian-2011-cd85bc215c9eed3c",
+      "citedBy": "agranovsky-2014-70363865cd8dfded"
+    },
+    {
+      "reference": "whitlock-2011-d9f162c2b64d329a",
+      "citedBy": "agranovsky-2014-70363865cd8dfded"
+    },
+    {
+      "reference": "lofstead-2008-58fd7adb75f0fe11",
+      "citedBy": "agranovsky-2014-70363865cd8dfded"
+    },
+    {
+      "reference": "schroeder-1990-998608be49dc8d9",
+      "citedBy": "fabian-2011-cd85bc215c9eed3c"
+    },
+    {
+      "reference": "ellsworth-2006-814ee41918ba75b6",
+      "citedBy": "fabian-2011-cd85bc215c9eed3c"
+    },
+    {
+      "reference": "tu-2006-fd1d7dcdb06b634d",
+      "citedBy": "fabian-2011-cd85bc215c9eed3c"
+    },
+    {
+      "reference": "lofstead-2008-58fd7adb75f0fe11",
+      "citedBy": "fabian-2011-cd85bc215c9eed3c"
+    },
+    {
+      "reference": "childs-2007-79d7a43083ea48e3",
+      "citedBy": "fabian-2011-cd85bc215c9eed3c"
+    },
+    {
+      "reference": "lofstead-2008-58fd7adb75f0fe11",
+      "citedBy": "larsen-2015-a08c10a6221f1c40"
+    },
+    {
+      "reference": "fabian-2011-cd85bc215c9eed3c",
+      "citedBy": "larsen-2015-a08c10a6221f1c40"
+    },
+    {
+      "reference": "whitlock-2011-d9f162c2b64d329a",
+      "citedBy": "larsen-2015-a08c10a6221f1c40"
+    },
+    {
+      "reference": "lofstead-2009-9c408c145c390ccf",
+      "citedBy": "lofstead-2011-8a0e67a0c58ffcb4"
+    },
+    {
+      "reference": "li-2003-1fb55a4467688b2f",
+      "citedBy": "lofstead-2011-8a0e67a0c58ffcb4"
+    },
+    {
+      "reference": "lofstead-2008-58fd7adb75f0fe11",
+      "citedBy": "lofstead-2011-8a0e67a0c58ffcb4"
+    },
+    {
+      "reference": "docan-2010-6d8851514b08ddcb",
+      "citedBy": "lofstead-2011-8a0e67a0c58ffcb4"
+    },
+    {
+      "reference": "upson-1989-f3596a2e45e5bea1",
+      "citedBy": "globus-1995-59a9f73fa657f43b"
+    },
+    {
+      "reference": "haimes-1994-779aa638071ae7ff",
+      "citedBy": "globus-1995-59a9f73fa657f43b"
+    },
+    {
+      "reference": "ellsworth-2006-814ee41918ba75b6",
+      "citedBy": "dorier-2013-df88645db91a8842"
+    },
+    {
+      "reference": "tu-2006-fd1d7dcdb06b634d",
+      "citedBy": "dorier-2013-df88645db91a8842"
+    },
+    {
+      "reference": "lofstead-2008-58fd7adb75f0fe11",
+      "citedBy": "dorier-2013-df88645db91a8842"
+    },
+    {
+      "reference": "whitlock-2011-d9f162c2b64d329a",
+      "citedBy": "dorier-2013-df88645db91a8842"
+    },
+    {
+      "reference": "fabian-2011-cd85bc215c9eed3c",
+      "citedBy": "dorier-2013-df88645db91a8842"
+    },
+    {
+      "reference": "lofstead-2009-9c408c145c390ccf",
+      "citedBy": "liu-2014-f0dba6fc0dc89d5d"
+    },
+    {
+      "reference": "li-2003-1fb55a4467688b2f",
+      "citedBy": "liu-2014-f0dba6fc0dc89d5d"
+    },
+    {
+      "reference": "docan-2010-6d8851514b08ddcb",
+      "citedBy": "liu-2014-f0dba6fc0dc89d5d"
+    },
+    {
+      "reference": "childs-2007-79d7a43083ea48e3",
+      "citedBy": "liu-2014-f0dba6fc0dc89d5d"
+    },
+    {
+      "reference": "lofstead-2011-8a0e67a0c58ffcb4",
+      "citedBy": "liu-2014-f0dba6fc0dc89d5d"
+    },
+    {
+      "reference": "lofstead-2008-58fd7adb75f0fe11",
+      "citedBy": "liu-2014-f0dba6fc0dc89d5d"
+    },
+    {
+      "reference": "docan-2010-6d8851514b08ddcb",
+      "citedBy": "docan-2015-13edbbcc4333945a"
+    },
+    {
+      "reference": "liu-2014-f0dba6fc0dc89d5d",
+      "citedBy": "docan-2015-13edbbcc4333945a"
+    },
+    {
+      "reference": "upson-1989-f3596a2e45e5bea1",
+      "citedBy": "childs-2007-79d7a43083ea48e3"
+    },
+    {
+      "reference": "bremer-2011-6da66230d7495b73",
+      "citedBy": "morozov-2013-4549a0240746d309"
+    },
+    {
+      "reference": "tu-2006-fd1d7dcdb06b634d",
+      "citedBy": "ma-2009-7b75045ff81f57c5"
+    },
+    {
+      "reference": "fryxell-2000-be2250f6ad2e0e5e",
+      "citedBy": "nouanesengsy-2014-55d6e589f8d164c0"
+    },
+    {
+      "reference": "tikhonova-2011-826ecc8136e6e54b",
+      "citedBy": "ye-2015-4f804523663bbb32"
+    },
+    {
+      "reference": "shoshani-2011-37a5276f65cca5d7",
+      "citedBy": "ye-2015-4f804523663bbb32"
+    },
+    {
+      "reference": "biedert-2015-e3fbdadb436d853a",
+      "citedBy": "ye-2015-4f804523663bbb32"
+    },
+    {
+      "reference": "fernandes-2014-bb630a4b1e45df44",
+      "citedBy": "ye-2015-4f804523663bbb32"
+    },
+    {
+      "reference": "dorier-2013-df88645db91a8842",
+      "citedBy": "ye-2015-4f804523663bbb32"
+    },
+    {
+      "reference": "tikhonova-2010-21fe360603edb017",
+      "citedBy": "ye-2015-4f804523663bbb32"
+    },
+    {
+      "reference": "ahrens-2014-e83004b1883b6a10",
+      "citedBy": "ye-2015-4f804523663bbb32"
+    },
+    {
+      "reference": "whitlock-2011-d9f162c2b64d329a",
+      "citedBy": "ye-2015-4f804523663bbb32"
+    },
+    {
+      "reference": "ma-2009-7b75045ff81f57c5",
+      "citedBy": "ye-2015-4f804523663bbb32"
+    },
+    {
+      "reference": "ahrens-2014-e83004b1883b6a10",
+      "citedBy": "biedert-2015-e3fbdadb436d853a"
+    },
+    {
+      "reference": "bremer-2011-6da66230d7495b73",
+      "citedBy": "biedert-2015-e3fbdadb436d853a"
+    },
+    {
+      "reference": "tikhonova-2010-21fe360603edb017",
+      "citedBy": "biedert-2015-e3fbdadb436d853a"
+    },
+    {
+      "reference": "ellsworth-2006-814ee41918ba75b6",
+      "citedBy": "whitlock-2011-d9f162c2b64d329a"
+    },
+    {
+      "reference": "yu-2010-1b97bd57e6ac1f4a",
+      "citedBy": "whitlock-2011-d9f162c2b64d329a"
+    },
+    {
+      "reference": "childs-2007-79d7a43083ea48e3",
+      "citedBy": "whitlock-2011-d9f162c2b64d329a"
+    },
+    {
+      "reference": "lofstead-2009-9c408c145c390ccf",
+      "citedBy": "whitlock-2011-d9f162c2b64d329a"
+    },
+    {
+      "reference": "fernandes-2014-bb630a4b1e45df44",
+      "citedBy": "fernandes-2015-b87e11186d02de56"
+    },
+    {
+      "reference": "ma-2009-7b75045ff81f57c5",
+      "citedBy": "fernandes-2015-b87e11186d02de56"
+    },
+    {
+      "reference": "yu-2010-1b97bd57e6ac1f4a",
+      "citedBy": "tikhonova-2011-826ecc8136e6e54b"
+    },
+    {
+      "reference": "schroeder-1990-998608be49dc8d9",
+      "citedBy": "o'leary-2015-b6cc8dfdedcb5f9c"
+    },
+    {
+      "reference": "fryxell-2000-be2250f6ad2e0e5e",
+      "citedBy": "li-2003-1fb55a4467688b2f"
+    },
+    {
+      "reference": "globus-1995-59a9f73fa657f43b",
+      "citedBy": "duque-2005-3a20b7699c742323"
+    },
+    {
+      "reference": "haimes-1994-779aa638071ae7ff",
+      "citedBy": "duque-2005-3a20b7699c742323"
+    },
+    {
+      "reference": "lofstead-2008-58fd7adb75f0fe11",
+      "citedBy": "choi-2013-4891ec87910ab73"
+    },
+    {
+      "reference": "docan-2010-6d8851514b08ddcb",
+      "citedBy": "lofstead-2013-9703b045966f55a5"
+    },
+    {
+      "reference": "lofstead-2011-8a0e67a0c58ffcb4",
+      "citedBy": "lofstead-2013-9703b045966f55a5"
+    },
+    {
+      "reference": "tikhonova-2011-826ecc8136e6e54b",
+      "citedBy": "ahrens-2014-9231637a6fe76c46"
+    },
+    {
+      "reference": "tikhonova-2010-21fe360603edb017",
+      "citedBy": "ahrens-2014-9231637a6fe76c46"
+    },
+    {
+      "reference": "ahrens-2014-e83004b1883b6a10",
+      "citedBy": "ahrens-2014-9231637a6fe76c46"
+    },
+    {
+      "reference": "ringler-2013-e220bb376a5aa44b",
+      "citedBy": "ahrens-2014-9231637a6fe76c46"
+    },
+    {
+      "reference": "chen-2008-2faf9e847a6c6871",
+      "citedBy": "ahrens-2014-9231637a6fe76c46"
+    },
+    {
+      "reference": "whitlock-2011-d9f162c2b64d329a",
+      "citedBy": "biddiscombe-2012-fc3c3c82ba4c1c1"
+    },
+    {
+      "reference": "docan-2010-6d8851514b08ddcb",
+      "citedBy": "biddiscombe-2012-fc3c3c82ba4c1c1"
+    },
+    {
+      "reference": "fabian-2011-cd85bc215c9eed3c",
+      "citedBy": "biddiscombe-2012-fc3c3c82ba4c1c1"
+    },
+    {
+      "reference": "vishwanath-2011-93e9eeb2f86313f8",
+      "citedBy": "biddiscombe-2012-fc3c3c82ba4c1c1"
+    },
+    {
+      "reference": "lofstead-2009-9c408c145c390ccf",
+      "citedBy": "biddiscombe-2012-fc3c3c82ba4c1c1"
+    },
+    {
+      "reference": "ahrens-2014-e83004b1883b6a10",
+      "citedBy": "moreland-2016-e5c47b5a1563ecb3"
+    },
+    {
+      "reference": "tikhonova-2010-21fe360603edb017",
+      "citedBy": "moreland-2016-e5c47b5a1563ecb3"
+    },
+    {
+      "reference": "ye-2013-46fc07f2bcb51f48",
+      "citedBy": "moreland-2016-e5c47b5a1563ecb3"
+    },
+    {
+      "reference": "nouanesengsy-2014-55d6e589f8d164c0",
+      "citedBy": "moreland-2016-e5c47b5a1563ecb3"
+    },
+    {
+      "reference": "upson-1989-f3596a2e45e5bea1",
+      "citedBy": "childs-2012-98cbd4bc735a0046"
+    },
+    {
+      "reference": "lofstead-2009-9c408c145c390ccf",
+      "citedBy": "dayal-2013-2dc28c6f09b30526"
+    },
+    {
+      "reference": "docan-2010-6d8851514b08ddcb",
+      "citedBy": "dayal-2013-2dc28c6f09b30526"
+    },
+    {
+      "reference": "fabian-2011-cd85bc215c9eed3c",
+      "citedBy": "fogal-2015-5170156996cac59b"
+    },
+    {
+      "reference": "whitlock-2011-d9f162c2b64d329a",
+      "citedBy": "fogal-2015-5170156996cac59b"
+    },
+    {
+      "reference": "dorier-2013-df88645db91a8842",
+      "citedBy": "fogal-2015-5170156996cac59b"
+    },
+    {
+      "reference": "upson-1989-f3596a2e45e5bea1",
+      "citedBy": "bethel-1994-16c7856f491f9d4"
+    },
+    {
+      "reference": "fabian-2011-cd85bc215c9eed3c",
+      "citedBy": "ahrens-2014-e83004b1883b6a10"
+    },
+    {
+      "reference": "ma-2009-7b75045ff81f57c5",
+      "citedBy": "ahrens-2014-e83004b1883b6a10"
+    },
+    {
+      "reference": "chen-2008-2faf9e847a6c6871",
+      "citedBy": "ahrens-2014-e83004b1883b6a10"
+    },
+    {
+      "reference": "tikhonova-2010-21fe360603edb017",
+      "citedBy": "ahrens-2014-e83004b1883b6a10"
+    },
+    {
+      "reference": "tu-2006-fd1d7dcdb06b634d",
+      "citedBy": "ahrens-2014-e83004b1883b6a10"
+    },
+    {
+      "reference": "ringler-2013-e220bb376a5aa44b",
+      "citedBy": "ahrens-2014-e83004b1883b6a10"
+    },
+    {
+      "reference": "yu-2010-1b97bd57e6ac1f4a",
+      "citedBy": "ahrens-2014-e83004b1883b6a10"
+    },
+    {
+      "reference": "tikhonova-2011-826ecc8136e6e54b",
+      "citedBy": "ahrens-2014-e83004b1883b6a10"
+    },
+    {
+      "reference": "fryxell-2000-be2250f6ad2e0e5e",
+      "citedBy": "malakar-2015-e471bf3f74d233"
+    },
+    {
+      "reference": "whitlock-2011-d9f162c2b64d329a",
+      "citedBy": "rübel-2016-44096eb03928c9be"
+    },
+    {
+      "reference": "lofstead-2009-9c408c145c390ccf",
+      "citedBy": "vishwanath-2011-93e9eeb2f86313f8"
+    },
+    {
+      "reference": "fryxell-2000-be2250f6ad2e0e5e",
+      "citedBy": "vishwanath-2011-93e9eeb2f86313f8"
+    },
+    {
+      "reference": "li-2003-1fb55a4467688b2f",
+      "citedBy": "vishwanath-2011-93e9eeb2f86313f8"
+    }
+  ]
+}

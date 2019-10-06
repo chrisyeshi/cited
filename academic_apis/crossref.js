@@ -9,8 +9,20 @@ export default async function query (
   if (!_.isNil(doi)) {
     // DOI available, directly fetch paper
     const url = `${crossref}/works/${doi}?mailto=${mailto}`
-    const res = await fetch(url)
-    return res.json()
+    console.log(url)
+    return new Promise((resolve, reject) => {
+      https.get(url, res => {
+        let data = ''
+        res.on('data', chunk => {
+          data += chunk
+        })
+        res.on('end', () => {
+          resolve(JSON.parse(data))
+        })
+      }).on('error', err => {
+        reject(err)
+      })
+    })
   }
   // search for papers
   const mail = mailto && `mailto=${mailto}`

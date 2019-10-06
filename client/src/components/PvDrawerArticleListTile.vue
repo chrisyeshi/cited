@@ -2,7 +2,10 @@
   <v-list-item v-on="$listeners" @pointerenter.native="onMouseEnter"
     @pointerleave.native="onMouseLeave">
     <div :style="leftSideStyle"></div>
-    <v-list-item-content style="justify-content: space-evenly;">
+    <v-list-item-content v-if="!title" class="caption">
+      Missing info for {{ mixArtHash }} 
+    </v-list-item-content>
+    <v-list-item-content v-else style="justify-content: space-evenly;">
       <div class="caption text-truncate font-weight-bold">{{ label }}</div>
       <div class="body-1 text-truncate font-weight-medium full-width">
         {{ title }}

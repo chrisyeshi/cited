@@ -84,14 +84,15 @@ export default {
       const merged = _.merge({}, this.currHierTags, this.filters.tagSelects)
       const singleLevelTags = _.pickBy(merged, obj => _.isEmpty(obj.children))
       const multiLevelTags = _.pickBy(merged, obj => !_.isEmpty(obj.children))
-      return [
-        ..._.map(multiLevelTags),
-        {
+      const tagGroups = [ ..._.map(multiLevelTags) ]
+      if (!_.isEmpty(singleLevelTags)) {
+        tagGroups.push({
           name: 'other',
           artHashes: _.union(..._.map(singleLevelTags, tag => tag.artHashes)),
           children: singleLevelTags
-        }
-      ]
+        })
+      }
+      return tagGroups
     },
     yearFrom: {
       get () {

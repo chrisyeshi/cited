@@ -85,6 +85,8 @@ export default {
           articles: coll.articles,
           relations: coll.relations,
           owner: this.currUser.uid
+        }).catch(err => {
+          this.$log.error('Error setting document: ', err)
         })
       }
 

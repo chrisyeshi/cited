@@ -16,7 +16,8 @@ export default {
       return getVisCardSideColor(nInCollCitedBys)
     },
     firstAuthorSurname () {
-      return _.property('authors[0].surname')(this.mixArt)
+      return _.property('firstAuthor.surname')(this.mixArt) ||
+        _.property('authors[0].surname')(this.mixArt)
     },
     label () {
       return `${this.firstAuthorSurname} ${this.year}`

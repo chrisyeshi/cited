@@ -120,11 +120,9 @@ const parseVis = {
         // article chanages
         const docRef = firebase.firestore().doc(`articles/${artId}`)
         const snapshot = await docRef.get()
-        if (snapshot.exists) {
-          currArt = {
-            ...snapshot.data(),
-            artHash: snapshot.id
-          }
+        currArt = {
+          ...snapshot.data(),
+          artHash: artId
         }
       }
       context.commit('set', {
