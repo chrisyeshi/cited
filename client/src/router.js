@@ -8,8 +8,6 @@ const PvDrawerCollectionView = () => import('@/views/PvDrawerCollectionView')
 const PvDrawerCollectionList = () => import('@/views/PvDrawerCollectionList')
 const PvDrawerRelativeList = () => import('@/views/PvDrawerRelativeList')
 const PvHomeView = () => import('@/views/PvHomeView')
-const UserAuth = () => import('@/views/UserAuth')
-const UserPage = () => import('@/views/UserPage')
 
 Vue.use(Router)
 
@@ -33,8 +31,6 @@ export default new Router({
       ]
     },
     // { path: '/art/:artId', component: PvArtView },
-    { path: '/auth/:action', name: 'UserAuth', component: UserAuth },
-    { path: '/user', name: 'UserPage', component: UserPage },
     { path: '*', component: NotFound }
   ]
 })
