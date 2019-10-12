@@ -2,6 +2,9 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 const _ = require('lodash');
+const convertArticle = require('./convertarticle')
+const createCollection = require('./createCollection')
+const semanticScholar = require('./semanticscholar')
 
 exports.createUserDoc = functions.auth.user().onCreate(async user => {
   return admin.firestore().collection('users').doc(user.uid).set({
@@ -63,4 +66,30 @@ exports.onArticleDocWrite =
     nReference: after.nReference || after.nReferences,
     nCitedBy: after.nCitedBy || after.nCitedBys
   })
+})
+
+exports.fetchSemanticScholar = functions.https.onCall(async (ssId, context) => {
+  const ssData = await semanticScholar.query({ semanticScholar: ssId })
+  const ssArt = semanticScholar.from(ssArt)
+  const ssReferences =
+      await Promise.all(_.map(ssArt.references, async reference => {
+    return semanticScholar.from(semanticScholar.query(reference.externs))
+  }))
+  const theArt = convertArticle(ssArt)
+  const refArts = _.map(ssReferences, convertArticle)
+  const coll = createCollection(refArts)
+
+  const batch = admin.firestore().batch()
+  _.forEach([ theArt, ...refArts ], art => {
+    const artRef = admin.firestore().doc(`articles/${art.artHash}`)
+    batch.set(artRef, art)
+  })
+  const collRef = admin.firestore().doc(`collections/${theArt.artHash}`)
+  batch.set(collRef, coll)
+  await batch.commit()
+
+  return {
+    article: theArt,
+    collection: coll
+  }
 })

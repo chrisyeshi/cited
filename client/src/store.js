@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/functions'
 import {
   fromColl as computeHierarchicalTags
 } from '@/components/hierarchicaltags.js'
@@ -117,7 +118,7 @@ const parseVis = {
         currHierTags = computeHierarchicalTags(coll)
       }
       if (prevArtId !== artId && !_.isNil(artId)) {
-        // article chanages
+        // article changes
         const docRef = firebase.firestore().doc(`articles/${artId}`)
         const snapshot = await docRef.get()
         currArt = {
@@ -127,6 +128,25 @@ const parseVis = {
       }
       context.commit('set', {
         currColl, currVisGraph, currHierTags, currArt
+      })
+    },
+    async fetchSemanticScholar (context, semanticScholarId) {
+      const artQuery = firebase.firestore().collection('articles')
+        .where('externs.semanticScholar', '==', semanticScholarId)
+      const artQuerySnap = await artQuery.get()
+      const currArt = artQuerySnap.empty
+        ? await firebase.functions()
+            .httpsCallable('fetchSemanticScholar')(semanticScholarId)
+        : { ...artQuerySnap.docs[0].data(), artHash: artQuerySnap.docs[0].id }
+      context.commit(
+        'setCollArtId', { collId: currArt.artHash, artId: currArt.artHash })
+      console.log(currArt)
+      const collRef = firebase.firestore().doc(`collections/${currArt.artHash}`)
+      const collSnap = await collRef.get()
+      const currColl = collSnap.data()
+      const currVisGraph = VisGraph.fromColl(currColl)
+      context.commit('set', {
+        currColl, currVisGraph, currArt
       })
     }
   },

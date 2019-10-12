@@ -37,7 +37,7 @@ export function fromSemanticScholar (semanticScholar) {
       semanticScholar: _.property('paperId')(semanticScholar)
     }),
     title: title,
-    abstract: null,
+    abstract: _.property('abstract')(semanticScholar),
     year: year,
     authors: authors,
     venue: _.property('venue')(semanticScholar) &&
