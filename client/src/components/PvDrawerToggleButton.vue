@@ -23,7 +23,7 @@ export default {
 .drawer-toggle-button {
   position: absolute;
   left: 100%;
-  top: 1em;
+  top: 4.5em;
   width: 1.5em;
   height: 3.5em;
   line-height: 3.5em;

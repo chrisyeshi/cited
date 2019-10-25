@@ -10,9 +10,9 @@ export default function createCollection (arts) {
 function createRelations (arts) {
   const relations = []
   _.forEach(arts, citedByArt => {
-    _.forEach(citedByArt.references, aRefArt => {
+    _.forEach(citedByArt.referenceArtHashes, aRefArtHash => {
       _.forEach(arts, bRefArt => {
-        if (isSameArtHash(aRefArt.artHash, bRefArt.artHash)) {
+        if (isSameArtHash(aRefArtHash, bRefArt.artHash)) {
           relations.push({
             reference: getFirstArtHash(bRefArt),
             citedBy: getFirstArtHash(citedByArt)
@@ -25,7 +25,7 @@ function createRelations (arts) {
 }
 
 function parseArticle (art) {
-  return {
+  return _.pickBy({
     artHash: getFirstArtHash(art),
     title: _.isArray(art.title) ? art.title[0] : art.title,
     abstract: _.truncate(art.abstract, { length: 280 }),
@@ -34,7 +34,7 @@ function parseArticle (art) {
     venue: art.venue,
     nReference: art.nReference || art.nReferences,
     nCitedBy: art.nCitedBy || art.nCitedBys
-  }
+  })
 }
 
 function getFirstArtHash (art) {

@@ -34,11 +34,15 @@ export default {
     mixVisGraph () {
       return this.currVisGraph
     },
+    nCitedBy () {
+      return _.property('nCitedBys')(this.mixArt) ||
+        _.property('nCitedBy')(this.mixArt)
+    },
     nCitedBys () {
-      return _.property('nCitedBys')(this.mixArt)
+      return this.nCitedBy
     },
     nCitedByText () {
-      return `Cited by ${_.property('nCitedBys')(this.mixArt)}`
+      return _.isNil(this.nCitedBy) ? null : `Cited by ${this.nCitedBy}`
     },
     title () {
       return _.property('title')(this.mixArt)

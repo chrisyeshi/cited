@@ -2,7 +2,9 @@
   <v-app overflow-hidden>
     <pv-app-bar />
     <pv-app-navigation-drawer />
-    <pv-vis-view />
+    <v-content>
+      <pv-vis-view style="width: 100%; height: 100%;" />
+    </v-content>
   </v-app>
 </template>
 

@@ -1,9 +1,6 @@
 <template>
   <div>
     <v-toolbar flat color="white">
-      <v-app-bar-nav-icon @click="back">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-app-bar-nav-icon>
       <v-toolbar-title v-if="art">{{ artLabel }}</v-toolbar-title>
       <v-toolbar-title v-else>
         <v-progress-circular indeterminate></v-progress-circular>
@@ -40,41 +37,16 @@
           <expandable-text :text="abstract" :textLimit="abstractLimit" />
         </v-col>
       </v-row>
-      <v-row class="mx-0">
-        <v-col cols=6 class="pr-1">
-          <v-row tag="h4" shrink class="font-weight-bold my-2 mr-0">
-            References ({{ nReference }})
-          </v-row>
-          <v-row v-for="art in references" :key="art.artHash"
-            class="my-2 mr-0" style="font-size: 12px;">
-            <pv-drawer-article-relative-card style="width: 100%;"
-              :art="art" @click="onClickArticle(art.artHash)" />
-          </v-row>
-          <v-row class="my-2 mr-0" justify="center">
-            <v-btn small text rounded outlined color="primary"
-              @click="onClickMoreRelatives('references')">
-              More
-            </v-btn>
-          </v-row>
-        </v-col>
-        <v-col cols=6 class="pl-1">
-          <v-row tag="h4" shrink class="font-weight-bold my-2 ml-0">
-            Cited by ({{ nCitedBy }})
-          </v-row>
-          <v-row v-for="art in citedBys" :key="art.artHash"
-            class="my-2 ml-0" style="font-size: 12px;">
-            <pv-drawer-article-relative-card style="width: 100%;"
-              :art="art" @click="onClickArticle(art.artHash)">
-            </pv-drawer-article-relative-card>
-          </v-row>
-          <v-row class="my-2 ml-0" justify="center">
-            <v-btn small text rounded outlined color="primary"
-              @click="onClickMoreRelatives('citedBys')">
-              More
-            </v-btn>
-          </v-row>
+      <v-row class="font-weight-medium">
+        <v-col class="py-1">
+          References ({{ nReference }})
         </v-col>
       </v-row>
+      <v-list three-line style="margin-left: -12px; margin-right: -12px;">
+        <pv-drawer-article-list-tile v-for="art in collArts" :key="art.artHash"
+          :art="art" @click="onClickArticle(art.artHash)">
+        </pv-drawer-article-list-tile>
+      </v-list>
     </v-container>
   </div>
 </template>
@@ -83,7 +55,7 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import ExpandableText from '@/components/ExpandableText.vue'
-import PvDrawerArticleRelativeCard from '@/components/PvDrawerArticleRelativeCard.vue'
+import PvDrawerArticleListTile from '@/components/PvDrawerArticleListTile'
 import PvDrawerArticleStatsRow from '@/components/PvDrawerArticleStatsRow.vue'
 import PvExpandableAuthorsLinks from '@/components/PvExpandableAuthorsLinks.vue'
 import { VisGraph } from '@/components/visgraph.js'
@@ -91,19 +63,17 @@ import { VisGraph } from '@/components/visgraph.js'
 export default {
   name: 'PvDrawerArticleView',
   components: {
-    ExpandableText,
-    PvDrawerArticleRelativeCard,
-    PvDrawerArticleStatsRow,
+    ExpandableText, PvDrawerArticleListTile, PvDrawerArticleStatsRow,
     PvExpandableAuthorsLinks
   },
   data: () => ({
     abstractLimit: 200
   }),
   computed: {
-    ...mapState('parseVis', [
-      'currCollId', 'currVisGraph', 'currArtId', 'currArt'
-    ]),
-    art () { return this.currArt || this.visGraph.getArt(this.currArtId) },
+    ...mapState('parseVis', [ 'currCollId', 'currColl', 'currVisGraph' ]),
+    art () {
+      return _.property('citedBy')(this.currColl)
+    },
     artLabel () {
       return this.title
         ? `${this.firstAuthorSurname} ${this.year}`
@@ -111,7 +81,7 @@ export default {
     },
     artStats () {
       const stats = []
-      if (_.isNil(_.property('title')(this.currArt))) {
+      if (_.isNil(_.property('title')(this.art))) {
         stats.push({
           label: 'db',
           tooltip: 'article not in database',
@@ -151,9 +121,13 @@ export default {
     authors () {
       return _.property('authors')(this.art) || []
     },
+    currArtId () { return _.property('artHash')(this.art) },
     firstAuthorSurname () {
       return this.art && this.art.authors && this.art.authors[0] &&
         this.art.authors[0].surname
+    },
+    collArts () {
+      return _.property('articles')(this.currColl)
     },
     citedBys () {
       const arts =

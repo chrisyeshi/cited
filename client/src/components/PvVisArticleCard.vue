@@ -58,9 +58,9 @@ export default {
       return `${this.firstAuthorSurname} ${this.article.year}`
     },
     nCitedByText () {
-      return _.isNil(this.article.nCitedBys)
+      return _.isNil(this.article.nCitedBy)
         ? null
-        : `Cited by ${this.article.nCitedBys}`
+        : `Cited by ${this.article.nCitedBy}`
     }
   },
   asyncComputed: {

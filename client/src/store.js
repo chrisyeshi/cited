@@ -130,24 +130,61 @@ const parseVis = {
         currColl, currVisGraph, currHierTags, currArt
       })
     },
-    async fetchSemanticScholar (context, semanticScholarId) {
-      const artQuery = firebase.firestore().collection('articles')
-        .where('externs.semanticScholar', '==', semanticScholarId)
-      const artQuerySnap = await artQuery.get()
-      const currArt = artQuerySnap.empty
-        ? await firebase.functions()
-            .httpsCallable('fetchSemanticScholar')(semanticScholarId)
-        : { ...artQuerySnap.docs[0].data(), artHash: artQuerySnap.docs[0].id }
-      context.commit(
-        'setCollArtId', { collId: currArt.artHash, artId: currArt.artHash })
-      console.log(currArt)
-      const collRef = firebase.firestore().doc(`collections/${currArt.artHash}`)
-      const collSnap = await collRef.get()
-      const currColl = collSnap.data()
-      const currVisGraph = VisGraph.fromColl(currColl)
-      context.commit('set', {
-        currColl, currVisGraph, currArt
-      })
+    async fetchCollArt (context, { collId, artId }) {
+      const fetchArtBySsId =
+        firebase.functions().httpsCallable('fetchArtBySsId')
+      const fetchArtRefColl =
+        firebase.functions().httpsCallable('fetchArtRefColl')
+      const fetchArt = async (artHash) => {
+        if (!artHash) {
+          return null
+        }
+        const artRef = firebase.firestore().doc(`articles/${artHash}`)
+        const artSnap = await artRef.get()
+        return artSnap.exists
+          ? { ...artSnap.data(), artHash: artSnap.id }
+          : null
+      }
+      const fetchColl = async (collId) => {
+        const collRef = firebase.firestore().doc(`collections/${collId}`)
+        const collSnap = await collRef.get()
+        return collSnap.exists
+          ? { ...collSnap.data(), collId: collSnap.id }
+          : null
+      }
+      const currArt = await fetchArt(artId)
+      const isArtHash = _.toInteger(_.property('[1]')(_.split(collId, '-')))
+      if (isArtHash) {
+        context.commit('setCollArtId', { collId: collId, artId: artId })
+        const [ citedBy, coll ] =
+          await Promise.all([ await fetchArt(collId), await fetchColl(collId) ])
+        if (!citedBy || !coll) {
+          throw new Error(`there is no ${collId} in articles or collections`)
+        }
+        const currColl = { ...coll, citedBy }
+        const currVisGraph = VisGraph.fromColl(currColl)
+        context.commit('set', { currColl, currVisGraph, currArt })
+
+      } else {
+        const { data: { art: citedBy, ssArt: ssCitedBy } } =
+          await fetchArtBySsId(collId)
+        context.commit('setCollArtId', { collId: collId, artId: artId })
+        const dbCollSnap =
+          await firebase.firestore().doc(`collections/${citedBy.artHash}`).get()
+        if (dbCollSnap.exists) {
+          const currColl = { ...dbCollSnap.data(), citedBy }
+          const currVisGraph = VisGraph.fromColl(currColl)
+          context.commit('set', { currColl, currVisGraph, currArt })
+        } else {
+          await Promise.all(_.map(ssCitedBy.references, async reference => {
+            await fetchArtBySsId(reference.externs.semanticScholar)
+          }))
+          const { data: coll } = await fetchArtRefColl(citedBy.artHash)
+          const currColl = { ...coll, citedBy }
+          const currVisGraph = VisGraph.fromColl(currColl)
+          context.commit('set', { currColl, currVisGraph, currArt })
+        }
+      }
     }
   },
   getters: {

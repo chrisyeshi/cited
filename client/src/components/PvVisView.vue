@@ -1,27 +1,25 @@
 <template>
-  <v-content>
-    <div ref="visContainer" class="vis-container"
-      @click="onCanvasClicked" v-resize.initial="onVisContainerResize">
-      <svg class="overlay-container" :style="overlayContainerStyle"
-        :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
-        <path v-for="(props, key) in paths" :key="key" v-bind="props"></path>
-      </svg>
-      <div class="cards-container" :style="cardsContainerStyle"
-        @click="onCanvasClicked">
-        <pv-vis-node-card v-for="node in visGraph.visNodes"
-          :key="node.visNodeId" ref="cards" :visNode="node"
-          :config="visConfig.card" :class="getCardClasses(node)"
-          :style="getCardStyle(node)"
-          :backgroundColor="getCardBackgroundColor(node)"
-          :citedByColor="getCardSideColor(node.inGraphCitedBys.length)"
-          :referenceColor="getCardSideColor(node.inGraphReferences.length)"
-          @click.native.stop="onCardClicked($event, node)"
-          @mouseenter.native.stop="onCardMouseEnter(node)"
-          @mouseleave.native.stop="onCardMouseLeave(node)">
-        </pv-vis-node-card>
-      </div>
+  <div ref="visContainer" class="vis-container"
+    @click="onCanvasClicked" v-resize.initial="onVisContainerResize">
+    <svg class="overlay-container" :style="overlayContainerStyle"
+      :viewBox="`0 0 ${this.canvasWidth} ${this.canvasHeight}`">
+      <path v-for="(props, key) in paths" :key="key" v-bind="props"></path>
+    </svg>
+    <div class="cards-container" :style="cardsContainerStyle"
+      @click="onCanvasClicked">
+      <pv-vis-node-card v-for="node in visGraph.visNodes"
+        :key="node.visNodeId" ref="cards" :visNode="node"
+        :config="visConfig.card" :class="getCardClasses(node)"
+        :style="getCardStyle(node)"
+        :backgroundColor="getCardBackgroundColor(node)"
+        :citedByColor="getCardSideColor(node.inGraphCitedBys.length)"
+        :referenceColor="getCardSideColor(node.inGraphReferences.length)"
+        @click.native.stop="onCardClicked($event, node)"
+        @mouseenter.native.stop="onCardMouseEnter(node)"
+        @mouseleave.native.stop="onCardMouseLeave(node)">
+      </pv-vis-node-card>
     </div>
-  </v-content>
+  </div>
 </template>
 
 <script>
@@ -619,8 +617,6 @@ function prefixSum (values) {
 <style scoped>
 .vis-container {
   position: relative;
-  width: 100%;
-  height: 100%;
   overflow: auto;
 }
 

@@ -73,7 +73,7 @@ export default {
       this.isCopyEmailSnackbarVisible = true
     },
     search () {
-      this.$router.push(`/sa/art/${this.searchTerm}`)
+      this.$router.push(`/coll/${this.searchTerm}`)
     },
     onSearchKeyDown (event) {
       if (event.key === 'Enter') {

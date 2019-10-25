@@ -1,0 +1,4696 @@
+{
+  "articles": [
+    {
+      "title": "Information Processing in Dynamical Systems: Foundations of Harmony Theory ; CU-CS-321-86",
+      "artHash": "smolensky-1986-b1ad39d576fdd879",
+      "year": 1986,
+      "firstAuthor": {
+        "surname": "Smolensky",
+        "given": "Paul"
+      },
+      "nReference": 2,
+      "nCitedBy": 1040,
+      "abstract": "Abstract : At this early stage in the development of cognitive science, methodological issues are both open and central. There may have been times when developments in neuroscience, artificial intelligence, or cognitive psychology seduced researchers into believing that their ..."
+    },
+    {
+      "abstract": "In an overcomplete basis, the number of basis vectors is greater than the dimensionality of the input, and the representation of an input is not a unique combination of basis vectors. Overcomplete representations have been advocated because they have greater robustness in the ...",
+      "title": "Learning Overcomplete Representations",
+      "artHash": "lewicki-2000-98522018016d1111",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 2000,
+      "firstAuthor": {
+        "given": "Michael",
+        "surname": "Lewicki"
+      },
+      "nReference": 31,
+      "nCitedBy": 847
+    },
+    {
+      "title": "Object Class Recognition and Localization Using Sparse Features with Limited Receptive Fields",
+      "artHash": "mutch-2007-3d7388c53a4ee9e4",
+      "venue": {
+        "name": "International Journal of Computer Vision"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "surname": "Mutch",
+        "given": "Jim"
+      },
+      "nReference": 30,
+      "nCitedBy": 271,
+      "abstract": "We investigate the role of sparsity and localized features in a biologically-inspired model of visual object classification. As in the model of Serre, Wolf, and Poggio, we first apply Gabor filters at all positions and scales; feature complexity and position/scale invariance a..."
+    },
+    {
+      "abstract": "We describe a single convolutional neural network architecture that, given a sentence, outputs a host of language processing predictions: part-of-speech tags, chunks, named entity tags, semantic roles, semantically similar words and the likelihood that the sentence makes sense...",
+      "title": "A unified architecture for natural language processing: deep neural networks with multitask learning",
+      "artHash": "collobert-2008-a439c545dcf00164",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "given": "Ronan",
+        "surname": "Collobert"
+      },
+      "nReference": 22,
+      "nCitedBy": 2669
+    },
+    {
+      "abstract": "Retaining all the key features of the previous editions, Introduction to Mathematical Logic, Fifth Edition explores the principal topics of mathematical logic. It covers propositional logic, first-order logic, first-order number theory, axiomatic set theory, and the theory of ...",
+      "title": "Introduction to Mathematical Logic",
+      "artHash": "mendelson-1979-8c6b0c9ee704db1c",
+      "year": 1979,
+      "firstAuthor": {
+        "given": "Elliott",
+        "surname": "Mendelson"
+      },
+      "nCitedBy": 759
+    },
+    {
+      "abstract": "We introduce a view of unsupervised learning that integrates probabilistic and nonprobabilistic methods for clustering, dimensionality reduction, and feature extraction in a unified framework. In this framework, an energy function associates low energies to input points that a...",
+      "title": "A Unified Energy-Based Framework for Unsupervised Learning",
+      "artHash": "ranzato-2007-a1b2a382d1f0f6fa",
+      "venue": {
+        "name": "AISTATS"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Marc'Aurelio",
+        "surname": "Ranzato"
+      },
+      "nReference": 10,
+      "nCitedBy": 48
+    },
+    {
+      "artHash": "allgower-1990-ed2c312831cdd9f4",
+      "year": 1990,
+      "firstAuthor": {
+        "given": "Eugene",
+        "surname": "Allgower"
+      },
+      "nCitedBy": 261,
+      "title": "Numerical Continuation Methods"
+    },
+    {
+      "abstract": "Reinforcement learning, one of the most active research areas in artificial intelligence, is a computational approach to learning whereby an agent tries to maximize the total amount of reward it receives when interacting with a complex, uncertain environment. In Reinforcement ...",
+      "title": "Reinforcement Learning: An Introduction",
+      "artHash": "sutton-1988-6d105a0e33d008da",
+      "venue": {
+        "name": "IEEE Transactions on Neural Networks"
+      },
+      "year": 1988,
+      "firstAuthor": {
+        "given": "Richard",
+        "surname": "Sutton"
+      },
+      "nReference": 198,
+      "nCitedBy": 9998
+    },
+    {
+      "artHash": "hochreiter-1991-bab90fef649c6afa",
+      "year": 1991,
+      "firstAuthor": {
+        "given": "Sepp",
+        "surname": "Hochreiter"
+      },
+      "nCitedBy": 328,
+      "title": "Untersuchungen zu dynamischen neuronalen Netzen"
+    },
+    {
+      "title": "Greedy Layer-Wise Training of Deep Networks",
+      "artHash": "schoelkopf-2007-139eca365fcebdbe",
+      "year": 2007,
+      "firstAuthor": {
+        "given": "BERNHARD.",
+        "surname": "Schoelkopf"
+      },
+      "nCitedBy": 2109,
+      "abstract": "Complexity theory of circuits strongly suggests that deep architectures can be much more ef cient (sometimes exponentially) than shallow architectures, in terms of computational elements required to represent some functions. Deep multi-layer neural networks have many levels of..."
+    },
+    {
+      "title": "Sparse deep belief net model for visual area V2",
+      "artHash": "lee-2007-2266e989fa98eab5",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "surname": "Lee",
+        "given": "Honglak"
+      },
+      "nReference": 23,
+      "nCitedBy": 693,
+      "abstract": "Motivated in part by the hierarchical organization of the cortex, a number of algorithms have recently been proposed that try to learn hierarchical, or \"deep,\" structure from unlabeled data. While several authors have formally or informally compared their algorithms to computa..."
+    },
+    {
+      "abstract": "Multilayer neural networks trained with the back-propagation algorithm constitute the best example of a successful gradient based learning technique. Given an appropriate network architecture, gradient-based learning algorithms can be used to synthesize a complex decision surf...",
+      "title": "Gradient-based learning applied to document recognition",
+      "artHash": "lecun-1998-e1770e784ab3470",
+      "year": 1998,
+      "firstAuthor": {
+        "given": "Yann",
+        "surname": "LeCun"
+      },
+      "nReference": 108,
+      "nCitedBy": 9998
+    },
+    {
+      "firstAuthor": {
+        "surname": "Neal",
+        "given": "Radford"
+      },
+      "nReference": 2,
+      "nCitedBy": 375,
+      "abstract": "Abstract Connectionist learning procedures are presented for “sigmoid” and “noisy-OR” varieties of probabilistic belief networks. These networks have previously been seen primarily as a means of representing knowledge derived from experts. Here it is shown that the “Gibbs samp...",
+      "title": "Connectionist Learning of Belief Networks",
+      "artHash": "neal-1992-37a91451c96dd201",
+      "venue": {
+        "name": "Artif. Intell."
+      },
+      "year": 1992
+    },
+    {
+      "firstAuthor": {
+        "surname": "Williams",
+        "given": "Christopher"
+      },
+      "nReference": 10,
+      "nCitedBy": 594,
+      "abstract": "The Bayesian analysis of neural networks is difficult because a simple prior over weights implies a complex prior distribution over functions. In this paper we investigate the use of Gaussian process priors over functions, which permit the predictive Bayesian analysis for fixe...",
+      "title": "Gaussian Processes for Regression",
+      "artHash": "williams-1995-2a37c69da4694a53",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 1995
+    },
+    {
+      "title": "A Two-Layer ICA-Like Model Estimated by Score Matching",
+      "artHash": "köster-2007-b97314a3417b4efe",
+      "venue": {
+        "name": "ICANN"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Urs",
+        "surname": "Köster"
+      },
+      "nReference": 9,
+      "nCitedBy": 35,
+      "abstract": "Capturing regularities in high-dimensional data is an important problem in machine learning and signal processing. Here we present a statistical model that learns a nonlinear representation from the data that reflects abstract, invariant properties of the signal without making..."
+    },
+    {
+      "abstract": "Deep multi-layer neural networks have many levels of non-linearities allowing them to compactly represent highly non-linear and highly-varying functions. However, until recently it was not clear how to train such deep networks, since gradient-based optimization starting from r...",
+      "title": "Exploring Strategies for Training Deep Neural Networks",
+      "artHash": "larochelle-2009-4729094b41355760",
+      "venue": {
+        "name": "J. Mach. Learn. Res."
+      },
+      "year": 2009,
+      "firstAuthor": {
+        "given": "Hugo",
+        "surname": "Larochelle"
+      },
+      "nReference": 56,
+      "nCitedBy": 502
+    },
+    {
+      "nCitedBy": 759,
+      "abstract": "This chapter contains sections titled: Relaxation Searches, Easy and Hard Learning, The Boltzmann Machine Learning Algorithm, An Example of Hard Learning, Achieving Reliable Computation with Unreliable Hardware, An Example of the Effects of Damage, Conclusion, Acknowledgments,...",
+      "title": "Learning and relearning in Boltzmann machines",
+      "artHash": "hinton-1986-63e7997e58bed607",
+      "year": 1986,
+      "firstAuthor": {
+        "given": "Geoffrey",
+        "surname": "Hinton"
+      }
+    },
+    {
+      "firstAuthor": {
+        "given": "Geoffrey",
+        "surname": "Hinton"
+      },
+      "nReference": 6,
+      "nCitedBy": 382,
+      "abstract": "An autoencoder network uses a set of recognition weights to convert an input vector into a code vector. It then uses a set of generative weights to convert the code vector into an approximate reconstruction of the input vector. We derive an objective function for training auto...",
+      "title": "Autoencoders, Minimum Description Length and Helmholtz Free Energy",
+      "artHash": "hinton-1993-8209d2273bcd1c63",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 1993
+    },
+    {
+      "artHash": "lecun-2005-4198b131ed0a4fd5",
+      "venue": {
+        "name": "AISTATS"
+      },
+      "year": 2005,
+      "firstAuthor": {
+        "given": "Yann",
+        "surname": "LeCun"
+      },
+      "nReference": 15,
+      "nCitedBy": 92,
+      "abstract": "Probabilistic graphical models associate a probability to each configuration of the relevant variables. Energy-based models (EBM) associate an energy to those configurations, eliminating the need for proper normalization of probability distributions. Making a decision (an infe...",
+      "title": "Loss Functions for Discriminative Training of Energy-Based Models"
+    },
+    {
+      "abstract": "Automatic grouping and segmentation of images remains a challenging problem in computer vision. Recently, a number of authors have demonstrated good performance on this task using methods that are based on eigenvectors of the affinity matrix. These approaches are extremely att...",
+      "title": "Segmentation using eigenvectors: a unifying view",
+      "artHash": "weiss-1999-d3d0bbe93f8cc3e2",
+      "venue": {
+        "name": "Proceedings of the Seventh IEEE International Conference on Computer Vision"
+      },
+      "year": 1999,
+      "firstAuthor": {
+        "given": "Yair",
+        "surname": "Weiss"
+      },
+      "nReference": 11,
+      "nCitedBy": 604
+    },
+    {
+      "firstAuthor": {
+        "given": "Johan",
+        "surname": "Håstad"
+      },
+      "nReference": 10,
+      "nCitedBy": 452,
+      "abstract": "A product mixture of a norbornene and a tetracyclododecene is prepared in any desired mole ratio in the range of 95/5 to 5/95 which comprises heating an olefin, cyclopentadiene, and a norbornene in the respective mole ratio of 1-20/1-5/1-5, at a temperature of 100 DEG to 400 D...",
+      "title": "Almost Optimal Lower Bounds for Small Depth Circuits",
+      "artHash": "håstad-1986-c97030c6f4961a73",
+      "venue": {
+        "name": "STOC"
+      },
+      "year": 1986
+    },
+    {
+      "title": "How to Make a Low-Dimensional Representation Suitable for Diverse Tasks",
+      "artHash": "intrator-1996-7bafb020394a8331",
+      "year": 1996,
+      "firstAuthor": {
+        "given": "Nathan",
+        "surname": "Intrator"
+      },
+      "nCitedBy": 18,
+      "abstract": "We consider training classifiers for multiple tasks as a method for improving generalization and obtaining a better low-dimensional representation. To that end, we introduce a hybrid training methodology for MLP networks; the utility of the hidden-unit representation is assess..."
+    },
+    {
+      "title": "Energy-Based Models for Sparse Overcomplete Representations",
+      "artHash": "teh-2003-42832e04631c6c76",
+      "venue": {
+        "name": "J. Mach. Learn. Res."
+      },
+      "year": 2003,
+      "firstAuthor": {
+        "given": "Yee",
+        "surname": "Teh"
+      },
+      "nCitedBy": 113,
+      "abstract": "We present a new way of extending independent components analysis (ICA) to overcomplete representations. In contrast to the causal generative extensions of ICA which maintain marginal independence of sources, we define features as deterministic (linear) functions of the inputs..."
+    },
+    {
+      "artHash": "simard-2003-1e655a66a26e98ad",
+      "venue": {
+        "name": "Seventh International Conference on Document Analysis and Recognition, 2003. Proceedings."
+      },
+      "year": 2003,
+      "firstAuthor": {
+        "given": "Patrice",
+        "surname": "Simard"
+      },
+      "nReference": 7,
+      "nCitedBy": 1028,
+      "abstract": "Neural networks are a powerful technology forclassification of visual inputs arising from documents.However, there is a confusing plethora of different neuralnetwork methods that are used in the literature and inindustry. This paper describes a set of concrete bestpractices th...",
+      "title": "Best practices for convolutional neural networks applied to visual document analysis"
+    },
+    {
+      "firstAuthor": {
+        "given": "David",
+        "surname": "Cohn"
+      },
+      "nReference": 25,
+      "nCitedBy": 1258,
+      "abstract": "For many types of machine learning algorithms, one can compute the statistically `optimal' way to select training data. In this paper, we review how optimal data selection techniques have been used with feedforward neural networks. We then show how the same principles may be u...",
+      "title": "Active Learning with Statistical Models",
+      "artHash": "cohn-1994-9536eb9e3bc1c4f0",
+      "venue": {
+        "name": "J. Artif. Intell. Res."
+      },
+      "year": 1994
+    },
+    {
+      "nCitedBy": 2643,
+      "abstract": "Recurrent neural networks can be used to map input sequences to output sequences, such as for recognition, production or prediction problems. However, practical difficulties have been reported in training recurrent neural networks to perform tasks in which the temporal conting...",
+      "title": "Learning long-term dependencies with gradient descent is difficult",
+      "artHash": "bengio-1994-53983d07a145e560",
+      "venue": {
+        "name": "IEEE Trans. Neural Networks"
+      },
+      "year": 1994,
+      "firstAuthor": {
+        "given": "Yoshua",
+        "surname": "Bengio"
+      },
+      "nReference": 11
+    },
+    {
+      "firstAuthor": {
+        "given": "Ricardo",
+        "surname": "Vilalta"
+      },
+      "nReference": 21,
+      "nCitedBy": 22,
+      "abstract": "We investigate an inherent limitation of top-down decision tree induction in which the continuous partitioning of the instance space progressively lessens the statistical support of every partial (i.e. disjunctive) hypothesis, known as the fragmentation problem. We show, both ...",
+      "title": "Global Data Analysis and the Fragmentation Problem in Decision Tree Induction",
+      "artHash": "vilalta-1997-da59dc0032d5a08e",
+      "venue": {
+        "name": "ECML"
+      },
+      "year": 1997
+    },
+    {
+      "firstAuthor": {
+        "surname": "Kennedy",
+        "given": "A."
+      },
+      "nCitedBy": 960,
+      "abstract": "Abstract I discuss the Hybrid Monte Carlo algorithm for performing lattice gauge theory calculations. This is a large step method which has none of the discrete step size errors usually associated with the Molecular Dynamics, Langevin, or Hybrid algorithms. The method allows t...",
+      "title": "Hybrid Monte Carlo",
+      "artHash": "kennedy-1988-9f3ccf80d44e0b18",
+      "year": 1988
+    },
+    {
+      "abstract": "The basic theory of Markov chains has been known to mathematicians and engineers for close to 80 years, but it is only in the past decade that it has been applied explicitly to problems in speech processing. One of the major reasons why speech models, based on Markov chains, h...",
+      "title": "An introduction to hidden Markov models",
+      "artHash": "rabiner-1986-3feabd80b4940e55",
+      "venue": {
+        "name": "IEEE ASSP Magazine"
+      },
+      "year": 1986,
+      "firstAuthor": {
+        "surname": "Rabiner",
+        "given": "Lawrence"
+      },
+      "nReference": 6,
+      "nCitedBy": 2289
+    },
+    {
+      "title": "Training Hierarchical Feed-Forward Visual Recognition Models Using Transfer Learning from Pseudo-Tasks",
+      "artHash": "ahmed-2008-89d1f7f17b009bc1",
+      "venue": {
+        "name": "ECCV"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "given": "Amr",
+        "surname": "Ahmed"
+      },
+      "nReference": 19,
+      "nCitedBy": 93,
+      "abstract": "Building visual recognition models that adapt across different domains is a challenging task for computer vision. While feature-learning machines in the form of hierarchial feed-forward models (e.g., convolutional neural networks) showed promise in this direction, they are sti..."
+    },
+    {
+      "abstract": "The computational power of massively parallel networks of simple processing elements resides in the communication bandwidth provided by the hardware connections between elements. These connections can allow a significant fraction of the knowledge of the system to be applied to...",
+      "title": "A Learning Algorithm for Boltzmann Machines",
+      "artHash": "ackley-1985-7b723a46d9939c76",
+      "venue": {
+        "name": "Cognitive Science"
+      },
+      "year": 1985,
+      "firstAuthor": {
+        "given": "David",
+        "surname": "Ackley"
+      },
+      "nReference": 9,
+      "nCitedBy": 1645
+    },
+    {
+      "artHash": "schölkopf-1999-5720ab639305f362",
+      "venue": {
+        "name": "IEEE Trans. Neural Networks"
+      },
+      "year": 1999,
+      "firstAuthor": {
+        "given": "Bernhard",
+        "surname": "Schölkopf"
+      },
+      "nReference": 27,
+      "nCitedBy": 684,
+      "abstract": "This paper collects some ideas targeted at advancing our understanding of the feature spaces associated with support vector (SV) kernel functions. We first discuss the geometry of feature space. In particular, we review what is known about the shape of the image of input space...",
+      "title": "Input space versus feature space in kernel-based methods"
+    },
+    {
+      "abstract": "This paper considers a natural error correcting problem with real valued input/output. We wish to recover an input vector f/spl isin/R/sup n/ from corrupted measurements y=Af+e. Here, A is an m by n (coding) matrix and e is an arbitrary and unknown vector of errors. Is it poss...",
+      "title": "Decoding by linear programming",
+      "artHash": "candès-2005-2efc4c3c294cb293",
+      "venue": {
+        "name": "IEEE Transactions on Information Theory"
+      },
+      "year": 2005,
+      "firstAuthor": {
+        "given": "Emmanuel",
+        "surname": "Candès"
+      },
+      "nReference": 9,
+      "nCitedBy": 4292
+    },
+    {
+      "artHash": "lee-2006-39dec12bf7bd029f",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2006,
+      "firstAuthor": {
+        "given": "Honglak",
+        "surname": "Lee"
+      },
+      "nReference": 13,
+      "nCitedBy": 1875,
+      "abstract": "Sparse coding provides a class of algorithms for finding succinct representations of stimuli; given only unlabeled input data, it discovers basis functions that capture higher-level features in the data. However, finding sparse codes remains a very difficult computational prob...",
+      "title": "Efficient sparse coding algorithms"
+    },
+    {
+      "abstract": "Directed graphical models with one layer of observed random variables and one or more layers of hidden random variables have been the dominant modelling paradigm in many research fields. Although this approach has met with considerable success, the causal semantics of these mo...",
+      "title": "Exponential Family Harmoniums with an Application to Information Retrieval",
+      "artHash": "welling-2004-abfa981526a080ab",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "given": "Max",
+        "surname": "Welling"
+      },
+      "nReference": 12,
+      "nCitedBy": 368
+    },
+    {
+      "firstAuthor": {
+        "given": "James",
+        "surname": "Bergstra"
+      },
+      "nReference": 22,
+      "nCitedBy": 41,
+      "abstract": "We introduce a new type of neural network activation function based on recent physiological rate models for complex cells in visual area V1. A single-hidden-layer neural network of this kind of model achieves 1.50% error on MNIST. We also introduce an existing criterion for le...",
+      "title": "Slow, Decorrelated Features for Pretraining Complex Cell-like Networks",
+      "artHash": "bergstra-2009-3bf5bb2de78ac817",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2009
+    },
+    {
+      "firstAuthor": {
+        "given": "Yoshua",
+        "surname": "Bengio"
+      },
+      "nReference": 29,
+      "nCitedBy": 3201,
+      "abstract": "A goal of statistical language modeling is to learn the joint probability function of sequences of words. This is intrinsically difficult because of the curse of dimensionality: we propose to fight it with its own weapons. In the proposed approach one learns simultaneously (1)...",
+      "title": "A Neural Probabilistic Language Model",
+      "artHash": "bengio-2000-7374275e1bac6b74",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2000
+    },
+    {
+      "firstAuthor": {
+        "given": "Hossein",
+        "surname": "Mobahi"
+      },
+      "nReference": 29,
+      "nCitedBy": 217,
+      "abstract": "This work proposes a learning method for deep architectures that takes advantage of sequential data, in particular from the temporal coherence that naturally exists in unlabeled video recordings. That is, two successive frames are likely to contain the same object or objects. ...",
+      "title": "Deep learning from temporal coherence in video",
+      "artHash": "mobahi-2009-55cc8b0fe26f207d",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2009
+    },
+    {
+      "artHash": "taylor-2009-dca3b285a1ad94d8",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2009,
+      "firstAuthor": {
+        "given": "Graham",
+        "surname": "Taylor"
+      },
+      "nReference": 2,
+      "nCitedBy": 252,
+      "abstract": "The Conditional Restricted Boltzmann Machine (CRBM) is a recently proposed model for time series that has a rich, distributed hidden state and permits simple, exact inference. We present a new model, based on the CRBM that preserves its most important computational properties ...",
+      "title": "Factored conditional restricted Boltzmann Machines for modeling motion style"
+    },
+    {
+      "nCitedBy": 153,
+      "title": "Markov random fields in statistics",
+      "artHash": "clifford-1990-71487348d8248f34",
+      "year": 1990,
+      "firstAuthor": {
+        "surname": "Clifford",
+        "given": "Peter"
+      },
+      "nReference": 13
+    },
+    {
+      "firstAuthor": {
+        "given": "John",
+        "surname": "Platt"
+      },
+      "nCitedBy": 1321,
+      "title": "Advances in Kernel Methods-Support Vector Learning",
+      "artHash": "platt-1999-fb586550c2cb0f89",
+      "year": 1999
+    },
+    {
+      "artHash": "mcclelland-1988-9067336a6aeeb8ad",
+      "year": 1988,
+      "firstAuthor": {
+        "surname": "McClelland",
+        "given": "James"
+      },
+      "nCitedBy": 222,
+      "title": "Explorations in parallel distributed processing"
+    },
+    {
+      "title": "Using manifold structure for partially labelled classification",
+      "artHash": "belkin-2002-e57d4f976b74bde9",
+      "venue": {
+        "name": "NIPS 2002"
+      },
+      "year": 2002,
+      "firstAuthor": {
+        "given": "Mikhail",
+        "surname": "Belkin"
+      },
+      "nReference": 6,
+      "nCitedBy": 165,
+      "abstract": "We consider the general problem of utilizing both labeled and unlabeled data to improve classification accuracy. Under the assumption that the data lie on a submanifold in a high dimensional space, we develop an algorithmic framework to classify a partially labeled data set in..."
+    },
+    {
+      "artHash": "xu-2003-d429018df15caef5",
+      "venue": {
+        "name": "EMNLP"
+      },
+      "year": 2003,
+      "firstAuthor": {
+        "given": "Peng",
+        "surname": "Xu"
+      },
+      "nReference": 14,
+      "nCitedBy": 18,
+      "abstract": "We investigate the performance of the Structured Language Model (SLM) in terms of perplexity (PPL) when its components are modeled by connectionist models. The connectionist models use a distributed representation of the items in the history and make much better use of context...",
+      "title": "Training Connectionist Models for the Structured Language Model"
+    },
+    {
+      "title": "Descartes' Rule of Signs for Radial Basis Function Neural Networks",
+      "artHash": "schmitt-2002-79974d4774341877",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 2002,
+      "firstAuthor": {
+        "given": "Michael",
+        "surname": "Schmitt"
+      },
+      "nReference": 21,
+      "nCitedBy": 12,
+      "abstract": "We establish versions of Descartes' rule of signs for radial basis function (RBF) neural networks. The RBF rules of signs provide tight bounds for the number of zeros of univariate networks with certain parameter restrictions. Moreover, they can be used to infer that the Vapni..."
+    },
+    {
+      "nCitedBy": 216,
+      "abstract": "When labelled training data is plentiful, discriminative techniques are widely used since they give excellent generalization performance. However, for large-scale applications such as object recognition, hand labelling of data is expensive, and there is much interest in semi-s...",
+      "title": "Principled Hybrids of Generative and Discriminative Models",
+      "artHash": "lasserre-2006-60f5f620080c1190",
+      "venue": {
+        "name": "2006 IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR'06)"
+      },
+      "year": 2006,
+      "firstAuthor": {
+        "surname": "Lasserre",
+        "given": "Julia"
+      },
+      "nReference": 11
+    },
+    {
+      "abstract": "Statistical and computational concerns have motivated parameter estimators based on various forms of likelihood, e.g., joint, conditional, and pseudolikelihood. In this paper, we present a unified framework for studying these estimators, which allows us to compare their relati...",
+      "title": "An asymptotic analysis of generative, discriminative, and pseudolikelihood estimators",
+      "artHash": "liang-2008-2143afa48c7b302b",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "surname": "Liang",
+        "given": "Percy"
+      },
+      "nReference": 14,
+      "nCitedBy": 93
+    },
+    {
+      "nCitedBy": 29,
+      "title": "Learning long-term dependencies is not as difficult with NARX recurrent neural networks",
+      "artHash": "lin-1995-a20edd190cb28a7f",
+      "year": 1995,
+      "firstAuthor": {
+        "given": "Tsung-Nan",
+        "surname": "Lin"
+      }
+    },
+    {
+      "firstAuthor": {
+        "given": "Bernhard",
+        "surname": "Boser"
+      },
+      "nCitedBy": 5731,
+      "abstract": "A training algorithm that maximizes the margin between the training patterns and the decision boundary is presented. The technique is applicable to a wide variety of the classification functions, including Perceptrons, polynomials, and Radial Basis Functions. The effective num...",
+      "title": "A Training Algorithm for Optimal Margin Classifiers",
+      "artHash": "boser-1992-b8213a15ee51b7cb",
+      "venue": {
+        "name": "COLT"
+      },
+      "year": 1992
+    },
+    {
+      "artHash": "hinton-1986-6c28985176bb1a49",
+      "year": 1986,
+      "firstAuthor": {
+        "given": "Geoffrey",
+        "surname": "Hinton"
+      },
+      "nCitedBy": 483,
+      "title": "Learning distributed representations of concepts"
+    },
+    {
+      "firstAuthor": {
+        "surname": "Pearlmutter",
+        "given": "Barak"
+      },
+      "nReference": 15,
+      "nCitedBy": 163,
+      "abstract": "Source separation arises in a surprising number of signal processing applications, from speech \nrecognition to EEG analysis. In the square linear blind source separation problem without time delays, \none must find an unmixing matrix which can detangle the result of mixing n un...",
+      "title": "A Context-Sensitive Generalization of ICA",
+      "artHash": "pearlmutter-1996-1bb2397eeaa65ac8",
+      "year": 1996
+    },
+    {
+      "nCitedBy": 215,
+      "title": "Boltzmann machines: constrained satisfaction networks that learn",
+      "artHash": "hinton-1984-54661bb6bd380ff1",
+      "year": 1984,
+      "firstAuthor": {
+        "surname": "Hinton",
+        "given": "Geoffrey"
+      }
+    },
+    {
+      "nCitedBy": 2552,
+      "abstract": "This paper introduces stacked generalization, a scheme for minimizing the generalization error rate of one or more generalizers. Stacked generalization works by deducing the biases of the generalizer(s) with respect to a provided learning set. This deduction proceeds by genera...",
+      "title": "Stacked generalization",
+      "artHash": "wolpert-1992-3e3f553b02ddd7dd",
+      "venue": {
+        "name": "Neural Networks"
+      },
+      "year": 1992,
+      "firstAuthor": {
+        "given": "David",
+        "surname": "Wolpert"
+      },
+      "nReference": 3
+    },
+    {
+      "nCitedBy": 2930,
+      "abstract": "The ability of learning networks to generalize can be greatly enhanced by providing constraints from the task domain. This paper demonstrates how such constraints can be integrated into a backpropagation network through the architecture of the network. This approach has been s...",
+      "title": "Backpropagation Applied to Handwritten Zip Code Recognition",
+      "artHash": "lecun-1989-ba8f000ca2efc420",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 1989,
+      "firstAuthor": {
+        "given": "Yann",
+        "surname": "LeCun"
+      },
+      "nReference": 15
+    },
+    {
+      "firstAuthor": {
+        "given": "Andrew",
+        "surname": "Yao"
+      },
+      "nCitedBy": 329,
+      "abstract": "We present exponential lower bounds on the size of depth-k Boolean circuits for computing certain functions. These results imply that there exists an oracle set A such that, relative to A, all the levels in the polynomial-time hierarchy are distinct, i.e., ΣkP,A is properly co...",
+      "title": "Separating the polynomial-time hierarchy by oracles",
+      "artHash": "yao-1985-bda61920590484d1",
+      "year": 1985
+    },
+    {
+      "nCitedBy": 969,
+      "abstract": "Humans and animals learn much better when the examples are not randomly presented but organized in a meaningful order which illustrates gradually more concepts, and gradually more complex ones. Here, we formalize such training strategies in the context of machine learning, and...",
+      "title": "Curriculum learning",
+      "artHash": "bengio-2009-316f49559ec77a97",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2009,
+      "firstAuthor": {
+        "given": "Yoshua",
+        "surname": "Bengio"
+      },
+      "nReference": 28
+    },
+    {
+      "firstAuthor": {
+        "surname": "Lewicki",
+        "given": "Michael"
+      },
+      "nReference": 7,
+      "nCitedBy": 60,
+      "abstract": "We derive a learning algorithm for inferring an overcomplete basis by viewing it as probabilistic model of the observed data. Overcomplete bases allow for better approximation of the underlying statistical density. Using a Laplacian prior on the basis coefficients removes redu...",
+      "title": "Learning Nonlinear Overcomplete Representations for Efficient Coding",
+      "artHash": "lewicki-1997-c795e23fb8b34bac",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 1997
+    },
+    {
+      "artHash": "osindero-2007-1c3730d823f23211",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Simon",
+        "surname": "Osindero"
+      },
+      "nReference": 14,
+      "nCitedBy": 97,
+      "abstract": "We describe an efficient learning procedure for multilayer generative models that combine the best aspects of Markov random fields and deep, directed belief nets. The generative models can be learned one layer at a time and when learning is complete they have a very fast infer...",
+      "title": "Modeling image patches with a directed hierarchy of Markov random fields"
+    },
+    {
+      "abstract": "Learning kernel parameters is important for kernel based methods because these parameters have significant impact on the generalization abilities of these methods. Besides the methods of Cross-Validation and Leave-One-Out, minimizing some upper bounds on the generalization err...",
+      "title": "Learning kernel parameters by using class separability measure",
+      "artHash": "wang-2002-84fe39e877dc8167",
+      "venue": {
+        "name": "NIPS 2002"
+      },
+      "year": 2002,
+      "firstAuthor": {
+        "surname": "Wang",
+        "given": "Lei"
+      },
+      "nReference": 11,
+      "nCitedBy": 23
+    },
+    {
+      "nCitedBy": 15,
+      "title": "Memoires associatives distribuees: Une comparaison (Distributed associative memories: A comparison)",
+      "artHash": "gallinari-1987-dd9ce55f0ef2c61a",
+      "year": 1987,
+      "firstAuthor": {
+        "surname": "Gallinari",
+        "given": "Patrick"
+      }
+    },
+    {
+      "abstract": "An unsupervised learning algorithm for a multilayer network of stochastic neurons is described. Bottom-up \"recognition\" connections convert the input into representations in successive hidden layers, and top-down \"generative\" connections reconstruct the representation in one l...",
+      "title": "The \"wake-sleep\" algorithm for unsupervised neural networks.",
+      "artHash": "hinton-1995-9eae1f32da00c93b",
+      "venue": {
+        "name": "Science"
+      },
+      "year": 1995,
+      "firstAuthor": {
+        "given": "G",
+        "surname": "Hinton"
+      },
+      "nReference": 1,
+      "nCitedBy": 575
+    },
+    {
+      "firstAuthor": {
+        "surname": "Welling",
+        "given": "Max"
+      },
+      "nReference": 10,
+      "nCitedBy": 35,
+      "abstract": "Boosting algorithms and successful applications thereof abound for classification and regression learning problems, but not for unsupervised learning. We propose a sequential approach to adding features to a random field model by training them to improve classification perform...",
+      "title": "Self Supervised Boosting",
+      "artHash": "welling-2002-6c357c6f4788f3b8",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2002
+    },
+    {
+      "artHash": "jordan-1998-7eaffcef928334f6",
+      "venue": {
+        "name": "NATO ASI Series"
+      },
+      "year": 1998,
+      "firstAuthor": {
+        "given": "Michael",
+        "surname": "Jordan"
+      },
+      "nCitedBy": 828,
+      "abstract": "Part 1 Inference: introduction to inference for Bayesian networks, Robert Cowell advanced inference in Bayesian networks, Robert Cowell inference in Bayesian networks using nested junction trees, Uffe Kjoerulff bucket elimination - a unifying framework for probabilistic infere...",
+      "title": "Learning in Graphical Models"
+    },
+    {
+      "nCitedBy": 517,
+      "abstract": "Recently, many applications for Restricted Boltzmann Machines (RBMs) have been developed for a large variety of learning problems. However, RBMs are usually used as feature extractors for another learning algorithm or to provide a good initialization for deep feed-forward neur...",
+      "title": "Classification using discriminative restricted Boltzmann machines",
+      "artHash": "larochelle-2008-ad1032cf288538c",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "given": "Hugo",
+        "surname": "Larochelle"
+      },
+      "nReference": 24
+    },
+    {
+      "abstract": "A new method for automatic indexing and retrieval is described. The approach is to take advantage of implicit higher-order structure in the association of terms with documents (“semantic structure”) in order to improve the detection of relevant documents on the basis of terms ...",
+      "title": "Indexing by Latent Semantic Analysis",
+      "artHash": "deerwester-1990-57b9c98155fe9c40",
+      "year": 1990,
+      "firstAuthor": {
+        "given": "Scott",
+        "surname": "Deerwester"
+      },
+      "nCitedBy": 8077
+    },
+    {
+      "firstAuthor": {
+        "surname": "Fukushima",
+        "given": "Kunihiko"
+      },
+      "nReference": 7,
+      "nCitedBy": 1702,
+      "abstract": "A neural network model for a mechanism of visual pattern recognition is proposed in this paper. The network is self-organized by “learning without a teacher”, and acquires an ability to recognize stimulus patterns based on the geometrical similarity (Gestalt) of their shapes w...",
+      "title": "Neocognitron: A self-organizing neural network model for a mechanism of pattern recognition unaffected by shift in position",
+      "artHash": "fukushima-1980-309eb8faff52d44d",
+      "venue": {
+        "name": "Biological Cybernetics"
+      },
+      "year": 1980
+    },
+    {
+      "abstract": "We present a method to learn object class models from unlabeled and unsegmented cluttered scenes for the purpose of visual object recognition. We focus on a particular type of model where objects are represented as flexible constellations of rigid parts (features). The variabi...",
+      "title": "Unsupervised Learning of Models for Recognition",
+      "artHash": "weber-2000-493b572bf56feb3c",
+      "venue": {
+        "name": "ECCV"
+      },
+      "year": 2000,
+      "firstAuthor": {
+        "given": "Markus",
+        "surname": "Weber"
+      },
+      "nReference": 14,
+      "nCitedBy": 553
+    },
+    {
+      "firstAuthor": {
+        "given": "Ruslan",
+        "surname": "Salakhutdinov"
+      },
+      "nReference": 19,
+      "nCitedBy": 315,
+      "abstract": "A dental model trimmer having an easily replaceable abrasive surfaced member. The abrasive surfaced member is contained within a housing and is releasably coupled onto a back plate assembly which is driven by a drive motor. The housing includes a releasably coupled cover plate...",
+      "title": "Learning a Nonlinear Embedding by Preserving Class Neighbourhood Structure",
+      "artHash": "salakhutdinov-2007-7fa639c1ccf011af",
+      "venue": {
+        "name": "AISTATS"
+      },
+      "year": 2007
+    },
+    {
+      "firstAuthor": {
+        "given": "Dumitru",
+        "surname": "Erhan"
+      },
+      "nReference": 16,
+      "nCitedBy": 181,
+      "abstract": "Whereas theoretical work suggests that deep architectures might be more e cient at representing highly-varying functions, training deep architectures was unsuccessful until the recent advent of algorithms based on unsupervised pretraining. Even though these new algorithms have...",
+      "title": "The Difficulty of Training Deep Architectures and the Effect of Unsupervised Pre-Training",
+      "artHash": "erhan-2009-439bfca6e13a94be",
+      "venue": {
+        "name": "AISTATS"
+      },
+      "year": 2009
+    },
+    {
+      "nCitedBy": 607,
+      "title": "Markov fields on finite graphs and lattices",
+      "artHash": "hammersley-1971-96fc6de2413054bf",
+      "year": 1971,
+      "firstAuthor": {
+        "given": "J.",
+        "surname": "Hammersley"
+      }
+    },
+    {
+      "abstract": "Probably the most important, problem in machine learning is the preliminary biasing of a learner’s hypothesis space so that it is small enough to ensure good generalisation from reasonable training sets, yet large enough that it contains a good solution to the problem being le...",
+      "title": "Learning Internal Representations",
+      "artHash": "baxter-1995-ce1e7f1ffb4fcdd4",
+      "venue": {
+        "name": "COLT"
+      },
+      "year": 1995,
+      "firstAuthor": {
+        "given": "Jonathan",
+        "surname": "Baxter"
+      },
+      "nCitedBy": 132
+    },
+    {
+      "nCitedBy": 28,
+      "abstract": "Recently there has been increasing interest in using neural networks for language modeling. In contrast to the well-known backoff n-gram language models, the neural network approach tries to limit the data sparseness problem by performing the estimation in a continuous space, ...",
+      "title": "Efficient training of large neural networks for language modeling",
+      "artHash": "schwenk-2004-42f210a08ec5071c",
+      "venue": {
+        "name": "2004 IEEE International Joint Conference on Neural Networks (IEEE Cat. No.04CH37541)"
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "given": "Helena",
+        "surname": "Schwenk"
+      },
+      "nReference": 10
+    },
+    {
+      "title": "Learning with Local and Global Consistency",
+      "artHash": "zhou-2003-6572291423acd558",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2003,
+      "firstAuthor": {
+        "given": "Dengyong",
+        "surname": "Zhou"
+      },
+      "nReference": 11,
+      "nCitedBy": 2372,
+      "abstract": "We consider the general problem of learning from labeled and unlabeled data, which is often called semi-supervised learning or transductive inference. A principled approach to semi-supervised learning is to design a classifying function which is sufficiently smooth with respec..."
+    },
+    {
+      "title": "Smoothing Techniques for Macromolecular Global Optimization",
+      "artHash": "moré-1995-2f92ea0425d0c906",
+      "year": 1995,
+      "firstAuthor": {
+        "given": "Jorge",
+        "surname": "Moré"
+      },
+      "nReference": 21,
+      "nCitedBy": 17,
+      "abstract": "We study global optimization problems that arise in macromolecular modeling, and the solution of these problems via continuation and smoothing. Our results unify and extend the theory associated with the use of the Gaussian transform for smoothing. We show that the, Gaussian t..."
+    },
+    {
+      "firstAuthor": {
+        "given": "James",
+        "surname": "McClelland"
+      },
+      "nCitedBy": 1121,
+      "title": "An interactive activation model of context effects in letter perception: I. An account of basic findings.",
+      "artHash": "mcclelland-1981-4c10e6c1f5fa258c",
+      "year": 1981
+    },
+    {
+      "abstract": "Neural probabilistic language models (NPLMs) have been shown to be competitive with and occasionally superior to the widely-used n-gram language models. The main drawback of NPLMs is their extremely long training and testing times. Morin and Bengio have proposed a hierarchical...",
+      "title": "A Scalable Hierarchical Distributed Language Model",
+      "artHash": "mnih-2008-558a6ed6c3ea126b",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "given": "Andriy",
+        "surname": "Mnih"
+      },
+      "nReference": 12,
+      "nCitedBy": 599
+    },
+    {
+      "abstract": "There has been much interest in unsupervised learning of hierarchical generative models such as deep belief networks. Scaling such models to full-sized, high-dimensional images remains a difficult problem. To address this problem, we present the convolutional deep belief netwo...",
+      "title": "Convolutional deep belief networks for scalable unsupervised learning of hierarchical representations",
+      "artHash": "lee-2009-e8f4d0f90de6e39",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2009,
+      "firstAuthor": {
+        "given": "Honglak",
+        "surname": "Lee"
+      },
+      "nReference": 21,
+      "nCitedBy": 1595
+    },
+    {
+      "title": "Learning Despite Concept Variation by Finding Structure in Attribute-based Data",
+      "artHash": "pérez-1996-115595f1ff20766e",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 1996,
+      "firstAuthor": {
+        "given": "Eduardo",
+        "surname": "Pérez"
+      },
+      "nReference": 14,
+      "nCitedBy": 15,
+      "abstract": "Learning accuracy depends on concept variation. The accuracy of six learning systems (C4.5, Grove, Greedy, Fringe, LFC and MRP) is compared using a set of forty test concepts. The selection of these concepts was guided by the existence of structured concepts that appear in dii..."
+    },
+    {
+      "title": "Links between perceptrons, MLPs and SVMs",
+      "artHash": "collobert-2004-d123d68acfa76023",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "given": "Ronan",
+        "surname": "Collobert"
+      },
+      "nReference": 13,
+      "nCitedBy": 157,
+      "abstract": "We propose to study links between three important classification algorithms: Perceptrons, Multi-Layer Perceptrons (MLPs) and Support Vector Machines (SVMs). We first study ways to control the capacity of Perceptrons (mainly regularization parameters and early stopping), using ..."
+    },
+    {
+      "title": "Connections Between Score Matching, Contrastive Divergence, and Pseudolikelihood for Continuous-Valued Variables",
+      "artHash": "hyvärinen-2007-ba3e339980d8206b",
+      "venue": {
+        "name": "IEEE Transactions on Neural Networks"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Aapo",
+        "surname": "Hyvärinen"
+      },
+      "nReference": 6,
+      "nCitedBy": 37,
+      "abstract": "Score matching (SM) and contrastive divergence (CD) are two recently proposed methods for estimation of nonnormalized statistical methods without computation of the normalization constant (partition function). Although they are based on very different approaches, we show in th..."
+    },
+    {
+      "abstract": "Generative probability models such as hidden Markov models provide a principled way of treating missing information and dealing with variable length sequences. On the other hand, discriminative methods such as support vector machines enable us to construct flexible decision bo...",
+      "title": "Exploiting Generative Models in Discriminative Classifiers",
+      "artHash": "jaakkola-1998-e4494e9aa459e51c",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 1998,
+      "firstAuthor": {
+        "given": "Tommi",
+        "surname": "Jaakkola"
+      },
+      "nReference": 3,
+      "nCitedBy": 1142
+    },
+    {
+      "abstract": "Because of the “all-or-none” character of nervous activity, neural events and the relations among them can be treated by means of propositional logic. It is found that the behavior of every net can be described in these terms, with the addition of more complicated logical mean...",
+      "title": "A logical calculus of the ideas immanent in nervous activity",
+      "artHash": "mcculloch-1988-39c96d3b73f88656",
+      "venue": {
+        "name": "Bulletin of mathematical biology"
+      },
+      "year": 1988,
+      "firstAuthor": {
+        "surname": "McCulloch",
+        "given": "Warren"
+      },
+      "nReference": 1,
+      "nCitedBy": 5724
+    },
+    {
+      "firstAuthor": {
+        "given": "Ruslan",
+        "surname": "Salakhutdinov"
+      },
+      "nReference": 12,
+      "nCitedBy": 275,
+      "abstract": "Deep Belief Networks (DBN's) are generative models that contain many layers of hidden variables. Efficient greedy algorithms for learning and approximate inference have allowed these models to be applied successfully in many application domains. The main building block of a DB...",
+      "title": "On the quantitative analysis of deep belief networks",
+      "artHash": "salakhutdinov-2008-a7bcb553b411e66",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2008
+    },
+    {
+      "abstract": "We describe an unsupervised learning algorithm for extracting sparse and locally shift-invariant features. We also devise a principled procedure for learning hierarchies of invariant features. Each feature detector is composed of a set of trainable convolutional filters follow...",
+      "title": "A Sparse and Locally Shift Invariant Feature Extractor Applied to Document Images",
+      "artHash": "ranzato-2007-e86177cd5be7160b",
+      "venue": {
+        "name": "Ninth International Conference on Document Analysis and Recognition (ICDAR 2007)"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Marc'Aurelio",
+        "surname": "Ranzato"
+      },
+      "nReference": 10,
+      "nCitedBy": 16
+    },
+    {
+      "title": "Shift-Invariance Sparse Coding for Audio Classification",
+      "artHash": "grosse-2007-dd7d152074812182",
+      "venue": {
+        "name": "UAI"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "surname": "Grosse",
+        "given": "Roger"
+      },
+      "nCitedBy": 170,
+      "abstract": "Sparse coding is an unsupervised learning algorithm that learns a succinct high-level representation of the inputs given only unlabeled data; it represents each input as a sparse linear combination of a set of basis functions. Originally applied to modeling the human visual co..."
+    },
+    {
+      "artHash": "coleman-1994-5d52600e20732b37",
+      "venue": {
+        "name": "J. Global Optimization"
+      },
+      "year": 1994,
+      "firstAuthor": {
+        "given": "Thomas",
+        "surname": "Coleman"
+      },
+      "nReference": 1,
+      "nCitedBy": 15,
+      "abstract": "This paper presents our recent work on developing parallel algorithms and software for solving the global minimization problem for molecular conformation, especially protein folding. Global minimization problems are difficult to solve when the objective functions have many loc...",
+      "title": "Parallel continuation-based global optimization for molecular conformation and protein folding"
+    },
+    {
+      "firstAuthor": {
+        "given": "Laurens",
+        "surname": "Maaten"
+      },
+      "nReference": 35,
+      "nCitedBy": 5738,
+      "abstract": "We present a new technique called “t-SNE” that visualizes high-dimensional data by giving each datapoint a location in a two or three-dimensional map. The technique is a variation of Stochastic Neighbor Embedding (Hinton and Roweis, 2002) that is much easier to optimize, and p...",
+      "title": "Visualizing Data using t-SNE",
+      "artHash": "maaten-2008-467209730088f67b",
+      "year": 2008
+    },
+    {
+      "nCitedBy": 1872,
+      "abstract": "The spatial receptive fields of simple cells in mammalian striate cortex have been reasonably well described physiologically and can be characterized as being localized, oriented, and bandpass, comparable with the basis functions of wavelet transforms. Previously, we have show...",
+      "title": "Sparse coding with an overcomplete basis set: A strategy employed by V1?",
+      "artHash": "olshausen-1997-326f0b91199dfee0",
+      "venue": {
+        "name": "Vision Research"
+      },
+      "year": 1997,
+      "firstAuthor": {
+        "given": "Bruno",
+        "surname": "Olshausen"
+      },
+      "nReference": 35
+    },
+    {
+      "abstract": "Although clustering data into mutually exclusive partitions has been an extremely successful approach to unsupervised learning, there are many situations in which a richer model is needed to fully represent the data. This is the case in problems where data points actually simu...",
+      "title": "A Nonparametric Bayesian Approach to Modeling Overlapping Clusters",
+      "artHash": "heller-2007-e7088320162ed505",
+      "venue": {
+        "name": "AISTATS"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "surname": "Heller",
+        "given": "Katherine"
+      },
+      "nReference": 13,
+      "nCitedBy": 38
+    },
+    {
+      "artHash": "utgoff-2002-31f2bb56b9747b0b",
+      "venue": {
+        "name": "Proceedings 2nd International Conference on Development and Learning. ICDL 2002"
+      },
+      "year": 2002,
+      "firstAuthor": {
+        "given": "Paul",
+        "surname": "Utgoff"
+      },
+      "nReference": 8,
+      "nCitedBy": 72,
+      "abstract": "We examine how a network of many knowledge layers can be constructed in an online manner such that the learned units represent building blocks of knowledge that serve to compress the overall representation. Our novel STL algorithm demonstrates a method for simultaneously acqui...",
+      "title": "Many-layered learning"
+    },
+    {
+      "firstAuthor": {
+        "given": "H.",
+        "surname": "Seung"
+      },
+      "nReference": 14,
+      "nCitedBy": 69,
+      "abstract": "One approach to invariant object recognition employs a recurrent neural network as an associative memory. In the standard depiction of the network's state space, memories of objects are stored as attractive fixed points of the dynamics. I argue for a modification of this pictu...",
+      "title": "Learning Continuous Attractors in Recurrent Networks",
+      "artHash": "seung-1997-3523c3045716f2ba",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 1997
+    },
+    {
+      "firstAuthor": {
+        "given": "Roland",
+        "surname": "Memisevic"
+      },
+      "nReference": 20,
+      "nCitedBy": 142,
+      "abstract": "We describe a probabilistic model for learning rich, distributed representations of image transformations. The basic model is defined as a gated conditional random field that is trained to predict transformations of its inputs using a factorial set of latent variables. Inferen...",
+      "title": "Unsupervised Learning of Image Transformations",
+      "artHash": "memisevic-2007-39734428484739d",
+      "venue": {
+        "name": "2007 IEEE Conference on Computer Vision and Pattern Recognition"
+      },
+      "year": 2007
+    },
+    {
+      "abstract": "We survey some of the central results in the complexity theory of discrete neural networks, with pointers to the literature. Our main emphasis is on the computational power of various acyclic and cyclic network models, but we also discuss briefly the complexity aspects of synt...",
+      "title": "Computational complexity of neural networks: a survey",
+      "artHash": "orponen-1994-8c6caa57823e2c1b",
+      "year": 1994,
+      "firstAuthor": {
+        "given": "Pekka",
+        "surname": "Orponen"
+      },
+      "nCitedBy": 43
+    },
+    {
+      "artHash": "attwell-2001-603a609d15d75983",
+      "venue": {
+        "name": "Journal of cerebral blood flow and metabolism : official journal of the International Society of Cerebral Blood Flow and Metabolism"
+      },
+      "year": 2001,
+      "firstAuthor": {
+        "given": "David",
+        "surname": "Attwell"
+      },
+      "nReference": 66,
+      "nCitedBy": 1383,
+      "abstract": "Anatomic and physiologic data are used to analyze the energy expenditure on different components of excitatory signaling in the grey matter of rodent brain. Action potentials and postsynaptic effects of glutamate are predicted to consume much of the energy (47% and 34%, respec...",
+      "title": "An energy budget for signaling in the grey matter of the brain."
+    },
+    {
+      "artHash": "schölkopf-2007-8c631a1886ee4823",
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Bernhard",
+        "surname": "Schölkopf"
+      },
+      "nCitedBy": 722,
+      "abstract": "We describe a novel unsupervised method for learning sparse, overcomplete features. The model uses a linear encoder, and a linear decoder preceded by a sparsifying non-linearity that turns a code vector into a quasi-binary sparse code vector. Given an input, the optimal code m...",
+      "title": "Efficient Learning of Sparse Representations with an Energy-Based Model"
+    },
+    {
+      "nCitedBy": 1084,
+      "abstract": "Convex programming involves a convex set F ⊆ Rn and a convex cost function c : F → R. The goal of convex programming is to find a point in F which minimizes c. In online convex programming, the convex set is known in advance, but in each step of some repeated optimization prob...",
+      "title": "Online Convex Programming and Generalized Infinitesimal Gradient Ascent",
+      "artHash": "zinkevich-2003-6dea48e8b573c262",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2003,
+      "firstAuthor": {
+        "given": "Martin",
+        "surname": "Zinkevich"
+      },
+      "nReference": 22
+    },
+    {
+      "firstAuthor": {
+        "given": "Tijmen",
+        "surname": "Tieleman"
+      },
+      "nReference": 14,
+      "nCitedBy": 183,
+      "abstract": "The most commonly used learning algorithm for restricted Boltzmann machines is contrastive divergence which starts a Markov chain at a data point and runs the chain for only a few iterations to get a cheap, low variance estimate of the sufficient statistics under the model. Ti...",
+      "title": "Using fast weights to improve persistent contrastive divergence",
+      "artHash": "tieleman-2009-ba26425e80fd9c99",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2009
+    },
+    {
+      "artHash": "ranzato-2008-fa3528601705ee3e",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "surname": "Ranzato",
+        "given": "Marc'Aurelio"
+      },
+      "nReference": 14,
+      "nCitedBy": 129,
+      "abstract": "Finding good representations of text documents is crucial in information retrieval and classification systems. Today the most popular document representation is based on a vector of word counts in the document. This representation neither captures dependencies between related ...",
+      "title": "Semi-supervised learning of compact document representations with deep networks"
+    },
+    {
+      "artHash": "geman-1984-abc0b5ec0b9a09bf",
+      "year": 1984,
+      "firstAuthor": {
+        "given": "Stuart",
+        "surname": "Geman"
+      },
+      "nCitedBy": 7748,
+      "title": "Stochastic relaxation, Gibbs distributions, and the Bayesian restoration of images"
+    },
+    {
+      "firstAuthor": {
+        "given": "Tijmen",
+        "surname": "Tieleman"
+      },
+      "nReference": 21,
+      "nCitedBy": 555,
+      "abstract": "A new algorithm for training Restricted Boltzmann Machines is introduced. The algorithm, named Persistent Contrastive Divergence, is different from the standard Contrastive Divergence algorithms in that it aims to draw samples from almost exactly the model distribution. It is ...",
+      "title": "Training restricted Boltzmann machines using approximations to the likelihood gradient",
+      "artHash": "tieleman-2008-c7abf3f9640ec9c6",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2008
+    },
+    {
+      "abstract": "There has been an increase of interest for semi-supervised learning recently, because of the many datasets with large amounts of unlabeled examples and only a few labeled ones. This paper follows up on proposed non-parametric algorithms which provide an estimated continuous la...",
+      "title": "Efficient Non-Parametric Function Induction in Semi-Supervised Learning",
+      "artHash": "delalleau-2004-f5b8b071b004848c",
+      "venue": {
+        "name": "AISTATS"
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "surname": "Delalleau",
+        "given": "Olivier"
+      },
+      "nReference": 14,
+      "nCitedBy": 116
+    },
+    {
+      "firstAuthor": {
+        "given": "Geoffrey",
+        "surname": "Hinton"
+      },
+      "nReference": 20,
+      "nCitedBy": 6952,
+      "abstract": "We show how to use complementary priors to eliminate the explaining-away effects that make inference difficult in densely connected belief nets that have many hidden layers. Using complementary priors, we derive a fast, greedy algorithm that can learn deep, directed belief net...",
+      "title": "A Fast Learning Algorithm for Deep Belief Nets",
+      "artHash": "hinton-2006-c23a53fd72c26a6b",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 2006
+    },
+    {
+      "nCitedBy": 422,
+      "abstract": "The supremacy of n-gram models in statistical language modelling has recently been challenged by parametric models that use distributed representations to counteract the difficulties caused by data sparsity. We propose three new probabilistic language models that define the di...",
+      "title": "Three new graphical models for statistical language modelling",
+      "artHash": "mnih-2007-c35b4aad634dac61",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Andriy",
+        "surname": "Mnih"
+      },
+      "nReference": 12
+    },
+    {
+      "title": "Using Deep Belief Nets to Learn Covariance Kernels for Gaussian Processes",
+      "artHash": "salakhutdinov-2007-3f9848dc9f7ed10e",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Ruslan",
+        "surname": "Salakhutdinov"
+      },
+      "nReference": 18,
+      "nCitedBy": 118,
+      "abstract": "We show how to use unlabeled data and a deep belief net (DBN) to learn a good covariance kernel for a Gaussian process. We first learn a deep generative model of the unlabeled data using the fast, greedy algorithm introduced by [7]. If the data is high-dimensional and highly-s..."
+    },
+    {
+      "firstAuthor": {
+        "given": "Xiaojin",
+        "surname": "Zhu"
+      },
+      "nReference": 9,
+      "nCitedBy": 2120,
+      "abstract": "Active and semi-supervised learning are important techniques when labeled data are scarce. We combine the two under a Gaussian random field model. Labeled and unlabeled data are represented as vertices in a weighted graph, with edge weights encoding the similarity between inst...",
+      "title": "Semi-Supervised Learning Using Gaussian Fields and Harmonic Functions",
+      "artHash": "zhu-2003-c73839189b0e261b",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2003
+    },
+    {
+      "title": "Recursive Distributed Representations",
+      "artHash": "pollack-1990-a83d9a5ea3553c7c",
+      "venue": {
+        "name": "Artif. Intell."
+      },
+      "year": 1990,
+      "firstAuthor": {
+        "surname": "Pollack",
+        "given": "Jordan"
+      },
+      "nReference": 23,
+      "nCitedBy": 537,
+      "abstract": "Abstract A longstanding difficulty for connectionist modeling has been how to represent variable-sized recursive data structures, such as trees and lists, in fixed-width patterns. This paper presents a connectionist architecture which automatically develops compact distributed..."
+    },
+    {
+      "firstAuthor": {
+        "given": "Bernhard",
+        "surname": "Schölkopf"
+      },
+      "nReference": 14,
+      "nCitedBy": 4571,
+      "abstract": "A new method for performing a nonlinear form of principal component analysis is proposed. By the use of integral operator kernel functions, one can efficiently compute principal components in high-dimensional feature spaces, related to input space by some nonlinear mapfor inst...",
+      "title": "Nonlinear Component Analysis as a Kernel Eigenvalue Problem",
+      "artHash": "schölkopf-1998-b42b3e314b0af9d7",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 1998
+    },
+    {
+      "firstAuthor": {
+        "given": "Hervé",
+        "surname": "Bourlard"
+      },
+      "nReference": 8,
+      "nCitedBy": 530,
+      "abstract": "The multilayer perceptron, when working in auto-association mode, is sometimes considered as an interesting candidate to perform data compression or dimensionality reduction of the feature space in information processing applications. The present paper shows that, for auto-ass...",
+      "title": "Auto-association by multilayer perceptrons and singular value decomposition",
+      "artHash": "bourlard-1988-c243c8760da04c86",
+      "venue": {
+        "name": "Biological Cybernetics"
+      },
+      "year": 1988
+    },
+    {
+      "artHash": "bell-1994-312766a1c61e656d",
+      "year": 1994,
+      "firstAuthor": {
+        "given": "Alan",
+        "surname": "Bell"
+      },
+      "nCitedBy": 597,
+      "title": "An information-maximisation approach to blind separation"
+    },
+    {
+      "nCitedBy": 189,
+      "abstract": "A Bayesian model of learning to learn by sampling from multiple tasks is presented. The multiple tasks are themselves generated by sampling from a distribution over an environment of related tasks. Such an environment is shown to be naturally modelled within a Bayesian context...",
+      "title": "A Bayesian/Information Theoretic Model of Learning to Learn via Multiple Task Sampling",
+      "artHash": "baxter-1997-1eec00c19b71bf80",
+      "venue": {
+        "name": "Machine Learning"
+      },
+      "year": 1997,
+      "firstAuthor": {
+        "surname": "Baxter",
+        "given": "Jonathan"
+      },
+      "nReference": 16
+    },
+    {
+      "firstAuthor": {
+        "surname": "Sutskever",
+        "given": "Ilya"
+      },
+      "nReference": 12,
+      "nCitedBy": 176,
+      "abstract": "We describe a new family of non-linear sequence models that are substantially more powerful than hidden Markov models or linear dynamical systems. Our models have simple approximate inference and learning procedures that work well in practice. Multilevel representations of seq...",
+      "title": "Learning Multilevel Distributed Representations for High-Dimensional Sequences",
+      "artHash": "sutskever-2007-d327137ed088041",
+      "venue": {
+        "name": "AISTATS"
+      },
+      "year": 2007
+    },
+    {
+      "abstract": "Thesupport-vector network is a new learning machine for two-group classification problems. The machine conceptually implements the following idea: input vectors are non-linearly mapped to a very high-dimension feature space. In this feature space a linear decision surface is c...",
+      "title": "Support-vector networks",
+      "artHash": "cortes-1995-9e68f0a11c28f427",
+      "venue": {
+        "name": "Machine Learning"
+      },
+      "year": 1995,
+      "firstAuthor": {
+        "surname": "Cortes",
+        "given": "Corinna"
+      },
+      "nCitedBy": 9999
+    },
+    {
+      "firstAuthor": {
+        "given": "David",
+        "surname": "Rumelhart"
+      },
+      "nCitedBy": 7656,
+      "abstract": "We describe a new learning procedure, back-propagation, for networks of neurone-like units. The procedure repeatedly adjusts the weights of the connections in the network so as to minimize a measure of the difference between the actual output vector of the net and the desired ...",
+      "title": "Learning representations by back-propagating errors",
+      "artHash": "rumelhart-1986-10212fd6d143c4c",
+      "venue": {
+        "name": "Nature"
+      },
+      "year": 1986
+    },
+    {
+      "firstAuthor": {
+        "given": "Joshua",
+        "surname": "Tenenbaum"
+      },
+      "nReference": 2,
+      "nCitedBy": 7509,
+      "abstract": "Scientists working with large volumes of high-dimensional data, such as global climate patterns, stellar spectra, or human gene distributions, regularly confront the problem of dimensionality reduction: finding meaningful low-dimensional structures hidden in their high-dimensi...",
+      "title": "A global geometric framework for nonlinear dimensionality reduction.",
+      "artHash": "tenenbaum-2000-86916535cccadd0",
+      "venue": {
+        "name": "Science"
+      },
+      "year": 2000
+    },
+    {
+      "nCitedBy": 501,
+      "abstract": "Unsupervised learning algorithms aim to discover the structure hidden in the data, and to learn representations that are more suitable as input to a supervised machine than the raw input. Many unsupervised methods are based on reconstructing the input from the representation, ...",
+      "title": "Sparse Feature Learning for Deep Belief Networks",
+      "artHash": "ranzato-2007-c39ca4b52ea025ae",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Marc'Aurelio",
+        "surname": "Ranzato"
+      },
+      "nReference": 14
+    },
+    {
+      "title": "Reducing the dimensionality of data with neural networks.",
+      "artHash": "hinton-2006-e9ce4c707876bb07",
+      "venue": {
+        "name": "Science"
+      },
+      "year": 2006,
+      "firstAuthor": {
+        "surname": "Hinton",
+        "given": "Geoffrey"
+      },
+      "nReference": 1,
+      "nCitedBy": 6560,
+      "abstract": "High-dimensional data can be converted to low-dimensional codes by training a multilayer neural network with a small central layer to reconstruct high-dimensional input vectors. Gradient descent can be used for fine-tuning the weights in such \"autoencoder\" networks, but this w..."
+    },
+    {
+      "nCitedBy": 4163,
+      "abstract": "In an earlier paper, we introduced a new \"boosting\" algorithm called AdaBoost which, theoretically, can be used to significantly reduce the error of any learning algorithm that con- sistently generates classifiers whose performance is a little better than random guessing. We a...",
+      "title": "Experiments with a New Boosting Algorithm",
+      "artHash": "freund-1996-8e990d0f8179ac7b",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 1996,
+      "firstAuthor": {
+        "given": "Yoav",
+        "surname": "Freund"
+      },
+      "nReference": 19
+    },
+    {
+      "firstAuthor": {
+        "given": "Andrew",
+        "surname": "Ng"
+      },
+      "nReference": 4,
+      "nCitedBy": 1190,
+      "abstract": "We compare discriminative and generative learning as typified by logistic regression and naive Bayes. We show, contrary to a widely-held belief that discriminative classifiers are almost always to be preferred, that there can often be two distinct regimes of performance as the...",
+      "title": "On Discriminative vs. Generative Classifiers: A comparison of logistic regression and naive Bayes",
+      "artHash": "ng-2001-bb8038b615332310",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2001
+    },
+    {
+      "abstract": "Prior work has shown that features which appear to be biologically plausible as well as empirically useful can be found by sparse coding with a prior such as a laplacian (L1) that promotes sparsity. We show how smoother priors can preserve the benefits of these sparse priors w...",
+      "title": "Differentiable Sparse Coding",
+      "artHash": "bagnell-2008-f5e7fbcac6ff7400",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "given": "J.",
+        "surname": "Bagnell"
+      },
+      "nReference": 18,
+      "nCitedBy": 78
+    },
+    {
+      "firstAuthor": {
+        "surname": "Andrieu",
+        "given": "Christophe"
+      },
+      "nReference": 116,
+      "nCitedBy": 1003,
+      "abstract": "This purpose of this introductory paper is threefold. First, it introduces the Monte Carlo method with emphasis on probabilistic machine learning. Second, it reviews the main building blocks of modern Markov chain Monte Carlo simulation, thereby providing and introduction to t...",
+      "title": "An Introduction to MCMC for Machine Learning",
+      "artHash": "andrieu-2003-7362c08e3039ca2c",
+      "venue": {
+        "name": "Machine Learning"
+      },
+      "year": 2003
+    },
+    {
+      "firstAuthor": {
+        "given": "Yann",
+        "surname": "LeCun"
+      },
+      "nReference": 42,
+      "nCitedBy": 262,
+      "abstract": "Energy-Based Models (EBMs) capture dependencies between variables by associating a scalar energy to each configuration of the variab les. Inference consists in clamping the value of observed variables and finding config urations of the remaining variables that minimize the ene...",
+      "title": "A Tutorial on Energy-Based Learning",
+      "artHash": "lecun-2006-86491ebc14379227",
+      "year": 2006
+    },
+    {
+      "abstract": "From the Publisher: \nArtificial \"neural networks\" are now widely used as flexible models for regression classification applications, but questions remain regarding what these models mean, and how they can safely be used when training data is limited. Bayesian Learning for Neur...",
+      "title": "Bayesian learning for neural networks",
+      "artHash": "hinton-1995-11736d08acb3ec72",
+      "year": 1995,
+      "firstAuthor": {
+        "given": "Geoffrey",
+        "surname": "Hinton"
+      },
+      "nReference": 38,
+      "nCitedBy": 1806
+    },
+    {
+      "artHash": "lanckriet-2002-f3007518d577f47a",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2002,
+      "firstAuthor": {
+        "surname": "Lanckriet",
+        "given": "Gert"
+      },
+      "nReference": 16,
+      "nCitedBy": 1656,
+      "abstract": "Kernel-based learning algorithms work by embedding the data into a Euclidean space, and then searching for linear relations among the embedded data points. The embedding is performed implicitly, by specifying the inner products between each pair of points in the embedding spac...",
+      "title": "Learning the Kernel Matrix with Semi-Definite Programming"
+    },
+    {
+      "abstract": "Bordes et al. (2005) describe the efficient online LASVM algorithm using selective sampling. On the other hand, Loosli et al. (2005) propose a strategy for handling invariance in SVMs, also using selective sampling. This paper combines the two approaches to build a very large ...",
+      "title": "Training Invariant Support Vector Machines using Selective Sampling",
+      "artHash": "loosli-2005-301ded2df5f6661b",
+      "year": 2005,
+      "firstAuthor": {
+        "given": "Gaëlle",
+        "surname": "Loosli"
+      },
+      "nReference": 28,
+      "nCitedBy": 136
+    },
+    {
+      "title": "The Cost of Cortical Computation",
+      "artHash": "lennie-2003-c95e11b6ad00b390",
+      "venue": {
+        "name": "Current Biology"
+      },
+      "year": 2003,
+      "firstAuthor": {
+        "given": "Peter",
+        "surname": "Lennie"
+      },
+      "nReference": 24,
+      "nCitedBy": 510,
+      "abstract": "Electrophysiological recordings show that individual neurons in cortex are strongly activated when engaged in appropriate tasks, but they tell us little about how many neurons might be engaged by a task, which is important to know if we are to understand how cortex encodes inf..."
+    },
+    {
+      "firstAuthor": {
+        "surname": "Saul",
+        "given": "Lawrence"
+      },
+      "nReference": 11,
+      "nCitedBy": 236,
+      "abstract": "We develop a mean field theory for sigmoid belief networks based on ideas from statistical mechanics. Our mean field theory provides a tractable approximation to the true probability distribution in these networks; it also yields a lower bound on the likelihood of evidence. We...",
+      "title": "Mean Field Theory for Sigmoid Belief Networks",
+      "artHash": "saul-1996-274e1226e47bf366",
+      "venue": {
+        "name": "J. Artif. Intell. Res."
+      },
+      "year": 1996
+    },
+    {
+      "nCitedBy": 363,
+      "abstract": "We present a novel model for human action categorization. A video sequence is represented as a collection of spatial and spatial-temporal features by extracting static and dynamic interest points. We propose a hierarchical model that can be characterized as a constellation of ...",
+      "title": "A Hierarchical Model of Shape and Appearance for Human Action Classification",
+      "artHash": "niebles-2007-32aa75d66193f2be",
+      "venue": {
+        "name": "2007 IEEE Conference on Computer Vision and Pattern Recognition"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "surname": "Niebles",
+        "given": "Juan"
+      },
+      "nReference": 21
+    },
+    {
+      "title": "Scaling learning algorithms towards AI",
+      "artHash": "bengio-2007-6c93e709fffd96b4",
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Yoshua",
+        "surname": "Bengio"
+      },
+      "nReference": 20,
+      "nCitedBy": 622,
+      "abstract": "One long-term goal of machine learning research is to produce methods that are applicable to highly complex tasks, such as perception (vision, audition), reasoning, intelligent control, and other artificially intelligent behaviors. We argue that in order to progress toward thi..."
+    },
+    {
+      "nCitedBy": 1240,
+      "title": "Efficient BackProp",
+      "artHash": "lecun-1998-cd0719f0c0ec2ce5",
+      "venue": {
+        "name": "Neural Networks: Tricks of the Trade"
+      },
+      "year": 1998,
+      "firstAuthor": {
+        "given": "Yann",
+        "surname": "LeCun"
+      }
+    },
+    {
+      "firstAuthor": {
+        "surname": "Schwenk",
+        "given": "Holger"
+      },
+      "nReference": 5,
+      "nCitedBy": 9,
+      "abstract": "Large vocabulary continuous speech recognizers for English Broadcast News achieve today word error rates below 10%. An important factor for this succes is the availability of large amounts of acoustic and language modeling training data. In this paper the recognition of French...",
+      "title": "Building continuous space language models for transcribing european languages",
+      "artHash": "schwenk-2005-fc6a3e257be171df",
+      "venue": {
+        "name": "INTERSPEECH"
+      },
+      "year": 2005
+    },
+    {
+      "abstract": "We introduce a framework for syntactic parsing with latent variables based on a form of dynamic Sigmoid Belief Networks called Incremental Sigmoid Belief Networks. We demonstrate that a previous feed-forward neural network parsing model can be viewed as a coarse approximation ...",
+      "title": "Constituent Parsing with Incremental Sigmoid Belief Networks",
+      "artHash": "titov-2007-cc47431595ea3da7",
+      "venue": {
+        "name": "ACL"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Ivan",
+        "surname": "Titov"
+      },
+      "nReference": 19,
+      "nCitedBy": 50
+    },
+    {
+      "firstAuthor": {
+        "given": "Yoshua",
+        "surname": "Bengio"
+      },
+      "nReference": 19,
+      "nCitedBy": 24,
+      "abstract": "We claim and present arguments to the effect that a large class of manifold learning algorithms that are essentially local and can be framed as kernel learning algorithms will suffer from the curse of dimensionality, at the dimension of the true underlying manifold. This obser...",
+      "title": "Nonlocal Estimation of Manifold Structure",
+      "artHash": "bengio-2006-8854fed84dac6833",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 2006
+    },
+    {
+      "abstract": "What chiefly distinguishes cerebral cortex from other parts of the central nervous system is the great diversity of its cell types and inter-connexions. It would be astonishing if such a structure did not profoundly modify the response patterns of fibres coming into it. In the...",
+      "title": "Receptive fields, binocular interaction and functional architecture in the cat's visual cortex.",
+      "artHash": "hubel-1962-8482e0549608d47e",
+      "venue": {
+        "name": "The Journal of physiology"
+      },
+      "year": 1962,
+      "firstAuthor": {
+        "surname": "Hubel",
+        "given": "David"
+      },
+      "nReference": 19,
+      "nCitedBy": 5485
+    },
+    {
+      "abstract": "Random forests are a combination of tree predictors such that each tree depends on the values of a random vector sampled independently and with the same distribution for all trees in the forest. The generalization error for forests converges a.s. to a limit as the number of tr...",
+      "title": "Random Forests",
+      "artHash": "breiman-2001-fe4cb17fcce004a9",
+      "venue": {
+        "name": "Machine Learning"
+      },
+      "year": 2001,
+      "firstAuthor": {
+        "given": "Leo",
+        "surname": "Breiman"
+      },
+      "nReference": 5,
+      "nCitedBy": 9998
+    },
+    {
+      "nCitedBy": 337,
+      "abstract": "Deep belief networks (DBN) are generative neural network models with many layers of hidden explanatory factors, recently introduced by Hinton, Osindero, and Teh (2006) along with a greedy layer-wise unsupervised learning algorithm. The building block of a DBN is a probabilisti...",
+      "title": "Representational Power of Restricted Boltzmann Machines and Deep Belief Networks",
+      "artHash": "roux-2008-2c26879688fc4439",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "given": "Nicolas",
+        "surname": "Roux"
+      },
+      "nReference": 17
+    },
+    {
+      "nCitedBy": 916,
+      "abstract": "Dimensionality reduction involves mapping a set of high dimensional input points onto a low dimensional manifold so that 'similar\" points in input space are mapped to nearby points on the manifold. We present a method - called Dimensionality Reduction by Learning an Invariant ...",
+      "title": "Dimensionality Reduction by Learning an Invariant Mapping",
+      "artHash": "hadsell-2006-b939d00e1ebb45b6",
+      "venue": {
+        "name": "2006 IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR'06)"
+      },
+      "year": 2006,
+      "firstAuthor": {
+        "given": "Raia",
+        "surname": "Hadsell"
+      },
+      "nReference": 14
+    },
+    {
+      "firstAuthor": {
+        "given": "Ruslan",
+        "surname": "Salakhutdinov"
+      },
+      "nReference": 17,
+      "nCitedBy": 644,
+      "abstract": "We show how to learn a deep graphical model of the word-count vectors obtained from a large set of documents. The values of the latent variables in the deepest layer are easy to infer and give a much better representation of each document than Latent Semantic Analysis. When th...",
+      "title": "Semantic hashing",
+      "artHash": "salakhutdinov-2009-b68464b0bc34a2ad",
+      "venue": {
+        "name": "Int. J. Approx. Reasoning"
+      },
+      "year": 2009
+    },
+    {
+      "title": "Learning methods for generic object recognition with invariance to pose and lighting",
+      "artHash": "lecun-2004-437494fd35366b96",
+      "venue": {
+        "name": "Proceedings of the 2004 IEEE Computer Society Conference on Computer Vision and Pattern Recognition, 2004. CVPR 2004."
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "given": "Yann",
+        "surname": "LeCun"
+      },
+      "nReference": 21,
+      "nCitedBy": 786,
+      "abstract": "We assess the applicability of several popular learning methods for the problem of recognizing generic visual categories with invariance to pose, lighting, and surrounding clutter. A large dataset comprising stereo image pairs of 50 uniform-colored toys under 36 azimuths, 9 el..."
+    },
+    {
+      "abstract": "Recently, several learning algorithms relying on models with deep architectures have been proposed. Though they have demonstrated impressive performance, to date, they have only been evaluated on relatively simple problems such as digit recognition in a controlled environment,...",
+      "title": "An empirical evaluation of deep architectures on problems with many factors of variation",
+      "artHash": "larochelle-2007-aa8555d18b06adb8",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "surname": "Larochelle",
+        "given": "Hugo"
+      },
+      "nReference": 11,
+      "nCitedBy": 498
+    },
+    {
+      "title": "Parallel Models of Associative Memory",
+      "artHash": "hinton-1989-9065fa101243b4ae",
+      "year": 1989,
+      "firstAuthor": {
+        "given": "Geoffrey",
+        "surname": "Hinton"
+      },
+      "nCitedBy": 150,
+      "abstract": "Contents: G.E. Hinton, J.A. Anderson, Introduction to the Updated Edition. D.E. Rumelhart, D.A. Norman, Introduction. J.A. Anderson, G.E. Hinton, Models of Information Processing in the Brain. J.A. Feldman, A Connectionist Model of Visual Memory. D. Willshaw, Holography, Assoc..."
+    },
+    {
+      "nCitedBy": 44,
+      "title": "PhD thesis: Modeles connexionnistes de l'apprentissage (connectionist learning models)",
+      "artHash": "lecun-1987-bb498661df559603",
+      "year": 1987,
+      "firstAuthor": {
+        "surname": "LeCun",
+        "given": "Yann"
+      }
+    },
+    {
+      "firstAuthor": {
+        "given": "Julien",
+        "surname": "Mairal"
+      },
+      "nReference": 21,
+      "nCitedBy": 768,
+      "abstract": "It is now well established that sparse signal models are well suited to restoration tasks and can effectively be learned from audio, image, and video data. Recent research has been aimed at learning discriminative sparse models instead of purely reconstructive ones. This paper...",
+      "title": "Supervised Dictionary Learning",
+      "artHash": "mairal-2008-2e10fe98b464b598",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2008
+    },
+    {
+      "abstract": "Previous work has shown that the difficulties in learning deep generative or discriminative models can be overcome by an initial unsupervised learning step that maps inputs to useful intermediate representations. We introduce and motivate a new training principle for unsupervi...",
+      "title": "Extracting and composing robust features with denoising autoencoders",
+      "artHash": "vincent-2008-91572b71f1c38ff8",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "surname": "Vincent",
+        "given": "Pascal"
+      },
+      "nReference": 21,
+      "nCitedBy": 2520
+    },
+    {
+      "firstAuthor": {
+        "given": "Marc'Aurelio",
+        "surname": "Ranzato"
+      },
+      "nReference": 17,
+      "nCitedBy": 526,
+      "abstract": "We present an unsupervised method for learning a hierarchy of sparse feature detectors that are invariant to small shifts and distortions. The resulting feature extractor consists of multiple convolution filters, followed by a feature-pooling layer that computes the max of eac...",
+      "title": "Unsupervised Learning of Invariant Feature Hierarchies with Applications to Object Recognition",
+      "artHash": "ranzato-2007-cc2264b0384d5357",
+      "venue": {
+        "name": "2007 IEEE Conference on Computer Vision and Pattern Recognition"
+      },
+      "year": 2007
+    },
+    {
+      "title": "Charting a Manifold",
+      "artHash": "brand-2002-ba2eb5b43671e9ef",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2002,
+      "firstAuthor": {
+        "given": "Matthew",
+        "surname": "Brand"
+      },
+      "nReference": 11,
+      "nCitedBy": 334,
+      "abstract": "We construct a nonlinear mapping from a high-dimensional sample space to a low-dimensional vector space, effectively recovering a Cartesian coordinate system for the manifold from which the data is sampled. The mapping preserves local geometric relations in the manifold and is..."
+    },
+    {
+      "firstAuthor": {
+        "surname": "Elman",
+        "given": "Jeffrey"
+      },
+      "nReference": 25,
+      "nCitedBy": 814,
+      "abstract": "It is a striking fact that in humans the greatest learning occurs precisely at that point in time--childhood--when the most dramatic maturational changes also occur. This report describes possible synergistic interactions between maturational change and the ability to learn a ...",
+      "title": "Learning and development in neural networks: the importance of starting small",
+      "artHash": "elman-1993-b1099f9c8734686b",
+      "venue": {
+        "name": "Cognition"
+      },
+      "year": 1993
+    },
+    {
+      "artHash": "hotelling-0-6f11615d7a20af5f",
+      "firstAuthor": {
+        "given": "Harold",
+        "surname": "Hotelling"
+      },
+      "nCitedBy": 3130,
+      "title": "Analysis of a complex of statistical variables into principal components."
+    },
+    {
+      "title": "Deep belief net learning in a long-range vision system for autonomous off-road driving",
+      "artHash": "hadsell-2008-5a402e2fec42feaf",
+      "venue": {
+        "name": "2008 IEEE/RSJ International Conference on Intelligent Robots and Systems"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "given": "Raia",
+        "surname": "Hadsell"
+      },
+      "nReference": 15,
+      "nCitedBy": 53,
+      "abstract": "We present a learning-based approach for long-range vision that is able to accurately classify complex terrain at distances up to the horizon, thus allowing high-level strategic planning. A deep belief network is trained with unsupervised data and a reconstruction criterion to..."
+    },
+    {
+      "title": "Small codes and large image databases for recognition",
+      "artHash": "torralba-2008-7c0f0cc2c8f37175",
+      "venue": {
+        "name": "2008 IEEE Conference on Computer Vision and Pattern Recognition"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "surname": "Torralba",
+        "given": "Antonio"
+      },
+      "nReference": 26,
+      "nCitedBy": 629,
+      "abstract": "The Internet contains billions of images, freely available online. Methods for efficiently searching this incredibly rich resource are vital for a large number of applications. These include object recognition, computer graphics, personal photo collections, online image search..."
+    },
+    {
+      "title": "Products of experts",
+      "artHash": "hinton-1999-5fabb06aeedc7843",
+      "year": 1999,
+      "firstAuthor": {
+        "surname": "Hinton",
+        "given": "Geoffrey"
+      },
+      "nReference": 1,
+      "nCitedBy": 244,
+      "abstract": "It is possible to combine multiple probabilistic models of the same data by multiplying the probabilities together and then renormalizing. This is a very efficient way to model high-dimensional data which simultaneously satisfies many different low dimensional constraints. Eac..."
+    },
+    {
+      "firstAuthor": {
+        "given": "Miguel",
+        "surname": "Carreira-Perpiñán"
+      },
+      "nReference": 12,
+      "nCitedBy": 425,
+      "abstract": "Maximum-likelihood (ML) learning of Markov random fields is challenging because it requires estimates of averages that have an exponential number of terms. Markov chain Monte Carlo methods typically take a long time to converge on unbiased estimates, but Hinton (2002) showed t...",
+      "title": "On Contrastive Divergence Learning",
+      "artHash": "carreira-perpiñán-2005-2e1a3c6933659721",
+      "venue": {
+        "name": "AISTATS"
+      },
+      "year": 2005
+    },
+    {
+      "firstAuthor": {
+        "given": "Jorge",
+        "surname": "Moré"
+      },
+      "nReference": 23,
+      "nCitedBy": 158,
+      "abstract": "Distance geometry problems arise in the determination of protein structure. We consider the case where only a subset of the distances between atoms is given and formulate this distance geometry problem as a global minimization problem with special structure. We show that globa...",
+      "title": "Global Continuation for Distance Geometry Problems",
+      "artHash": "moré-1997-d55c4ebe1e401fc5",
+      "venue": {
+        "name": "SIAM Journal on Optimization"
+      },
+      "year": 1997
+    },
+    {
+      "title": "Nonlinear dimensionality reduction by locally linear embedding.",
+      "artHash": "roweis-2000-7ac6439acf1111d8",
+      "venue": {
+        "name": "Science"
+      },
+      "year": 2000,
+      "firstAuthor": {
+        "given": "Sam",
+        "surname": "Roweis"
+      },
+      "nReference": 3,
+      "nCitedBy": 8361,
+      "abstract": "Many areas of science depend on exploratory data analysis and visualization. The need to analyze large amounts of multivariate data raises the fundamental problem of dimensionality reduction: how to discover compact representations of high-dimensional data. Here, we introduce ..."
+    },
+    {
+      "title": "Establishing Good Benchmarks and Baselines for Face Recognition",
+      "artHash": "pinto-2008-a0e4711e8edc5785",
+      "year": 2008,
+      "firstAuthor": {
+        "given": "Nicolas",
+        "surname": "Pinto"
+      },
+      "nReference": 15,
+      "nCitedBy": 41,
+      "abstract": "The Rowland Institute at Harvard, Harvard University, 100 Edwin Land Blvd.,Cambridge, MA 02142, USA,cox@rowland.harvard.eduAbstract. Progress in face recognition relies critically on the creationof test sets against which the performance of various approaches can beevaluated. ..."
+    },
+    {
+      "nCitedBy": 119,
+      "abstract": "Many classification algorithms were originally designed for fixed-size vectors. Recent applications in text and speech processing and computational biology require however the analysis of variable-length sequences and more generally weighted automata. An approach widely used i...",
+      "title": "Rational Kernels: Theory and Algorithms",
+      "artHash": "cortes-2004-2242ae724027399e",
+      "venue": {
+        "name": "J. Mach. Learn. Res."
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "given": "Corinna",
+        "surname": "Cortes"
+      },
+      "nReference": 32
+    },
+    {
+      "firstAuthor": {
+        "surname": "Bengio",
+        "given": "Yoshua"
+      },
+      "nReference": 16,
+      "nCitedBy": 94,
+      "abstract": "We present a series of theoretical arguments supporting the claim that a large class of modern learning algorithms that rely solely on the smoothness prior - with similarity between examples expressed with a local kernel - are sensitive to the curse of dimensionality, or more ...",
+      "title": "The Curse of Highly Variable Functions for Local Kernel Machines",
+      "artHash": "bengio-2005-5e84f372657d8a3f",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2005
+    },
+    {
+      "firstAuthor": {
+        "given": "Tai",
+        "surname": "Lee"
+      },
+      "nReference": 54,
+      "nCitedBy": 793,
+      "abstract": "Traditional views of visual processing suggest that early visual neurons in areas V1 and V2 are static spatiotemporal filters that extract local features from a visual scene. The extracted information is then channeled through a feedforward chain of modules in successively hig...",
+      "title": "Hierarchical Bayesian inference in the visual cortex.",
+      "artHash": "lee-2003-7a472810be41eb9e",
+      "venue": {
+        "name": "Journal of the Optical Society of America. A, Optics, image science, and vision"
+      },
+      "year": 2003
+    },
+    {
+      "title": "Optimization by simulated annealing.",
+      "artHash": "kirkpatrick-1983-5f2c985cbb503fa0",
+      "venue": {
+        "name": "Science"
+      },
+      "year": 1983,
+      "firstAuthor": {
+        "surname": "Kirkpatrick",
+        "given": "Scott"
+      },
+      "nReference": 4,
+      "nCitedBy": 9999,
+      "abstract": "There is a deep and useful connection between statistical mechanics (the behavior of systems with many degrees of freedom in thermal equilibrium at a finite temperature) and multivariate or combinatorial optimization (finding the minimum of a given function depending on many p..."
+    },
+    {
+      "firstAuthor": {
+        "given": "Risto",
+        "surname": "Miikkulainen"
+      },
+      "nReference": 33,
+      "nCitedBy": 72,
+      "abstract": "An approach to connectionist natural language processing is proposed, which is based on hierarchically organized modular parallel distributed processing (PDP) networks and a central lexicon of distributed input/output representations. The modules communicate using these repres...",
+      "title": "Natural Language Processing With Modular PDP Networks and Distributed Lexicon",
+      "artHash": "miikkulainen-1991-18ec530879dc93cf",
+      "venue": {
+        "name": "Cognitive Science"
+      },
+      "year": 1991
+    },
+    {
+      "abstract": "We present a distribution model for binary vectors, called the influence combination model and show how this model can be used as the basis for unsupervised learning algorithms for feature selection. The model can be represented by a particular type of Boltzmann machine with a...",
+      "title": "Unsupervised Learning of Distributions of Binary Vectors Using 2-Layer Networks",
+      "artHash": "freund-1991-256905f893464cf2",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 1991,
+      "firstAuthor": {
+        "given": "Yoav",
+        "surname": "Freund"
+      },
+      "nReference": 5,
+      "nCitedBy": 216
+    },
+    {
+      "nCitedBy": 360,
+      "abstract": "Memory-based classification algorithms such as radial basis functions or K-nearest neighbors typically rely on simple distances (Euclidean, dot product...), which are not particularly meaningful on pattern vectors. More complex, better suited distance measures are often expens...",
+      "title": "Efficient Pattern Recognition Using a New Transformation Distance",
+      "artHash": "simard-1992-d963cf644246b7a",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 1992,
+      "firstAuthor": {
+        "surname": "Simard",
+        "given": "Patrice"
+      },
+      "nReference": 4
+    },
+    {
+      "abstract": "We present a new learning algorithm for Boltzmann machines that contain many layers of hidden variables. Data-dependent expectations are estimated using a variational approximation that tends to focus on a single mode, and dataindependent expectations are approximated using pe...",
+      "title": "Deep Boltzmann Machines",
+      "artHash": "salakhutdinov-2009-2959ea08acfaf430",
+      "venue": {
+        "name": "AISTATS"
+      },
+      "year": 2009,
+      "firstAuthor": {
+        "given": "Ruslan",
+        "surname": "Salakhutdinov"
+      },
+      "nReference": 7,
+      "nCitedBy": 1177
+    },
+    {
+      "firstAuthor": {
+        "given": "Erik",
+        "surname": "Sudderth"
+      },
+      "nCitedBy": 138,
+      "abstract": "Abstract\nWe develop hierarchical, probabilistic models for objects, the parts composing them, and the visual scenes surrounding them. Our approach couples topic models originally developed for text analysis with spatial transformations, and thus consistently accounts for geome...",
+      "title": "Describing Visual Scenes Using Transformed Objects and Parts",
+      "artHash": "sudderth-2007-827466932547ea61",
+      "venue": {
+        "name": "International Journal of Computer Vision"
+      },
+      "year": 2007
+    },
+    {
+      "title": "Modeling Human Motion Using Binary Latent Variables",
+      "artHash": "schölkopf-2007-534c835556d09747",
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Bernhard",
+        "surname": "Schölkopf"
+      },
+      "nCitedBy": 512,
+      "abstract": "We propose a non-linear generative model for human motion data that uses an undirected model with binary latent variables and real-valued “visible” variables that represent joint angles. The latent and visible variables at each time step receive directed connections from the v..."
+    },
+    {
+      "abstract": "This paper describes ongoing work on a new approach for language modeling for large vocabulary continuous speech recognition. Almost all state.. o. f-the-art systems use statistical n-gram language models estimated on text corpora. One principle problem with such language mode...",
+      "title": "Connectionist language modeling for large vocabulary continuous speech recognition",
+      "artHash": "schwenk-2002-be5ff89dd6c6f52f",
+      "venue": {
+        "name": "2002 IEEE International Conference on Acoustics, Speech, and Signal Processing"
+      },
+      "year": 2002,
+      "firstAuthor": {
+        "given": "Holger",
+        "surname": "Schwenk"
+      },
+      "nReference": 4,
+      "nCitedBy": 113
+    },
+    {
+      "firstAuthor": {
+        "given": "Geoffrey",
+        "surname": "Hinton"
+      },
+      "nReference": 23,
+      "nCitedBy": 171,
+      "abstract": "The uniformity of the cortical architecture and the ability of functions to move to different areas of cortex following early damage strongly suggest that there is a single basic learning algorithm for extracting underlying structure from richly structured, high-dimensional se...",
+      "title": "To recognize shapes, first learn to generate images.",
+      "artHash": "hinton-2007-6c87eefff4ef6d84",
+      "venue": {
+        "name": "Progress in brain research"
+      },
+      "year": 2007
+    },
+    {
+      "title": "The Helmholtz Machine",
+      "artHash": "dayan-1995-abee44ead7df5850",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 1995,
+      "firstAuthor": {
+        "given": "Peter",
+        "surname": "Dayan"
+      },
+      "nReference": 25,
+      "nCitedBy": 575,
+      "abstract": "Discovering the structure inherent in a set of patterns is a fundamental aim of statistical inference or learning. One fruitful approach is to build a parameterized stochastic generative model, independent draws from which are likely to produce the patterns. For all but the si..."
+    },
+    {
+      "title": "Flexible shaping: How learning in small steps helps",
+      "artHash": "krueger-2009-fe865105897eacf7",
+      "venue": {
+        "name": "Cognition"
+      },
+      "year": 2009,
+      "firstAuthor": {
+        "given": "Kai",
+        "surname": "Krueger"
+      },
+      "nReference": 50,
+      "nCitedBy": 73,
+      "abstract": "Humans and animals can perform much more complex tasks than they can acquire using pure trial and error learning. This gap is filled by teaching. One important method of instruction is shaping, in which a teacher decomposes a complete task into sub-components, thereby providin..."
+    },
+    {
+      "nCitedBy": 12,
+      "abstract": "We present a new way of interpreting ICA as a probability density model and a new way of fitting this model to data. The advantage of our approach is that it suggests simple, novel extensions to overcomplete, undercomplete and multilayer non-linear versions of ICA. 1. ICA AS A...",
+      "title": "A New View of ICA",
+      "artHash": "hinton-2001-ad501ac2cd756601",
+      "year": 2001,
+      "firstAuthor": {
+        "given": "Geoffrey",
+        "surname": "Hinton"
+      },
+      "nReference": 15
+    },
+    {
+      "firstAuthor": {
+        "given": "Aapo",
+        "surname": "Hyvärinen"
+      },
+      "nCitedBy": 69,
+      "abstract": "Statistical models are often based on non-normalized probability densities. That is, the model contains an unknown normalization constant whose computation is too difficult for practical purposes. Such models were encountered, for example, in Sects. 13.1.5 and 13.1.7. Maximum ...",
+      "title": "Estimation of Non-normalized Statistical Models",
+      "artHash": "hyvärinen-2009-bf61b35e2ec099da",
+      "year": 2009
+    },
+    {
+      "abstract": "Invariant features of temporally varying signals are useful for analysis and classification. Slow feature analysis (SFA) is a new method for learning invariant or slowly varying features from a vectorial input signal. It is based on a nonlinear expansion of the input signal an...",
+      "title": "Slow Feature Analysis: Unsupervised Learning of Invariances",
+      "artHash": "wiskott-2002-8d9f24924ce32758",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 2002,
+      "firstAuthor": {
+        "given": "Laurenz",
+        "surname": "Wiskott"
+      },
+      "nReference": 28,
+      "nCitedBy": 698
+    },
+    {
+      "title": "Transformation Invariant Autoassociation with Application to Handwritten Character Recognition",
+      "artHash": "schwenk-1994-3f6ef6adbf431d0c",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 1994,
+      "firstAuthor": {
+        "given": "Holger",
+        "surname": "Schwenk"
+      },
+      "nReference": 6,
+      "nCitedBy": 52,
+      "abstract": "When training neural networks by the classical backpropagation algorithm the whole problem to learn must be expressed by a set of inputs and desired outputs. However, we often have high-level knowledge about the learning problem. In optical character recognition (OCR), for ins..."
+    },
+    {
+      "abstract": "We present a principled Bayesian framework for modeling partial memberships of data points to clusters. Unlike a standard mixture model which assumes that each data point belongs to one and only one mixture component, or cluster, a partial membership model allows data points t...",
+      "title": "Statistical models for partial membership",
+      "artHash": "heller-2008-fbb3e1465521814f",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "surname": "Heller",
+        "given": "Katherine"
+      },
+      "nReference": 12,
+      "nCitedBy": 25
+    },
+    {
+      "abstract": "We present a simple new Monte Carlo algorithm for evaluating probabilities of observations in complex latent variable models, such as Deep Belief Networks. While the method is based on Markov chains, estimates based on short runs are formally unbiased. In expectation, the log ...",
+      "title": "Evaluating probabilities under high-dimensional latent variable models",
+      "artHash": "murray-2008-dfcccdd1ad661868",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2008,
+      "firstAuthor": {
+        "given": "Iain",
+        "surname": "Murray"
+      },
+      "nReference": 18,
+      "nCitedBy": 68
+    },
+    {
+      "artHash": "doi-2005-daf3a68389d5bbc1",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2005,
+      "firstAuthor": {
+        "given": "Eizaburo",
+        "surname": "Doi"
+      },
+      "nReference": 6,
+      "nCitedBy": 18,
+      "abstract": "Biological sensory systems are faced with the problem of encoding a high-fidelity sensory signal with a population of noisy, low-fidelity neurons. This problem can be expressed in information theoretic terms as coding and transmitting a multi-dimensional, analog signal over a ...",
+      "title": "A Theoretical Analysis of Robust Coding over Noisy Overcomplete Channels"
+    },
+    {
+      "abstract": "This paper investigates learning in a lifelong context. Lifelong learning addresses situations in which a learner faces a whole stream of learning tasks. Such scenarios provide the opportunity to transfer knowledge across multiple learning tasks, in order to generalize more ac...",
+      "title": "Is Learning The n-th Thing Any Easier Than Learning The First?",
+      "artHash": "thrun-1995-2a1581366bda1485",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 1995,
+      "firstAuthor": {
+        "surname": "Thrun",
+        "given": "Sebastian"
+      },
+      "nReference": 16,
+      "nCitedBy": 417
+    },
+    {
+      "abstract": "Suppose x is an unknown vector in Ropfm (a digital image or signal); we plan to measure n general linear functionals of x and then reconstruct. If x is known to be compressible by transform coding with a known transform, and we reconstruct via the nonlinear procedure defined h...",
+      "title": "Compressed sensing",
+      "artHash": "donoho-2004-3817ea79a4bd61cf",
+      "venue": {
+        "name": "IEEE Transactions on Information Theory"
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "surname": "Donoho",
+        "given": "David"
+      },
+      "nReference": 40,
+      "nCitedBy": 9999
+    },
+    {
+      "abstract": "Human and non-human primates excel at visual recognition tasks. The primate visual system exhibits a strong degree of selectivity while at the same time being robust to changes in the input image. We have developed a quantitative theory to account for the computations performe...",
+      "title": "A quantitative theory of immediate visual recognition.",
+      "artHash": "serre-2007-f161345e8271b366",
+      "venue": {
+        "name": "Progress in brain research"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Thomas",
+        "surname": "Serre"
+      },
+      "nReference": 70,
+      "nCitedBy": 171
+    },
+    {
+      "title": "Some extensions of score matching",
+      "artHash": "hyvärinen-2007-9afc3ae6608253b9",
+      "venue": {
+        "name": "Computational Statistics & Data Analysis"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "surname": "Hyvärinen",
+        "given": "Aapo"
+      },
+      "nReference": 6,
+      "nCitedBy": 103,
+      "abstract": "Many probabilistic models are only defined up to a normalization constant. This makes maximum likelihood estimation of the model parameters very difficult. Typically, one then has to resort to Markov Chain Monte Carlo methods, or approximations of the normalization constant. P..."
+    },
+    {
+      "firstAuthor": {
+        "given": "Nathalie",
+        "surname": "Japkowicz"
+      },
+      "nReference": 3,
+      "nCitedBy": 101,
+      "abstract": "A common misperception within the neural network community is that even with nonlinearities in their hidden layer, autoassociators trained with backpropagation are equivalent to linear methods such as principal component analysis (PCA). Our purpose is to demonstrate that nonli...",
+      "title": "Nonlinear Autoassociation Is Not Equivalent to PCA",
+      "artHash": "japkowicz-2000-b6db2d9804e4e447",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 2000
+    },
+    {
+      "abstract": "We investigate the power of threshold circuits of small depth. In particular, we give functions that require exponential size unweighted threshold circuits of depth 3 when we restrict the bottom fanin. We also prove that there are monotone functionsfk that can be computed in d...",
+      "title": "On the power of small-depth threshold circuits",
+      "artHash": "håstad-1991-88695acbc8f52449",
+      "venue": {
+        "name": "computational complexity"
+      },
+      "year": 1991,
+      "firstAuthor": {
+        "surname": "Håstad",
+        "given": "Johan"
+      },
+      "nReference": 17,
+      "nCitedBy": 147
+    },
+    {
+      "abstract": "We present a new machine learning framework called \"self-taught learning\" for using unlabeled data in supervised classification tasks. We do not assume that the unlabeled data follows the same class labels or generative distribution as the labeled data. Thus, we would like to ...",
+      "title": "Self-taught learning: transfer learning from unlabeled data",
+      "artHash": "raina-2007-75de0e2e62f4f755",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "surname": "Raina",
+        "given": "Rajat"
+      },
+      "nReference": 21,
+      "nCitedBy": 992
+    },
+    {
+      "abstract": "Despite the seminal studies of response differentiation by the method of successive approximation detailed in chapter 8 of The Behavior of Organisms (1938), B. F. Skinner never actually shaped an operant response by hand until a memorable incident of startling serendipity on t...",
+      "title": "A day of great illumination: B. F. Skinner's discovery of shaping.",
+      "artHash": "peterson-2004-7df4c890ce5a9896",
+      "venue": {
+        "name": "Journal of the experimental analysis of behavior"
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "surname": "Peterson",
+        "given": "Gail"
+      },
+      "nReference": 18,
+      "nCitedBy": 57
+    },
+    {
+      "firstAuthor": {
+        "given": "Lawrence",
+        "surname": "Brown"
+      },
+      "nCitedBy": 172,
+      "title": "Fundamentals of Statistical Exponential Families",
+      "artHash": "brown-1987-2478fdf308a336a5",
+      "year": 1987
+    },
+    {
+      "artHash": "belkin-2004-94f8fb2ed743c95d",
+      "venue": {
+        "name": "COLT"
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "given": "Mikhail",
+        "surname": "Belkin"
+      },
+      "nCitedBy": 380,
+      "abstract": "We consider the problem of labeling a partially labeled graph. This setting may arise in a number of situations from survey sampling to information retrieval to pattern recognition in manifold settings. It is also of potential practical importance, when the data is abundant, b...",
+      "title": "Regularization and Semi-supervised Learning on Large Graphs"
+    },
+    {
+      "title": "The Entire Regularization Path for the Support Vector Machine",
+      "artHash": "hastie-2004-5cd2ed8e09207b58",
+      "venue": {
+        "name": "J. Mach. Learn. Res."
+      },
+      "year": 2004,
+      "firstAuthor": {
+        "given": "Trevor",
+        "surname": "Hastie"
+      },
+      "nReference": 11,
+      "nCitedBy": 445,
+      "abstract": "The support vector machine (SVM) is a widely used tool for classification. Many efficient implementations exist for fitting a two-class SVM model. The user has to supply values for the tuning parameters: the regularization cost parameter, and the kernel parameters. It seems a ..."
+    },
+    {
+      "nCitedBy": 9997,
+      "abstract": "Setting of the learning problem consistency of learning processes bounds on the rate of convergence of learning processes controlling the generalization ability of learning processes constructing learning algorithms what is important in learning theory?.",
+      "title": "The Nature of Statistical Learning Theory",
+      "artHash": "vapnik-1995-4bdea6d95188316a",
+      "venue": {
+        "name": "Statistics for Engineering and Information Science"
+      },
+      "year": 1995,
+      "firstAuthor": {
+        "given": "Vladimir",
+        "surname": "Vapnik"
+      },
+      "nReference": 50
+    },
+    {
+      "abstract": "Most of the existing approaches to collaborative filtering cannot handle very large data sets. In this paper we show how a class of two-layer undirected graphical models, called Restricted Boltzmann Machines (RBM's), can be used to model tabular data, such as user's ratings of...",
+      "title": "Restricted Boltzmann machines for collaborative filtering",
+      "artHash": "salakhutdinov-2007-1cd3053b61bce883",
+      "venue": {
+        "name": "ICML"
+      },
+      "year": 2007,
+      "firstAuthor": {
+        "given": "Ruslan",
+        "surname": "Salakhutdinov"
+      },
+      "nReference": 14,
+      "nCitedBy": 1019
+    },
+    {
+      "firstAuthor": {
+        "given": "Yoshua",
+        "surname": "Bengio"
+      },
+      "nReference": 23,
+      "nCitedBy": 130,
+      "abstract": "We study an expansion of the log likelihood in undirected graphical models such as the restricted Boltzmann machine (RBM), where each term in the expansion is associated with a sample in a Gibbs chain alternating between two random variables (the visible vector and the hidden ...",
+      "title": "Justifying and Generalizing Contrastive Divergence",
+      "artHash": "bengio-2009-e116761a2eb506e7",
+      "venue": {
+        "name": "Neural Computation"
+      },
+      "year": 2009
+    },
+    {
+      "abstract": "Convexity has recently received a lot of attention in the machine learning community, and the lack of convexity has been seen as a major disadvantage of many learning algorithms, such as multi-layer artificial neural networks. We show that training multi-layer neural networks ...",
+      "title": "Convex Neural Networks",
+      "artHash": "bengio-2005-611343199d7916d1",
+      "venue": {
+        "name": "NIPS"
+      },
+      "year": 2005,
+      "firstAuthor": {
+        "surname": "Bengio",
+        "given": "Yoshua"
+      },
+      "nReference": 8,
+      "nCitedBy": 50
+    },
+    {
+      "abstract": "Abstract We prove lower bounds for approximate computations of piecewise polynomial functions which, in particular, apply for round-off computations of such functions.",
+      "title": "Complexity Lower Bounds for Approximation Algebraic Computation Trees",
+      "artHash": "cucker-1999-6134693b52f5afd4",
+      "venue": {
+        "name": "J. Complexity"
+      },
+      "year": 1999,
+      "firstAuthor": {
+        "surname": "Cucker",
+        "given": "Felipe"
+      },
+      "nReference": 9,
+      "nCitedBy": 5
+    }
+  ],
+  "relations": [
+    {
+      "citedBy": "lewicki-2000-98522018016d1111",
+      "reference": "hinton-1986-63e7997e58bed607"
+    },
+    {
+      "citedBy": "lewicki-2000-98522018016d1111",
+      "reference": "olshausen-1997-326f0b91199dfee0"
+    },
+    {
+      "citedBy": "mutch-2007-3d7388c53a4ee9e4",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "mutch-2007-3d7388c53a4ee9e4",
+      "reference": "fukushima-1980-309eb8faff52d44d"
+    },
+    {
+      "citedBy": "collobert-2008-a439c545dcf00164",
+      "reference": "schwenk-2002-be5ff89dd6c6f52f"
+    },
+    {
+      "citedBy": "collobert-2008-a439c545dcf00164",
+      "reference": "bengio-2000-7374275e1bac6b74"
+    },
+    {
+      "citedBy": "collobert-2008-a439c545dcf00164",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "ranzato-2007-a1b2a382d1f0f6fa",
+      "reference": "lecun-2006-86491ebc14379227"
+    },
+    {
+      "citedBy": "ranzato-2007-a1b2a382d1f0f6fa",
+      "reference": "teh-2003-42832e04631c6c76"
+    },
+    {
+      "citedBy": "ranzato-2007-a1b2a382d1f0f6fa",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "ranzato-2007-a1b2a382d1f0f6fa",
+      "reference": "doi-2005-daf3a68389d5bbc1"
+    },
+    {
+      "citedBy": "ranzato-2007-a1b2a382d1f0f6fa",
+      "reference": "olshausen-1997-326f0b91199dfee0"
+    },
+    {
+      "citedBy": "ranzato-2007-a1b2a382d1f0f6fa",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "lee-2007-2266e989fa98eab5",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "lee-2007-2266e989fa98eab5",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "lee-2007-2266e989fa98eab5",
+      "reference": "lee-2006-39dec12bf7bd029f"
+    },
+    {
+      "citedBy": "lee-2007-2266e989fa98eab5",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "lee-2007-2266e989fa98eab5",
+      "reference": "wiskott-2002-8d9f24924ce32758"
+    },
+    {
+      "citedBy": "lee-2007-2266e989fa98eab5",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "lee-2007-2266e989fa98eab5",
+      "reference": "larochelle-2007-aa8555d18b06adb8"
+    },
+    {
+      "citedBy": "lee-2007-2266e989fa98eab5",
+      "reference": "raina-2007-75de0e2e62f4f755"
+    },
+    {
+      "citedBy": "lecun-1998-e1770e784ab3470",
+      "reference": "boser-1992-b8213a15ee51b7cb"
+    },
+    {
+      "citedBy": "lecun-1998-e1770e784ab3470",
+      "reference": "vapnik-1995-4bdea6d95188316a"
+    },
+    {
+      "citedBy": "lecun-1998-e1770e784ab3470",
+      "reference": "ackley-1985-7b723a46d9939c76"
+    },
+    {
+      "citedBy": "lecun-1998-e1770e784ab3470",
+      "reference": "bengio-1994-53983d07a145e560"
+    },
+    {
+      "citedBy": "lecun-1998-e1770e784ab3470",
+      "reference": "lecun-1987-bb498661df559603"
+    },
+    {
+      "citedBy": "lecun-1998-e1770e784ab3470",
+      "reference": "lecun-1989-ba8f000ca2efc420"
+    },
+    {
+      "citedBy": "lecun-1998-e1770e784ab3470",
+      "reference": "hinton-1986-63e7997e58bed607"
+    },
+    {
+      "citedBy": "lecun-1998-e1770e784ab3470",
+      "reference": "simard-1992-d963cf644246b7a"
+    },
+    {
+      "citedBy": "neal-1992-37a91451c96dd201",
+      "reference": "ackley-1985-7b723a46d9939c76"
+    },
+    {
+      "citedBy": "williams-1995-2a37c69da4694a53",
+      "reference": "kennedy-1988-9f3ccf80d44e0b18"
+    },
+    {
+      "citedBy": "williams-1995-2a37c69da4694a53",
+      "reference": "hinton-1995-11736d08acb3ec72"
+    },
+    {
+      "citedBy": "köster-2007-b97314a3417b4efe",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "köster-2007-b97314a3417b4efe",
+      "reference": "hyvärinen-2009-bf61b35e2ec099da"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "ranzato-2007-c39ca4b52ea025ae"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "hinton-2007-6c87eefff4ef6d84"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "bengio-2007-6c93e709fffd96b4"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "saul-1996-274e1226e47bf366"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "jaakkola-1998-e4494e9aa459e51c"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "yao-1985-bda61920590484d1"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "neal-1992-37a91451c96dd201"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "larochelle-2007-aa8555d18b06adb8"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "salakhutdinov-2007-7fa639c1ccf011af"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "larochelle-2008-ad1032cf288538c"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "vincent-2008-91572b71f1c38ff8"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "ng-2001-bb8038b615332310"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "lasserre-2006-60f5f620080c1190"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "carreira-perpiñán-2005-2e1a3c6933659721"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "osindero-2007-1c3730d823f23211"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "dayan-1995-abee44ead7df5850"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "håstad-1986-c97030c6f4961a73"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "hadsell-2008-5a402e2fec42feaf"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "ranzato-2007-cc2264b0384d5357"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "bengio-2005-5e84f372657d8a3f"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "håstad-1991-88695acbc8f52449"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "smolensky-1986-b1ad39d576fdd879"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "bell-1994-312766a1c61e656d"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "salakhutdinov-2008-a7bcb553b411e66"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "collobert-2008-a439c545dcf00164"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "bengio-2009-e116761a2eb506e7"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "hinton-1995-9eae1f32da00c93b"
+    },
+    {
+      "citedBy": "larochelle-2009-4729094b41355760",
+      "reference": "salakhutdinov-2007-1cd3053b61bce883"
+    },
+    {
+      "citedBy": "lecun-2005-4198b131ed0a4fd5",
+      "reference": "lecun-2004-437494fd35366b96"
+    },
+    {
+      "citedBy": "lecun-2005-4198b131ed0a4fd5",
+      "reference": "bengio-2000-7374275e1bac6b74"
+    },
+    {
+      "citedBy": "lecun-2005-4198b131ed0a4fd5",
+      "reference": "teh-2003-42832e04631c6c76"
+    },
+    {
+      "citedBy": "lecun-2005-4198b131ed0a4fd5",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "håstad-1986-c97030c6f4961a73",
+      "reference": "yao-1985-bda61920590484d1"
+    },
+    {
+      "citedBy": "simard-2003-1e655a66a26e98ad",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "bengio-1994-53983d07a145e560",
+      "reference": "kirkpatrick-1983-5f2c985cbb503fa0"
+    },
+    {
+      "citedBy": "vilalta-1997-da59dc0032d5a08e",
+      "reference": "pérez-1996-115595f1ff20766e"
+    },
+    {
+      "citedBy": "ahmed-2008-89d1f7f17b009bc1",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "ahmed-2008-89d1f7f17b009bc1",
+      "reference": "hubel-1962-8482e0549608d47e"
+    },
+    {
+      "citedBy": "ahmed-2008-89d1f7f17b009bc1",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "ackley-1985-7b723a46d9939c76",
+      "reference": "kirkpatrick-1983-5f2c985cbb503fa0"
+    },
+    {
+      "citedBy": "ackley-1985-7b723a46d9939c76",
+      "reference": "geman-1984-abc0b5ec0b9a09bf"
+    },
+    {
+      "citedBy": "schölkopf-1999-5720ab639305f362",
+      "reference": "schölkopf-1998-b42b3e314b0af9d7"
+    },
+    {
+      "citedBy": "schölkopf-1999-5720ab639305f362",
+      "reference": "boser-1992-b8213a15ee51b7cb"
+    },
+    {
+      "citedBy": "schölkopf-1999-5720ab639305f362",
+      "reference": "lecun-1989-ba8f000ca2efc420"
+    },
+    {
+      "citedBy": "schölkopf-1999-5720ab639305f362",
+      "reference": "vapnik-1995-4bdea6d95188316a"
+    },
+    {
+      "citedBy": "lee-2006-39dec12bf7bd029f",
+      "reference": "lewicki-2000-98522018016d1111"
+    },
+    {
+      "citedBy": "lee-2006-39dec12bf7bd029f",
+      "reference": "olshausen-1997-326f0b91199dfee0"
+    },
+    {
+      "citedBy": "welling-2004-abfa981526a080ab",
+      "reference": "deerwester-1990-57b9c98155fe9c40"
+    },
+    {
+      "citedBy": "welling-2004-abfa981526a080ab",
+      "reference": "smolensky-1986-b1ad39d576fdd879"
+    },
+    {
+      "citedBy": "welling-2004-abfa981526a080ab",
+      "reference": "freund-1991-256905f893464cf2"
+    },
+    {
+      "citedBy": "bergstra-2009-3bf5bb2de78ac817",
+      "reference": "ranzato-2007-c39ca4b52ea025ae"
+    },
+    {
+      "citedBy": "bergstra-2009-3bf5bb2de78ac817",
+      "reference": "vincent-2008-91572b71f1c38ff8"
+    },
+    {
+      "citedBy": "bergstra-2009-3bf5bb2de78ac817",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "bergstra-2009-3bf5bb2de78ac817",
+      "reference": "mobahi-2009-55cc8b0fe26f207d"
+    },
+    {
+      "citedBy": "bergstra-2009-3bf5bb2de78ac817",
+      "reference": "loosli-2005-301ded2df5f6661b"
+    },
+    {
+      "citedBy": "bergstra-2009-3bf5bb2de78ac817",
+      "reference": "wiskott-2002-8d9f24924ce32758"
+    },
+    {
+      "citedBy": "bergstra-2009-3bf5bb2de78ac817",
+      "reference": "larochelle-2007-aa8555d18b06adb8"
+    },
+    {
+      "citedBy": "bergstra-2009-3bf5bb2de78ac817",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "bergstra-2009-3bf5bb2de78ac817",
+      "reference": "lee-2007-2266e989fa98eab5"
+    },
+    {
+      "citedBy": "bengio-2000-7374275e1bac6b74",
+      "reference": "schwenk-2002-be5ff89dd6c6f52f"
+    },
+    {
+      "citedBy": "bengio-2000-7374275e1bac6b74",
+      "reference": "hinton-1986-6c28985176bb1a49"
+    },
+    {
+      "citedBy": "bengio-2000-7374275e1bac6b74",
+      "reference": "deerwester-1990-57b9c98155fe9c40"
+    },
+    {
+      "citedBy": "bengio-2000-7374275e1bac6b74",
+      "reference": "lecun-1998-cd0719f0c0ec2ce5"
+    },
+    {
+      "citedBy": "mobahi-2009-55cc8b0fe26f207d",
+      "reference": "roweis-2000-7ac6439acf1111d8"
+    },
+    {
+      "citedBy": "mobahi-2009-55cc8b0fe26f207d",
+      "reference": "lecun-2004-437494fd35366b96"
+    },
+    {
+      "citedBy": "mobahi-2009-55cc8b0fe26f207d",
+      "reference": "wiskott-2002-8d9f24924ce32758"
+    },
+    {
+      "citedBy": "mobahi-2009-55cc8b0fe26f207d",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "mobahi-2009-55cc8b0fe26f207d",
+      "reference": "tenenbaum-2000-86916535cccadd0"
+    },
+    {
+      "citedBy": "mobahi-2009-55cc8b0fe26f207d",
+      "reference": "vapnik-1995-4bdea6d95188316a"
+    },
+    {
+      "citedBy": "taylor-2009-dca3b285a1ad94d8",
+      "reference": "schölkopf-2007-534c835556d09747"
+    },
+    {
+      "citedBy": "taylor-2009-dca3b285a1ad94d8",
+      "reference": "memisevic-2007-39734428484739d"
+    },
+    {
+      "citedBy": "clifford-1990-71487348d8248f34",
+      "reference": "geman-1984-abc0b5ec0b9a09bf"
+    },
+    {
+      "citedBy": "belkin-2002-e57d4f976b74bde9",
+      "reference": "tenenbaum-2000-86916535cccadd0"
+    },
+    {
+      "citedBy": "xu-2003-d429018df15caef5",
+      "reference": "bengio-2000-7374275e1bac6b74"
+    },
+    {
+      "citedBy": "lasserre-2006-60f5f620080c1190",
+      "reference": "ng-2001-bb8038b615332310"
+    },
+    {
+      "citedBy": "liang-2008-2143afa48c7b302b",
+      "reference": "lasserre-2006-60f5f620080c1190"
+    },
+    {
+      "citedBy": "liang-2008-2143afa48c7b302b",
+      "reference": "ng-2001-bb8038b615332310"
+    },
+    {
+      "citedBy": "pearlmutter-1996-1bb2397eeaa65ac8",
+      "reference": "hotelling-0-6f11615d7a20af5f"
+    },
+    {
+      "citedBy": "lecun-1989-ba8f000ca2efc420",
+      "reference": "hubel-1962-8482e0549608d47e"
+    },
+    {
+      "citedBy": "lecun-1989-ba8f000ca2efc420",
+      "reference": "fukushima-1980-309eb8faff52d44d"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "moré-1995-2f92ea0425d0c906"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "vincent-2008-91572b71f1c38ff8"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "cohn-1994-9536eb9e3bc1c4f0"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "moré-1997-d55c4ebe1e401fc5"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "collobert-2008-a439c545dcf00164"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "krueger-2009-fe865105897eacf7"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "bengio-2000-7374275e1bac6b74"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "coleman-1994-5d52600e20732b37"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "ranzato-2007-c39ca4b52ea025ae"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "salakhutdinov-2007-1cd3053b61bce883"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "salakhutdinov-2007-7fa639c1ccf011af"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "freund-1991-256905f893464cf2"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "peterson-2004-7df4c890ce5a9896"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "elman-1993-b1099f9c8734686b"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "håstad-1991-88695acbc8f52449"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "salakhutdinov-2007-3f9848dc9f7ed10e"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "larochelle-2007-aa8555d18b06adb8"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "schwenk-2002-be5ff89dd6c6f52f"
+    },
+    {
+      "citedBy": "bengio-2009-316f49559ec77a97",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "osindero-2007-1c3730d823f23211",
+      "reference": "memisevic-2007-39734428484739d"
+    },
+    {
+      "citedBy": "osindero-2007-1c3730d823f23211",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "osindero-2007-1c3730d823f23211",
+      "reference": "geman-1984-abc0b5ec0b9a09bf"
+    },
+    {
+      "citedBy": "osindero-2007-1c3730d823f23211",
+      "reference": "schölkopf-2007-534c835556d09747"
+    },
+    {
+      "citedBy": "osindero-2007-1c3730d823f23211",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "osindero-2007-1c3730d823f23211",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "welling-2002-6c357c6f4788f3b8",
+      "reference": "freund-1991-256905f893464cf2"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "freund-1991-256905f893464cf2"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "lee-2007-2266e989fa98eab5"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "zhu-2003-c73839189b0e261b"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "lasserre-2006-60f5f620080c1190"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "smolensky-1986-b1ad39d576fdd879"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "ng-2001-bb8038b615332310"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "carreira-perpiñán-2005-2e1a3c6933659721"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "schölkopf-2007-534c835556d09747"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "larochelle-2007-aa8555d18b06adb8"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "salakhutdinov-2007-1cd3053b61bce883"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "roux-2008-2c26879688fc4439"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "hinton-2007-6c87eefff4ef6d84"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "sutskever-2007-d327137ed088041"
+    },
+    {
+      "citedBy": "larochelle-2008-ad1032cf288538c",
+      "reference": "bengio-2005-5e84f372657d8a3f"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-7fa639c1ccf011af",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-7fa639c1ccf011af",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-7fa639c1ccf011af",
+      "reference": "freund-1991-256905f893464cf2"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-7fa639c1ccf011af",
+      "reference": "smolensky-1986-b1ad39d576fdd879"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-7fa639c1ccf011af",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "larochelle-2007-aa8555d18b06adb8"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "freund-1991-256905f893464cf2"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "bengio-2009-e116761a2eb506e7"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "lee-2007-2266e989fa98eab5"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "salakhutdinov-2007-1cd3053b61bce883"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "håstad-1991-88695acbc8f52449"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "salakhutdinov-2007-3f9848dc9f7ed10e"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "maaten-2008-467209730088f67b"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "vincent-2008-91572b71f1c38ff8"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "ranzato-2007-c39ca4b52ea025ae"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "collobert-2008-a439c545dcf00164"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "erhan-2009-439bfca6e13a94be",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "schwenk-2004-42f210a08ec5071c",
+      "reference": "bengio-2000-7374275e1bac6b74"
+    },
+    {
+      "citedBy": "schwenk-2004-42f210a08ec5071c",
+      "reference": "schwenk-2002-be5ff89dd6c6f52f"
+    },
+    {
+      "citedBy": "zhou-2003-6572291423acd558",
+      "reference": "zhu-2003-c73839189b0e261b"
+    },
+    {
+      "citedBy": "moré-1995-2f92ea0425d0c906",
+      "reference": "moré-1997-d55c4ebe1e401fc5"
+    },
+    {
+      "citedBy": "mnih-2008-558a6ed6c3ea126b",
+      "reference": "mnih-2007-c35b4aad634dac61"
+    },
+    {
+      "citedBy": "mnih-2008-558a6ed6c3ea126b",
+      "reference": "schwenk-2002-be5ff89dd6c6f52f"
+    },
+    {
+      "citedBy": "mnih-2008-558a6ed6c3ea126b",
+      "reference": "bengio-2000-7374275e1bac6b74"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "schölkopf-2007-534c835556d09747"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "lee-2003-7a472810be41eb9e"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "lecun-1989-ba8f000ca2efc420"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "lee-2007-2266e989fa98eab5"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "raina-2007-75de0e2e62f4f755"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "grosse-2007-dd7d152074812182"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "lee-2009-e8f4d0f90de6e39",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "collobert-2004-d123d68acfa76023",
+      "reference": "lecun-1987-bb498661df559603"
+    },
+    {
+      "citedBy": "collobert-2004-d123d68acfa76023",
+      "reference": "vapnik-1995-4bdea6d95188316a"
+    },
+    {
+      "citedBy": "collobert-2004-d123d68acfa76023",
+      "reference": "lecun-1998-cd0719f0c0ec2ce5"
+    },
+    {
+      "citedBy": "hyvärinen-2007-ba3e339980d8206b",
+      "reference": "ackley-1985-7b723a46d9939c76"
+    },
+    {
+      "citedBy": "hyvärinen-2007-ba3e339980d8206b",
+      "reference": "hyvärinen-2009-bf61b35e2ec099da"
+    },
+    {
+      "citedBy": "jaakkola-1998-e4494e9aa459e51c",
+      "reference": "vapnik-1995-4bdea6d95188316a"
+    },
+    {
+      "citedBy": "salakhutdinov-2008-a7bcb553b411e66",
+      "reference": "salakhutdinov-2007-1cd3053b61bce883"
+    },
+    {
+      "citedBy": "salakhutdinov-2008-a7bcb553b411e66",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "salakhutdinov-2008-a7bcb553b411e66",
+      "reference": "schölkopf-2007-534c835556d09747"
+    },
+    {
+      "citedBy": "salakhutdinov-2008-a7bcb553b411e66",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "salakhutdinov-2008-a7bcb553b411e66",
+      "reference": "carreira-perpiñán-2005-2e1a3c6933659721"
+    },
+    {
+      "citedBy": "salakhutdinov-2008-a7bcb553b411e66",
+      "reference": "roux-2008-2c26879688fc4439"
+    },
+    {
+      "citedBy": "salakhutdinov-2008-a7bcb553b411e66",
+      "reference": "bengio-2007-6c93e709fffd96b4"
+    },
+    {
+      "citedBy": "ranzato-2007-e86177cd5be7160b",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "ranzato-2007-e86177cd5be7160b",
+      "reference": "simard-2003-1e655a66a26e98ad"
+    },
+    {
+      "citedBy": "ranzato-2007-e86177cd5be7160b",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "maaten-2008-467209730088f67b",
+      "reference": "hotelling-0-6f11615d7a20af5f"
+    },
+    {
+      "citedBy": "maaten-2008-467209730088f67b",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "maaten-2008-467209730088f67b",
+      "reference": "roweis-2000-7ac6439acf1111d8"
+    },
+    {
+      "citedBy": "maaten-2008-467209730088f67b",
+      "reference": "tenenbaum-2000-86916535cccadd0"
+    },
+    {
+      "citedBy": "maaten-2008-467209730088f67b",
+      "reference": "zhu-2003-c73839189b0e261b"
+    },
+    {
+      "citedBy": "olshausen-1997-326f0b91199dfee0",
+      "reference": "pearlmutter-1996-1bb2397eeaa65ac8"
+    },
+    {
+      "citedBy": "olshausen-1997-326f0b91199dfee0",
+      "reference": "dayan-1995-abee44ead7df5850"
+    },
+    {
+      "citedBy": "heller-2007-e7088320162ed505",
+      "reference": "hinton-1993-8209d2273bcd1c63"
+    },
+    {
+      "citedBy": "seung-1997-3523c3045716f2ba",
+      "reference": "ackley-1985-7b723a46d9939c76"
+    },
+    {
+      "citedBy": "memisevic-2007-39734428484739d",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "memisevic-2007-39734428484739d",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "zinkevich-2003-6dea48e8b573c262",
+      "reference": "boser-1992-b8213a15ee51b7cb"
+    },
+    {
+      "citedBy": "tieleman-2009-ba26425e80fd9c99",
+      "reference": "lecun-2004-437494fd35366b96"
+    },
+    {
+      "citedBy": "tieleman-2009-ba26425e80fd9c99",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "tieleman-2009-ba26425e80fd9c99",
+      "reference": "neal-1992-37a91451c96dd201"
+    },
+    {
+      "citedBy": "tieleman-2009-ba26425e80fd9c99",
+      "reference": "smolensky-1986-b1ad39d576fdd879"
+    },
+    {
+      "citedBy": "tieleman-2009-ba26425e80fd9c99",
+      "reference": "tieleman-2008-c7abf3f9640ec9c6"
+    },
+    {
+      "citedBy": "tieleman-2009-ba26425e80fd9c99",
+      "reference": "larochelle-2008-ad1032cf288538c"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "ranzato-2007-a1b2a382d1f0f6fa"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "lecun-1998-cd0719f0c0ec2ce5"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "salakhutdinov-2007-3f9848dc9f7ed10e"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "ranzato-2007-c39ca4b52ea025ae"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "deerwester-1990-57b9c98155fe9c40"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "bengio-2007-6c93e709fffd96b4"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "ranzato-2008-fa3528601705ee3e",
+      "reference": "salakhutdinov-2009-b68464b0bc34a2ad"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "salakhutdinov-2008-a7bcb553b411e66"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "smolensky-1986-b1ad39d576fdd879"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "bengio-2009-e116761a2eb506e7"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "larochelle-2007-aa8555d18b06adb8"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "carreira-perpiñán-2005-2e1a3c6933659721"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "neal-1992-37a91451c96dd201"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "salakhutdinov-2007-1cd3053b61bce883"
+    },
+    {
+      "citedBy": "tieleman-2008-c7abf3f9640ec9c6",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "delalleau-2004-f5b8b071b004848c",
+      "reference": "zhou-2003-6572291423acd558"
+    },
+    {
+      "citedBy": "delalleau-2004-f5b8b071b004848c",
+      "reference": "zhu-2003-c73839189b0e261b"
+    },
+    {
+      "citedBy": "delalleau-2004-f5b8b071b004848c",
+      "reference": "belkin-2002-e57d4f976b74bde9"
+    },
+    {
+      "citedBy": "hinton-2006-c23a53fd72c26a6b",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "hinton-2006-c23a53fd72c26a6b",
+      "reference": "simard-2003-1e655a66a26e98ad"
+    },
+    {
+      "citedBy": "hinton-2006-c23a53fd72c26a6b",
+      "reference": "teh-2003-42832e04631c6c76"
+    },
+    {
+      "citedBy": "hinton-2006-c23a53fd72c26a6b",
+      "reference": "neal-1992-37a91451c96dd201"
+    },
+    {
+      "citedBy": "hinton-2006-c23a53fd72c26a6b",
+      "reference": "lee-2003-7a472810be41eb9e"
+    },
+    {
+      "citedBy": "hinton-2006-c23a53fd72c26a6b",
+      "reference": "carreira-perpiñán-2005-2e1a3c6933659721"
+    },
+    {
+      "citedBy": "hinton-2006-c23a53fd72c26a6b",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "mnih-2007-c35b4aad634dac61",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "mnih-2007-c35b4aad634dac61",
+      "reference": "bengio-2000-7374275e1bac6b74"
+    },
+    {
+      "citedBy": "mnih-2007-c35b4aad634dac61",
+      "reference": "hinton-1986-6c28985176bb1a49"
+    },
+    {
+      "citedBy": "mnih-2007-c35b4aad634dac61",
+      "reference": "sutskever-2007-d327137ed088041"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-3f9848dc9f7ed10e",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-3f9848dc9f7ed10e",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-3f9848dc9f7ed10e",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-3f9848dc9f7ed10e",
+      "reference": "bengio-2007-6c93e709fffd96b4"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-3f9848dc9f7ed10e",
+      "reference": "salakhutdinov-2007-7fa639c1ccf011af"
+    },
+    {
+      "citedBy": "zhu-2003-c73839189b0e261b",
+      "reference": "cohn-1994-9536eb9e3bc1c4f0"
+    },
+    {
+      "citedBy": "pollack-1990-a83d9a5ea3553c7c",
+      "reference": "ackley-1985-7b723a46d9939c76"
+    },
+    {
+      "citedBy": "pollack-1990-a83d9a5ea3553c7c",
+      "reference": "mcclelland-1981-4c10e6c1f5fa258c"
+    },
+    {
+      "citedBy": "pollack-1990-a83d9a5ea3553c7c",
+      "reference": "hinton-1986-6c28985176bb1a49"
+    },
+    {
+      "citedBy": "schölkopf-1998-b42b3e314b0af9d7",
+      "reference": "lecun-1989-ba8f000ca2efc420"
+    },
+    {
+      "citedBy": "schölkopf-1998-b42b3e314b0af9d7",
+      "reference": "cortes-1995-9e68f0a11c28f427"
+    },
+    {
+      "citedBy": "schölkopf-1998-b42b3e314b0af9d7",
+      "reference": "boser-1992-b8213a15ee51b7cb"
+    },
+    {
+      "citedBy": "schölkopf-1998-b42b3e314b0af9d7",
+      "reference": "vapnik-1995-4bdea6d95188316a"
+    },
+    {
+      "citedBy": "baxter-1997-1eec00c19b71bf80",
+      "reference": "baxter-1995-ce1e7f1ffb4fcdd4"
+    },
+    {
+      "citedBy": "sutskever-2007-d327137ed088041",
+      "reference": "carreira-perpiñán-2005-2e1a3c6933659721"
+    },
+    {
+      "citedBy": "sutskever-2007-d327137ed088041",
+      "reference": "smolensky-1986-b1ad39d576fdd879"
+    },
+    {
+      "citedBy": "sutskever-2007-d327137ed088041",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "sutskever-2007-d327137ed088041",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "ranzato-2007-c39ca4b52ea025ae",
+      "reference": "teh-2003-42832e04631c6c76"
+    },
+    {
+      "citedBy": "ranzato-2007-c39ca4b52ea025ae",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "ranzato-2007-c39ca4b52ea025ae",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "ranzato-2007-c39ca4b52ea025ae",
+      "reference": "ranzato-2007-a1b2a382d1f0f6fa"
+    },
+    {
+      "citedBy": "ranzato-2007-c39ca4b52ea025ae",
+      "reference": "lennie-2003-c95e11b6ad00b390"
+    },
+    {
+      "citedBy": "ranzato-2007-c39ca4b52ea025ae",
+      "reference": "lewicki-2000-98522018016d1111"
+    },
+    {
+      "citedBy": "freund-1996-8e990d0f8179ac7b",
+      "reference": "simard-1992-d963cf644246b7a"
+    },
+    {
+      "citedBy": "bagnell-2008-f5e7fbcac6ff7400",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "bagnell-2008-f5e7fbcac6ff7400",
+      "reference": "raina-2007-75de0e2e62f4f755"
+    },
+    {
+      "citedBy": "bagnell-2008-f5e7fbcac6ff7400",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "bagnell-2008-f5e7fbcac6ff7400",
+      "reference": "simard-2003-1e655a66a26e98ad"
+    },
+    {
+      "citedBy": "bagnell-2008-f5e7fbcac6ff7400",
+      "reference": "olshausen-1997-326f0b91199dfee0"
+    },
+    {
+      "citedBy": "andrieu-2003-7362c08e3039ca2c",
+      "reference": "geman-1984-abc0b5ec0b9a09bf"
+    },
+    {
+      "citedBy": "andrieu-2003-7362c08e3039ca2c",
+      "reference": "kirkpatrick-1983-5f2c985cbb503fa0"
+    },
+    {
+      "citedBy": "andrieu-2003-7362c08e3039ca2c",
+      "reference": "kennedy-1988-9f3ccf80d44e0b18"
+    },
+    {
+      "citedBy": "andrieu-2003-7362c08e3039ca2c",
+      "reference": "hinton-1995-11736d08acb3ec72"
+    },
+    {
+      "citedBy": "lecun-2006-86491ebc14379227",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "lecun-2006-86491ebc14379227",
+      "reference": "hadsell-2006-b939d00e1ebb45b6"
+    },
+    {
+      "citedBy": "lecun-2006-86491ebc14379227",
+      "reference": "lecun-1998-cd0719f0c0ec2ce5"
+    },
+    {
+      "citedBy": "lecun-2006-86491ebc14379227",
+      "reference": "vapnik-1995-4bdea6d95188316a"
+    },
+    {
+      "citedBy": "lecun-2006-86491ebc14379227",
+      "reference": "lecun-2005-4198b131ed0a4fd5"
+    },
+    {
+      "citedBy": "hinton-1995-11736d08acb3ec72",
+      "reference": "geman-1984-abc0b5ec0b9a09bf"
+    },
+    {
+      "citedBy": "loosli-2005-301ded2df5f6661b",
+      "reference": "simard-1992-d963cf644246b7a"
+    },
+    {
+      "citedBy": "loosli-2005-301ded2df5f6661b",
+      "reference": "cortes-1995-9e68f0a11c28f427"
+    },
+    {
+      "citedBy": "loosli-2005-301ded2df5f6661b",
+      "reference": "simard-2003-1e655a66a26e98ad"
+    },
+    {
+      "citedBy": "loosli-2005-301ded2df5f6661b",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "lennie-2003-c95e11b6ad00b390",
+      "reference": "attwell-2001-603a609d15d75983"
+    },
+    {
+      "citedBy": "saul-1996-274e1226e47bf366",
+      "reference": "neal-1992-37a91451c96dd201"
+    },
+    {
+      "citedBy": "saul-1996-274e1226e47bf366",
+      "reference": "dayan-1995-abee44ead7df5850"
+    },
+    {
+      "citedBy": "niebles-2007-32aa75d66193f2be",
+      "reference": "weber-2000-493b572bf56feb3c"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "williams-1995-2a37c69da4694a53"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "schölkopf-1998-b42b3e314b0af9d7"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "delalleau-2004-f5b8b071b004848c"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "tenenbaum-2000-86916535cccadd0"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "lecun-1989-ba8f000ca2efc420"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "simard-2003-1e655a66a26e98ad"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "schmitt-2002-79974d4774341877"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "roweis-2000-7ac6439acf1111d8"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "bengio-2007-6c93e709fffd96b4",
+      "reference": "zhou-2003-6572291423acd558"
+    },
+    {
+      "citedBy": "schwenk-2005-fc6a3e257be171df",
+      "reference": "bengio-2000-7374275e1bac6b74"
+    },
+    {
+      "citedBy": "schwenk-2005-fc6a3e257be171df",
+      "reference": "schwenk-2002-be5ff89dd6c6f52f"
+    },
+    {
+      "citedBy": "schwenk-2005-fc6a3e257be171df",
+      "reference": "schwenk-2004-42f210a08ec5071c"
+    },
+    {
+      "citedBy": "titov-2007-cc47431595ea3da7",
+      "reference": "neal-1992-37a91451c96dd201"
+    },
+    {
+      "citedBy": "titov-2007-cc47431595ea3da7",
+      "reference": "hinton-1995-9eae1f32da00c93b"
+    },
+    {
+      "citedBy": "titov-2007-cc47431595ea3da7",
+      "reference": "geman-1984-abc0b5ec0b9a09bf"
+    },
+    {
+      "citedBy": "bengio-2006-8854fed84dac6833",
+      "reference": "simard-1992-d963cf644246b7a"
+    },
+    {
+      "citedBy": "bengio-2006-8854fed84dac6833",
+      "reference": "zhu-2003-c73839189b0e261b"
+    },
+    {
+      "citedBy": "bengio-2006-8854fed84dac6833",
+      "reference": "tenenbaum-2000-86916535cccadd0"
+    },
+    {
+      "citedBy": "bengio-2006-8854fed84dac6833",
+      "reference": "schölkopf-1998-b42b3e314b0af9d7"
+    },
+    {
+      "citedBy": "bengio-2006-8854fed84dac6833",
+      "reference": "belkin-2002-e57d4f976b74bde9"
+    },
+    {
+      "citedBy": "bengio-2006-8854fed84dac6833",
+      "reference": "brand-2002-ba2eb5b43671e9ef"
+    },
+    {
+      "citedBy": "bengio-2006-8854fed84dac6833",
+      "reference": "roweis-2000-7ac6439acf1111d8"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "hinton-1999-5fabb06aeedc7843"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "salakhutdinov-2007-7fa639c1ccf011af"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "bengio-2005-5e84f372657d8a3f"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "bengio-2007-6c93e709fffd96b4"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "ackley-1985-7b723a46d9939c76"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "roux-2008-2c26879688fc4439",
+      "reference": "carreira-perpiñán-2005-2e1a3c6933659721"
+    },
+    {
+      "citedBy": "hadsell-2006-b939d00e1ebb45b6",
+      "reference": "tenenbaum-2000-86916535cccadd0"
+    },
+    {
+      "citedBy": "hadsell-2006-b939d00e1ebb45b6",
+      "reference": "lecun-2004-437494fd35366b96"
+    },
+    {
+      "citedBy": "hadsell-2006-b939d00e1ebb45b6",
+      "reference": "schölkopf-1998-b42b3e314b0af9d7"
+    },
+    {
+      "citedBy": "hadsell-2006-b939d00e1ebb45b6",
+      "reference": "roweis-2000-7ac6439acf1111d8"
+    },
+    {
+      "citedBy": "salakhutdinov-2009-b68464b0bc34a2ad",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "salakhutdinov-2009-b68464b0bc34a2ad",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "salakhutdinov-2009-b68464b0bc34a2ad",
+      "reference": "salakhutdinov-2007-7fa639c1ccf011af"
+    },
+    {
+      "citedBy": "salakhutdinov-2009-b68464b0bc34a2ad",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "salakhutdinov-2009-b68464b0bc34a2ad",
+      "reference": "deerwester-1990-57b9c98155fe9c40"
+    },
+    {
+      "citedBy": "larochelle-2007-aa8555d18b06adb8",
+      "reference": "salakhutdinov-2007-7fa639c1ccf011af"
+    },
+    {
+      "citedBy": "larochelle-2007-aa8555d18b06adb8",
+      "reference": "lecun-2004-437494fd35366b96"
+    },
+    {
+      "citedBy": "larochelle-2007-aa8555d18b06adb8",
+      "reference": "hinton-2007-6c87eefff4ef6d84"
+    },
+    {
+      "citedBy": "larochelle-2007-aa8555d18b06adb8",
+      "reference": "lecun-1989-ba8f000ca2efc420"
+    },
+    {
+      "citedBy": "larochelle-2007-aa8555d18b06adb8",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "larochelle-2007-aa8555d18b06adb8",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "larochelle-2007-aa8555d18b06adb8",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "larochelle-2007-aa8555d18b06adb8",
+      "reference": "bengio-2007-6c93e709fffd96b4"
+    },
+    {
+      "citedBy": "larochelle-2007-aa8555d18b06adb8",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "mairal-2008-2e10fe98b464b598",
+      "reference": "ranzato-2008-fa3528601705ee3e"
+    },
+    {
+      "citedBy": "mairal-2008-2e10fe98b464b598",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "mairal-2008-2e10fe98b464b598",
+      "reference": "raina-2007-75de0e2e62f4f755"
+    },
+    {
+      "citedBy": "mairal-2008-2e10fe98b464b598",
+      "reference": "salakhutdinov-2007-7fa639c1ccf011af"
+    },
+    {
+      "citedBy": "mairal-2008-2e10fe98b464b598",
+      "reference": "larochelle-2008-ad1032cf288538c"
+    },
+    {
+      "citedBy": "mairal-2008-2e10fe98b464b598",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "mairal-2008-2e10fe98b464b598",
+      "reference": "lasserre-2006-60f5f620080c1190"
+    },
+    {
+      "citedBy": "mairal-2008-2e10fe98b464b598",
+      "reference": "olshausen-1997-326f0b91199dfee0"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "larochelle-2007-aa8555d18b06adb8"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "utgoff-2002-31f2bb56b9747b0b"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "lecun-1987-bb498661df559603"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "doi-2005-daf3a68389d5bbc1"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "ranzato-2007-c39ca4b52ea025ae"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "lee-2007-2266e989fa98eab5"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "gallinari-1987-dd9ce55f0ef2c61a"
+    },
+    {
+      "citedBy": "vincent-2008-91572b71f1c38ff8",
+      "reference": "bengio-2007-6c93e709fffd96b4"
+    },
+    {
+      "citedBy": "ranzato-2007-cc2264b0384d5357",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "ranzato-2007-cc2264b0384d5357",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "ranzato-2007-cc2264b0384d5357",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "ranzato-2007-cc2264b0384d5357",
+      "reference": "olshausen-1997-326f0b91199dfee0"
+    },
+    {
+      "citedBy": "ranzato-2007-cc2264b0384d5357",
+      "reference": "doi-2005-daf3a68389d5bbc1"
+    },
+    {
+      "citedBy": "brand-2002-ba2eb5b43671e9ef",
+      "reference": "tenenbaum-2000-86916535cccadd0"
+    },
+    {
+      "citedBy": "brand-2002-ba2eb5b43671e9ef",
+      "reference": "roweis-2000-7ac6439acf1111d8"
+    },
+    {
+      "citedBy": "hadsell-2008-5a402e2fec42feaf",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "torralba-2008-7c0f0cc2c8f37175",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "torralba-2008-7c0f0cc2c8f37175",
+      "reference": "salakhutdinov-2007-7fa639c1ccf011af"
+    },
+    {
+      "citedBy": "torralba-2008-7c0f0cc2c8f37175",
+      "reference": "salakhutdinov-2009-b68464b0bc34a2ad"
+    },
+    {
+      "citedBy": "carreira-perpiñán-2005-2e1a3c6933659721",
+      "reference": "teh-2003-42832e04631c6c76"
+    },
+    {
+      "citedBy": "carreira-perpiñán-2005-2e1a3c6933659721",
+      "reference": "freund-1991-256905f893464cf2"
+    },
+    {
+      "citedBy": "cortes-2004-2242ae724027399e",
+      "reference": "boser-1992-b8213a15ee51b7cb"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "brand-2002-ba2eb5b43671e9ef"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "delalleau-2004-f5b8b071b004848c"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "belkin-2004-94f8fb2ed743c95d"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "weiss-1999-d3d0bbe93f8cc3e2"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "belkin-2002-e57d4f976b74bde9"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "roweis-2000-7ac6439acf1111d8"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "williams-1995-2a37c69da4694a53"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "boser-1992-b8213a15ee51b7cb"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "tenenbaum-2000-86916535cccadd0"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "zhu-2003-c73839189b0e261b"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "schmitt-2002-79974d4774341877"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "zhou-2003-6572291423acd558"
+    },
+    {
+      "citedBy": "bengio-2005-5e84f372657d8a3f",
+      "reference": "schölkopf-1998-b42b3e314b0af9d7"
+    },
+    {
+      "citedBy": "lee-2003-7a472810be41eb9e",
+      "reference": "dayan-1995-abee44ead7df5850"
+    },
+    {
+      "citedBy": "lee-2003-7a472810be41eb9e",
+      "reference": "hinton-1995-9eae1f32da00c93b"
+    },
+    {
+      "citedBy": "miikkulainen-1991-18ec530879dc93cf",
+      "reference": "hinton-1986-6c28985176bb1a49"
+    },
+    {
+      "citedBy": "salakhutdinov-2009-2959ea08acfaf430",
+      "reference": "tieleman-2008-c7abf3f9640ec9c6"
+    },
+    {
+      "citedBy": "salakhutdinov-2009-2959ea08acfaf430",
+      "reference": "neal-1992-37a91451c96dd201"
+    },
+    {
+      "citedBy": "salakhutdinov-2009-2959ea08acfaf430",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "salakhutdinov-2009-2959ea08acfaf430",
+      "reference": "hinton-1993-8209d2273bcd1c63"
+    },
+    {
+      "citedBy": "schwenk-2002-be5ff89dd6c6f52f",
+      "reference": "bengio-2000-7374275e1bac6b74"
+    },
+    {
+      "citedBy": "hinton-2007-6c87eefff4ef6d84",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "hinton-2007-6c87eefff4ef6d84",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "hinton-2007-6c87eefff4ef6d84",
+      "reference": "lecun-2004-437494fd35366b96"
+    },
+    {
+      "citedBy": "hinton-2007-6c87eefff4ef6d84",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "hinton-2007-6c87eefff4ef6d84",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "hinton-2007-6c87eefff4ef6d84",
+      "reference": "rumelhart-1986-10212fd6d143c4c"
+    },
+    {
+      "citedBy": "hinton-2007-6c87eefff4ef6d84",
+      "reference": "simard-2003-1e655a66a26e98ad"
+    },
+    {
+      "citedBy": "hinton-2007-6c87eefff4ef6d84",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "dayan-1995-abee44ead7df5850",
+      "reference": "hinton-1993-8209d2273bcd1c63"
+    },
+    {
+      "citedBy": "dayan-1995-abee44ead7df5850",
+      "reference": "ackley-1985-7b723a46d9939c76"
+    },
+    {
+      "citedBy": "dayan-1995-abee44ead7df5850",
+      "reference": "neal-1992-37a91451c96dd201"
+    },
+    {
+      "citedBy": "dayan-1995-abee44ead7df5850",
+      "reference": "hinton-1986-63e7997e58bed607"
+    },
+    {
+      "citedBy": "krueger-2009-fe865105897eacf7",
+      "reference": "elman-1993-b1099f9c8734686b"
+    },
+    {
+      "citedBy": "krueger-2009-fe865105897eacf7",
+      "reference": "peterson-2004-7df4c890ce5a9896"
+    },
+    {
+      "citedBy": "krueger-2009-fe865105897eacf7",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "hinton-2001-ad501ac2cd756601",
+      "reference": "olshausen-1997-326f0b91199dfee0"
+    },
+    {
+      "citedBy": "hinton-2001-ad501ac2cd756601",
+      "reference": "bell-1994-312766a1c61e656d"
+    },
+    {
+      "citedBy": "hinton-2001-ad501ac2cd756601",
+      "reference": "pearlmutter-1996-1bb2397eeaa65ac8"
+    },
+    {
+      "citedBy": "hinton-2001-ad501ac2cd756601",
+      "reference": "lewicki-2000-98522018016d1111"
+    },
+    {
+      "citedBy": "wiskott-2002-8d9f24924ce32758",
+      "reference": "lecun-1989-ba8f000ca2efc420"
+    },
+    {
+      "citedBy": "wiskott-2002-8d9f24924ce32758",
+      "reference": "vapnik-1995-4bdea6d95188316a"
+    },
+    {
+      "citedBy": "schwenk-1994-3f6ef6adbf431d0c",
+      "reference": "simard-1992-d963cf644246b7a"
+    },
+    {
+      "citedBy": "heller-2008-fbb3e1465521814f",
+      "reference": "hinton-1999-5fabb06aeedc7843"
+    },
+    {
+      "citedBy": "heller-2008-fbb3e1465521814f",
+      "reference": "heller-2007-e7088320162ed505"
+    },
+    {
+      "citedBy": "murray-2008-dfcccdd1ad661868",
+      "reference": "salakhutdinov-2008-a7bcb553b411e66"
+    },
+    {
+      "citedBy": "murray-2008-dfcccdd1ad661868",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "murray-2008-dfcccdd1ad661868",
+      "reference": "osindero-2007-1c3730d823f23211"
+    },
+    {
+      "citedBy": "thrun-1995-2a1581366bda1485",
+      "reference": "baxter-1995-ce1e7f1ffb4fcdd4"
+    },
+    {
+      "citedBy": "serre-2007-f161345e8271b366",
+      "reference": "fukushima-1980-309eb8faff52d44d"
+    },
+    {
+      "citedBy": "serre-2007-f161345e8271b366",
+      "reference": "hubel-1962-8482e0549608d47e"
+    },
+    {
+      "citedBy": "serre-2007-f161345e8271b366",
+      "reference": "lecun-1998-e1770e784ab3470"
+    },
+    {
+      "citedBy": "hyvärinen-2007-9afc3ae6608253b9",
+      "reference": "ackley-1985-7b723a46d9939c76"
+    },
+    {
+      "citedBy": "raina-2007-75de0e2e62f4f755",
+      "reference": "jaakkola-1998-e4494e9aa459e51c"
+    },
+    {
+      "citedBy": "raina-2007-75de0e2e62f4f755",
+      "reference": "tenenbaum-2000-86916535cccadd0"
+    },
+    {
+      "citedBy": "raina-2007-75de0e2e62f4f755",
+      "reference": "deerwester-1990-57b9c98155fe9c40"
+    },
+    {
+      "citedBy": "raina-2007-75de0e2e62f4f755",
+      "reference": "thrun-1995-2a1581366bda1485"
+    },
+    {
+      "citedBy": "raina-2007-75de0e2e62f4f755",
+      "reference": "roweis-2000-7ac6439acf1111d8"
+    },
+    {
+      "citedBy": "raina-2007-75de0e2e62f4f755",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "raina-2007-75de0e2e62f4f755",
+      "reference": "lee-2006-39dec12bf7bd029f"
+    },
+    {
+      "citedBy": "hastie-2004-5cd2ed8e09207b58",
+      "reference": "boser-1992-b8213a15ee51b7cb"
+    },
+    {
+      "citedBy": "hastie-2004-5cd2ed8e09207b58",
+      "reference": "cortes-1995-9e68f0a11c28f427"
+    },
+    {
+      "citedBy": "vapnik-1995-4bdea6d95188316a",
+      "reference": "boser-1992-b8213a15ee51b7cb"
+    },
+    {
+      "citedBy": "vapnik-1995-4bdea6d95188316a",
+      "reference": "simard-1992-d963cf644246b7a"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-1cd3053b61bce883",
+      "reference": "deerwester-1990-57b9c98155fe9c40"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-1cd3053b61bce883",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-1cd3053b61bce883",
+      "reference": "salakhutdinov-2007-7fa639c1ccf011af"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-1cd3053b61bce883",
+      "reference": "carreira-perpiñán-2005-2e1a3c6933659721"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-1cd3053b61bce883",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-1cd3053b61bce883",
+      "reference": "sutskever-2007-d327137ed088041"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-1cd3053b61bce883",
+      "reference": "schölkopf-2007-534c835556d09747"
+    },
+    {
+      "citedBy": "salakhutdinov-2007-1cd3053b61bce883",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "schölkopf-2007-8c631a1886ee4823"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "schoelkopf-2007-139eca365fcebdbe"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "carreira-perpiñán-2005-2e1a3c6933659721"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "hinton-1984-54661bb6bd380ff1"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "schölkopf-2007-534c835556d09747"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "hinton-1999-5fabb06aeedc7843"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "tieleman-2008-c7abf3f9640ec9c6"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "bourlard-1988-c243c8760da04c86"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "smolensky-1986-b1ad39d576fdd879"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "japkowicz-2000-b6db2d9804e4e447"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "schwenk-1994-3f6ef6adbf431d0c"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "hinton-1993-8209d2273bcd1c63"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "hinton-2006-c23a53fd72c26a6b"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "hinton-2006-e9ce4c707876bb07"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "larochelle-2007-aa8555d18b06adb8"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "rumelhart-1986-10212fd6d143c4c"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "freund-1991-256905f893464cf2"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "bengio-2007-6c93e709fffd96b4"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "welling-2004-abfa981526a080ab"
+    },
+    {
+      "citedBy": "bengio-2009-e116761a2eb506e7",
+      "reference": "hinton-1986-63e7997e58bed607"
+    },
+    {
+      "citedBy": "bengio-2005-611343199d7916d1",
+      "reference": "rumelhart-1986-10212fd6d143c4c"
+    },
+    {
+      "citedBy": "bengio-2005-611343199d7916d1",
+      "reference": "delalleau-2004-f5b8b071b004848c"
+    }
+  ]
+}

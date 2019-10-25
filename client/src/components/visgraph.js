@@ -113,26 +113,83 @@ export class ArtGraph {
     return _.property('citedBys')(this.adjLists[nodeId])
   }
 
-  getNodeLevels (rootProp, connProp) {
-    const levelsMap = _.mapValues(this.adjLists, _.constant(0))
-    const rootIdsMap =
-      _.pickBy(this.adjLists, adjList => {
-        return _.isEmpty(adjList[rootProp])
-      })
-    const rootIds = _.keys(rootIdsMap)
-    _.forEach(rootIds, nodeId => { levelsMap[nodeId] = 0 })
-    let bfsQueue = [ ...rootIds ]
-    while (bfsQueue.length > 0) {
-      const currNodeId = bfsQueue.shift()
-      const connNodeIds = this.adjLists[currNodeId][connProp]
-      _.forEach(connNodeIds, connNodeId => {
-        levelsMap[connNodeId] = levelsMap[connNodeId]
-          ? Math.max(levelsMap[currNodeId] + 1, levelsMap[connNodeId])
-          : levelsMap[currNodeId] + 1
-        bfsQueue.push(connNodeId)
-      })
+  mergeTreeNodeLevels (levelsMaps) {
+    return _.mapValues(this.adjLists, (value, nodeId) => {
+      return _.max(_.map(levelsMaps, _.property(nodeId)))
+    })
+  }
+
+  recurTreeNodeLevel (
+      currNodeId, rootProp, connProp, recStack, levelsMap, currLevel) {
+    const connNodeIds = this.adjLists[currNodeId][connProp]
+    // if leaf node
+    if (_.isEmpty(connNodeIds)) {
+      levelsMap[currNodeId] = _.max([ currLevel, levelsMap[currNodeId] ])
+      return true
     }
+    // if already visited and the existing level is higher
+    if (levelsMap[currNodeId] > currLevel) {
+      return true
+    }
+    // if loop node
+    if (recStack[currNodeId]) {
+      return false
+    }
+    // recur downward
+    recStack[currNodeId] = true
+    levelsMap[currNodeId] = currLevel
+    const noLoops = _.map(connNodeIds, connNodeId => {
+      return this.recurTreeNodeLevel(
+        connNodeId, rootProp, connProp, recStack, levelsMap, currLevel + 1)
+    })
+    recStack[currNodeId] = false
+    return _.every(noLoops, Boolean)
+  }
+
+  getTreeNodeLevels (rootId, rootProp, connProp) {
+    const levelsMap = _.mapValues(this.adjLists, _.constant(0))
+    const recStack = _.mapValues(this.adjLists, _.constant(false))
+    // DFS to calculate node levels in this tree
+    this.recurTreeNodeLevel(rootId, rootProp, connProp, recStack, levelsMap, 0)
     return levelsMap
+  }
+
+  getNodeLevels (rootProp, connProp) {
+    // new algorithm that can handle loops in a graph
+    const rootIdsMap =
+      _.pickBy(this.adjLists, adjList => _.isEmpty(adjList[rootProp]))
+    const rootIds = _.keys(rootIdsMap)
+    const treeNodeLevelsMaps = _.map(rootIds, rootId => {
+      return this.getTreeNodeLevels(rootId, rootProp, connProp)
+    })
+    return this.mergeTreeNodeLevels(treeNodeLevelsMaps)
+    // // original algorithm that loops infinitely when there are loop(s)
+    // const levelsMap = _.mapValues(this.adjLists, _.constant(0))
+    // const rootIdsMap =
+    //   _.pickBy(this.adjLists, adjList => {
+    //     return _.isEmpty(adjList[rootProp])
+    //   })
+    // const rootIds = _.keys(rootIdsMap)
+    // const visited = {}
+    // _.forEach(rootIds, nodeId => {
+    //   levelsMap[nodeId] = 0
+    //   visited[nodeId] = true
+    // })
+    // let bfsQueue = [ ...rootIds ]
+    // while (bfsQueue.length > 0) {
+    //   const currNodeId = bfsQueue.shift()
+    //   const connNodeIds = this.adjLists[currNodeId][connProp]
+    //   _.forEach(connNodeIds, connNodeId => {
+    //     levelsMap[connNodeId] = levelsMap[connNodeId]
+    //       ? Math.max(levelsMap[currNodeId] + 1, levelsMap[connNodeId])
+    //       : levelsMap[currNodeId] + 1
+    //     visited[currNodeId] = true
+    //     if (!visited[connNodeId]) {
+    //       bfsQueue.push(connNodeId)
+    //     }
+    //   })
+    // }
+    // return levelsMap
   }
 
   getNodeInGraphReferenceLevels () {
@@ -143,21 +200,29 @@ export class ArtGraph {
     return this.getNodeLevels('citedBys', 'references')
   }
 
-  getAllPathsBetween (referenceId, citedById, path = []) {
+  getAllPathsBetween (referenceId, citedById, path = [], recStack = {}) {
     if (referenceId === citedById) {
+      return [ path ]
+    }
+    if (recStack[referenceId]) {
       return [ path ]
     }
     if (_.isEmpty(this.getInGraphCitedByIds(referenceId))) {
       return false
     }
+    recStack[referenceId] = true
     const paths =
       _.concat(
         ..._.map(this.getInGraphCitedByIds(referenceId), currCitedById => {
-          const paths = this.getAllPathsBetween(
-            currCitedById, citedById,
-            [ ...path, { reference: referenceId, citedBy: currCitedById } ])
+          const paths =
+            this.getAllPathsBetween(
+              currCitedById,
+              citedById,
+              [ ...path, { reference: referenceId, citedBy: currCitedById } ],
+              recStack)
           return paths
         }))
+    recStack[referenceId] = false
     return _.filter(paths)
   }
 }
@@ -277,6 +342,7 @@ export class VisGraph {
           grid[minColIdx].push(nodeId)
         } else {
           colIdxMap[nodeId] = maxColIdx
+          // console.log(nodeId, maxColIdx, colIdxMap['ackley-1985-7b723a46d9939c76'], citedByIds, citedByColIndexes, existingCitedByColIndexes, colIdxRangesMap[nodeId])
           grid[maxColIdx].push(nodeId)
         }
       }
