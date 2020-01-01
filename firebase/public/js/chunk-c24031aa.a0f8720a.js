@@ -5,4 +5,4 @@
  * @see https://github.com/alexsasharegan/vue-functional-data-merge
  */
 function s(){const t={};let e,i,s=arguments.length;while(s--)for(e of Object.keys(arguments[s]))switch(e){case"class":case"style":case"directives":Array.isArray(t[e])||(t[e]=[]),t[e]=t[e].concat(arguments[s][e]);break;case"staticClass":if(!arguments[s][e])break;void 0===t[e]&&(t[e]=""),t[e]&&(t[e]+=" "),t[e]+=arguments[s][e].trim();break;case"on":case"nativeOn":t[e]||(t[e]={});const r=t[e];for(i of Object.keys(arguments[s][e]||{}))r[i]?r[i]=Array().concat(r[i],arguments[s][e][i]):r[i]=arguments[s][e][i];break;case"attrs":case"props":case"domProps":case"scopedSlots":case"staticStyle":case"hook":case"transition":t[e]||(t[e]={}),t[e]={...arguments[s][e],...t[e]};break;case"slot":case"key":case"ref":case"tag":case"show":case"keepAlive":default:t[e]||(t[e]=arguments[s][e])}return t}i.d(e,"a",function(){return s})},feb6:function(t,e,i){}}]);
-//# sourceMappingURL=chunk-c24031aa.e296af3b.js.map
+//# sourceMappingURL=chunk-c24031aa.a0f8720a.js.map

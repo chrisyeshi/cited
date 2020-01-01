@@ -33,6 +33,7 @@ const defaultState = {
   currArt: null,
   filters: defaultFilters,
   isDrawerOpen: true,
+  recentColls: [],
   temporaryArticleIds: [],
   hoveringArticleId: null,
   selectedArticleIds: []
@@ -185,6 +186,37 @@ const parseVis = {
           context.commit('set', { currColl, currVisGraph, currArt })
         }
       }
+    },
+    async fetchRecentColls (context) {
+      const collMetasSnap =
+        await firebase.firestore().collection('collMetas').limit(20).get()
+      const collMetas = _.map(collMetasSnap.docs, collMetaSnap => ({
+        ...collMetaSnap.data(),
+        collId: collMetaSnap.id
+      }))
+      const artMetas =
+        await Promise.all(_.map(collMetas, async ({ collId }) => {
+          const artMetaSnap =
+            await firebase.firestore().doc(`artMetas/${collId}`).get()
+          return artMetaSnap.exists
+            ? {
+                ...artMetaSnap.data(),
+                artId: artMetaSnap.id
+              }
+            : null
+        }))
+      const colls =
+        _.filter(_.map(_.zip(collMetas, artMetas), ([ collMeta, artMeta ]) => {
+          if (!artMeta) {
+            return null
+          }
+          return {
+            ...artMeta,
+            ...collMeta,
+            description: artMeta.abstract
+          }
+        }))
+      context.commit('set', { recentColls: colls })
     }
   },
   getters: {

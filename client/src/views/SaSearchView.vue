@@ -25,6 +25,21 @@
                 @keydown="onSearchKeyDown"
                 @click:append="onSearchClick" />
             </v-row>
+            <v-row justify="center">
+              <v-list three-line>
+                <v-subheader>Recently Visited:</v-subheader>
+                <v-list-item
+                  v-for="coll in colls" :key="coll.collId"
+                  @click="$router.push(`/coll/${coll.collId}`)">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ coll.title }}</v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ coll.description }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-row>
           </v-col>
         </v-row>
       </v-container>
@@ -57,6 +72,7 @@
 
 <script>
 import _ from 'lodash'
+import { mapState } from 'vuex'
 import SignInButton from '@/components/SignInButton'
 
 export default {
@@ -67,10 +83,17 @@ export default {
     searchTerm: '',
     toEmail: 'contact@cited.app'
   }),
+  computed: {
+    ...mapState('parseVis', [ 'recentColls' ]),
+    colls () { return this.recentColls }
+  },
   methods: {
     copyEmail () {
       navigator.clipboard.writeText(this.toEmail)
       this.isCopyEmailSnackbarVisible = true
+    },
+    fetchData () {
+      this.$store.dispatch('parseVis/fetchRecentColls')
     },
     search () {
       this.$router.push(`/coll/${this.searchTerm}`)
@@ -85,6 +108,9 @@ export default {
         return this.search()
       }
     }
+  },
+  created () {
+    this.fetchData()
   }
 }
 </script>

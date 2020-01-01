@@ -1,5 +1,5 @@
 <template>
-  <v-list two-line>
+  <v-list three-line>
     <v-subheader>All Collections</v-subheader>
     <v-list-item v-for="coll in colls" :key="coll.collId"
       :style="getCollTileStyle(coll)"
